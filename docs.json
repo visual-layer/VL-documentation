@@ -16,37 +16,83 @@
           {
             "group": "Getting Started",
             "pages": [
-              "getting-started/introduction",
-              "getting-started/quick-start",
-              "getting-started/deployment-options",
+              "docs/getting-started/introduction",
+              "docs/getting-started/quick-start",
+              "docs/getting-started/deployment-options",
               {
                 "group": "Definitions & Entities",
                 "pages": [
-                  "getting-started/definitions-entities",
-                  "getting-started/understanding-clusters"
+                  "docs/getting-started/definitions-entities",
+                  "docs/getting-started/understanding-clusters"
                 ]
               },
               {
                 "group": "Orientation",
                 "pages": [
-                  "getting-started/orientation",
-                  "getting-started/dataset-inventory",
-                  "getting-started/view-panels"
+                  "docs/getting-started/orientation",
+                  "docs/getting-started/dataset-inventory",
+                  "docs/getting-started/view-panels"
                 ]
               }
             ]
           },
           {
-            "group": "Essentials",
+            "group":"On-Premises",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
+              "docs/on-prem/single-node-deployment"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "docs/Integrations/preparing-a-private-aws-s3-bucket",
+              "CVAT - Coming Soon",
+              "Labelbox - Coming Soon"
+            ]
+          },
+          {
+            "group":"Creating Datasets",
+            "pages": [
+              "docs/Creating-Datasets/createdelete-datasets",
+            {
+              "group": "Importing Annotations",
+              "pages": [
+                  "docs/Creating-Datasets/importing-annotations/annotations-overview",
+                  "docs/Creating-Datasets/importing-annotations/upload-annotations",
+                  "docs/Creating-Datasets/importing-annotations/preparing-annotation-data-file",
+                  "docs/Creating-Datasets/importing-annotations/bounding-box",
+                  "docs/Creating-Datasets/importing-annotations/converting-yolo",
+                  "docs/Creating-Datasets/importing-annotations/creating-annotation-file-with-class-labels"
+
+              ]
+            }
+            ]
+          },
+          {
+            "group":"Managing Datasets",
+            "pages": [
+              "docs/Managing-Datasets/save-views",
+              "docs/Managing-Datasets/tag-items",
+              "docs/Managing-Datasets/share-dataset",
+              "docs/Managing-Datasets/export-dataset",
+              "docs/Managing-Datasets/update-metadata-coming-soon",
+              "docs/Managing-Datasets/update-data-coming-soon",
+              "docs/Managing-Datasets/customize-metadata-coming-soon"
+            ]
+          },
+          {
+            "group":"Exploring Datasets",
+            "pages": [
+              "docs/Exploring-datasets/overview",
+              "docs/Managing-Datasets/tag-items",
+              "docs/Managing-Datasets/share-dataset",
+              "docs/Managing-Datasets/export-dataset",
+              "docs/Managing-Datasets/update-metadata-coming-soon",
+              "docs/Managing-Datasets/update-data-coming-soon",
+              "docs/Managing-Datasets/customize-metadata-coming-soon"
             ]
           }
+  
         ]
       },
       {

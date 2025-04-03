@@ -1,0 +1,55 @@
+---
+title: "Creating Annotation File with Class Labels"
+slug: "creating-annotation-file-with-class-labels-copy"
+excerpt: ""
+hidden: true
+createdAt: "Tue Mar 11 2025 15:55:29 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Tue Mar 11 2025 15:55:49 GMT+0000 (Coordinated Universal Time)"
+---
+This example shows how to create VL annotations file using subfolder structure, each subfolder is the class label.  
+The root folder of the dataset contains 3 subfolders which are the classes: `Ulcer`, `Normal` and `AVM`.
+
+```
+import os  
+import csv
+
+def create_annotation_csv(root_dir, output_csv):  
+    rows = []
+
+    # Iterate over all items in the root directory.
+    for subdir in os.listdir(root_dir):
+        subdir_path = os.path.join(root_dir, subdir)
+        if os.path.isdir(subdir_path):
+            label = subdir  # The subfolder name is the label.
+            # Iterate over each file in the subdirectory.
+            for filename in os.listdir(subdir_path):
+                file_path = os.path.join(subdir_path, filename)
+                if os.path.isfile(file_path):
+                    # Build the relative file path (e.g., "b/image1.jpg").
+                    relative_path = os.path.join(subdir, filename)
+                    rows.append([relative_path, label])
+
+    # Write the CSV file with header "filename,label".
+    with open(output_csv, mode='w', newline='') as csv_file:
+        writer = csv.writer(csv_file)
+        writer.writerow(['filename', 'label'])
+        writer.writerows(rows)
+    print(f"CSV file '{output_csv}' created successfully.")
+
+if __name__ == "__main__":  
+    root_directory = "."  # Folder containing your subfolders.  
+    output_csv_file = "image_annotations.csv"  
+    create_annotation_csv(root_directory, output_csv_file)
+```
+
+Example output:
+
+```
+filename,label
+Ulcer/Ulcer_2024-08-07-08-28-10_81061.bmp,Ulcer
+Ulcer/Ulcer_2024-08-07-08-29-37_82025.bmp,Ulcer
+Ulcer/Ulcer_2024-08-07-08-29-07_43887.bmp,Ulcer
+Ulcer/Ulcer_2024-08-07-08-28-10_43888.bmp,Ulcer
+Ulcer/Ulcer_2024-08-07-08-30-31_30154.bmp,Ulcer
+Ulcer/Ulcer_2024-08-07-08-27-27_96319.bmp,Ulcer
+```

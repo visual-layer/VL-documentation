@@ -1,0 +1,46 @@
+---
+title: "Upload Annotations"
+slug: "importing-annotations-copy"
+excerpt: "Learn how annotations enhance dataset structure, improve search-ability, and support AI training in Visual Layer."
+hidden: true
+createdAt: "Tue Mar 11 2025 15:55:05 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Wed Mar 26 2025 10:53:53 GMT+0000 (Coordinated Universal Time)"
+---
+## What Are Annotations?
+
+Annotations are metadata labels that describe and categorize images or objects within images. They help structure visual datasets, making them searchable, analyzable, and useful for AI training.
+
+## Common annotation types:
+
+- **Image Annotations:** Assign class labels to entire images, helping categorize datasets.
+- **Object Annotations:** Label individual objects within images using bounding boxes, improving model accuracy.
+
+## Why Are Annotations Important?
+
+Annotations play a critical role in machine learning and AI model training by:  
+✔ Improving data organization for easier retrieval and filtering  
+✔ Enhancing search-ability within datasets  
+✔ Supporting object detection and classification tasks  
+✔ Increasing model accuracy with high-quality labeled data
+
+***
+
+## Supported Annotation Formats
+
+1. **Parquet / CSV**
+2. **JSON (COCO format)**
+
+## ⚠️ Limitations
+
+- **Important:** Annotations must be added when creating a dataset. Currently, you cannot add them afterward.
+- Your annotation file must be named exactly as one of the following:
+  - `annotations.json`
+  - `image_annotations.csv`
+  - `object_annotations.csv`
+  - `image_annotations.parquet`
+  - `object_annotations.parquet`
+
+**For more details, visit**:
+
+- [importing annotations](https://dash.readme.com/project/visual-layer2/v1.0/docs/importing-annotations-copy-1)
+- Preparing Annotation file

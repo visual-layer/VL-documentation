@@ -1,0 +1,99 @@
+---
+title: "Preparing Annotation File"
+slug: "preparing-annotation-data-file-copy"
+excerpt: "This guide provides instructions on structuring annotation files correctly before importing them into Visual Layer. Visual Layer supports two annotation formats: **COCO (JSON format) and CSV format.** Ensuring proper structuring will prevent errors during dataset creation and allow seamless integration."
+hidden: true
+createdAt: "Tue Mar 11 2025 15:55:21 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Tue Mar 25 2025 12:04:37 GMT+0000 (Coordinated Universal Time)"
+---
+>  **Note:** to convert YOLO annotation to VL format visit: [Converting YOLO Annotations to Visual Layer Format](<>)
+
+# Tabular Formats: Parquet / CSV
+
+## Image Annotations
+
+For full-image class labels, create an annotation file named `image_annotations.csv`  or`image_annotations.parquet`. Each row in the file represents an image and its corresponding label.
+
+### Example Format:
+
+| filename                              | label  |
+| ------------------------------------- | :----- |
+| IDX_DF_SIG21341_PlasmasNeg.png        | IDX_DF |
+| IDX_DF_ALM00324_PlasmasPos.png        | IDX_DF |
+| folder/IDX_RC_ALM04559_PlasmasNeg.png | IDX_RC |
+
+- The `filename` column must contain relative paths.
+- The `label` column assigns a class to entire image.
+- **Multiple labels** can be stored as a list, e.g., `['t-shirt', 'SKU12345']`.
+- You may also include a `caption` column for textual metadata.
+
+### Example for Multiple Labels:
+
+| filename        | label                   |
+| --------------- | ----------------------- |
+| cool-tshirt.png | ["t-shirt", "SKU12345"] |
+| cool-pants.jpg  | ["pants", "SKU231312"]  |
+
+## Object Annotations
+
+For object-level annotations, create an annotation file named `object_annotations.csv` or `object_annotations.parquet`. Each row represents a detected object, including its bounding box coordinates and class label.
+
+### Example Format:
+
+| filename                              | col_x | row_y | width | height | label |
+| ------------------------------------- | ----- | ----- | ----- | ------ | ----- |
+| Kitti/raw/training/image_2/006149.png | 0     | 240   | 135   | 133    | Car   |
+| Kitti/raw/training/image_2/006149.png | 608   | 169   | 59    | 43     | Car   |
+
+- `col_x `and `row_y` define the top-left corner of the bounding box.
+- `width` and `height` must be greater than zero.
+- Each row corresponds to a single object within an image.
+
+***
+
+# JSON Annotations (COCO Format)
+
+Ensure The file is named `annotations.json`.
+
+### Example JSON Format:
+
+```json
+{
+    "images": [
+        { "id": 1, "width": 640, "height": 480, "file_name": "image1.jpg" },
+        { "id": 2, "width": 800, "height": 600, "file_name": "image2.jpg" }
+    ],
+    "categories": [
+        { "id": 1, "name": "cat" },
+        { "id": 2, "name": "dog" },
+        { "id": 3, "name": "t-rex" }
+    ],
+    "annotations": [
+        { "id": 1, "image_id": 1, "category_id": 1, "bbox": [100, 100, 200, 200] },
+        { "id": 2, "image_id": 2, "category_id": 2, "bbox": [50, 50, 150, 150] },
+        { "id": 3, "image_id": 1, "category_id": 3 },
+        { "id": 4, "image_id": 2, "category_id": 3 }
+    ]
+}
+```
+
+- **Bounding boxes (`bbox`)** follow the format `[col_x, row_y, width, height]`.
+  - `col_x `and `row_y` define the top-left corner of the bounding box.
+  - `width` and `height` must be greater than zero.
+- **Remove comments** before uploading.
+
+***
+
+### **Summary of Bounding Box Formats**
+
+| Format                  | Representation                                 | File Type |
+| ----------------------- | ---------------------------------------------- | --------- |
+| **JSON (COCO)**         | `[x_min, y_min, width, height]`                | `.json`   |
+| **CSV** (Image Labels)  | `[filename, label]`                            | `.csv`    |
+| **CSV** (Object Labels) | `filename, col_x, row_y, width, height, label` | `.csv`    |
+
+<br />
+
+For instructions on importing annotation files, see [Importing Annotations.](<>)
+
+By following these guidelines, you can ensure that your annotation files are structured correctly and ready for seamless dataset creation in Visual Layer.

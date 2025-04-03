@@ -1,0 +1,37 @@
+---
+title: "Importing Annotations"
+slug: "importing-annotations-copy-1"
+excerpt: "This guide explains how to import **pre-existing annotation files** into Visual Layer. If you already have labeled datasets, you can upload them in supported formats to integrate with your dataset seamlessly."
+hidden: true
+createdAt: "Wed Mar 12 2025 12:07:27 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Tue Mar 25 2025 12:05:39 GMT+0000 (Coordinated Universal Time)"
+---
+>  **Note:** Annotations must be uploaded when creating a dataset and cannot be added later. See Creating a Dataset for more details.
+
+For file structuring guidelines, visit[ Preparing Annotation Files.](<>)
+
+## Supported Annotation Formats
+
+1. **Parquet / CSV**
+2. **JSON (COCO format)**
+
+**Important:** 
+
+- Annotations **must be added when creating a dataset**. Currently, you cannot add them afterward.
+- Your annotation file must be named **exactly** as one of the following:
+  - `annotations.json`
+  - `image_annotations.csv`
+  - `object_annotations.csv`
+  - `image_annotations.parquet`
+  - `object_annotations.parquet`  
+    **Why is file naming important?** Annotation files must follow a strict naming convention to ensure proper recognition by Visual Layer. Files that do not match these names **will not be processed correctly.**
+
+***
+
+## How to Import Annotations
+
+1. Upload your annotation file **during dataset creation** (see [Creating a Dataset](<>)).  
+   Files can be uploaded from your **local machine** and **S3 bucket**.
+2. Ensure that your file follows the **required format** and has the correct name (see [Preparing Annotation Files](<>)).
+
+![](https://files.readme.io/e76e5a9d515f756143072f47d2ef7320856c99bb64cec6da5859677bd2eda88a-image.png)

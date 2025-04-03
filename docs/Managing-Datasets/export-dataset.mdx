@@ -1,0 +1,184 @@
+---
+title: "Export Dataset"
+excerpt: "Export your data from Visual Layer to use in external tools or workflows. You can export the entire dataset, a filtered subset, or just specific items—depending on your needs."
+hidden: true
+createdAt: "Tue Mar 11 2025 16:09:56 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Thu Apr 03 2025 09:27:56 GMT+0000 (Coordinated Universal Time)"
+---
+## How to Export:
+
+1. Go to the **Dataset Exploration** page.
+2. Click on the **Export** button (top right).
+3. Provide a name for your export file.
+4. Choose the **Export Scope** (see below).
+5. Select your **file format**:
+   - JSON – available now
+   - COCO – coming soon
+6. (Optional) Toggle **Include image files** (up to 5,000 images).
+7. Click **Export File **to download your export..
+
+***
+
+## Export Options
+
+### Entire Dataset:
+
+Exports all items in the dataset, regardless of filters or manual selections.
+
+### Matching the applied filters
+
+Exports only the items that match your currently active filters (e.g., issue type, labels, user tags).
+
+### Current Selection
+
+Exports only the items you’ve manually selected (selected images, objects, clusters and more).
+
+***
+
+## JSON File Format
+
+The export is provided in a structured .json file. The file contains two main sections:
+
+1. `info`  
+   General metadata about the dataset and export.
+
+```c json
+"info": {
+        "dataset": "Name",
+        "dataset_creation_time": "2025-04-02T12:15:02.510168",
+        "dataset_url": "http://app.visual-layer.com/dataset/.../data",
+        "description": "Exported from trying at Visual Layer",
+        "export_time": "2025-04-02T14:31:30.931324",
+        "exported_by": "User_Name",
+        "schema_version": "1.1",
+        "total_media_items": 10,000,000
+    }
+```
+
+<br />
+
+2. `media_items`
+
+An array of media items (images or video frames), each with all available metadata:.
+
+```coffeescript json
+{
+  "media_id": "<uuid>",
+  "media_type": "image",  // or "video_frame"
+  "file_name": "example.jpg",
+  "file_path": "example.jpg",
+  "file_size": "48.96KB",
+  "height": 360,
+  "width": 360,
+  "url": "http://...",
+  "cluster_id": "<uuid>",
+  "uniqueness_score": 0.85,
+  "metadata_items": [ ... ]
+}
+```
+
+***
+
+## Metadata Items
+
+Each media item includes a list of `metadata_items`. 
+
+1. `type: "issue"`  
+   Used to represent a detected problem:
+
+```c json
+{
+  "type": "issue",
+  "properties": {
+    "issue_type": "duplicates",
+    "confidence": 0.85,
+    "duplicate_group_id": "<uuid>",
+    "duplicate_threshold": 0.88
+  }
+}
+```
+
+2. `type: "user_tag"`  
+   Tags applied by a user to a media item:
+
+```c json
+{
+  "type": "user_tag",
+  "properties": {
+    "tag_name": "spider",
+    "assigned_date": "2025-04-02T12:34:00.189534"
+  }
+}
+```
+
+3. `type: "video_info"`  
+   Provides context on a video frame:
+
+```c json
+{
+  "type": "video_info",
+  "properties": {
+    "frame_number": 17,
+    "video_id": "<uuid>",
+    "timestamp": "00:00:00.567"
+  }
+}
+```
+
+4. `type: "object_label"`  
+   Describes an annotated object (bounding box), including nested issues:
+
+```c json
+{
+  "type": "object_label",
+  "properties": {
+    "bbox": [x, y, width, height],
+    "category_name": "Joey",
+    "source": "User",
+    "original_id": -1,
+    "uniqueness_score": 0.85,
+    "url": "http://...",
+    "metadata_items": [
+      {
+        "type": "issue",
+        "properties": {
+          "issue_type": "blur",
+          "confidence": 0.81
+        }
+      }
+    ]
+  }
+}
+```
+
+5. `type: "image_label"`  
+   A classification label applied to the entire image:
+
+```c json
+{
+  "type": "image_label",
+  "properties": {
+    "category_name": "car",
+    "source": "Model",
+    "original_id": 1234
+  }
+}
+```
+
+6. `type: "caption"`
+
+```c json
+{
+  "type": "caption",
+  "properties": {
+    "text": "A dog playing in the field",
+    "source": "AI model"
+  }
+}
+```
+
+**Notes**
+
+- Duplicates often include `duplicate_group_id` and `threshold` values.
+- Object-level issues are nested inside `object_label` blocks.
+- JSON schema may evolve, but follows versioned structure (currently

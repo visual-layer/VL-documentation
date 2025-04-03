@@ -1,0 +1,157 @@
+---
+title: "Single-node deployment"
+slug: "single-node-deployment-copy"
+excerpt: ""
+hidden: true
+createdAt: "Wed Apr 02 2025 08:12:56 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Wed Apr 02 2025 08:14:09 GMT+0000 (Coordinated Universal Time)"
+---
+# Minimal system requirements
+
+## System configuration
+
+- Operating System: Ubuntu LTS 20/22/24
+- X86 architecture
+- RAM: 64G
+- Disk space: 256Gb + 2.5 times the estimated amount of data.
+- CPU: 16 cores
+- Optional: GPU: Common Nvidia GPU types (Nvidia A10, A100, H100, RTX 4090, etc.)
+
+## Dependencies
+
+- Docker v.27 or above - follow [the official instructions](https://docs.docker.com/engine/install/ubuntu/) and [the post-install guide](https://docs.docker.com/engine/install/linux-postinstall/).
+- jq - json data parsing library
+- psql - postgres command line client
+- zip/unzip
+
+## Advised tools for troubleshooting/maintenance
+
+- vi - or equivalent required for file editing
+- object store CLIs if applicable (aws cli, mc)
+
+## Required permissions and access
+
+- Make sure you run the installation as a regular user (not a root user), with sudo privileges.
+
+# Setting Up the Environment
+
+## Log into Docker Image Repo
+
+To authenticate with Docker, run:
+
+```shell
+docker login -u visuallayer
+```
+
+When prompted for a password, copy and paste the **Docker Hub access token** provided by your Visual Layer representative.
+
+- If you do not have the token or it is incorrect, contact [support@visual-layer.com](mailto:support@visual-layer.com).
+
+## Run the installer
+
+### GPU Deployment (Full Enrichment Enabled)
+
+```smarty Shell
+HARDWARE=gpu VL_VERSION="2.33.1-rc10" bash -c "$(curl -fsSL https://vl-public-bucket.s3.us-east-2.amazonaws.com/installer/new/install_helper.sh)"
+```
+
+### CPU Deployment (No Enrichment)
+
+```shell
+HARDWARE=cpu VL_VERSION="2.33.1-rc10" bash -c "$(curl -fsSL https://vl-public-bucket.s3.us-east-2.amazonaws.com/installer/new/install_helper.sh)"
+```
+
+# Operations
+
+## Connect to the Application
+
+Once the system is running, connect to the application using your browser:
+
+- **HTTP\:** `http://<server name>:2080`
+- **HTTPS\:** `https://<server name>:2443`
+
+## Start the System
+
+```sh
+./srart.sh
+```
+
+## Stop the System
+
+```sh
+./stop.sh
+```
+
+## Creating Datasets
+
+```sh
+./run_profiler.sh -n "<desired dataset name>" -p "<dataset source dir>"
+```
+
+- This process **can take several hours**, depending on data size.
+- If the dataset name includes spaces, use **quotation marks** (e.g., `"My Dataset"`).
+
+# Troubleshooting
+
+## Resolving Common Errors
+
+### Problem: Image Not Found
+
+```sh
+docker: Error response from daemon: pull access denied for visuallayer/onprem-installer, repository does not exist or may require 'docker login'.
+```
+
+**Solution:** Ensure you are logged into Docker.
+
+### Problem: Docker Daemon Not Running
+
+```sh
+docker: Cannot connect to the Docker daemon at unix:///var/run/docker.sock.
+```
+
+**Solution:** Start the Docker daemon.
+
+### Problem: Image Pulling Fails
+
+```sh
+manifest for visuallayer/onprem-cd:2.25.6-rc6 not found: manifest unknown
+```
+
+**Solution:** Verify the **software version** and that you are logged into Docker with the correct user.
+
+### Problem: Platform Mismatch Warning
+
+```sh
+WARNING: The requested image's platform (linux/arm64) does not match the detected host platform (linux/amd64/v3).
+```
+
+**Solution:** This is a **warning only**—can be ignored.
+
+### Problem: `docker compose` Not Found
+
+```sh
+./run_profiler.sh: line 159: docker compose: command not found
+```
+
+**Solution:** Install or reinstall Docker following the official installation instructions.
+
+### Problem: PostgreSQL Operational Error
+
+```sh
+sqlalchemy.exc.OperationalError: (psycopg.OperationalError) [Errno -3] Temporary failure in name resolution
+```
+
+**Solution:** Ensure the system was brought up using the `docker up` command.
+
+***
+
+# Accessing Logs & Support
+
+### Debugging Run
+
+Use the following environment variables to enable debugging:
+
+```sh
+LOG_LEVEL=10  # Set log level to debug
+REPORTING_LOG_PATH="/path/to/log.txt"  # Write pipeline log to file
+```

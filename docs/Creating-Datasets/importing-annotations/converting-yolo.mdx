@@ -1,0 +1,170 @@
+---
+title: "Converting YOLO Annotations to Visual Layer Format"
+slug: "converting-yolo-annotations-to-visual-layer-format-copy"
+excerpt: "This guide explains how to convert a Kaggle Masati dataset into a CSV file that conforms to Visual Layer's object annotation format."
+hidden: true
+createdAt: "Tue Mar 11 2025 15:55:32 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Tue Mar 25 2025 12:06:38 GMT+0000 (Coordinated Universal Time)"
+---
+In this dataset, the images and labels are organized as follows:
+
+Images: Located in the folder output/images (PNG format).  
+Annotations: Located in the folder output/labels (text files).
+
+Each text file corresponds to an image and contains zero or more rows in YOLO format.
+
+## YOLO Annotation Format
+
+Each annotation file contains lines with five values in the following format:
+
+```
+<class_id> <norm_cx> <norm_cy> <norm_w> <norm_h>
+```
+
+<br />
+
+```
+0 0.5869140625 0.2412109375 0.021484375 0.044921875
+0 0.8974609375 0.185546875 0.044921875 0.1015625
+...
+
+```
+
+<br />
+
+`class_id`: Represents the object class (e.g. 0 corresponds to "ship").  
+`norm_cx`, `norm_cy`: Normalized center coordinates (values between 0 and 1).  
+`norm_w`, `norm_h`: Normalized width and height (values between 0 and 1).
+
+## Conversion Process
+
+The conversion script performs the following steps:
+
+- Load Each Image:  
+  The script loads each PNG image to retrieve its pixel dimensions (width and height).
+- Read the Corresponding Annotation File:  
+  It reads each text file from output/labels that corresponds to an image.
+- Convert Normalized Coordinates:  
+  For each annotation, the script converts the normalized center coordinates and dimensions into absolute pixel values. The top‑left coordinates are calculated as:
+
+```
+top_left_x = (center_x - width/2)
+top_left_y = (center_y - height/2)
+```
+
+<br />
+
+- Generate the CSV File:  
+  The CSV is generated with the following columns:
+
+`filename`: The image file name.  
+`col_x`: The x‑coordinate (column) of the top‑left corner.  
+`row_y`: The y‑coordinate (row) of the top‑left corner.  
+`w`: Bounding box width (pixels).  
+`h`: Bounding box height (pixels).  
+`label`: The object label (e.g., "ship").
+
+## Python Conversion Script
+
+<br />
+
+```
+import os
+import csv
+import cv2
+
+# Paths to your folders
+labels_folder = "output/labels"
+images_folder = "output/images"
+output_csv = "annotations.csv"
+
+# Open CSV for writing
+with open(output_csv, "w", newline="") as csvfile:
+    writer = csv.writer(csvfile)
+    # Write header row
+    writer.writerow(["filename", "col_x", "row_y", "width", "height", "label"])
+
+    # Process each label file
+    for label_file in os.listdir(labels_folder):
+        if label_file.endswith(".txt"):
+            # Assume the image file has the same base name with .png extension
+            image_base = os.path.splitext(label_file)[0]
+            image_filename = image_base + ".png"
+            image_path = os.path.join(images_folder, image_filename)
+            label_file_path = os.path.join(labels_folder, label_file)
+
+            # Check if the image exists
+            if not os.path.exists(image_path):
+                print(f"Image not found for {label_file}")
+                continue
+
+            # Read image to get dimensions
+            image = cv2.imread(image_path)
+            if image is None:
+                print(f"Failed to load image {image_path}")
+                continue
+
+            h_img, w_img = image.shape[:2]
+
+            # Open and read the label file
+            with open(label_file_path, "r") as f:
+                lines = f.readlines()
+                for line in lines:
+                    parts = line.strip().split()
+                    if len(parts) != 5:
+                        continue  # Skip lines not in expected format
+
+                    # YOLO format: class, norm_cx, norm_cy, norm_w, norm_h
+                    class_id, norm_cx, norm_cy, norm_w, norm_h = map(float, parts)
+
+                    # Convert normalized values to absolute pixel values
+                    abs_cx = norm_cx * w_img
+                    abs_cy = norm_cy * h_img
+                    abs_w = norm_w * w_img
+                    abs_h = norm_h * h_img
+
+                    # Calculate the top-left corner coordinates
+                    top_left_x = abs_cx - abs_w / 2
+                    top_left_y = abs_cy - abs_h / 2
+
+                    # Map class_id to a string label; here we assume 0 means "ship"
+                    label_str = "ship" if class_id == 0 else str(int(class_id))
+
+                    # Write the row to CSV (coordinates cast to int)
+                    writer.writerow([
+                        image_filename,
+                        int(top_left_x),
+                        int(top_left_y),
+                        int(abs_w),
+                        int(abs_h),
+                        label_str
+                    ])
+
+```
+
+<br />
+
+## Script Explanation
+
+- Input & Output Folders:  
+  The script iterates over all .txt files in output/labels and assumes a matching .png image exists in output/images.
+- Image Dimensions:  
+  OpenCV (cv2) is used to load each image to determine its width and height, which are necessary for converting normalized coordinates to pixel values.
+- Coordinate Conversion:  
+  The normalized center coordinates and dimensions are multiplied by the image dimensions. The top‑left corner of the bounding box is then computed by subtracting half the width and height from the center coordinates.
+- CSV Output:  
+  The CSV file (annotations.csv) is written with each annotation as a row containing the image filename, the computed top‑left coordinates, bounding box width and height in pixels, and the object label (e.g., "ship").
+
+Example CSV Output  
+After running the script, the CSV output will look similar to this:
+
+| filename          | col_x | row_y | width | height | label |
+| ----------------- | ----- | ----- | ----- | ------ | ----- |
+| output_000001.png | 150   | 100   | 30    | 40     | ship  |
+| output_000002.png | 200   | 80    | 25    | 35     | ship  |
+| output_000003.png | 175   | 90    | 28    | 32     | ship  |
+
+`filename`: Name of the image file.  
+`col_x` & `row_y`: Top‑left pixel coordinates of the bounding box.  
+`w` & `h`: Width and height of the bounding box in pixels.  
+`label`: Object label ("ship").

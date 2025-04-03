@@ -1,0 +1,137 @@
+---
+title: "Bounding Box Visual Layer Format"
+slug: "preparing-annotation-data-file-copy-1"
+excerpt: ""
+hidden: true
+createdAt: "Thu Mar 13 2025 11:56:08 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Thu Mar 13 2025 12:04:03 GMT+0000 (Coordinated Universal Time)"
+---
+## Overview
+
+The Visual Layer bounding box annotation format is stored in **CSV format**, making it easy to process and integrate with various machine learning workflows. Each row represents a single bounding box annotation for an object within an image.
+
+## CSV Format Structure
+
+| Column Name | Description                                                                            |
+| ----------- | -------------------------------------------------------------------------------------- |
+| `filename`  | The name of the image file containing the object.                                      |
+| `col_x`     | The x-coordinate (horizontal position) of the **top-left** corner of the bounding box. |
+| `row_y`     | The y-coordinate (vertical position) of the **top-left** corner of the bounding box.   |
+| `width`     | The width of the bounding box, extending from `col_x`.                                 |
+| `height`    | The height of the bounding box, extending from `row_y`.                                |
+| `label`     | The class or category of the detected object.                                          |
+
+## Example Annotation
+
+```csv
+filename,col_x,row_y,width,height,label
+image1.jpg,50,30,200,150,car
+image2.jpg,120,60,80,100,person
+image3.jpg,15,10,50,70,dog
+```
+
+<br />
+
+The top 5 common annotation formats for bounding boxes in image datasets include:
+
+### 1. **COCO (Common Objects in Context) Format**
+
+- **Bounding Box Format**: `[x_min, y_min, width, height]`
+- **Details**: Uses JSON format with a dictionary structure. The bounding box is represented by the top-left `(x_min, y_min)` coordinate, along with `width` and `height`.
+- **Example**:
+  ```json
+  {
+    "bbox": [100, 150, 200, 300]
+  }
+  ```
+- **Used In**: Microsoft COCO dataset.
+
+***
+
+### 2. **PASCAL VOC (Visual Object Classes) Format**
+
+- **Bounding Box Format**: `(x_min, y_min, x_max, y_max)`
+- **Details**: Stored in XML files using a `<bndbox>` tag. The bounding box is represented using absolute pixel values for top-left (`x_min, y_min`) and bottom-right (`x_max, y_max`) coordinates.
+- **Example**:
+  ```xml
+  <bndbox>
+    <xmin>100</xmin>
+    <ymin>150</ymin>
+    <xmax>300</xmax>
+    <ymax>450</ymax>
+  </bndbox>
+  ```
+- **Used In**: VOC 2012 dataset.
+
+***
+
+### 3. **YOLO (You Only Look Once) Format**
+
+- **Bounding Box Format**: `[x_center, y_center, width, height]`, normalized (0 to 1 scale)
+- **Details**: Uses plain text `.txt` files where each row represents an object as `class_id x_center y_center width height`, with values normalized relative to the image width and height.
+- **Example**:
+  ```
+  0 0.5 0.6 0.25 0.4
+  ```
+- **Used In**: YOLO models and datasets.
+
+***
+
+### 4. **TFRecord / TensorFlow Object Detection API Format**
+
+- **Bounding Box Format**: Normalized `(y_min, x_min, y_max, x_max)` (0 to 1 scale)
+- **Details**: Uses TFRecord format to store images and annotations in protocol buffers (Protobuf). Bounding boxes are stored as normalized float values within `.tfrecord` files.
+- **Example** (within a `.record` file, usually not human-readable):
+  ```python
+  {
+    "ymin": 0.25,
+    "xmin": 0.20,
+    "ymax": 0.75,
+    "xmax": 0.80
+  }
+  ```
+- **Used In**: TensorFlow Object Detection API.
+
+***
+
+### 5. **LabelMe Format**
+
+- **Bounding Box Format**: `(x_min, y_min, x_max, y_max)`
+- **Details**: Uses JSON files similar to COCO but with a different structure, including polygon annotations. Bounding boxes are stored as `[x_min, y_min, x_max, y_max]`.
+- **Example**:
+  ```json
+  {
+    "shapes": [
+      {
+        "label": "dog",
+        "points": [[100, 150], [300, 450]],
+        "shape_type": "rectangle"
+      }
+    ]
+  }
+  ```
+- **Used In**: LabelMe annotation tool.
+
+***
+
+### **Summary of Bounding Box Formats**
+
+| Format       | Representation                        | Normalized? | File Type   |
+| ------------ | ------------------------------------- | ----------- | ----------- |
+| **COCO**     | `[x_min, y_min, width, height]`       | No          | `.json`     |
+| **VOC**      | `(x_min, y_min, x_max, y_max)`        | No          | `.xml`      |
+| **YOLO**     | `[x_center, y_center, width, height]` | Yes         | `.txt`      |
+| **TFRecord** | `(y_min, x_min, y_max, x_max)`        | Yes         | `.tfrecord` |
+| **LabelMe**  | `[[x_min, y_min], [x_max, y_max]]`    | No          | `.json`     |
+
+Each format is optimized for different use cases, with COCO and VOC being the most widely used in academic datasets, YOLO for real-time detection, TFRecord for TensorFlow-based training, and LabelMe for manual annotations.
+
+# Converting to Visual Layer format
+
+1. Convert from rom VOC2012 to Visual Layer Object Detection
+
+📘 [VL Bounding Boxes](https://github.com/visual-layer/documentation/blob/main/notebooks/Voc2012%20to%20VL%20Bounding%20Box%20input%20format/voc2012%20to%20VL%20Annoation.ipynb)
+
+2. Convert from rom Coco to Visual Layer Object Detection
+
+📘 [VL Bounding Boxes](https://github.com/visual-layer/documentation/blob/main/notebooks/Voc2012%20to%20VL%20Bounding%20Box%20input%20format/voc2012%20to%20VL%20Annoation.ipynb)

@@ -1,0 +1,67 @@
+---
+title: "🔵Outliers"
+slug: "outlier-imagesobjects-copy-1"
+excerpt: ""
+hidden: true
+createdAt: "Tue Mar 11 2025 16:26:51 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Mon Mar 24 2025 15:48:51 GMT+0000 (Coordinated Universal Time)"
+---
+## What Are Outlier Images and Objects?
+
+Outlier Images refer to Images that deviate significantly from the majority of Images in a Dataset or exhibit characteristics that are distinct or anomalous compared to the rest of the Dataset. These Images stand out as unusual or atypical within the Dataset.
+
+**Reasons for Outliers:**
+
+1. **Data collection errors:** Outlier Images can result from errors during the data collection process. For example, if samples from another vertical are incorrectly collected, they may appear as outliers in a Dataset.
+
+2. **Image artifacts or anomalies:** Outliers can arise due to Image artifacts or anomalies that are not representative of the normal visual content. This could include Images with significant noise, blur, unusual lighting conditions, or other distortions.
+
+3. **Rare or unique instances:** Outlier Images can represent rare occurrences or unique instances that differ significantly from the majority of the Dataset. Examples include unusual Objects, rare events, or Images captured from unconventional perspectives.
+
+***
+
+## Why Is This a Problem?
+
+Detecting and managing outlier Images is important for several reasons:
+
+1. **Data quality:** Outliers can introduce noise or bias into a Dataset, affecting the overall quality of the data. By identifying and addressing outlier Images, you'll ensure the Dataset represents the desired distribution and characteristics.
+
+2. **Model performance:** Outliers can have a significant impact on the performance of machine learning models. Models trained on outlier Images may generalize poorly or exhibit unexpected behavior when deployed. Removing or handling outliers can lead to more reliable and accurate models.
+
+***
+
+## How to Detect using VL:
+
+In large-scale datasets, detecting outliers (images and objects) can be challenging. Visual Layer simplifies this process with just one click.
+
+### Find unclassified data using a simple filter
+
+1. Navigate to the  [Dataset Inventory](https://dash.readme.com/project/visual-layer2/v1.0/docs/browsing-datasets) and select a dataset by clicking on it. 
+2. Select the required view: Images view or [Objects](https://dash.readme.com/project/visual-layer2/v1.0/docs/understanding-and-exploring-objects) view. 
+3. In the top filter bar, go to "Issues" filter, select "Outliers" and apply the filter.
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/d7dd161-image.png",
+        null,
+        "Coco Dataset: Top bar Issues filter: Select \"Outliers\""
+      ],
+      "align": "center",
+      "border": true,
+      "caption": "Coco Dataset: Top bar Issues filter: Select \"Outliers\""
+    }
+  ]
+}
+[/block]
+
+
+***
+
+4. The returned results will consists of images or image clusters, object or object clusters that are detected by Visual Layer as outliers. 
+5. Users can add outlier data to the "Selected Items" list, export it, and send it for data cleaning processes. Alternatively, users can add all data except for outliers (excluding outliers) to the "Selected Items" list, and export the clean data.
+   1. See the following pages for more info: 
+      1. [ORGANIZE section](https://dash.readme.com/project/visual-layer2/v1.0/docs/data-selection-using-visual-layer) 
+      2. [EXPORT section ](https://dash.readme.com/project/visual-layer2/v1.0/docs/export-data)

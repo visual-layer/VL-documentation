@@ -1,0 +1,132 @@
+---
+title: "🔴Caption Search"
+slug: "textually-searching-for-data-copy"
+excerpt: ""
+hidden: true
+createdAt: "Tue Mar 11 2025 16:14:47 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Mon Mar 24 2025 08:36:20 GMT+0000 (Coordinated Universal Time)"
+---
+## Caption Search Operators
+
+### AND operator
+
+- **Description**: The AND operator is implied when typing a search query with terms separated by spaces
+- **Usage**: Include "AND" between the search terms or just leave a space. Uppercase or lowercase does not matter. 
+- **Example**: Searching for black cat in the search bar. The following queries are equivalent
+
+```Text Search query
+black AND cat  
+black and cat  
+black + cat
+```
+
+- **Result**: This query will return images that contains both the terms "black" AND "cat" in any order.
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/69b2c83-Screenshot_2024-06-05_at_10.56.55.png",
+        "",
+        ""
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+### OR operator
+
+- **Description**: The OR operator is used to find results containing either one of the search terms or both
+- **Usage**: Include "OR" between the search terms. Uppercase or lowercase does not matter
+- **Example**: 
+
+```Text Search query
+black cat OR black dog
+black cat or black dog
+```
+
+- **Result**: This query will return images containing either black cats, black dogs or both.
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/88a1799-Screenshot_2024-06-05_at_11.02.05.png",
+        "",
+        ""
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+### NOT operator
+
+- **Description**: The NOT operator is used to exclude terms from the search results
+- **Usage**: Prefix the term you wish to exclude with a minus sign (-)
+- **Example**: 
+
+```Text Search query
+dog -black
+```
+
+- **Result**: This query will return images with the term "black" in the metadata but will exclude any images that also contain the term "cat".
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/7a1fe3a-Screenshot_2024-06-05_at_11.11.35.png",
+        "",
+        ""
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+### Exact match
+
+- **Description**: For an exact match of a phrase or sequence of words, use quotation marks
+- **Usage**: Enclose the exact phrase within double quotes
+- **Example**: 
+
+```
+"yellow flower"
+```
+
+- **Result**: This query will return images where the metadata exactly matches the phrase "yellow flower" and not a more generic search which also returns other image which contain flowers or yellow objects
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/34b756c-Screenshot_2024-06-05_at_17.33.37.png",
+        "",
+        ""
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+### Combining operators
+
+It is also possible to combine the operators above eg
+
+```Text Search query
+flower -bird or tree and "red leave"
+```

@@ -1,0 +1,87 @@
+---
+title: "Save Views"
+excerpt: "Easily preserve, reuse, and share filtered views of your dataset. Saved Views streamline exploration and help you stay consistent when working with large datasets or collaborating with others."
+hidden: true
+createdAt: "Tue Mar 11 2025 16:17:28 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Wed Apr 02 2025 09:26:59 GMT+0000 (Coordinated Universal Time)"
+---
+
+## What are Views
+
+Saved Views are predefined queries on a specific Dataset. A View doesn’t store the data itself, but dynamically displays the data fetched from the underlying Dataset each time it is accessed.
+
+Each View has a View Descriptor, which is a list of Filters that define the query logic for the View. When a View is accessed, the View Descriptor is applied and the matching data is queried. A View Descriptor may include multiple Filters, as well as textual and similarity search queries.
+
+## How Views work
+
+- Exploring a View shows the data that matches the View Descriptor in that specific point in time  
+- Views belong to a specific Dataset and can only query that Dataset  
+- All dataset collaborators can view, create, and delete Saved Views (including those created by other collaborators)  
+- Every Dataset has a "Views" tab that lists all of the available Views, but they are also available directly from within the "Explore" tab  
+- Currently, Views are immutable
+
+## Why Save Queries as Views
+
+Saved Views allow you to organize your data by preserving filter combinations or queries as reusable views. This feature streamlines data management, ensures consistency, and reduces repetitive work when navigating large datasets. Views help you:
+
+- **Efficiency**: Quickly access frequently used subsets of data without reapplying filters or rebuilding queries  
+- **Consistency**: Ensure team members can access the same subset of data using shared Saved Views  
+- **Flexibility**: Create views tailored to specific workflows, such as "Training Data" or "Outliers"  
+
+***
+
+# Managing Views
+
+## Saving a query as a View
+
+When you want to save a query as a View:
+
+1. Open the Dataset exploration page  
+2. Apply various filters to refine your data  
+3. If you feel this set of filters could be useful in the future, click on the “Save as View” action  
+4. The system will ask you for the View name  
+5. After you provide a descriptive and unique name, click the “Create View” button  
+6. You’ll see a confirmation once the View is successfully created
+
+<img src="https://files.readme.io/bad71564918dec127a0dc6b24ef2d00c289129324090dea34c6e879fc2d44f6a-Screenshot_2025-01-08_at_15.52.30.png" alt="Save as View" style={{ width: "100%", maxWidth: "700px", display: "block", margin: "2rem auto" }} />
+
+## Exploring a View
+
+When you want to explore a previously saved View:
+
+1. Open the Dataset exploration page  
+2. Click on the "Views" button  
+3. The system will show the Views available for this Dataset  
+4. Find the relevant View and click on it  
+5. The system will apply the selected View on the page and show the relevant results
+
+<br />
+
+<img src="https://files.readme.io/808173750c4e109086f57dcade30a3c71c9431b165e6a72a610900377ea50663-image.png" alt="Explore View" style={{ width: "100%", maxWidth: "700px", display: "block", margin: "2rem auto" }} />
+
+<br />
+
+## Sharing a View
+
+When you want to share a View with a colleague:
+
+1. Go to the "Views" tab and find the View you would like to share  
+2. Click on the “Share View” button  
+3. The system opens a window that allows you to type an email address  
+4. Enter your colleague's email and click **“Share”**  
+5. A success message is presented and the system sends your colleague an email with details about the View and an “Open View” action
+
+<img src="https://files.readme.io/8524d53d253152978bb6edfd2c95881aad939cc32dc48c29f33647099f299c75-image.png" alt="Share View" style={{ width: "35%", display: "block", margin: "2rem auto" }} />
+
+<br />
+
+## Deleting a View
+
+In case you want to delete a View:
+
+1. Go to the "Views" tab and find the View you would like to delete  
+2. Click on the “Delete” button  
+3. The system will ask you to confirm the deletion  
+4. Once you confirm, the system will delete the View and show a success message
+
+<img src="https://files.readme.io/bfe481a9a1eebf262e6576ca67303670e5afd1a87300524a1bbe6a3f2473bc9a-image.png" alt="Delete View" style={{ width: "100%", maxWidth: "700px", display: "block", margin: "2rem auto" }} />

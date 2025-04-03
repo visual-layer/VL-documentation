@@ -1,0 +1,138 @@
+---
+title: "Amazon S3"
+excerpt: ""
+hidden: true
+createdAt: "Tue Mar 11 2025 15:50:58 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Mon Mar 17 2025 08:29:19 GMT+0000 (Coordinated Universal Time)"
+---
+## Step 1: Configure access permissions for the S3 bucket
+
+### AWS access control requirements
+
+VisualLayer requires the following permissions on an S3 bucket to be able to access files in the bucket:
+
+- s3:GetBucket\*
+- s3:GetObject
+- s3:GetObjectVersion
+- s3:ListBucket
+
+### Creating an IAM policy
+
+The following step-by-step instructions describe how to configure access permissions for VisualLayer in your AWS Management Console so that you can use an S3 bucket to load and unload data:
+
+1. Log into the AWS Management Console
+
+2. From the home dashboard, search for and select **IAM**
+
+3. From the left-hand navigation pane, select **Account settings**
+
+4. From the left-hand navigation pane, select **Policies**
+
+5. Select **Create Policy**
+
+6. For **Policy editor**, select **JSON**
+
+7. Add a policy document that will allow VisualLayer to access the S3 bucket. Copy and paste the text into the policy editor:
+
+> 🚧 Make sure to replace \<bucket\> with your actual bucket name
+
+```
+{  
+	"Version": "2012-10-17",  
+	"Statement": [  
+		{  
+			"Effect": "Allow",  
+			"Action": [  
+				"s3:GetObject",  
+				"s3:GetObjectVersion"  
+			],  
+			"Resource": "arn:aws:s3:::<bucket>/*"  
+		},  
+		{  
+			"Effect": "Allow",  
+			"Action": [  
+				"s3:ListBucket",  
+				"s3:GetBucket*"  
+			],  
+			"Resource": "arn:aws:s3:::<bucket>"  
+		}  
+	]
+}
+```
+
+<br />
+
+## Step 2: Create the IAM Role in AWS
+
+To configure access permissions for VisualLayer in the AWS Management Console, do the following:
+
+1. From the left-hand navigation pane in the Identity and Access Management (IAM) Dashboard, select **Roles**
+
+2. Select **Create role**
+
+3. Select **AWS account** as the trusted entity type
+
+4. In the **Account ID** field, enter your own AWS account ID temporarily. Later, you modify the trust relationship and grant access to VisualLayer
+
+5. Select the **Require external ID** option. An external ID is used to grant access to your AWS resources (such as S3 buckets) to a third party like VisualLayer. Enter a placeholder ID such as 0000
+
+6. In a later step, you will modify the trust relationship for your IAM role and specify the external ID for your storage integration and click **Next**
+
+7. Select the policy you created in Step 1 and click **Next**
+
+8. Enter a name and description for the role, then select **Create role**. You have now created an IAM policy for a bucket, created an IAM role, and attached the policy to the role
+
+9. On the role summary page, locate and record the **Role ARN** value, you will be asked to send it to us in step 4
+
+<br />
+
+## Step 3: Grant the IAM User Permissions to Access Bucket Objects
+
+The following step-by-step instructions describe how to configure IAM access permissions for VisualLayer in your AWS Management Console so that you can use a S3 bucket:
+
+1. Log in to the AWS Management Console
+
+2. Select **IAM**
+
+3. From the left-hand navigation pane, select **Roles**
+
+4. Select the role you created in Step 2
+
+5. Select the **Trust Relationships** tab
+
+6. Select **Edit Trust Policy** and insert the following:
+
+```
+{
+	"Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::027730031917:root"
+      },
+      "Action": "sts:AssumeRole",
+      "Condition": {}
+    }
+  ]
+}
+```
+
+7. Select **Update Policy** to save your changes
+
+<br />
+
+## Step 4: Send us the Role ARN value
+
+1. Go to the summary page of the IAM Role you created on step 2
+2. Locate and record the Role ARN value, and send it to [support@visual-layer.com](mailto:support@visual-layer.com) with the title "Private S3 bucket"
+3. Wait for us to review and confirm this was received and configured
+
+<br />
+
+## Step 5: Create a Dataset
+
+1. [Create a new Dataset](doc:dataset-management)
+2. Select ״Public S3 Bucket״ as the data source
+3. Insert the URL to your private AWS S3 bucket
