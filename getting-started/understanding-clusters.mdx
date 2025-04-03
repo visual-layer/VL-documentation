@@ -1,0 +1,60 @@
+---
+title: "Understanding Clusters"
+excerpt: ""
+hidden: true
+createdAt: "Tue Mar 11 2025 16:13:35 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Wed Mar 26 2025 10:17:51 GMT+0000 (Coordinated Universal Time)"
+---
+
+- **Understanding Clusters** – Learn how images and objects are grouped based on similarity and how to interact with them.  
+- **Entity Types: Images vs. Objects** – Understand the different views available: **Image View** and **Object View**.  
+- **Images and Video Frames** – Explore how Visual Layer handles images and extracted video frames.
+
+Managing large collections of images and videos can be time-consuming. To simplify exploration, Visual Layer automatically groups similar **images** and **Core Frames** from videos into **Clusters**. Clusters are structured based on the selected view—either as images or core frames in **Image View** or as objects in **Object View**.
+
+Clusters allow you to efficiently:
+
+- **Explore** and **filter** vast amounts of visual data.  
+- **Tag** and **sort** images based on their similarities.  
+- **Identify patterns** by grouping objects with similar visual properties.
+
+# Cluster previews
+
+<img src="https://files.readme.io/5e0d818-Screenshot_2024-05-21_at_10.47.33.png" alt="Cluster preview" style={{ display: "block", margin: "auto" }} />
+
+Clusters are presented as preview cards to help users quickly grasp the structure of their data. Each cluster preview displays:
+
+- **Number of items** – Total number of items that comply with the current filtering criteria.  
+- **Prominent labels** – Ordered by most frequent image or object labels.  
+- **Representing Images** – A selection of key images or Core Frames that visually summarize the cluster.
+
+### Example of Cluster Previews
+
+Clusters preview in **images view**:
+
+<img src="https://files.readme.io/3d225ad-Screenshot_2024-05-29_at_17.29.51.png" alt="Images view" style={{ display: "block", margin: "auto" }} />
+
+Clusters preview in **Objects view** (Objects are cropped):
+
+<img src="https://files.readme.io/711dd8a-Screenshot_2024-05-29_at_17.35.27.png" alt="Objects view" style={{ display: "block", margin: "auto" }} />
+
+## Find similar:
+
+When hovering over a cluster preview, you can quickly search for similar images or objects based on the selected view.  
+For more details, visit **Visual Search**.
+
+<img src="https://files.readme.io/dc4dd7ba2b5a177b242a5d10947d72d52a94e272736c4976bbbaa736ae0e1497-Scene-1_copy_3.gif" alt="Find similar GIF" style={{ display: "block", margin: "auto" }} />
+
+## Clustering granularity
+
+The **Granularity knob** at the bottom right of the screen allows you to adjust the level of similarity that determines clustering.
+
+<img src="https://files.readme.io/8b5976c48d84e6affe81677bfe61cd8aba53e86c8426efad270310738846750f-Scene-1_copy.gif" alt="Granularity knob" style={{ display: "block", margin: "auto" }} />
+
+<br />
+
+Moving the knob to the **left** creates looser clusters (lower similarity threshold), grouping visually similar images and objects more broadly. _(This is the default setting)_
+
+Moving the knob to the **right** applies stricter clustering (higher similarity threshold), ensuring that only highly similar images and objects are grouped together.
+
+To learn more about the **dataset management interface**, visit the **Manage Dataset Overview**.

@@ -14,11 +14,18 @@
         "tab": "Guides",
         "groups": [
           {
-            "group": "Get Started",
+            "group": "getting started",
             "pages": [
-              "introduction",
-              "quickstart",
-              "development"
+              "getting-started/introduction",
+              "getting-started/quick-start",
+              "getting-started/deployment-options",
+              {
+                "group": "definitions & entities",
+                "pages": [
+                  "getting-started/definitions-entities",
+                  "getting-started/understanding-clusters"
+                ]
+              }
             ]
           },
           {
@@ -33,6 +40,9 @@
             ]
           }
         ]
+      },
+      {
+        "tab": "Workflows"
       },
       {
         "tab": "API Reference",
@@ -57,11 +67,6 @@
     ],
     "global": {
       "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
         {
           "anchor": "Community",
           "href": "https://mintlify.com/community",
@@ -88,15 +93,15 @@
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Try Now",
+      "href": "https://www.visual-layer.com/"
     }
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/visual_layer",
+      "github": "https://github.com/visual-layer/fastdup",
+      "linkedin": "https://www.linkedin.com/company/visual-layer/"
     }
   }
 }
