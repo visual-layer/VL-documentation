@@ -14,16 +14,24 @@
         "tab": "Guides",
         "groups": [
           {
-            "group": "getting started",
+            "group": "Getting Started",
             "pages": [
               "getting-started/introduction",
               "getting-started/quick-start",
               "getting-started/deployment-options",
               {
-                "group": "definitions & entities",
+                "group": "Definitions & Entities",
                 "pages": [
                   "getting-started/definitions-entities",
                   "getting-started/understanding-clusters"
+                ]
+              },
+              {
+                "group": "Orientation",
+                "pages": [
+                  "getting-started/orientation",
+                  "getting-started/dataset-inventory",
+                  "getting-started/view-panels"
                 ]
               }
             ]
