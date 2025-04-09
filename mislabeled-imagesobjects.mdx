@@ -1,0 +1,96 @@
+---
+title: Identifying Mislabeled Images and Objects
+description: Learn how mislabeled annotations can impact your dataset quality and how to detect and correct them using Visual Layer.
+---
+
+<Card title="How this Helps" icon="lightbulb">
+    Mislabeling is one of the most common and costly sources of noise in visual datasets. Visual Layer helps surface mislabeled images and objects quickly, reducing model drift, training errors, and bias in production systems.
+</Card>
+
+Mislabeled annotations—whether on an image or object level—can significantly reduce the performance, fairness, and accuracy of machine learning models. These errors are often introduced during human labeling, automated pipelines, or changes in how classes are understood over time.
+
+Common causes of mislabeling include:
+
+- **Human error:** Annotators misinterpret content or confuse similar classes
+- **Ambiguity:** Some images lack clear labeling boundaries or contain overlapping concepts
+- **Algorithmic error:** Auto-labeling models may introduce bias or misclassify unfamiliar samples
+- **Evolving definitions:** Dataset classes can shift based on new understanding, making prior labels obsolete
+
+## Why It Matters
+
+<div className="integrations-table">
+
+| Pain Point | Impact |
+|------------|--------|
+| **Poor training data quality** | Flawed labels misguide your model’s learning process, leading to lower accuracy and higher generalization error. |
+| **Skewed model behavior** | Repeated label errors introduce systemic bias, especially across edge cases or underrepresented classes. |
+| **Wasted compute and time** | Training on bad data wastes GPU cycles, engineering time, and annotation effort. |
+| **Broken downstream performance** | Incorrect labels propagate into production failures, such as incorrect medical diagnoses or autonomous navigation errors. |
+| **Erosion of user trust** | Visible errors in model output (e.g., UI predictions) reduce confidence and increase frustration. |
+
+</div>
+
+## Mislabeled Images vs. Mislabeled Objects
+
+Understanding the distinction is key to taking action.
+
+<Card title="Mislabeled Images">
+These are entire **images** that are likely labeled with the wrong class.  
+Example: “Found 3 images likely mislabeled as *husky* — possible corrections: *wolf*, *coyote*, *Alaskan malamute*.”
+
+Another scenario is multi-object confusion:  
+An image shows a **cat** on a **table**, but the image is labeled only as “cat” or only as “table”—even though both are valid classes.
+</Card>
+
+<Card title="Mislabeled Objects">
+These refer to individual **objects** within an image that have the wrong label.  
+Example: “Found 3 objects likely mislabeled as *husky* — possible corrections: *wolf*, *coyote*, *Alaskan malamute*.”
+
+Object-level issues often come from:
+- Incorrect class identification
+- Bounding boxes that are too small, too large, or misaligned
+- Overlapping or occluded objects treated as one
+</Card>
+
+## How to Fix It
+
+Visual Layer provides several options to detect and resolve label issues:
+
+<Steps>
+
+<Step title="Use Label Filters">
+Surface misclassified data using Visual Layer’s [label filters](https://dash.readme.com/project/visual-layer2/v1.0/docs/find-mislabeled-data-using-visual-layer-label-filters), which help compare assigned vs. predicted labels across your dataset to spot likely errors.
+</Step>
+
+<Step title="Enable Auto-Detection">
+Let Visual Layer automatically flag mislabeled images or objects using its [auto-detection system](https://dash.readme.com/project/visual-layer2/v1.0/docs/mislabeled-data-auto-detection), powered by dataset-level anomaly detection.
+</Step>
+
+<Step title="Curate via Data Selection">
+Use [data selection filters](https://dash.readme.com/project/visual-layer2/v1.0/docs/data-selection-using-visual-layer) to isolate label conflicts, outliers, or visually similar groups before sending data into training.
+</Step>
+
+<Step title="Export for Re-labeling">
+[Export mislabeled data](https://dash.readme.com/project/visual-layer2/v1.0/docs/export-data) for annotation review. You can route exports to your labeling platform, vendor, or internal QA team with one click.
+</Step>
+
+</Steps>
+
+
+<Tip>
+Label QA is most effective when done iteratively. Visual Layer makes it easy to re-import corrected data versions and track improvements over time.
+</Tip>
+
+## Related Articles
+
+<CardGroup cols={3}>
+  <Card title="Find Mislabeled Data with Filters" icon="search" href="https://dash.readme.com/project/visual-layer2/v1.0/docs/find-mislabeled-data-using-visual-layer-label-filters">
+    Use label predictions and metadata to surface likely errors.
+  </Card>
+  <Card title="Auto-Detect Mislabeled Data" icon="wand-magic" href="https://dash.readme.com/project/visual-layer2/v1.0/docs/mislabeled-data-auto-detection">
+    Automatically identify label issues across your dataset.
+  </Card>
+  <Card title="Export Data for Re-Annotation" icon="upload" href="https://dash.readme.com/project/visual-layer2/v1.0/docs/export-data">
+    Send mislabeled data back to annotation teams.
+  </Card>
+</CardGroup>

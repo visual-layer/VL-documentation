@@ -1,63 +1,102 @@
 ---
-title: "Tag Items"
-excerpt: "Use tags to streamline future workflows - such as relabeling, reclassification, exclude from dataset."
-hidden: true
-createdAt: "Tue Mar 11 2025 16:17:21 GMT+0000 (Coordinated Universal Time)"
-updatedAt: "Wed Mar 26 2025 16:49:42 GMT+0000 (Coordinated Universal Time)"
+title: Tag Items
+description: Use tags to organize your dataset, manage workflows, and simplify downstream processes like relabeling or exclusion.
 ---
 
-# Why Tagging Data is Useful?
+<Card title="How This Helps" icon="tag">
+    Tagging makes it easy to group, track, and manage data for training, QA, relabeling, or experimentation. Whether you're cleaning data, preparing a subset, or tracking annotation status — tags let you move faster and stay organized.
+</Card>
 
-Tags help you **quickly find and organize data items that are relevant to your task**.  
+Tags help you **quickly organize, filter, and take action** on relevant items in your dataset. They can be applied across Clusters, Images, or Objects, and used to streamline curation, quality review, or experimental workflows.
 
-This can help you:
+Use cases include:
 
-1. **Data Curation:** Select a subset of relevant data for a specific task, such as training a model. Label it as **“representative”** or classify it into groups like “train,” “test,” or “validation.”  
-2. **Data Cleaning:** Identify and remove unwanted data by tagging it as **low quality, duplicates, or outliers**.  
-3. **Workflow Management:** Highlight priority items using tags like **urgent** or **critical**. Assign review states such as **for review**, **approved**, or **rejected** when reviewing mislabeled items.  
-4. **Experiment Tracking:** Tag datasets used in experiments (e.g., "Experiment-123") to track inputs and outputs.
+- **Data Curation:** Group items for training, validation, or internal evaluation. Tags like `train`, `test`, `representative` help define clear splits.  
+- **Data Cleaning:** Identify problematic items with tags like `low_quality`, `duplicate`, or `needs_review`.  
+- **Workflow Management:** Add review state tags such as `approved`, `rejected`, `for-review`, or priority labels like `urgent`.  
+- **Experiment Tracking:** Label data used in experiments (`exp-103`, `baseline-set`) for traceability and auditability.
 
-***
+---
 
-# Managing Tags of Multiple Items
+## Tag Multiple Items
 
-1. Open a dataset and explore its contents.  
-2. Select the **Clusters**, **Images**, and **Objects** you wish to tag.  
-3. The selected items are added to the "**Selected Items**" menu at the top right.  
-4. Open the **"Selected Items"** menu and click on the **"Manage Tags"** button to associate an existing **User Tag** with the displayed items.  
-5. Assign one or more **User Tags** to the selected items.
+You can assign tags to many items at once across views.
 
-<img src="https://files.readme.io/57df4c0facde9d06e956217764b7438b0cf401e0972bc0d714e61ea98b3db0a8-Screenshot_2025-01-06_at_18.11.29.png" alt="Manage Tags Menu" style={{ width: "100%", maxWidth: "700px", display: "block", margin: "2rem auto" }} />
+<Steps>
 
-***
+<Step title="Select Items">
+Navigate to a dataset and select Clusters, Images, or Objects of interest.
+</Step>
 
-## Listing & Removing Tags
+<Step title="Open Selected Items Panel">
+Click the **Selected Items** icon in the top right.
+</Step>
 
-1. Any tags assigned to the Selected Items can be viewed in the Assigned Tags Menu.  
-2. Selecting a tag allows you to **remove** it from any items it's attributed to — even if the tag isn’t applied to all items in a selected cluster, for example.
+<Step title="Manage Tags">
+Click **Manage Tags** and choose from existing tags or create new ones.
+</Step>
 
-<img src="https://files.readme.io/358697be707e1404195cef0f2baea9dae19b7c2080094c0bb6c0d49565f3df37-Screenshot_2025-01-06_at_18.11.42.png" alt="Remove Tags" style={{ width: "100%", maxWidth: "700px", display: "block", margin: "2rem auto" }} />
+</Steps>
 
-***
+![Manage Tags Menu](https://files.readme.io/57df4c0facde9d06e956217764b7438b0cf401e0972bc0d714e61ea98b3db0a8-Screenshot_2025-01-06_at_18.11.29.png)
 
-## Managing Tags of a Specific Image
+---
 
-You can also apply tags directly to individual images via the Image Details Page:
+## View and Remove Tags
 
-<img src="https://files.readme.io/a594ae0-Screenshot_2024-06-20_at_8.29.18.png" alt="Coco Dataset: Assign User Tags to Image" style={{ width: "100%", maxWidth: "700px", display: "block", margin: "2rem auto", border: "1px solid #ccc", borderRadius: "8px" }} />
+You can view and edit tags in the Assigned Tags panel.
 
-**Caption:** Coco Dataset: Assign User Tags to Image
+<Steps>
 
-Clicking on **"Assign User Tags"** on the right pane will open a menu where you can either create a new tag or apply an existing one:
+<Step title="Open Assigned Tags Menu">
+Select your items and open the **Assigned Tags** panel.
+</Step>
 
-<img src="https://files.readme.io/336cd90-Screenshot_2024-06-20_at_8.31.48.png" alt="Assign User Tags" style={{ width: "100%", maxWidth: "700px", display: "block", margin: "2rem auto", border: "1px solid #ccc", borderRadius: "8px" }} />
+<Step title="Remove Tags">
+Click a tag to remove it from any selected items — even if it’s not applied to all of them.
+</Step>
 
-**Caption:** Coco Dataset: Assign User Tags to Image
+</Steps>
 
-Any tags assigned to an image can be viewed in the right pane:
+![Remove Tags](https://files.readme.io/358697be707e1404195cef0f2baea9dae19b7c2080094c0bb6c0d49565f3df37-Screenshot_2025-01-06_at_18.11.42.png)
 
-<img src="https://files.readme.io/0a46c09-Screenshot_2024-06-20_at_8.32.24.png" alt="Assigned Tags on Right Pane" style={{ width: "100%", maxWidth: "700px", display: "block", margin: "2rem auto", border: "1px solid #ccc", borderRadius: "8px" }} />
+---
 
-**Caption:** Coco Dataset: Assign User Tags to Image
+## Tag Individual Images
 
-To remove a tag directly from Image View, click the X next to the tag name.
+You can also tag single images directly in the Image Details Page.
+
+<Card title="How to Apply Tags to an Image">
+Click **Assign User Tags** in the right-hand pane of the Image Details Page. You can create a new tag or apply an existing one.
+</Card>
+
+![Assign Tags in Detail View](https://files.readme.io/a594ae0-Screenshot_2024-06-20_at_8.29.18.png)  
+**Caption:** Assign tags to a specific image from the side panel
+
+![Tag Selection Menu](https://files.readme.io/336cd90-Screenshot_2024-06-20_at_8.31.48.png)  
+**Caption:** Select or create a new tag
+
+![Tags Applied](https://files.readme.io/0a46c09-Screenshot_2024-06-20_at_8.32.24.png)  
+**Caption:** View or remove assigned tags directly in the right pane
+
+To remove a tag, click the **X** next to its label.
+
+<Tip>
+You can mix and match tag workflows — start with bulk tagging, refine at the image level, or export tagged items for review, relabeling, or exclusion.
+</Tip>
+
+---
+
+## Related Articles
+
+<CardGroup cols={3}>
+  <Card title="Find Mislabeled Data with Filters" icon="search" href="https://dash.readme.com/project/visual-layer2/v1.0/docs/find-mislabeled-data-using-visual-layer-label-filters">
+    Use label predictions and metadata to surface likely errors.
+  </Card>
+  <Card title="Export Data for Re-Annotation" icon="upload" href="https://dash.readme.com/project/visual-layer2/v1.0/docs/export-data">
+    Send tagged items or mislabeled data to your annotation teams.
+  </Card>
+  <Card title="Data Selection Using Filters" icon="filter" href="https://dash.readme.com/project/visual-layer2/v1.0/docs/data-selection-using-visual-layer">
+    Filter by tag, metadata, or label to prepare data for experiments or curation.
+  </Card>
+</CardGroup>

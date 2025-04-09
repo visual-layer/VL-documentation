@@ -1,67 +1,94 @@
 ---
-title: "Export Dataset"
-excerpt: "Export your data from Visual Layer to use in external tools or workflows. You can export the entire dataset, a filtered subset, or just specific items—depending on your needs."
-hidden: true
-createdAt: "Tue Mar 11 2025 16:09:56 GMT+0000 (Coordinated Universal Time)"
-updatedAt: "Thu Apr 03 2025 09:27:56 GMT+0000 (Coordinated Universal Time)"
+title: Export Dataset
+description: Export your data from Visual Layer to use in external tools or workflows. You can export the entire dataset, a filtered subset, or just specific items—depending on your needs.
 ---
-## How to Export:
 
-1. Go to the **Dataset Exploration** page.
-2. Click on the **Export** button (top right).
-3. Provide a name for your export file.
-4. Choose the **Export Scope** (see below).
-5. Select your **file format**:
-   - JSON – available now
-   - COCO – coming soon
-6. (Optional) Toggle **Include image files** (up to 5,000 images).
-7. Click **Export File **to download your export..
+<Card title="How This Helps" icon="download">
+    Export datasets for use in training pipelines, labeling platforms, analytics workflows, or external review. You can export everything or just what you need.
+</Card>
 
-***
+---
+
+## Export a Dataset
+
+<Steps>
+
+<Step title="Open the Dataset">
+Go to the **Dataset Exploration** page.
+</Step>
+
+<Step title="Click 'Export'">
+Click the **Export** button in the top-right corner.
+</Step>
+
+<Step title="Name the Export">
+Provide a descriptive name for your export file.
+</Step>
+
+<Step title="Choose Export Scope">
+Select the scope—entire dataset, filtered view, or specific selections.
+</Step>
+
+<Step title="Pick a Format">
+Choose from supported formats:
+- **JSON** – available now  
+- **COCO** – coming soon
+</Step>
+
+<Step title="Include Images (Optional)">
+Toggle **Include image files** to include up to 5,000 images in your export.
+</Step>
+
+<Step title="Export">
+Click **Export File** to download.
+</Step>
+
+</Steps>
+
+---
 
 ## Export Options
 
-### Entire Dataset:
+### Entire Dataset
 
-Exports all items in the dataset, regardless of filters or manual selections.
+Exports **all items** in the dataset, regardless of filters or selections.
 
-### Matching the applied filters
+### Matching Filters
 
-Exports only the items that match your currently active filters (e.g., issue type, labels, user tags).
+Exports only the items that match **your currently applied filters**, such as issue types, tags, or labels.
 
 ### Current Selection
 
-Exports only the items you’ve manually selected (selected images, objects, clusters and more).
+Exports only **manually selected items**—images, objects, or clusters.
 
-***
+---
 
-## JSON File Format
+## JSON Export Format
 
-The export is provided in a structured .json file. The file contains two main sections:
+Exported data is structured into a `.json` file with two sections:
 
-1. `info`  
-   General metadata about the dataset and export.
+### 1. `info`
 
-```c json
+General metadata about the dataset and export:
+
+```json
 "info": {
-        "dataset": "Name",
-        "dataset_creation_time": "2025-04-02T12:15:02.510168",
-        "dataset_url": "http://app.visual-layer.com/dataset/.../data",
-        "description": "Exported from trying at Visual Layer",
-        "export_time": "2025-04-02T14:31:30.931324",
-        "exported_by": "User_Name",
-        "schema_version": "1.1",
-        "total_media_items": 10,000,000
-    }
+  "dataset": "Name",
+  "dataset_creation_time": "2025-04-02T12:15:02.510168",
+  "dataset_url": "http://app.visual-layer.com/dataset/.../data",
+  "description": "Exported from Visual Layer",
+  "export_time": "2025-04-02T14:31:30.931324",
+  "exported_by": "User_Name",
+  "schema_version": "1.1",
+  "total_media_items": 10000000
+} 
 ```
 
-<br />
+### 2. `media_items`
 
-2. `media_items`
+An array of media items (images or video frames), each with all available metadata:
 
-An array of media items (images or video frames), each with all available metadata:.
-
-```coffeescript json
+```json
 {
   "media_id": "<uuid>",
   "media_type": "image",  // or "video_frame"
@@ -77,16 +104,17 @@ An array of media items (images or video frames), each with all available metada
 }
 ```
 
-***
+---
 
-## Metadata Items
+### Metadata Items
 
-Each media item includes a list of `metadata_items`. 
+Each media item includes a list of `metadata_items`. Below are the possible types:
 
-1. `type: "issue"`  
-   Used to represent a detected problem:
+#### 1. `type: "issue"`
 
-```c json
+Used to represent a detected problem:
+
+```json
 {
   "type": "issue",
   "properties": {
@@ -98,10 +126,11 @@ Each media item includes a list of `metadata_items`.
 }
 ```
 
-2. `type: "user_tag"`  
-   Tags applied by a user to a media item:
+#### 2. `type: "user_tag"`
 
-```c json
+Tags applied by a user to a media item:
+
+```json
 {
   "type": "user_tag",
   "properties": {
@@ -111,10 +140,11 @@ Each media item includes a list of `metadata_items`.
 }
 ```
 
-3. `type: "video_info"`  
-   Provides context on a video frame:
+#### 3. `type: "video_info"`
 
-```c json
+Provides context on a video frame:
+
+```json
 {
   "type": "video_info",
   "properties": {
@@ -125,10 +155,11 @@ Each media item includes a list of `metadata_items`.
 }
 ```
 
-4. `type: "object_label"`  
-   Describes an annotated object (bounding box), including nested issues:
+#### 4. `type: "object_label"`
 
-```c json
+Describes an annotated object (bounding box), including nested issues:
+
+```json
 {
   "type": "object_label",
   "properties": {
@@ -151,10 +182,11 @@ Each media item includes a list of `metadata_items`.
 }
 ```
 
-5. `type: "image_label"`  
-   A classification label applied to the entire image:
+#### 5. `type: "image_label"`
 
-```c json
+A classification label applied to the entire image:
+
+```json
 {
   "type": "image_label",
   "properties": {
@@ -165,9 +197,9 @@ Each media item includes a list of `metadata_items`.
 }
 ```
 
-6. `type: "caption"`
+#### 6. `type: "caption"`
 
-```c json
+```json
 {
   "type": "caption",
   "properties": {
@@ -177,8 +209,9 @@ Each media item includes a list of `metadata_items`.
 }
 ```
 
-**Notes**
+---
+
+### Notes
 
 - Duplicates often include `duplicate_group_id` and `threshold` values.
 - Object-level issues are nested inside `object_label` blocks.
-- JSON schema may evolve, but follows versioned structure (currently

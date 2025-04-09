@@ -76,8 +76,8 @@
               "docs/Managing-Datasets/tag-items",
               "docs/Managing-Datasets/share-dataset",
               "docs/Managing-Datasets/export-dataset",
-              "docs/Managing-Datasets/update-metadata-coming-soon",
               "docs/Managing-Datasets/update-data-coming-soon",
+              "docs/Managing-Datasets/update-metadata-coming-soon",
               "docs/Managing-Datasets/customize-metadata-coming-soon"
             ]
           },
@@ -90,7 +90,7 @@
               "docs/Exploring-datasets/visual-search",
               "docs/Exploring-datasets/filter-dataset",
               "docs/Exploring-datasets/mislabeled-imagesobjects",
-              "docs/Exploring-datasets/mislabeled-imagesobjects-rachel",
+              "mislabeled-imagesobjects",
               "docs/Exploring-datasets/unlabeled-data-detection",
               "docs/Exploring-datasets/duplicate-imagesobjects",
               "docs/Exploring-datasets/outlier-imagesobjects",
