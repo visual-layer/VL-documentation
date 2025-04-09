@@ -16,8 +16,8 @@
           {
             "group": "Getting Started",
             "pages": [
-              "docs/getting-started/introduction",
               "docs/getting-started/quick-start",
+              "docs/getting-started/introduction",
               "docs/getting-started/deployment-options",
               {
                 "group": "Definitions & Entities",
@@ -40,6 +40,7 @@
             "group":"On-Premises",
             "pages": [
               "docs/on-prem/single-node-deployment"
+              "docs/on-prem/command-line-flags"
             ]
           },
           {

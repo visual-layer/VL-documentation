@@ -1,8 +1,43 @@
 ---
-title: "🔴Select Unique Items"
+title: "🔵Select Unique Items"
 slug: "select-unique-items"
-excerpt: ""
+excerpt: "Surface only the most visually distinctive images or objects in your dataset."
 hidden: true
 createdAt: "Mon Mar 17 2025 08:49:19 GMT+0000 (Coordinated Universal Time)"
-updatedAt: "Thu Mar 20 2025 15:26:14 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Wed Apr 09 2025 07:10:15 GMT+0000 (Coordinated Universal Time)"
 ---
+A powerful tool designed to automatically surface the most visually distinct examples in your dataset and **reduce redundancy**. This helps you focus on high-value, diverse content—making your** model training** more effective and your **data exploration** more meaningful and efficient.
+
+***
+
+## Use Cases
+
+- **Reduce redundancy** before exporting or training
+- **Generate compact datasets **by removing near-duplicates
+- **Explore long tail** data that might otherwise be hidden among common examples
+
+***
+
+## How It Works
+
+- Each image or object in your dataset is assigned a **uniqueness score**, ranging from `0` (not unique) to` 1` (highly unique).
+- When activated, this filter excludes similar items based on your selected threshold, retaining only the most unique examples.
+- This filtering action is added to the Exclude row in the Query Panel.
+
+***
+
+## How to Apply the Filter
+
+- In the **Dataset Exploration View**, click the** Select Uniques button** (located next to the search bar).
+- A **threshold slider** will appear, allowing you to choose the desired** level of uniqueness**.
+- Once selected, the filter is applied and represented as a Query Tab under the Exclude section of the Query Panel.
+
+***
+
+## In the Export JSON
+
+When exporting data with this filter applied, the remaining items will have relatively **high uniqueness scores**. You can find these scores in the` media_items` section:
+
+```
+"uniqueness_score": 0.9285714285714288
+```

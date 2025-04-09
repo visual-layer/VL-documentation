@@ -1,0 +1,45 @@
+---
+title: "🔵Command Line Flags"
+slug: "command-line-flags"
+excerpt: "Use command line flags to customize behavior and output when running Visual Layer backend tools or scripts."
+hidden: true
+createdAt: "Wed Apr 09 2025 07:42:01 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Wed Apr 09 2025 07:47:24 GMT+0000 (Coordinated Universal Time)"
+---
+`LOG_LEVEL`
+
+**Description**: Controls how verbose the logging system is. Useful for debugging or reducing noise in production.
+
+**Accepted Values:**
+
+`DEBUG`
+
+`INFO` (default)
+
+`WARNING`
+
+`ERROR`
+
+`CRITICAL`
+
+Example:
+
+```c bash
+python main.py --LOG_LEVEL=DEBUG
+```
+
+At `DEBUG`, additional internal processing messages will be logged, including more detailed diagnostics (e.g., when log level is set to 10 extra diagnostic info is shown).
+
+***
+
+`SWAP_RGB_CHANNELS_FOR_TIFF_HEIC`
+
+**Description:** Corrects color rendering issues that can occur in certain TIFF and HEIC image formats, where red and blue channels may appear reversed.
+
+**Behavior: ** When enabled, the red and blue color channels are swapped while green remains unchanged. This ensures that images are displayed using the expected RGB format across all systems.
+
+Example:
+
+```c bash
+python main.py --SWAP_RGB_CHANNELS_FOR_TIFF_HEIC=true
+```
