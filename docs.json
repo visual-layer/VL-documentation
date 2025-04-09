@@ -90,7 +90,6 @@
               "docs/Exploring-datasets/visual-search",
               "docs/Exploring-datasets/filter-dataset",
               "docs/Exploring-datasets/mislabeled-imagesobjects",
-              "mislabeled-imagesobjects",
               "docs/Exploring-datasets/unlabeled-data-detection",
               "docs/Exploring-datasets/duplicate-imagesobjects",
               "docs/Exploring-datasets/outlier-imagesobjects",
@@ -160,8 +159,8 @@
     }
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "logo/light.svg",
+    "dark": "logo/dark.svg"
   },
   "navbar": {
     "links": [
