@@ -1,8 +1,99 @@
 ---
-title: "🔴Filter Dataset"
-slug: "filter-dataset"
-excerpt: ""
+title: "Filter Dataset"
+excerpt: "Use filters to narrow down, explore, and manage your dataset more effectively. Filters can be applied based on labels, tags, objects, issues, and more."
 hidden: true
 createdAt: "Mon Mar 17 2025 08:41:47 GMT+0000 (Coordinated Universal Time)"
-updatedAt: "Thu Mar 20 2025 07:34:39 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Wed Apr 09 2025 07:01:31 GMT+0000 (Coordinated Universal Time)"
 ---
+Visual Layer provides a powerful, flexible filter system based on logical structures (AND, OR, EXCLUDE). Filters are managed through the **Filter Menu**, configured in the **Query Modal**, and displayed as **Query Tab**s in the **Query Panel**.
+
+***
+
+## Filter Menu
+
+The Filter Menu is where you select filters to apply. Available options depend on your dataset and view context.
+
+**Available Filters:**
+
+- Labels
+- Object Labels
+- User Tags
+- Captions
+- Duplicates
+- Mislabels
+- Outliers
+- Quality Issues (Blurry, Bright, Dark)
+- File Type (Image/Video)
+- Folder
+
+> **The menu dynamically adapts based on the dataset and view.**
+
+In AND logic: only filters relevant to the current view are shown.
+
+In OR logic: filters apply to the entire dataset.
+
+In Exclude logic: filters exclude data from the visible set.
+
+***
+
+## Query Modal
+
+**Each filter opens a Query Modal, where you define:**
+
+- Condition (e.g., IS, IS NOT, CONTAINS)
+- Value Input (e.g., dropdown, text input, slider)
+
+***
+
+## Query Panel
+
+The Query Panel displays all filters grouped by logic:
+
+- AND Row (default): All conditions must be met.
+- OR Row: At least one condition must match.
+- Exclude Row: Items matching these conditions will be excluded.
+
+You can reorder AND filters and remove any filter at any time.
+
+> **Some actions like Find Similar or Select Uniques automatically create an Exclude tab.**
+
+***
+
+## Filter Logic & Behavior
+
+### Supported Conditions
+
+- IS / IS NOT
+- IS ONE OF / IS NOT ONE OF
+- CONTAINS / DOES NOT CONTAIN
+- STARTS WITH / ENDS WITH
+- SIMILAR TO / NOT SIMILAR TO
+
+***
+
+## Filter Types – Logic & Input Table
+
+| **Filter Type** | **Supported Logic**                | **Input Component**      |
+| --------------- | ---------------------------------- | ------------------------ |
+| Text Search     | CONTAINS, DOES NOT CONTAIN         | Free-text                |
+| Labels          | IS, IS NOT, IS ONE OF              | Multi-select dropdown    |
+| Object Labels   | IS, IS NOT, IS ONE OF              | Multi-select dropdown    |
+| User Tags       | IS, IS NOT, IS ONE OF              | Multi-select dropdown    |
+| Captions        | CONTAINS, DOES NOT CONTAIN         | Free-text                |
+| Duplicates      | IS                                 | Slider (threshold)       |
+| Outliers        | IS, IS NOT                         | Toggle / Checkbox        |
+| Mislabels       | IS, IS NOT                         | Toggle / Checkbox        |
+| Quality Issues  | IS, IS ONE OF                      | Multi-select checkboxes  |
+| File Type       | IS                                 | Dropdown (image / video) |
+| Folder          | IS, IS NOT, STARTS WITH, ENDS WITH | Text field               |
+
+***
+
+## Advanced Features
+
+- **Select Uniques: **Added to Exclude row. Filters non-unique items.
+- **Visual Similarity:**
+  - IS → Finds items similar to selected anchor.
+  - IS NOT → Moves to Exclude row.
+  - Can be dragged between rows to expand/narrow results.
+- **Cluster Navigation: **Now separated from filtering. You can enter a cluster without automatically filtering by it.

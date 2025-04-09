@@ -1,0 +1,89 @@
+---
+title: [ENTER A TITLE HERE]
+description: [For example: Learn how to configure triggers to control when and how automated dataset workflows are initiated in Visual Layer.]
+---
+<Card title="How this Helps" icon="lightbulb">
+    This feature enables teams to streamline repetitive or manual tasks, reducing time spent on video review and dataset cleanup. It’s particularly valuable for computer vision teams managing large-scale video datasets across multiple environments.
+</Card>
+
+<Note>
+    Need help finding the right trigger type for your use case? See [About Triggers](/docs/workflows/building-workflows/triggers/triggers).
+</Note>
+
+Triggers determine **how and when** a Visual Layer workflow starts. Every published workflow must include a configured trigger to function properly.
+
+[Choosing the right trigger type](/docs/workflows/triggers/overview) helps ensure your automation aligns with operational needs, while changing a trigger allows for flexibility as priorities shift.
+
+<Note>
+To learn more about how trigger types behave, visit the [Trigger Overview](/docs/workflows/triggers/overview). For help with setup, see documentation on each type: [on-demand](#on-demand-triggers), [event-based](#event-based-triggers), or [scheduled](#scheduled-triggers).
+</Note>
+
+## Choose or Change a Trigger Type
+
+<Warning>
+If you change a trigger type, **all existing trigger-specific settings will be erased** and cannot be recovered automatically.
+</Warning>
+
+Triggers can be configured during the workflow creation process—either via **Workflow Editor** or with assistance from **Visual Copilot**.
+
+After selecting the trigger type, the next step is to configure it [based on the type](#related-articles) you chose.
+
+<Note>
+Need help creating a workflow first? Check out [Creating a Workflow](/docs/workflows/creating).
+</Note>
+
+**To change the trigger for an existing workflow:**
+
+1. Navigate to [**Workflows**](/docs/workflows/editor) in the Visual Layer Console.
+
+    The Workflows dashboard appears.
+
+2. Open the desired project and select the workflow you'd like to edit.
+
+    The workflow opens in the canvas view.
+
+3. Hover over the current trigger and open the options menu (three dots).
+
+    A dropdown appears, similar to the following image:
+
+<Frame>
+  <img src="/img/Automations/ChangeTriggers.gif" alt="Change trigger in workflow editor" />
+</Frame>
+
+4. Click **Change Trigger Type**.
+
+    A selection panel opens, allowing you to choose a new type.
+
+<Frame>
+  <img src="/img/Automations/ChooseNewTrigger.gif" alt="Choose a new trigger type" />
+</Frame>
+
+5. Choose from the following supported trigger types:
+
+<div className="integrations-table">
+
+|   | Trigger Type | Description |
+|---|--------------|-------------|
+| <Icon icon="user-large" iconType="regular" /> | [On-demand triggers](/docs/workflows/triggers/on-demand) | Manually initiated via CLI, Slack, or the Visual Layer portal. |
+| <Icon icon="bolt" iconType="regular" /> | [Event-based triggers](/docs/workflows/triggers/event-based) | Automatically triggered by system events, such as a dataset upload or webhook. |
+| <Icon icon="clock" iconType="regular" /> | [Scheduled triggers](/docs/workflows/triggers/scheduled) | Run workflows at pre-defined intervals, e.g., hourly or weekly. |
+
+</div>
+
+6. Click **Apply**.
+
+    The selected trigger is now active, and the workflow is updated accordingly.
+
+## Related Articles
+
+<CardGroup cols={3}>
+  <Card title="On-demand Triggers" icon="user" href="/docs/workflows/triggers/on-demand">
+    Run a workflow manually when needed.
+  </Card>
+  <Card title="Event-based Triggers" icon="bolt" href="/docs/workflows/triggers/event-based">
+    Kick off workflows when a system or API event occurs.
+  </Card>
+  <Card title="Scheduled Triggers" icon="calendar" href="/docs/workflows/triggers/scheduled">
+    Run workflows at set intervals or according to time-based rules.
+  </Card>
+</CardGroup>

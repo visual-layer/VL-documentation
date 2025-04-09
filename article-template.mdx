@@ -1,0 +1,115 @@
+---
+title: [ENTER A TITLE HERE]
+description: [For example: Manage video datasets at scale using automated workflows.]
+---
+
+<Card title="How this Helps" icon="lightbulb">
+    This feature enables teams to streamline repetitive or manual tasks, reducing time spent on video review and dataset cleanup. It’s particularly valuable for computer vision teams managing large-scale video datasets across multiple environments.
+</Card>
+
+[Feature Name] allows users to [brief description of what this feature enables]. At Visual Layer, this is especially useful for [describe role, e.g., ML engineers or data scientists] looking to [solve a specific challenge, like identify duplicates, improve annotation quality, or prepare datasets for fine-tuning].
+
+Common use cases include:
+- [Use case 1]: [brief description]
+- [Use case 2]: [brief description]
+- [Use case 3]: [brief description]
+
+# [Feature Architecture / How It Works]
+
+The diagram below outlines the key components of this feature in Visual Layer:
+
+<Frame>
+  <img src="/img/[relevant-diagram].png" alt="[Alt text for diagram]" />
+</Frame>
+
+Below is a breakdown of each component:
+
+<div className="integrations-table">
+
+|   | Component     | Description |
+|---|---------------|-------------|
+| 1 | [Triggers](/docs/[path-to-trigger-doc]) | Events or user actions that initiate the workflow or feature process. |
+| 2 | [Steps](/docs/[path-to-steps]) | Sequential actions or evaluations taken on the video or image data. |
+| 3 | [Flow Controls](/docs/[path-to-flow-controls]) | Logic that governs conditional execution of steps, such as filters or decision trees. |
+| 4 | [Outputs](/docs/[path-to-outputs]) | Final outputs such as metadata exports, updated video versions, or metrics. |
+
+</div>
+
+<Tip>
+You can use [Visual Layer Copilot](/docs/copilot) to accelerate the setup process and generate optimized flows automatically.
+</Tip>
+
+<Accordion title="Example I: Auto-Remove Blurry Frames Before Annotation" icon="memo-circle-info" iconType="solid" size={30}>
+A computer vision team at ACME Robotics needs a pre-processing step that removes low-quality frames before the data is sent for labeling.
+
+This process begins with an on-demand trigger that scans uploaded datasets. The system evaluates each frame for sharpness and flags blurry frames for exclusion. Once identified, those frames are automatically removed or isolated in a separate dataset version.
+
+The result is a cleaner, more efficient annotation pipeline with higher training data quality and lower cost.
+</Accordion>
+
+# Using [Feature Name]
+
+With [Feature Name], you can:
+
+- [action 1]
+- [action 2]
+- [action 3]
+- [action 4]
+
+## [First sub-heading — e.g., How It Works]
+
+The following is an overview of how the process works:
+
+<Steps>
+
+<Step title="Upload your video dataset">
+Upload a dataset using the Visual Layer UI or API. Once uploaded, the system will begin metadata indexing.
+
+</Step>
+
+<Step title="Enable frame quality checks">
+Enable frame quality filters from the configuration panel.
+
+<Frame>
+  <img src="/img/frame-quality-ui.png" alt="Frame Quality UI Configuration" />
+</Frame>
+
+</Step>
+
+<Step title="Define thresholds for blur detection">
+Set acceptable ranges for visual clarity, based on your project's needs.
+
+</Step>
+
+<Step title="Review flagged frames">
+A preview set of flagged frames will be shown for validation. You can confirm removals or override false positives.
+
+</Step>
+
+<Step title="Commit clean dataset version">
+Once validated, save the filtered dataset as a new version for downstream tasks like labeling or fine-tuning.
+
+</Step>
+
+</Steps>
+
+## Recommendations and Limitations
+
+- Works best on datasets larger than 500 frames
+- Thresholds may need adjustment for infrared or thermal footage
+- Currently supports `.mp4`, `.avi`, and `.mov` formats
+- GPU-accelerated processing is only available on Enterprise plans
+
+# Related Articles
+
+<CardGroup cols={3}>
+  <Card title="Working with Dataset Versions" icon="layers" href="/docs/datasets/versions">
+    Learn how to manage different versions of your video datasets.
+  </Card>
+  <Card title="Using Visual Layer Copilot" icon="bot" href="/docs/copilot">
+    Leverage AI assistance to automate common workflows.
+  </Card>
+  <Card title="Preprocessing Before Labeling" icon="magic-wand" href="/docs/preprocessing">
+    See best practices for cleaning and preparing your data.
+  </Card>
+</CardGroup>

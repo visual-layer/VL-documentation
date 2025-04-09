@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Mint Starter Kit",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#0097D9",
+    "light": "#0097D9",
+    "dark": "#0097D9" 
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -39,7 +39,7 @@
           {
             "group":"On-Premises",
             "pages": [
-              "docs/on-prem/single-node-deployment"
+              "docs/on-prem/single-node-deployment",
               "docs/on-prem/command-line-flags"
             ]
           },
@@ -47,8 +47,8 @@
             "group": "Integrations",
             "pages": [
               "docs/Integrations/preparing-a-private-aws-s3-bucket",
-              "CVAT - Coming Soon",
-              "Labelbox - Coming Soon"
+              "docs/Integrations/cvat-coming-soon",
+              "docs/Integrations/labelbox-coming-soon"
             ]
           },
           {
@@ -85,15 +85,44 @@
             "group":"Exploring Datasets",
             "pages": [
               "docs/Exploring-datasets/overview",
-              "docs/Managing-Datasets/tag-items",
-              "docs/Managing-Datasets/share-dataset",
-              "docs/Managing-Datasets/export-dataset",
-              "docs/Managing-Datasets/update-metadata-coming-soon",
-              "docs/Managing-Datasets/update-data-coming-soon",
-              "docs/Managing-Datasets/customize-metadata-coming-soon"
+              "docs/Exploring-datasets/semantic-search", 
+              "docs/Exploring-datasets/caption-search",
+              "docs/Exploring-datasets/visual-search",
+              "docs/Exploring-datasets/filter-dataset",
+              "docs/Exploring-datasets/mislabeled-imagesobjects",
+              "docs/Exploring-datasets/mislabeled-imagesobjects-rachel",
+              "docs/Exploring-datasets/unlabeled-data-detection",
+              "docs/Exploring-datasets/duplicate-imagesobjects",
+              "docs/Exploring-datasets/outlier-imagesobjects",
+              "docs/Exploring-datasets/select-unique-items",
+              {
+                "group": "Dataset Quality",
+                "pages": [
+                  "docs/Exploring-datasets/blurry-imagesobjects",
+                  "docs/Exploring-datasets/dark-imagesobjects",
+                  "docs/Exploring-datasets/bright-imagesobjects"
+                ]
+              }
+
+            ]
+          },
+          {
+            "group":"Dataset Enrichment",
+            "pages": [
+              "docs/Dataset-Enrichment/enrich_overview",
+              "docs/Dataset-Enrichment/model-catalog",
+              "docs/Dataset-Enrichment/analyze-enriched-dataset",
+              "docs/Dataset-Enrichment/use-custom-models-coming-soon"
+            ]
+          },
+          {
+            "group":"Help & Support",
+            "pages": [
+              "docs/Help-Support/troubleshooting",
+              "docs/Help-Support/faqs",
+              "docs/Help-Support/community"
             ]
           }
-  
         ]
       },
       {
@@ -123,13 +152,8 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
-        },
-        {
           "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
+          "href": "https://www.visual-layer.com/blog",
           "icon": "newspaper"
         }
       ]

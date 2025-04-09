@@ -1,0 +1,107 @@
+---
+title: "Caption Search"
+excerpt: ""
+hidden: true
+createdAt: "Tue Mar 11 2025 16:14:47 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Mon Mar 24 2025 08:36:20 GMT+0000 (Coordinated Universal Time)"
+---
+
+## Caption Search Operators
+
+### AND Operator
+
+**Description**  
+The AND operator is implied when typing a search query with terms separated by spaces.
+
+**Usage**  
+Include `AND` between the search terms or just leave a space. Uppercase or lowercase does not matter.
+
+**Example**  
+Searching for `black cat` in the search bar. The following queries are equivalent:
+
+```text
+black AND cat  
+black and cat  
+black + cat
+```
+
+**Result**  
+This query will return images that contain both the terms "black" AND "cat" in any order.
+
+![AND Operator Example](https://files.readme.io/69b2c83-Screenshot_2024-06-05_at_10.56.55.png)
+
+---
+
+### OR Operator
+
+**Description**  
+The OR operator is used to find results containing either one of the search terms or both.
+
+**Usage**  
+Include `OR` between the search terms. Uppercase or lowercase does not matter.
+
+**Example**  
+
+```text
+black cat OR black dog  
+black cat or black dog
+```
+
+**Result**  
+This query will return images containing either black cats, black dogs, or both.
+
+![OR Operator Example](https://files.readme.io/88a1799-Screenshot_2024-06-05_at_11.02.05.png)
+
+---
+
+### NOT Operator
+
+**Description**  
+The NOT operator is used to exclude terms from the search results.
+
+**Usage**  
+Prefix the term you wish to exclude with a minus sign (`-`).
+
+**Example**  
+
+```text
+dog -black
+```
+
+**Result**  
+This query will return images with the term "dog" in the metadata but will exclude any images that also contain the term "black."
+
+![NOT Operator Example](https://files.readme.io/7a1fe3a-Screenshot_2024-06-05_at_11.11.35.png)
+
+---
+
+### Exact Match
+
+**Description**  
+For an exact match of a phrase or sequence of words, use quotation marks.
+
+**Usage**  
+Enclose the exact phrase within double quotes.
+
+**Example**  
+
+```text
+"yellow flower"
+```
+
+**Result**  
+This query will return images where the metadata exactly matches the phrase "yellow flower" and not a more generic search that also returns other images containing flowers or yellow objects.
+
+![Exact Match Example](https://files.readme.io/34b756c-Screenshot_2024-06-05_at_17.33.37.png)
+
+---
+
+### Combining Operators
+
+It is also possible to combine the operators above.
+
+**Example**  
+
+```text
+flower -bird OR tree AND "red leave"
+```
