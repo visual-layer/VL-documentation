@@ -1,72 +1,78 @@
 ---
-title: "Visual Search"
-description: "Find visually similar images, objects, or patterns in your dataset using Visual Layer's powerful similarity search options."
+title: Visual Search
+description: Find visually similar images, objects, or patterns in your dataset using Visual Layer's powerful similarity search options.
 ---
 
-Visual Layer enables flexible and intuitive **visual similarity search** across your datasets. You can find near-duplicate images, match specific objects, or search by uploading an image. 
+<Card title="How this Helps" icon="lightbulb">
+  Visual Search allows you to find near-duplicates, repeated patterns, and conceptually similar content in your dataset—whether at the image or object level. It’s ideal for identifying anomalies, clustering related visuals, and accelerating QA review.
+</Card>
 
-Choose to run similarity searches:
+## Overview
 
-- [on a cluster](#similarity-search-on-a-cluster)  
-- [on an image/object](#similarity-search-on-an-image-or-object)  
-- [using a region of interest](#similarity-search-using-a-region-of-interest)  
-- [via image upload](#similarity-search-via-image-upload)  
+Visual Layer enables intuitive similarity search across datasets using deep visual embeddings. You can run a similarity search in several ways:
+
+- [On a cluster](#similarity-search-on-a-cluster)  
+- [On an image or object](#similarity-search-on-an-image-or-object)  
+- [Using a region of interest](#similarity-search-using-a-region-of-interest)  
+- [Via image upload](#similarity-search-via-image-upload)
 
 ## Similarity Search on a Cluster
 
-To find similar results starting from a cluster:
+To find similar results based on a full cluster:
 
 1. Hover over the desired cluster in your dataset.
 2. Click **Find Similar** at the bottom of the card.
 
-<Image src="https://files.readme.io/dc4dd7ba2b5a177b242a5d10947d72d52a94e272736c4976bbbaa736ae0e1497-Scene-1_copy_3.gif" alt="Similarity Search on Cluster" />
+<Frame>
+  <img src="https://files.readme.io/dc4dd7ba2b5a177b242a5d10947d72d52a94e272736c4976bbbaa736ae0e1497-Scene-1_copy_3.gif" alt="Similarity Search on Cluster" />
+</Frame>
 
 ## Similarity Search on an Image or Object
 
-You can trigger a similarity search: 
-- [from the Dataset page](#search-from-the-dataset-page)  
-- [from the Cluster Details page](#search-from-the-cluster-details-page)  
-- [by object](#search-by-object)
+You can also trigger similarity search directly from any image or object. There are multiple entry points depending on your view:
 
 ### Search from the Dataset Page
 
 1. Click into a cluster.
 2. Hover over the image or object and click **Find Similar**.
 
-<Image src="https://files.readme.io/67833bc9d2959b2165dc17f6c69fa0e6c6eadd09b98f090dba08e0e6ca813a76-Scene-1_2.gif" alt="Similarity Search from Dataset Page" />
+<Frame>
+  <img src="https://files.readme.io/67833bc9d2959b2165dc17f6c69fa0e6c6eadd09b98f090dba08e0e6ca813a76-Scene-1_2.gif" alt="Similarity Search from Dataset Page" />
+</Frame>
 
 ### Search from the Cluster Details Page
 
 1. Click an image or object to open the **Image Details Page**.
-2. Click **Find Similar**, then click the similarity icon at the center of the image.
+2. Click **Find Similar**, then click the similarity icon centered on the image.
 
-<Image src="https://files.readme.io/1e3113710ffe12699bc92844d8bbf90f8a35bcae9c7b9e8da826047ebf5e9a3b-Scene-1_2_copy.gif" alt="Similarity Search from Image Details Page" />
+<Frame>
+  <img src="https://files.readme.io/1e3113710ffe12699bc92844d8bbf90f8a35bcae9c7b9e8da826047ebf5e9a3b-Scene-1_2_copy.gif" alt="Similarity Search from Image Details Page" />
+</Frame>
 
 ### Search by Object
 
-To search for images containing a visually similar object:
+To run similarity search based on a specific object in the image:
 
 1. Hover over the object’s bounding box.
 2. Click the **Find Similar** icon.
 
+## Similarity Search Using a Region of Interest
 
-## Similarity Search using a Region of Interest
-
-Search based on a cropped portion of an image:
+You can crop part of an image and use that region as a visual anchor:
 
 1. Open an image from any cluster.
 2. Click **Find Similar**.
-3. Drag to crop the Region of Interest.
+3. Drag to define the Region of Interest.
 4. Click the similarity icon again to start the search.
-
 
 ## Similarity Search via Image Upload
 
-You can also initiate a search using an external image:
+You can also start a similarity search using an external image:
 
 1. On the Dataset Page, click the **Find Similar** icon near the search bar.
-2. Upload an image from your device.
-3. Optionally crop before starting the search.
+2. Upload an image from your local device.
+3. Optionally crop it before starting the search.
 
-<Image src="https://files.readme.io/632ec1043a7acd38bb9f928d26c6cf7f96b6f5f496561e7905f25bcf623f3c52-Scene-1_2_2.gif" alt="Similarity Search via Upload" />
-
+<Frame>
+  <img src="https://files.readme.io/632ec1043a7acd38bb9f928d26c6cf7f96b6f5f496561e7905f25bcf623f3c52-Scene-1_2_2.gif" alt="Similarity Search via Upload" />
+</Frame>

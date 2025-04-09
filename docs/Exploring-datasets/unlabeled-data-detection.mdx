@@ -1,25 +1,41 @@
 ---
-title: "Unlabelled"
-excerpt: "Detect unclassified data using Visual Layer"
-hidden: true
-createdAt: "Tue Mar 11 2025 16:26:12 GMT+0000 (Coordinated Universal Time)"
-updatedAt: "Tue Mar 25 2025 12:27:35 GMT+0000 (Coordinated Universal Time)"
+title: Unlabeled
+description: Detect unclassified images and objects in your dataset using Visual Layer's filters.
 ---
 
-In large-scale datasets, detecting unclassified images and objects can be challenging. Visual Layer simplifies this process with just one click.
+## Why Unlabeled Data Matters
 
-### Find unclassified data using a simple filter
+Unlabeled content is a common byproduct of large, evolving datasets. Whether you're ingesting new data from external sources or curating internal samples, having a method to quickly surface unlabeled items is essential to improving data coverage and model training effectiveness.
 
-1. Navigate to the [Dataset Inventory](https://dash.readme.com/project/visual-layer2/v1.0/docs/browsing-datasets) and select a dataset by clicking on it. 
-2. Select the required view: Images view or [Objects](https://dash.readme.com/project/visual-layer2/v1.0/docs/understanding-and-exploring-objects) view. 
-3. In the top filter bar, go to the "Labels" filter, select "Unlabeled," and apply the filter. 
+Visual Layer makes it easy to locate and take action on unlabeled data—whether at the image or object level.
 
-![Coco Dataset: Top bar labels filter: Select "unlabeled"](https://files.readme.io/f4e5633-image.png)
+## How to Find Unlabeled Data
 
----
+You can filter for unlabeled content directly within the Visual Layer UI using the "Labels" filter.
 
-4. The returned results will consist of images or image clusters, objects, or object clusters that are unlabeled. 
-5. Users can add unlabeled data to the "Selected Items" list, export it, and send it for classification/labeling.
-   1. See the following pages for more info: 
-      1. [ORGANIZE section](https://dash.readme.com/project/visual-layer2/v1.0/docs/data-selection-using-visual-layer) 
-      2. [EXPORT section](https://dash.readme.com/project/visual-layer2/v1.0/docs/export-data)
+### Steps to Apply the Filter
+
+1. Navigate to the [Dataset Inventory](https://dash.readme.com/project/visual-layer2/v1.0/docs/browsing-datasets) and click on the dataset you want to review.
+2. Choose either the **Images view** or the [**Objects view**](https://dash.readme.com/project/visual-layer2/v1.0/docs/understanding-and-exploring-objects).
+3. In the top filter bar, open the **Labels** filter.
+4. Select **"Unlabeled"** and apply the filter.
+
+<Frame>
+  <img src="https://files.readme.io/f4e5633-image.png" alt="Top bar labels filter - select unlabeled" />
+</Frame>
+
+### What Happens Next
+
+Once the filter is applied:
+
+- You’ll see all images or objects (or clusters) that currently have no label.
+- These can be reviewed, grouped, exported, or flagged for labeling.
+
+## What You Can Do with Unlabeled Data
+
+After surfacing unlabeled items, you can take additional actions to keep your dataset clean and complete:
+
+- **Organize**: Add relevant data points to the [Selected Items list](https://dash.readme.com/project/visual-layer2/v1.0/docs/data-selection-using-visual-layer) for triage or review.
+- **Export**: Use the [Export](https://dash.readme.com/project/visual-layer2/v1.0/docs/export-data) feature to send selected data for manual annotation, third-party labeling, or internal review.
+
+Keeping up with unlabeled content helps maintain dataset integrity and ensures no high-impact images are left out of training.

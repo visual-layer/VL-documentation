@@ -73,7 +73,7 @@
             "group":"Managing Datasets",
             "pages": [
               "docs/Managing-Datasets/save-views",
-              "docs/Managing-Datasets/tag-items",
+              "docs/Managing-Datasets/tag-iteams",
               "docs/Managing-Datasets/share-dataset",
               "docs/Managing-Datasets/export-dataset",
               "docs/Managing-Datasets/update-data-coming-soon",
@@ -159,8 +159,8 @@
     }
   },
   "logo": {
-    "light": "logo/light.svg",
-    "dark": "logo/dark.svg"
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
   },
   "navbar": {
     "links": [
