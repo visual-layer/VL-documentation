@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "maple",
+  "theme": "mint",
   "name": "Visual Layer Documentation",
   "colors": {
     "primary": "#0097D9",
@@ -115,9 +115,6 @@
             ]
           }
         ]
-      },
-      {
-        "tab": "Workflows"
       },
       {
         "tab": "API Reference",
@@ -236,6 +233,11 @@
       {
         "label": "Support",
         "href": "mailto:support@visual-layer.com"
+      },
+      {
+        "type": "button",
+        "label": "Get a Demo",
+        "href": "https://www.visual-layer.com/"
       }
     ],
     "primary": {
