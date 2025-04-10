@@ -5,33 +5,36 @@ hidden: false
 createdAt: "Thu Feb 16 2023 12:53:34 GMT+0000 (Coordinated Universal Time)"
 updatedAt: "Thu Jan 16 2025 09:34:19 GMT+0000 (Coordinated Universal Time)"
 ---
+
 For most cases, installation is as simple as:
 
-```shell bash
+```bash
 pip3 install -U pip 
 pip3 install -U fastdup
 ```
 
-Latest fastdup is available for Mac M1 12 and higher, Ubuntu 20 and higher, Windows 10 and higher (via WSL)
+Latest fastdup is available for Mac M1 12 and higher, Ubuntu 20 and higher, Windows 10 and higher (via WSL).
 
-Legacy versions are:  Ubutntu 18, Centos 07. Mac Intel. 
+Legacy versions are: Ubuntu 18, CentOS 7, Mac Intel.
 
 #### Below we list common issues and prerequisites for various platforms:
 
 1. [Ubuntu 22.04/20.04 Preliminaries](#ubuntu)  
-2. [Mac OSX Preliminaries](#macosx)
-3. [CentOS 7 Preliminaries](#centos7)
-4. [Amazon Linux 2](#amazon_linux)
-5. [Windows Server 10 Preliminaries](#windows10)
-6. [Pypi setup using pip](#pypi)
-7. [Preinstalled docker](#docker)
+2. [Mac OSX Preliminaries](#macosx)  
+3. [CentOS 7 Preliminaries](#centos7)  
+4. [Amazon Linux 2](#amazon_linux)  
+5. [Windows Server 10 Preliminaries](#windows10)  
+6. [Pypi setup using pip](#pypi)  
+7. [Preinstalled docker](#docker)  
 8. [Common installation errors](#common)
 
-fastdup is currently supported on Ubuntu 20.04/22.04/24.04 or 18.04 OS, CentOS 7.9, Amazon Linux 2, RedHat 4.8, Mac OS 10+  using Intel or M1 CPUs, and Windows 10, 11 Server (via WSL).
+fastdup is currently supported on Ubuntu 20.04/22.04/24.04 or 18.04 OS, CentOS 7.9, Amazon Linux 2, RedHat 4.8, Mac OS 10+ using Intel or M1 CPUs, and Windows 10, 11 Server (via WSL).
+
+---
 
 ## Ubuntu 24.04/22.04/20.04 LTS Machine Setup <a name="ubuntu"></a>
 
-Required machine setup
+Required machine setup:
 
 ```bash
 sudo apt update
@@ -44,7 +47,9 @@ sudo apt -y install libgl1-mesa-glx
 python3.9 -m pip install --upgrade pip
 ```
 
-## Mac OS setup <a name="macosx"></a>
+---
+
+## Mac OS Setup <a name="macosx"></a>
 
 ```bash
 # Install python:
@@ -53,7 +58,9 @@ python3.9 -m pip install --U pip
 python3.9 -m pip install fastdup
 ```
 
-Note: when using conda on Mac M1 or Mac M1 Pro make sure you install conda for arm (and not conda for intel) otherwise it will not be possible to install.
+> **Note**: When using conda on Mac M1 or Mac M1 Pro, make sure you install conda for ARM (and not conda for Intel). Otherwise, it will not be possible to install.
+
+---
 
 ## CentOS 7 Setup / Amazon Linux 2 / RedHat 4.8 <a name="centos7"></a>
 
@@ -67,11 +74,13 @@ sudo yum install redhat-lsb-core # for lsb_release
 sudo yum install -y ffmpeg ffmpeg-devel # for video support
 ```
 
-Download and istall CentOS 7 whl image from our [release page](https://github.com/visual-layer/fastdup/releases).
+Download and install the CentOS 7 `.whl` image from our [release page](https://github.com/visual-layer/fastdup/releases).
 
-```
+```bash
 python3.7 -m pip install <path of the downloaded whl>
 ```
+
+---
 
 ## Amazon Linux 2 Setup <a name="amazon_linux"></a>
 
@@ -79,191 +88,100 @@ python3.7 -m pip install <path of the downloaded whl>
 sudo yum install mesa-libGL -y
 ```
 
-Download and isntall CentOS 7 whl image from our [release page](https://github.com/visual-layer/fastdup/releases).
+Download and install the CentOS 7 `.whl` image from our [release page](https://github.com/visual-layer/fastdup/releases).
 
-```
+```bash
 python3.7 -m pip install <path of the downloaded whl>
 ```
 
+---
+
 ## Windows 10/11 Server/Pro Setup Using WSL2 <a name="windows10"></a>
 
-### Setting up WSL2. The below instructions are for Windows Server 10. More detailed instructions are [here](https://learn.microsoft.com/en-us/windows/wsl/install-on-server).
+### Setting up WSL2
 
-For Windows 10+11 follow the instructions [here](https://learn.microsoft.com/en-us/windows/wsl/install).
+The below instructions are for Windows Server 10. More detailed instructions are [here](https://learn.microsoft.com/en-us/windows/wsl/install-on-server).
 
-- Enable WSL on your machine (Search -> powershell-> right click -> run as administrator)
+For Windows 10+11, follow the instructions [here](https://learn.microsoft.com/en-us/windows/wsl/install).
 
-```
+- Enable WSL on your machine (Search -> PowerShell -> right-click -> Run as Administrator):
+
+```powershell
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
 Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform
 ```
 
-- Reboot your machine
-- Check that wsl is enabled using the command:
+- Reboot your machine.
+- Check that WSL is enabled using the command:
 
-```
+```powershell
 Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
 ```
 
-- Download ubuntu 22.04 from [\<https://aka.ms/wslubuntu2204]\(<https://aka.ms/wslubuntu2204)>
-- After the download, run powershell as admin, goto your download folder (for example c:\\users/danny_bickson/downloads/)
+- Download Ubuntu 22.04 from [https://aka.ms/wslubuntu2204](https://aka.ms/wslubuntu2204).
+- After the download, run PowerShell as admin, go to your download folder (e.g., `C:\Users\YourName\Downloads`):
 
-```
-cd c:\\users\danny_bickson\Download # change to your download folders
-Expand-Archive .\Ubuntu_1804.2019.522.0_x64.zip .\Ubuntu_2204
+```powershell
+cd C:\Users\YourName\Downloads
+Expand-Archive .\Ubuntu_2204.zip .\Ubuntu_2204
 cd .\Ubuntu_2204\
- .\ubuntu2204.exe
+.\ubuntu2204.exe
 ```
 
-This will take a few minutes, you will see an output of the kind:
+This will take a few minutes. You will see an output like:
 
-```
+```plaintext
 Please create a default UNIX user account. The username does not need to match your Windows username.
-For more information visit: https://aka.ms/wslusers
-Enter new UNIX username: danny_bickson # (chnage to your username)
-Enter new UNIX password: *******
-Retype new UNIX password: *******
+Enter new UNIX username: your_username
+Enter new UNIX password: ********
+Retype new UNIX password: ********
 passwd: password updated successfully
 Installation successful!
-To run a command as administrator (user "root"), use "sudo <command>".
-See "man sudo_root" for details.
 ```
 
-### Optional: Update WSL to version 2 (recommended, significant performance wins!)
+### Optional: Update WSL to version 2 (recommended for significant performance improvements)
 
-- Download the installer from <https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi>
-- Run the installer and follow the instructions
+- Download the installer from [https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi](https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi).
+- Run the installer and follow the instructions.
 
-### Once WSL2 and Ubuntu 2204 are set up, continue with the below instructions
+---
 
-- Inside the Ubuntu shell, run the following installers (you will be asked for password you entered before).
+## Pip Package Setup <a name="pypi"></a>
 
-```
-sudo apt update
-sudo apt -y install software-properties-common
-sudo add-apt-repository -y ppa:deadsnakes/ppa
-sudo apt update
-sudo apt -y install python3.9
-sudo apt -y install python3-pip
-sudo apt -y install libgl1-mesa-glx
-pip3 install --upgrade pip
-python3.9 -m pip install fastdup
-```
-
-- <br />
-
-# Pip Package setup
-
-## Using pypi <a name="pypi"></a>
-
-This is the recommended installation method for all Mac, Ubuntu 18-20, Debian 10, Windows Server 10.  
-Will not work for Centos 7.9, RedHat 4.8.
+This is the recommended installation method for all Mac, Ubuntu 18-20, Debian 10, and Windows Server 10.
 
 ```bash
 python3.9 -m pip install -U pip
 python3.9 -m pip install fastdup
 ```
 
-## Using stable release.
+---
 
-This is mandatory for CentOS 7.9 / RedHat 4.8 /Ubuntu 18 and similiar OS.
+## Docker <a name="docker"></a>
 
-- download the latest wheel for your system from our [release page](https://github.com/visualdatabase/fastdup/releases). Assuming the wheel file is found in your working folder, run:
-
-```bash
-python3.9 -m pip install -U pip
-python3.9 -m pip install *.whl
-```
-
-Note: python used should be similar to your python. For example cp38 is python3.8, cp39 is python3.9 etc.
-
-# Debian package install
-
-- download the latest deb for your system from our [release page](https://github.com/visualdatabase/fastdup/releases). Assuming the wheel file is found in your working folder, run:
-
-```bash
-sudo dpkg -i fastdup-<VERSION>-ubuntu-20.04.deb
-```
-
-Application name is fastdup.
-
-# Docker <a name="docker"></a>
-
-## Pull from docker hub the latest ubuntu
+### Pull from Docker Hub
 
 ```bash
 docker pull karpadoni/fastdup-ubuntu-20.04
 ```
 
-## Build your own docker
+### Build Your Own Docker
 
 ```bash
 docker build -f Dockerfile -t fastdup-ubuntu .
 ```
 
-# Currently supported software/hardware
+---
 
-Operating system
+## Common Installation Issues and Their Solutions <a name="common"></a>
 
-- `Ubuntu 20.04 LTS`
-- `Ubuntu 18.04 LTS`
-- `Mac OSX M1 Chip` (tested on Big Sur)
-- `Mac OSX M2 Chip` (tested on Ventura)
-- `Mac Intel Chip` (tested on Mojave)
-- `CentOS 7.9` (via stable release)
-- `Amazon Linux 2 (via stable release)`
-- `Windows 10 Server` (via WSL)
+### Error: `fastdup-0.39-cp38-cp38-manylinux_2_31_x86_64.whl is not a supported wheel on this platform`
 
-Software versions
+- Ensure you are on Ubuntu 20.04 or 18.04 (via `lsb_release -r`) or Mac M1 Big Sur/Mac Intel Mojave (via `sw_vers`).
+- Ensure you are using the correct Python version (e.g., Python 3.8).
+- Update pip: `python3.8 -m pip install -U pip`.
+- Install using `python3.8 -m pip install ...` instead of `pip install ...`.
 
-- `Python 3.7, 3.8, 3.9` (via pip) 
-- Note: conda is not recommended
-- pyenv installed python is not working on Mac, install python using `brew install python@3.8`
+---
 
-Hardware support
 
-- CPU (GPU not needed!)
-
-# Common installation issues and their solution <a name="common"></a>
-
-ERROR: fastdup-0.39-cp38-cp38-manylinux_2_31_x86_64.whl is not a supported wheel on this platform.
-
-- Check that you are on ubuntu 20.04 or 18.04 (via the command `lsb_release -r`). Alternatively on Mac M1 Big Sur or Mac Intel Mojave (use the command `sw_vers`) 
-- Check that you are using the right python version (python3.8 and not python) 
-- Make sure pip is up to date using `python3.8 -m pip install -U pip`). 
-- Make sure you install using `python3.8 -m pip install..` and not just `pip install...`.
-- If that does not work, please open an issue with the otuput of `python3.8 -m pip debug --verbose` or join our slack channel.
-- If you are on mac using conda, make sure conda is installed for the right platform intel/ arm.
-- If you are on mac using pyenv, make sure to use python3.8 and not python3.7
-
-ERROR on Ubuntu: `libGL.so.1: cannot open shared object file: No such file or directory`
-
-- Need to install depedency: `sudo apt -y install libgl1-mesa-glx`
-
-Error on Mac+conda: `OMP: Error #15: Initializing libomp.dylib, but found libomp.dylib already initialized.
-OMP: Hint This means that multiple copies of the OpenMP runtime have been linked into the program. That is dangerous, since it can degrade performance or cause incorrect results. The best thing to do is to ensure that only a single OpenMP runtime is linked into the process, e.g. by avoiding static linking of the OpenMP runtime in any library. As an unsafe, unsupported, undocumented workaround you can set the environment variable KMP_DUPLICATE_LIB_OK=TRUE to allow the program to continue to execute, but that may cause crashes or silently produce incorrect results. For more information, please see http://openmp.llvm.org/
-zsh: abort      python3`
-
-- Solution from [StackOverflow](https://stackoverflow.com/questions/53014306/error-15-initializing-libiomp5-dylib-but-found-libiomp5-dylib-already-initial)
-- You should install all packages without MKL support:
-
-```
-conda install nomkl
-conda install numpy scipy pandas tensorflow
-conda remove mkl mkl-service # may fail, don't worry
-```
-
-Error on Mac M1: `AttributeError: partially initialized module 'cv2' has no attribute 'gapi_wip_gst_GStreamerPipeline' (most likely due to a circular import)`  
-Solution: downgrade your cv2 version to 4.5.5.64 using the command `python.XX -m pip install -U opencv-python==4.5.5.64` where XX is your python version.
-
-Error on Mac M1: library not loaded when trying to import cv2 `ImportError: dlopen(/Users/mikasnoopy/homebrew/lib/python3.9/site-packages/cv2/python-3.9/cv2.cpython-39-darwin.so, 2): Library not loaded: /Users/mikasnoopy/homebrew/opt/dav1d/lib/libdav1d.5.dylib
-  Referenced from: /Users/mikasnoopy/homebrew/opt/ffmpeg@4/lib/libavcodec.58.dylib
-  Reason: image not found
-` or any similar error.  
-Solution: Downgrade your ffmpg using `brew remove ffmpeg; brew install ffmpeg@4`
-
-[block:html]
-{
-  "html": "<center> \n    <a href=\"https://www.visual-layer.com\" target=\"_blank\" rel=\"noopener noreferrer\">\n    <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo_dark_mode.png\" width=200>\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    <img alt=\"vl logo.\" src=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    </picture>\n    </a><br><br>\n    <a href=\"https://github.com/visual-layer/fastdup\" target=\"_blank\" style=\"text-decoration: none;\"> GitHub </a> •\n    <a href=\"https://visual-layer.slack.com/\" target=\"_blank\" style=\"text-decoration: none;\"> Join Slack Community </a> •\n    <a href=\"https://visual-layer.readme.io/discuss\" target=\"_blank\" style=\"text-decoration: none;\"> Discussion Forum </a>\n</center>\n\n<center> \n    <a href=\"https://medium.com/visual-layer\" target=\"_blank\" style=\"text-decoration: none;\"> Blog </a> •\n    <a href=\"https://visual-layer.readme.io/\" target=\"_blank\" style=\"text-decoration: none;\"> Documentation </a> •\n    <a href=\"https://visual-layer.com/about\" target=\"_blank\" style=\"text-decoration: none;\"> About Us </a> \n</center>\n\n<center> \n    <a href=\"https://www.linkedin.com/company/visual-layer/\" target=\"_blank\" style=\"text-decoration: none;\"> LinkedIn </a> •\n    <a href=\"https://twitter.com/visual_layer\" target=\"_blank\" style=\"text-decoration: none;\"> Twitter </a>\n</center>"
-}
-[/block]
