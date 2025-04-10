@@ -1,10 +1,6 @@
 ---
 title: "Single-node deployment"
-slug: "single-node-deployment-copy"
-excerpt: ""
-hidden: true
-createdAt: "Wed Apr 02 2025 08:12:56 GMT+0000 (Coordinated Universal Time)"
-updatedAt: "Wed Apr 02 2025 08:14:09 GMT+0000 (Coordinated Universal Time)"
+description: ""
 ---
 # Minimal system requirements
 
@@ -67,8 +63,8 @@ HARDWARE=cpu VL_VERSION="2.33.1-rc10" bash -c "$(curl -fsSL https://vl-public-bu
 
 Once the system is running, connect to the application using your browser:
 
-- **HTTP\:** `http://<server name>:2080`
-- **HTTPS\:** `https://<server name>:2443`
+- **HTTP\**: `http://<server name>:2080`
+- **HTTPS\**: `https://<server name>:2443`
 
 ## Start the System
 
@@ -89,7 +85,7 @@ Once the system is running, connect to the application using your browser:
 ```
 
 - This process **can take several hours**, depending on data size.
-- If the dataset name includes spaces, use **quotation marks** (e.g., `"My Dataset"`).
+- If the dataset name includes spaces, use **quotation marks**(e.g., `"My Dataset"`).
 
 # Troubleshooting
 
@@ -101,7 +97,7 @@ Once the system is running, connect to the application using your browser:
 docker: Error response from daemon: pull access denied for visuallayer/onprem-installer, repository does not exist or may require 'docker login'.
 ```
 
-**Solution:** Ensure you are logged into Docker.
+ **Solution***Solution**: Ensure you are logged into Docker.
 
 ### Problem: Docker Daemon Not Running
 
@@ -109,7 +105,7 @@ docker: Error response from daemon: pull access denied for visuallayer/onprem-in
 docker: Cannot connect to the Docker daemon at unix:///var/run/docker.sock.
 ```
 
-**Solution:** Start the Docker daemon.
+ **Solution***Solution**: Start the Docker daemon.
 
 ### Problem: Image Pulling Fails
 
@@ -117,7 +113,7 @@ docker: Cannot connect to the Docker daemon at unix:///var/run/docker.sock.
 manifest for visuallayer/onprem-cd:2.25.6-rc6 not found: manifest unknown
 ```
 
-**Solution:** Verify the **software version** and that you are logged into Docker with the correct user.
+**Solution **: Verify the** software version**and that you are logged into Docker with the correct user.
 
 ### Problem: Platform Mismatch Warning
 
@@ -125,7 +121,7 @@ manifest for visuallayer/onprem-cd:2.25.6-rc6 not found: manifest unknown
 WARNING: The requested image's platform (linux/arm64) does not match the detected host platform (linux/amd64/v3).
 ```
 
-**Solution:** This is a **warning only**—can be ignored.
+**Solution **: This is a** warning only**—can be ignored.
 
 ### Problem: `docker compose` Not Found
 
@@ -133,7 +129,7 @@ WARNING: The requested image's platform (linux/arm64) does not match the detecte
 ./run_profiler.sh: line 159: docker compose: command not found
 ```
 
-**Solution:** Install or reinstall Docker following the official installation instructions.
+ **Solution***Solution**: Install or reinstall Docker following the official installation instructions.
 
 ### Problem: PostgreSQL Operational Error
 
@@ -141,7 +137,7 @@ WARNING: The requested image's platform (linux/arm64) does not match the detecte
 sqlalchemy.exc.OperationalError: (psycopg.OperationalError) [Errno -3] Temporary failure in name resolution
 ```
 
-**Solution:** Ensure the system was brought up using the `docker up` command.
+ **Solution***Solution**: Ensure the system was brought up using the `docker up` command.
 
 ***
 

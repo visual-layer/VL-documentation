@@ -1,12 +1,13 @@
 ---
-title: "Preparing Annotation File"
-slug: "preparing-annotation-data-file-copy"
-excerpt: "This guide provides instructions on structuring annotation files correctly before importing them into Visual Layer. Visual Layer supports two annotation formats: **COCO (JSON format) and CSV format.** Ensuring proper structuring will prevent errors during dataset creation and allow seamless integration."
-hidden: true
-createdAt: "Tue Mar 11 2025 15:55:21 GMT+0000 (Coordinated Universal Time)"
-updatedAt: "Tue Mar 25 2025 12:04:37 GMT+0000 (Coordinated Universal Time)"
+title: "Preparing annotation file"
+description: "This guide provides instructions on structuring annotation files correctly before importing them into Visual Layer. Visual Layer supports two annotation formats **: COCO (JSON format) and CSV format.** Ensuring proper structuring will prevent errors during dataset creation and allow seamless integration."
 ---
->  **Note:** to convert YOLO annotation to VL format visit: [Converting YOLO Annotations to Visual Layer Format](<>)
+
+<Note>
+
+To convert YOLO annotation to VL format visit: [Converting YOLO Annotations to Visual Layer Format](<>)
+
+</Note>
 
 # Tabular Formats: Parquet / CSV
 
@@ -84,15 +85,15 @@ Ensure The file is named `annotations.json`.
 
 ***
 
-### **Summary of Bounding Box Formats**
+###**Summary of Bounding Box Formats**
 
 | Format                  | Representation                                 | File Type |
 | ----------------------- | ---------------------------------------------- | --------- |
-| **JSON (COCO)**         | `[x_min, y_min, width, height]`                | `.json`   |
-| **CSV** (Image Labels)  | `[filename, label]`                            | `.csv`    |
-| **CSV** (Object Labels) | `filename, col_x, row_y, width, height, label` | `.csv`    |
+|**JSON (COCO)**        | `[x_min, y_min, width, height]`                | `.json`   |
+| **CSV**(Image Labels)  | `[filename, label]`                            | `.csv`    |
+| **CSV**(Object Labels) | `filename, col_x, row_y, width, height, label` | `.csv`    |
 
-<br />
+
 
 For instructions on importing annotation files, see [Importing Annotations.](<>)
 

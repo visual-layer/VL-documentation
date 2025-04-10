@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "theme": "maple",
+  "name": "Visual Layer Documentation",
   "colors": {
     "primary": "#0097D9",
     "light": "#0097D9",
@@ -14,13 +14,13 @@
         "tab": "Guides",
         "groups": [
           {
-            "group": "Getting Started",
+            "group": "Getting started",
             "pages": [
-              "docs/getting-started/quick-start",
               "docs/getting-started/introduction",
+               "docs/getting-started/quick-start",
               "docs/getting-started/deployment-options",
               {
-                "group": "Definitions & Entities",
+                "group": "Definitions & entities",
                 "pages": [
                   "docs/getting-started/definitions-entities",
                   "docs/getting-started/understanding-clusters"
@@ -37,7 +37,7 @@
             ]
           },
           {
-            "group":"On-Premises",
+            "group":"On-premises",
             "pages": [
               "docs/on-prem/single-node-deployment",
               "docs/on-prem/command-line-flags"
@@ -52,11 +52,11 @@
             ]
           },
           {
-            "group":"Creating Datasets",
+            "group":"Creating datasets",
             "pages": [
               "docs/Creating-Datasets/createdelete-datasets",
             {
-              "group": "Importing Annotations",
+              "group": "Importing annotations",
               "pages": [
                   "docs/Creating-Datasets/importing-annotations/annotations-overview",
                   "docs/Creating-Datasets/importing-annotations/upload-annotations",
@@ -70,7 +70,7 @@
             ]
           },
           {
-            "group":"Managing Datasets",
+            "group":"Managing datasets",
             "pages": [
               "docs/Managing-Datasets/save-views",
               "docs/Managing-Datasets/tag-iteams",
@@ -82,7 +82,7 @@
             ]
           },
           {
-            "group":"Exploring Datasets",
+            "group":"Exploring datasets",
             "pages": [
               "docs/Exploring-datasets/overview",
               "docs/Exploring-datasets/semantic-search", 
@@ -95,7 +95,7 @@
               "docs/Exploring-datasets/outlier-imagesobjects",
               "docs/Exploring-datasets/select-unique-items",
               {
-                "group": "Dataset Quality",
+                "group": "Dataset quality",
                 "pages": [
                   "docs/Exploring-datasets/blurry-imagesobjects",
                   "docs/Exploring-datasets/dark-imagesobjects",
@@ -106,7 +106,7 @@
             ]
           },
           {
-            "group":"Dataset Enrichment",
+            "group":"Dataset enrichment",
             "pages": [
               "docs/Dataset-Enrichment/enrich_overview",
               "docs/Dataset-Enrichment/model-catalog",
@@ -115,7 +115,7 @@
             ]
           },
           {
-            "group":"Help & Support",
+            "group":"Help & support",
             "pages": [
               "docs/Help-Support/troubleshooting",
               "docs/Help-Support/faqs",
@@ -128,7 +128,7 @@
         "tab": "Workflows"
       },
       {
-        "tab": "API Reference",
+        "tab": "API reference",
         "groups": [
           {
             "group": "API Documentation",
@@ -246,7 +246,7 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:support@visual-layer.com"
       }
     ],
     "primary": {
@@ -255,11 +255,28 @@
       "href": "https://www.visual-layer.com/"
     }
   },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/visual_layer",
-      "github": "https://github.com/visual-layer/fastdup",
-      "linkedin": "https://www.linkedin.com/company/visual-layer/"
+"footer": {
+  "socials": {
+    "x": "https://x.com/visual_layer",
+    "github": "https://github.com/visual-layer/fastdup",
+    "linkedin": "https://www.linkedin.com/company/visual-layer/"
+  },
+  "links": [
+    {
+      "header": "Navigation",
+      "items": [
+        { "label": "Home", "href": "https://www.visual-layer.com" },
+        { "label": "Platform", "href": "https://www.visual-layer.com/#platform" }
+      ]
+    },
+    {
+      "header": "Resources",
+      "items": [
+        { "label": "Blog", "href": "https://www.visual-layer.com/blog" },
+        { "label": "Videos", "href": "https://www.youtube.com/@visual-layer" }
+      ]
     }
-  }
+  ]
+}
+
 }

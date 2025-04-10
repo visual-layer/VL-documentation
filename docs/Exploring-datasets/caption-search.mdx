@@ -1,5 +1,5 @@
 ---
-title: Caption Search
+title: Caption search
 description: Learn how to use advanced operators when searching by image captions in Visual Layer.
 ---
 
@@ -15,14 +15,14 @@ Visual Layer supports several search operators to help you build flexible, accur
 
 The `AND` operator is implied when you separate terms with a space, or you can write it explicitly.
 
-- **Usage:**  
+- **Usage**:  
   Use `AND`, `and`, or `+` between terms. Example:  
   `black AND cat`  
   `black and cat`  
   `black + cat`  
   `black cat`
 
-- **Result:**  
+- **Result**:  
   Returns captions that include both “black” and “cat” in any order.
 
 <Frame>
@@ -33,12 +33,12 @@ The `AND` operator is implied when you separate terms with a space, or you can w
 
 Use the `OR` operator to find results that contain either one term or the other—or both.
 
-- **Usage:**  
+- **Usage**:  
   Use `OR` or `or` between terms. Example:  
   `black cat OR black dog`  
   `black cat or black dog`
 
-- **Result:**  
+- **Result**:  
   Returns images that mention “black cat,” “black dog,” or both.
 
 <Frame>
@@ -49,11 +49,11 @@ Use the `OR` operator to find results that contain either one term or the other�
 
 Use the `NOT` operator to exclude terms from search results.
 
-- **Usage:**  
+- **Usage**:  
   Prefix a word with a minus sign `-`. Example:  
   `dog -black`
 
-- **Result:**  
+- **Result**:  
   Returns captions that contain “dog” but exclude any that also include “black.”
 
 <Frame>
@@ -64,11 +64,11 @@ Use the `NOT` operator to exclude terms from search results.
 
 Wrap terms in double quotes to return captions that match the exact phrase.
 
-- **Usage:**  
+- **Usage**:  
   Use double quotation marks `" "` around a phrase. Example:  
   `"yellow flower"`
 
-- **Result:**  
+- **Result**:  
   Returns captions with the exact phrase “yellow flower.”
 
 <Frame>
@@ -79,10 +79,10 @@ Wrap terms in double quotes to return captions that match the exact phrase.
 
 You can combine operators to write more advanced queries.
 
-- **Example:**  
+- **Example**:  
   `flower -bird OR tree AND "red leave"`
 
-- **Result:**  
+- **Result**:  
   This query includes:  
   - Any caption that includes “flower” but not “bird”  
   - Or includes “tree”  

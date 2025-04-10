@@ -1,10 +1,6 @@
 ---
-title: "Converting YOLO Annotations to Visual Layer Format"
-slug: "converting-yolo-annotations-to-visual-layer-format-copy"
-excerpt: "This guide explains how to convert a Kaggle Masati dataset into a CSV file that conforms to Visual Layer's object annotation format."
-hidden: true
-createdAt: "Tue Mar 11 2025 15:55:32 GMT+0000 (Coordinated Universal Time)"
-updatedAt: "Tue Mar 25 2025 12:06:38 GMT+0000 (Coordinated Universal Time)"
+title: "Converting YOLO annotations to visual layer format"
+description: "This guide explains how to convert a Kaggle Masati dataset into a CSV file that conforms to Visual Layer's object annotation format."
 ---
 In this dataset, the images and labels are organized as follows:
 
@@ -21,7 +17,7 @@ Each annotation file contains lines with five values in the following format:
 <class_id> <norm_cx> <norm_cy> <norm_w> <norm_h>
 ```
 
-<br />
+
 
 ```
 0 0.5869140625 0.2412109375 0.021484375 0.044921875
@@ -30,7 +26,7 @@ Each annotation file contains lines with five values in the following format:
 
 ```
 
-<br />
+
 
 `class_id`: Represents the object class (e.g. 0 corresponds to "ship").  
 `norm_cx`, `norm_cy`: Normalized center coordinates (values between 0 and 1).  
@@ -52,7 +48,7 @@ top_left_x = (center_x - width/2)
 top_left_y = (center_y - height/2)
 ```
 
-<br />
+
 
 - Generate the CSV File:  
   The CSV is generated with the following columns:
@@ -66,7 +62,7 @@ top_left_y = (center_y - height/2)
 
 ## Python Conversion Script
 
-<br />
+
 
 ```
 import os
@@ -142,7 +138,7 @@ with open(output_csv, "w", newline="") as csvfile:
 
 ```
 
-<br />
+
 
 ## Script Explanation
 

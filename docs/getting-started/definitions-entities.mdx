@@ -1,69 +1,98 @@
 ---
-title: "Definitions & Entities"
-slug: "definitions-entities-copy"
-excerpt: "Visual Layer key definitions"
-hidden: true
-createdAt: "Thu Mar 20 2025 10:55:47 GMT+0000 (Coordinated Universal Time)"
-updatedAt: "Mon Mar 24 2025 15:38:01 GMT+0000 (Coordinated Universal Time)"
+title: "Definitions & entities"
+description: "Visual Layer key definitions"
 ---
-This glossary provides definitions and explanations for the key terms and entities relevant to Visual Layer. Use this as a quick reference to understand the platform's core concepts and features.
 
-**Annotations:** Descriptive metadata or markers added to images or objects, such as bounding boxes or class labels, to enhance dataset usability.
+This glossary provides definitions and explanations for key terms and entities relevant to Visual Layer. Use it as a quick reference to understand the platform's core concepts and features.
 
-**Bounding Box:** A shape annotation drawn around an object in an image to define its position and size for object detection tasks.
+---
 
-**Cluster:** A set of data entities grouped by a common characteristic. Images are grouped by sophisticated similarity algorithm.
+### **Annotations**  
+Descriptive metadata or markers added to images or objects, such as bounding boxes or class labels, to enhance dataset usability.
 
-**Cluster view: ** A structured interface that visually presents groups of similar images, allowing users to explore related data efficiently.
+### **Bounding Box**  
+A shape annotation drawn around an object in an image to define its position and size for object detection tasks.
 
-**Dataset:** A collection of visual data, such as images or videos, that users upload to Visual Layer for organization, exploration, and analysis.
+### **Cluster**  
+A set of data entities grouped by a common characteristic. Images are grouped by a sophisticated similarity algorithm.
 
-**Dataset Analysis:** A process in which the images in a given dataset are tested for possible issues from the known issue types and are grouped together for easy visualization. The result of the analysis is zero or more issues and zero or more Clusters.
+### **Cluster View**  
+A structured interface that visually presents groups of similar images, allowing users to explore related data efficiently.
 
-**Dataset exploration:** The process of browsing, filtering and searching through the data in a Dataset, usually for data selection purposes.
+### **Dataset**  
+A collection of visual data, such as images or videos, that users upload to Visual Layer for organization, exploration, and analysis.
 
-**Dataset Exploration View:** The main view for browsing, filtering, and analyzing your dataset. It provides access to images, objects, clusters, metadata filters, and search tools.
+### **Dataset Analysis**  
+A process that tests images in a dataset for known issue types and groups them for easy visualization. Results may include issue instances and clusters.
 
-**Dataset Inventory:**The overview of all available datasets
+### **Dataset Exploration**  
+The process of browsing, filtering, and searching through dataset contents, typically for data selection or inspection.
 
-**Duplicates:** Identical or near-identical images or videos within a dataset. Identifying and removing duplicates ensures data quality and prevents redundancy in analyses.
+### **Dataset Exploration View**  
+The primary view for exploring and analyzing a dataset. It provides access to images, objects, clusters, metadata filters, and search tools.
 
-**Enrichment:** The process of adding additional metadata or attributes to dataset items to enhance their value and utility. This can include annotations, tags, or external data sources.
+### **Dataset Inventory**  
+An overview of all available datasets in your Visual Layer environment.
 
-**Filtering:** process of reduction of a set of items by applying conditions (query expression) to items metadata properties. Set of items can be anything: a cluster, entire dataset, similar images
+### **Duplicates**  
+Identical or near-identical images or videos within a dataset. Identifying and removing duplicates improves data quality and prevents redundancy.
 
-**Image:** A file that contains a visual representation of something. for example, a GIF or PNG file. An image can be an artifact, such as a photograph or other two-dimensional picture, that resembles a subject.
+### **Enrichment**  
+The process of adding metadata or attributes to dataset items to enhance their value. This includes annotations, tags, or external data sources.
 
-**Image View:** Image View displays clusters of visually similar images across your dataset.
+### **Filtering**  
+The process of reducing a set of items by applying conditions to metadata properties. Filters can be applied to datasets, clusters, or groups of similar images.
 
-**Issue:** A concrete instance of an issue type, associated with one or more images (e.g. train/test leakage, cluster of duplicates, data drift).
+### **Image**  
+A visual file (e.g., PNG, JPG, GIF) representing an object or scene. In Visual Layer, images are the core unit of analysis and annotation.
 
-**Issue Type:** A specific type of a problem that during the analysis process takes one or more images in and generates zero or more issue instances.
+### **Image View**  
+Displays clusters of visually similar images across your dataset, enabling efficient visual browsing.
 
-**Metadata:** Information associated with each visual data item, such as file name, dimensions, creation date, or user-defined attributes. Metadata plays a key role in filtering and organizing datasets.
+### **Issue**  
+A concrete instance of an issue type, typically linked to one or more images (e.g., train/test leakage, duplicates, or data drift).
 
-**Mislabel:** An incorrect or inconsistent label applied to a dataset item. Identifying and correcting mislabels is crucial for maintaining dataset accuracy and reliability.
+### **Issue Type**  
+A predefined category of problem identified during dataset analysis. It generates issue instances based on specific patterns or anomalies.
 
-**Object:** A region of interest in an image, usually a region that contains an instance of a specific class.
+### **Metadata**  
+Information associated with each visual item, such as filename, dimensions, timestamps, and user-defined tags. Crucial for organizing and filtering datasets.
 
-**Object View:** Object View presents clusters of annotated or enriched objects, grouped by visual similarity. Rather than analyzing entire images, this view focuses on specific object instances—like faces, cars, animals, and more—allowing for detailed inspection and object-level insights.
+### **Mislabel**  
+An incorrect or inconsistent label applied to a dataset item. Detecting and correcting mislabels ensures dataset accuracy.
 
-**Outliers:** Data points that deviate significantly from the rest of the dataset. Visual Layer enables users to identify and analyze outliers to improve data quality and gain insights.
+### **Object**  
+A region of interest within an image, usually representing an instance of a specific class (e.g., a face, vehicle, or product).
 
-**Saved Views:** Custom configurations of filters and sorting applied to a dataset. Saved Views allow users to easily revisit specific subsets of data and share them with collaborators.
+### **Object View**  
+Displays clusters of annotated or enriched objects grouped by visual similarity. This view focuses on object-level insights rather than whole images.
 
-**Selected item(s):** The item/s (Image, Cluster or Object) that user selects in order to see details about or perform an action on.
+### **Outliers**  
+Data points that differ significantly from the rest of the dataset. Identifying outliers can improve data quality and uncover unique patterns.
 
-**Semantic Search:** A search technique that uses the meaning and context of terms rather than exact matches, enabling more intuitive and relevant results when querying datasets.
+### **Saved Views**  
+Custom configurations of filters and sorting applied to a dataset. Saved Views allow users to revisit specific subsets of data and share them with collaborators.
 
-**Similarity Results:** Images and Clusters that are visually similar to a chosen Vertex
+### **Selected Item(s)**  
+The image, object, or cluster a user selects to view in detail or perform an action on.
 
-**Similarity Search:** The process of finding similar Images and/or Clusters for a given query Image or Cluster
+### **Semantic Search**  
+A search technique based on meaning and context rather than exact keyword matches, enabling more intuitive dataset queries.
 
-**Similarity Vertex:** The item/s (Image, Cluster or Object) that user chooses to see its similar Images
+### **Similarity Results**  
+Images or clusters that are visually similar to a selected item (the "vertex").
 
-**User tags:** User-defined labels applied to dataset items to categorize, group, or annotate specific data points. Tags enhance search-ability and organization.
+### **Similarity Search**  
+The process of finding visually similar images or clusters for a given query item.
 
-**Video:** A file that contains the recording, reproducing, or broadcasting of moving visual images.
+### **Similarity Vertex**  
+The reference item (image, object, or cluster) used as the starting point for similarity search.
 
-**Video Frame:** An individual image extracted from a video sequence. Each frame represents a single moment in time and can be analyzed or processed independently.
+### **User Tags**  
+Custom labels applied by users to annotate or categorize dataset items. Tags support better organization, search, and collaboration.
+
+### **Video**  
+A media file containing a sequence of moving images. Videos are treated as datasets and can be analyzed frame-by-frame.
+
+### **Video Frame**  
+An individual still image extracted from a video sequence. Each frame can be analyzed or annotated independently.

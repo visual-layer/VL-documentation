@@ -1,21 +1,21 @@
 ---
-title: "Importing Annotations"
-slug: "importing-annotations-copy-1"
-excerpt: "This guide explains how to import **pre-existing annotation files** into Visual Layer. If you already have labeled datasets, you can upload them in supported formats to integrate with your dataset seamlessly."
-hidden: true
-createdAt: "Wed Mar 12 2025 12:07:27 GMT+0000 (Coordinated Universal Time)"
-updatedAt: "Tue Mar 25 2025 12:05:39 GMT+0000 (Coordinated Universal Time)"
+title: "Importing annotations"
+description: "This guide explains how to import **pre-existing annotation files** into Visual Layer."
 ---
->  **Note:** Annotations must be uploaded when creating a dataset and cannot be added later. See Creating a Dataset for more details.
+This guide explains how to import **pre-existing annotation files** into Visual Layer. If you already have labeled datasets, you can upload them in supported formats to integrate with your dataset seamlessly.
+
+<Note>
+Annotations must be uploaded when creating a dataset and cannot be added later. See Creating a Dataset for more details.
+</Note>
 
 For file structuring guidelines, visit[ Preparing Annotation Files.](<>)
 
 ## Supported Annotation Formats
 
-1. **Parquet / CSV**
-2. **JSON (COCO format)**
+1.**Parquet / CSV**
+2.**JSON (COCO format)**
 
-**Important:** 
+ **Important**: 
 
 - Annotations **must be added when creating a dataset**. Currently, you cannot add them afterward.
 - Your annotation file must be named **exactly** as one of the following:
@@ -24,9 +24,10 @@ For file structuring guidelines, visit[ Preparing Annotation Files.](<>)
   - `object_annotations.csv`
   - `image_annotations.parquet`
   - `object_annotations.parquet`  
-    **Why is file naming important?** Annotation files must follow a strict naming convention to ensure proper recognition by Visual Layer. Files that do not match these names **will not be processed correctly.**
-
-***
+   
+   <Card title="Why is this important?">
+   Annotation files must follow a strict naming convention to ensure proper recognition by Visual Layer. Files that do not match these names will not be processed correctly.
+   </Card>
 
 ## How to Import Annotations
 
