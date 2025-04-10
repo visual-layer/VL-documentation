@@ -1,0 +1,47 @@
+---
+title: "API Comparison"
+excerpt: "V1 and V0.2 API differences"
+hidden: false
+metadata: 
+  image: []
+  robots: "index"
+createdAt: "Tue Mar 21 2023 03:51:49 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Thu Oct 26 2023 05:37:19 GMT+0000 (Coordinated Universal Time)"
+---
+# Comparison to the old API
+
+The new Fastdup V1.0 API follows much of the existing interface but tries to simplify the usage and avoid the need to provide paths and parameters repeatedly.
+
+### V1.0
+
+For the V1.0 API, input and work directories are set once at initialization. Parameters for the `fastdup.run` function are used in the `.run()` methods, following the same naming.
+
+Galleries and visualization are under the `.vis` subclass.
+
+```python python
+import fastdup
+
+fd = fastdup.create(work_dir="out", input_dir="/path/to/your/folder")
+fd.run(nearest_neighbors_k=5, ccthreshold=0.96)
+
+fd.vis.duplicates_gallery()     #create a visual gallery of found duplicates
+fd.vis.outliers_gallery()       #create a visual gallery of anomalies
+fd.vis.components_gallery()     #create visualiaiton of connected components
+fd.vis.stats_gallery()          #create visualization of images stastics (for example blur)
+```
+
+### V0.2xx
+
+The previous (V0.2xx) API is still fully supported and no breaking changes were made.  
+For working with webdataset/ tar/ zip files containing images please use v0.2.
+
+```python
+import fastdup
+
+fastdup.run(input_dir="/path/to/your/folder", work_dir='out', nearest_neighbors_k=5, turi_param='ccthreshold=0.96')    #main running function.
+
+fastdup.create_duplicates_gallery('out/similarity.csv', save_path='.')     #create a visual gallery of found duplicates
+fastdup.create_outliers_gallery('out/outliers.csv',   save_path='.')       #create a visual gallery of anomalies
+fastdup.create_components_gallery('out', save_path='.')                    #create visualiaiton of connected components
+fastdup.create_stats_gallery('out', save_path='.', metric='blur')          #create visualization of images stastics (for example blur)
+```

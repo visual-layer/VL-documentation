@@ -1,0 +1,388 @@
+---
+title: "Hugging Face Datasets"
+excerpt: "Analyze any computer vision datasets from [Hugging Face Datasets](https://huggingface.co/docs/datasets/). We will analyze an image classification dataset for duplicates/near-duplicates,  outliers and potential mislabels."
+hidden: false
+metadata: 
+  image: []
+  robots: "index"
+createdAt: "Wed Aug 23 2023 09:03:49 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Thu Oct 26 2023 05:37:19 GMT+0000 (Coordinated Universal Time)"
+---
+[![Open in Colab](https://img.shields.io/badge/Open%20in%20Colab-blue?style=for-the-badge&logo=data:image/png;base64,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&labelColor=gray)](https://colab.research.google.com/github/visual-layer/fastdup/blob/main/examples/analyzing-hf-datasets.ipynb) [![Open in Kaggle](https://img.shields.io/badge/Open%20in%20Kaggle-blue?style=for-the-badge&logo=data:image/png;base64,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&labelColor=gray)](https://kaggle.com/kernels/welcome?src=https://github.com/visual-layer/fastdup/blob/main/examples/analyzing-hf-datasets.ipynb)
+
+# Installation
+
+First, let's install the necessary packages to run this tutorial. 
+
+- `fastdup` - Analyze issues in the dataset.
+- `datasets` - Pull datasets from [Hugging Face Datasets](https://huggingface.co/datasets).
+
+```
+pip install fastdup datasets
+```
+
+Now, test the installation. If there's no error message, we are ready to go.
+
+```python
+import fastdup
+fastdup.__version__
+```
+
+```
+'1.41'
+```
+
+> 📘 Info
+> 
+> There are over 50,000 openly available datasets on Hugging Face Datasets. Some datasets are [gated](https://huggingface.co/docs/hub/datasets-gated#gated-datasets) and can only be downloaded if you have a user credential.
+
+# Load Dataset
+
+The Hugging Face  `datasets` [package](https://github.com/huggingface/datasets) provides an easy interface to load any datasets from the Hugging Face platform. On top of the package, fastdup provides a wrapper class `FastdupHFDataset` as a connector to ensure the `datasets` package works seamlessly within fastdup.
+
+The `FastdupHFDataset` class works the same way as the [`load_dataset`](https://huggingface.co/docs/datasets/v2.14.5/loading) method. You can import the wrapper class and specify the name of the Hugging Face Datasets repository as the first argument. 
+
+In this example, we load the [Tiny ImageNet](https://huggingface.co/datasets/zh-plus/tiny-imagenet) dataset which contains 100,000 images of 200 classes (500 for each class) downsized to 64×64 colored images. Each class has 500 training images, 50 validation images, and 50 test images.
+
+In the following code, we load the train split of the Tiny ImageNet dataset. 
+
+```python
+from fastdup.datasets import FastdupHFDataset
+dataset = FastdupHFDataset("zh-plus/tiny-imagenet")
+```
+
+> 👍 Tip
+> 
+> **Optional** parameters for the `FastdupHFDataset` class:
+> 
+> - `split` - Which split to download. **Default**: `'train'`.
+> - `img_key`- The key value for the dataset column containing images. **Default**: `'image'`.
+> - `label_key` -  The key value for the dataset column containing labels. **Default**: `'label'`.
+> - `cache_dir` - Where to cache the downloaded dataset. **Default**: `'/root/.cache/huggingface/datasets/'`
+> - `jpg_save_dir` - Which folder to store the `jpg` images. **Default**: `'jpg_images'`
+> - `reconvert_jpg`- Flag to force reconversion of images from `.parquet` to `.jpg`. **Default**: `False`
+> 
+> See [implementation](https://github.com/visual-layer/fastdup/blob/main/fastdup/datasets.py) for details.
+
+Now, let's inspect the `dataset` object.
+
+```python
+dataset
+```
+
+```
+Dataset({
+    features: ['image', 'label'],
+    num_rows: 100000
+})
+```
+
+Get the first element of the dataset.
+
+```python
+dataset[0]
+```
+
+```
+{'image': <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=64x64>,
+ 'label': 0}
+```
+
+Get the `PIL` image of the first element.
+
+```python
+dataset[0]['image']
+```
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/babae01-image.png",
+        null,
+        ""
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+Get the label of the first element.
+
+```python
+dataset[0]['label']
+```
+
+```
+0
+```
+
+> 📘 Info
+> 
+> You can also confirm the image and label of the first element by heading to the dataset [page](https://huggingface.co/datasets/zh-plus/tiny-imagenet).
+
+# Run fastdup
+
+Once loaded, we can now analyze the dataset in fastdup by passing in 2 properties of `dataset` into fastdup:
+
+- `dataset.img_dir` - Returns the folder directory where the jpg images are saved.
+- `dataset.annotations`- Returns a`DataFrame` of image and class labels.
+
+```python
+dataset.img_dir
+```
+
+```
+/root/.cache/huggingface/datasets/tiny-imagenet/jpg_images
+```
+
+```python
+dataset.annotations
+```
+
+[block:html]
+{
+  "html": "<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: left;\">\n      <th></th>\n      <th>filename</th>\n      <th>label</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>/root/.cache/huggingface/datasets/tiny-imagenet/jpg_images/38/19443.jpg</td>\n      <td>38</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>/root/.cache/huggingface/datasets/tiny-imagenet/jpg_images/38/19127.jpg</td>\n      <td>38</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>/root/.cache/huggingface/datasets/tiny-imagenet/jpg_images/38/19199.jpg</td>\n      <td>38</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>/root/.cache/huggingface/datasets/tiny-imagenet/jpg_images/38/19271.jpg</td>\n      <td>38</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>/root/.cache/huggingface/datasets/tiny-imagenet/jpg_images/38/19213.jpg</td>\n      <td>38</td>\n    </tr>\n  </tbody>\n</table>"
+}
+[/block]
+
+
+Let's run fastdup and pass in`dataset.img_dir` and `dataset.annotations` as arguments.
+
+```python
+fd = fastdup.create(input_dir=dataset.img_dir)
+fd.run(annotations=dataset.annotations)
+```
+
+```
+Warning: fastdup create() without work_dir argument, output is stored in a folder named work_dir in your current working path.
+FastDup Software, (C) copyright 2022 Dr. Amir Alush and Dr. Danny Bickson.
+
+
+                                                                               
+   ad88                                          88                            
+  d8"                             ,d             88                            
+  88                              88             88                            
+MM88MMM  ,adPPYYba,  ,adPPYba,  MM88MMM  ,adPPYb,88  88       88  8b,dPPYba,   
+  88     ""     `Y8  I8[    ""    88    a8"    `Y88  88       88  88P'    "8a  
+  88     ,adPPPPP88   `"Y8ba,     88    8b       88  88       88  88       d8  
+  88     88,    ,88  aa    ]8I    88,   "8a,   ,d88  "8a,   ,a88  88b,   ,a8"  
+  88     `"8bbdP"Y8  `"YbbdP"'    "Y888  `"8bbdP"Y8   `"YbbdP'Y8  88`YbbdP"'   
+                                                                  88           
+                                                                  88           
+
+
+2023-09-19 21:40:45 [INFO] Going to loop over dir /tmp/tmpjb5y9uvf.csv
+2023-09-19 21:40:45 [INFO] Found total 100000 images to run on, 100000 train, 0 test, name list 100000, counter 100000 
+2023-09-19 21:44:25 [INFO] Found total 100000 images to run onmated: 0 Minutes
+Finished histogram 38.760
+Finished bucket sort 38.971
+2023-09-19 21:44:45 [INFO] 20456) Finished write_index() NN model
+2023-09-19 21:44:45 [INFO] Stored nn model index file work_dir/nnf.index
+2023-09-19 21:44:56 [INFO] Total time took 251595 ms
+2023-09-19 21:44:56 [INFO] Found a total of 40 fully identical images (d>0.990), which are 0.02 % of total graph edges
+2023-09-19 21:44:56 [INFO] Found a total of 0 nearly identical images(d>0.980), which are 0.00 % of total graph edges
+2023-09-19 21:44:56 [INFO] Found a total of 11083 above threshold images (d>0.900), which are 5.54 % of total graph edges
+2023-09-19 21:44:56 [INFO] Found a total of 10001 outlier images         (d<0.050), which are 5.00 % of total graph edges
+2023-09-19 21:44:56 [INFO] Min distance found 0.601 max distance 1.000
+2023-09-19 21:44:56 [INFO] Running connected components for ccthreshold 0.960000 
+.0
+ ########################################################################################
+
+Dataset Analysis Summary: 
+
+    Dataset contains 100000 images
+    Valid images are 100.00% (100,000) of the data, invalid are 0.00% (0) of the data
+    Similarity:  0.05% (46) belong to 1 similarity clusters (components).
+    99.95% (99,954) images do not belong to any similarity cluster.
+    Largest cluster has 4 (0.00%) images.
+    For a detailed analysis, use `.connected_components()`
+(similarity threshold used is 0.9, connected component threshold used is 0.96).
+
+    Outliers: 6.34% (6,344) of images are possible outliers, and fall in the bottom 5.00% of similarity values.
+    For a detailed list of outliers, use `.outliers()`.
+
+########################################################################################
+Would you like to see awesome visualizations for some of the most popular academic datasets?
+Click here to see and learn more: https://app.visual-layer.com/vl-datasets?utm_source=fastdup
+########################################################################################
+0
+```
+
+Once completed, we can visualize the issues in fastdup galleries.
+
+# Duplicates
+
+Let's visualize the duplicates in a gallery.
+
+```python
+fd.vis.duplicates_gallery()
+```
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/eaaf92e-_media_dnth_Active-Projects_fastdup_examples_work_dir_galleries_duplicates.html.png",
+        "",
+        ""
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+To get a detailed DataFrame on the duplicates/near-duplicate found, use the `similarity`method.
+
+```python
+similarity_df = fd.similarity()  
+similarity_df.head()
+```
+
+[block:html]
+{
+  "html": "<!DOCTYPE html>\n<html>\n<head>\n\t<title></title>\n\t<style>\n\t\t.table-container {\n\t\t\toverflow-x: auto;\n\t\t}\n\t</style>\n</head>\n<body>\n\t<div class=\"table-container\">\n\t\t<table border=\"1\" class=\"dataframe\">\n\t\t<thead>\n\t\t\t<tr style=\"text-align: left;\">\n\t\t\t\t<th></th>\n\t\t\t\t<th>from</th>\n\t\t\t\t<th>to</th>\n\t\t\t\t<th>distance</th>\n\t\t\t\t<th>filename_from</th>\n\t\t\t\t<th>label_from</th>\n\t\t\t\t<th>split_from</th>\n\t\t\t\t<th>index_x</th>\n\t\t\t\t<th>error_code_from</th>\n\t\t\t\t<th>is_valid_from</th>\n\t\t\t\t<th>fd_index_from</th>\n\t\t\t\t<th>filename_to</th>\n\t\t\t\t<th>label_to</th>\n\t\t\t\t<th>split_to</th>\n\t\t\t\t<th>index_y</th>\n\t\t\t\t<th>error_code_to</th>\n\t\t\t\t<th>is_valid_to</th>\n\t\t\t\t<th>fd_index_to</th>\n\t\t\t</tr>\n\t\t</thead>\n\t\t<tbody>\n\t\t\t<tr>\n\t\t\t\t<th>0</th>\n\t\t\t\t<td>67443</td>\n\t\t\t\t<td>26670</td>\n\t\t\t\t<td>1.0</td>\n\t\t\t\t<td>images_dir/images/banana/89460.jpg</td>\n\t\t\t\t<td>banana</td>\n\t\t\t\t<td>train</td>\n\t\t\t\t<td>67443</td>\n\t\t\t\t<td>VALID</td>\n\t\t\t\t<td>True</td>\n\t\t\t\t<td>67443</td>\n\t\t\t\t<td>images_dir/images/orange/99613.jpg</td>\n\t\t\t\t<td>orange</td>\n\t\t\t\t<td>train</td>\n\t\t\t\t<td>26670</td>\n\t\t\t\t<td>VALID</td>\n\t\t\t\t<td>True</td>\n\t\t\t\t<td>26670</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<th>1</th>\n\t\t\t\t<td>26670</td>\n\t\t\t\t<td>67443</td>\n\t\t\t\t<td>1.0</td>\n\t\t\t\t<td>images_dir/images/orange/99613.jpg</td>\n\t\t\t\t<td>orange</td>\n\t\t\t\t<td>train</td>\n\t\t\t\t<td>26670</td>\n\t\t\t\t<td>VALID</td>\n\t\t\t\t<td>True</td>\n\t\t\t\t<td>26670</td>\n\t\t\t\t<td>images_dir/images/banana/89460.jpg</td>\n\t\t\t\t<td>banana</td>\n\t\t\t\t<td>train</td>\n\t\t\t\t<td>67443</td>\n\t\t\t\t<td>VALID</td>\n\t\t\t\t<td>True</td>\n\t\t\t\t<td>67443</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<th>2</th>\n\t\t\t\t<td>26553</td>\n\t\t\t\t<td>27990</td>\n\t\t\t\t<td>1.0</td>\n\t\t\t\t<td>images_dir/images/orange/99746.jpg</td>\n\t\t\t\t<td>orange</td>\n\t\t\t\t<td>train</td>\n\t\t\t\t<td>26553</td>\n\t\t\t\t<td>VALID</td>\n\t\t\t\t<td>True</td>\n\t\t\t\t<td>26553</td>\n\t\t\t\t<td>images_dir/images/lemon/88551.jpg</td>\n\t\t\t\t<td>lemon</td>\n\t\t\t\t<td>train</td>\n\t\t\t\t<td>27990</td>\n\t\t\t\t<td>VALID</td>\n\t\t\t\t<td>True</td>\n\t\t\t\t<td>27990</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<th>3</th>\n\t\t\t\t<td>29903</td>\n\t\t\t\t<td>12251</td>\n\t\t\t\t<td>1.0</td>\n\t\t\t\t<td>images_dir/images/brain-coral/6866.jpg</td>\n\t\t\t\t<td>brain-coral</td>\n\t\t\t\t<td>train</td>\n\t\t\t\t<td>29903</td>\n\t\t\t\t<td>VALID</td>\n\t\t\t\t<td>True</td>\n\t\t\t\t<td>29903</td>\n\t\t\t\t<td>images_dir/images/coral-reef/95198.jpg</td>\n\t\t\t\t<td>coral-reef</td>\n\t\t\t\t<td>train</td>\n\t\t\t\t<td>12251</td>\n\t\t\t\t<td>VALID</td>\n\t\t\t\t<td>True</td>\n\t\t\t\t<td>12251</td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<th>4</th>\n\t\t\t\t<td>13861</td>\n\t\t\t\t<td>81041</td>\n\t\t\t\t<td>1.0</td>\n\t\t\t\t<td>images_dir/images/mashed-potato/87457.jpg</td>\n\t\t\t\t<td>mashed-potato</td>\n\t\t\t\t<td>train</td>\n\t\t\t\t<td>13861</td>\n\t\t\t\t<td>VALID</td>\n\t\t\t\t<td>True</td>\n\t\t\t\t<td>13861</td>\n\t\t\t\t<td>images_dir/images/meat-loaf_meatloaf/90376.jpg</td>\n\t\t\t\t<td>meat-loaf_meatloaf</td>\n\t\t\t\t<td>train</td>\n\t\t\t\t<td>81041</td>\n\t\t\t\t<td>VALID</td>\n\t\t\t\t<td>True</td>\n\t\t\t\t<td>81041</td>\n\t\t\t</tr>\n\t\t</tbody>\n\t</table>\n\t</div>\n</body>\n</html>\n"
+}
+[/block]
+
+
+We can get the number of duplicates/near-duplicates by filtering them on the `distance` score. A `distance` of `1.0` is an exact copy, and vice versa.
+
+```python
+near_duplicates = similarity_df[similarity_df["distance"] >= 0.99]
+near_duplicates = near_duplicates[["distance","filename_from", "filename_to", "label_from", "label_to"]]
+len(near_duplicates)
+```
+
+```
+40
+```
+
+# Outliers
+
+```python
+fd.vis.outliers_gallery()
+```
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/eaddc49-_media_dnth_Active-Projects_fastdup_examples_work_dir_galleries_outliers.html.png",
+        "",
+        ""
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+```python
+outliers_df = fd.outliers()
+outliers_df.head()
+```
+
+[block:html]
+{
+  "html": "<!DOCTYPE html>\n<html>\n<head>\n\t<title></title>\n\t<style>\n\t       .table-container {\n\t           overflow-x: auto;\n\t       }\n\t</style>\n</head>\n<body>\n\t<div class=\"table-container\">\n\t\t<table border=\"1\" class=\"dataframe\">\n\t\t\t<thead>\n\t\t\t\t<tr style=\"text-align: right;\">\n\t\t\t\t\t<th></th>\n\t\t\t\t\t<th>outlier</th>\n\t\t\t\t\t<th>nearest</th>\n\t\t\t\t\t<th>distance</th>\n\t\t\t\t\t<th>filename_outlier</th>\n\t\t\t\t\t<th>label_outlier</th>\n\t\t\t\t\t<th>split_outlier</th>\n\t\t\t\t\t<th>index_x</th>\n\t\t\t\t\t<th>error_code_outlier</th>\n\t\t\t\t\t<th>is_valid_outlier</th>\n\t\t\t\t\t<th>fd_index_outlier</th>\n\t\t\t\t\t<th>filename_nearest</th>\n\t\t\t\t\t<th>label_nearest</th>\n\t\t\t\t\t<th>split_nearest</th>\n\t\t\t\t\t<th>index_y</th>\n\t\t\t\t\t<th>error_code_nearest</th>\n\t\t\t\t\t<th>is_valid_nearest</th>\n\t\t\t\t\t<th>fd_index_nearest</th>\n\t\t\t\t</tr>\n\t\t\t</thead>\n\t\t\t<tbody>\n\t\t\t\t<tr>\n\t\t\t\t\t<th>0</th>\n\t\t\t\t\t<td>49827</td>\n\t\t\t\t\t<td>53704</td>\n\t\t\t\t\t<td>0.600712</td>\n\t\t\t\t\t<td>images_dir/images/slug/99254.jpg</td>\n\t\t\t\t\t<td>slug</td>\n\t\t\t\t\t<td>train</td>\n\t\t\t\t\t<td>49827</td>\n\t\t\t\t\t<td>VALID</td>\n\t\t\t\t\t<td>True</td>\n\t\t\t\t\t<td>49827</td>\n\t\t\t\t\t<td>images_dir/images/grasshopper_hopper/17431.jpg</td>\n\t\t\t\t\t<td>grasshopper_hopper</td>\n\t\t\t\t\t<td>train</td>\n\t\t\t\t\t<td>53704</td>\n\t\t\t\t\t<td>VALID</td>\n\t\t\t\t\t<td>True</td>\n\t\t\t\t\t<td>53704</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<th>1</th>\n\t\t\t\t\t<td>43915</td>\n\t\t\t\t\t<td>70359</td>\n\t\t\t\t\t<td>0.620984</td>\n\t\t\t\t\t<td>images_dir/images/fountain/47232.jpg</td>\n\t\t\t\t\t<td>fountain</td>\n\t\t\t\t\t<td>train</td>\n\t\t\t\t\t<td>43915</td>\n\t\t\t\t\t<td>VALID</td>\n\t\t\t\t\t<td>True</td>\n\t\t\t\t\t<td>43915</td>\n\t\t\t\t\t<td>images_dir/images/syringe/74220.jpg</td>\n\t\t\t\t\t<td>syringe</td>\n\t\t\t\t\t<td>train</td>\n\t\t\t\t\t<td>70359</td>\n\t\t\t\t\t<td>VALID</td>\n\t\t\t\t\t<td>True</td>\n\t\t\t\t\t<td>70359</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<th>2</th>\n\t\t\t\t\t<td>60394</td>\n\t\t\t\t\t<td>70399</td>\n\t\t\t\t\t<td>0.639867</td>\n\t\t\t\t\t<td>images_dir/images/jellyfish/6152.jpg</td>\n\t\t\t\t\t<td>jellyfish</td>\n\t\t\t\t\t<td>train</td>\n\t\t\t\t\t<td>60394</td>\n\t\t\t\t\t<td>VALID</td>\n\t\t\t\t\t<td>True</td>\n\t\t\t\t\t<td>60394</td>\n\t\t\t\t\t<td>images_dir/images/syringe/74452.jpg</td>\n\t\t\t\t\t<td>syringe</td>\n\t\t\t\t\t<td>train</td>\n\t\t\t\t\t<td>70399</td>\n\t\t\t\t\t<td>VALID</td>\n\t\t\t\t\t<td>True</td>\n\t\t\t\t\t<td>70399</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<th>3</th>\n\t\t\t\t\t<td>41058</td>\n\t\t\t\t\t<td>93188</td>\n\t\t\t\t\t<td>0.641278</td>\n\t\t\t\t\t<td>images_dir/images/walking-stick_walkingstick_stick-insect/17626.jpg</td>\n\t\t\t\t\t<td>walking-stick_walkingstick_stick-insect</td>\n\t\t\t\t\t<td>train</td>\n\t\t\t\t\t<td>41058</td>\n\t\t\t\t\t<td>VALID</td>\n\t\t\t\t\t<td>True</td>\n\t\t\t\t\t<td>41058</td>\n\t\t\t\t\t<td>images_dir/images/cockroach_roach/18144.jpg</td>\n\t\t\t\t\t<td>cockroach_roach</td>\n\t\t\t\t\t<td>train</td>\n\t\t\t\t\t<td>93188</td>\n\t\t\t\t\t<td>VALID</td>\n\t\t\t\t\t<td>True</td>\n\t\t\t\t\t<td>93188</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<th>4</th>\n\t\t\t\t\t<td>64552</td>\n\t\t\t\t\t<td>64680</td>\n\t\t\t\t\t<td>0.648504</td>\n\t\t\t\t\t<td>images_dir/images/goldfish_Carassius-auratus/497.jpg</td>\n\t\t\t\t\t<td>goldfish_Carassius-auratus</td>\n\t\t\t\t\t<td>train</td>\n\t\t\t\t\t<td>64552</td>\n\t\t\t\t\t<td>VALID</td>\n\t\t\t\t\t<td>True</td>\n\t\t\t\t\t<td>64552</td>\n\t\t\t\t\t<td>images_dir/images/goldfish_Carassius-auratus/118.jpg</td>\n\t\t\t\t\t<td>goldfish_Carassius-auratus</td>\n\t\t\t\t\t<td>train</td>\n\t\t\t\t\t<td>64680</td>\n\t\t\t\t\t<td>VALID</td>\n\t\t\t\t\t<td>True</td>\n\t\t\t\t\t<td>64680</td>\n\t\t\t\t</tr>\n\t\t\t</tbody>\n\t\t</table>\n\t</div>\n</body>\n</html>"
+}
+[/block]
+
+
+# Mislabels
+
+```python
+fd.vis.similarity_gallery(slice='diff')
+```
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/dbafbc0-_media_dnth_Active-Projects_fastdup_examples_work_dir_galleries_similarity.html.png",
+        "",
+        ""
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+# Wrap Up
+
+That's it! We've just conveniently surfaced many issues with this dataset by running fastdup. By taking care of dataset quality issues, we hope this will help you train better models.
+
+Questions about this tutorial? Reach out to us on our [Slack channel](https://visuallayer.slack.com/)!
+
+# VL Profiler - A faster and easier way to diagnose and visualize dataset issues
+
+The team behind fastdup also recently launched [VL Profiler](https://medium.com/visual-layer/introducing-vl-profiler-1cde3257c76c), a no-code cloud-based platform that lets you leverage fastdup in the browser. 
+
+VL Profiler lets you find:
+
+- Duplicates/near-duplicates.
+- Outliers.
+- Mislabels.
+- Non-useful images.
+
+Here's a highlight of the issues found in the RVL-CDIP test dataset on the VL Profiler.
+
+[block:embed]
+{
+  "html": "<iframe class=\"embedly-embed\" src=\"//cdn.embedly.com/widgets/media.html?src=https%3A%2F%2Fwww.youtube.com%2Fembed%2Fijf8Ag4-3TE%3Ffeature%3Doembed&display_name=YouTube&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dijf8Ag4-3TE&image=https%3A%2F%2Fi.ytimg.com%2Fvi%2Fijf8Ag4-3TE%2Fhqdefault.jpg&key=7788cb384c9f4d5dbbdbeffd9fe4b92f&type=text%2Fhtml&schema=youtube\" width=\"640\" height=\"480\" scrolling=\"no\" title=\"YouTube embed\" frameborder=\"0\" allow=\"autoplay; fullscreen; encrypted-media; picture-in-picture;\" allowfullscreen=\"true\"></iframe>",
+  "url": "https://www.youtube.com/watch?v=ijf8Ag4-3TE",
+  "title": "RVL DCIP Test Dataset - Visual Layer Profiler",
+  "favicon": "https://www.google.com/favicon.ico",
+  "image": "https://i.ytimg.com/vi/ijf8Ag4-3TE/hqdefault.jpg",
+  "provider": "youtube.com",
+  "href": "https://www.youtube.com/watch?v=ijf8Ag4-3TE",
+  "typeOfEmbed": "youtube"
+}
+[/block]
+
+
+> 👍 Free Usage
+> 
+> Use VL Profiler for free to analyze issues on your dataset with up to **1,000,000 images**. 
+> 
+> [Get started for free.](https://app.visual-layer.com?utm_source=fastdupdocs)
+
+Not convinced yet? 
+
+Interact with a collection of datasets like ImageNet-21K, COCO, and DeepFashion [here](https://app.visual-layer.com/vl-datasets?utm_source=fastdupdocs).
+
+No sign-ups needed.
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/d67dc85-GitHub_Banner.gif",
+        null,
+        ""
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+[block:html]
+{
+  "html": "<center> \n    <a href=\"https://www.visual-layer.com\" target=\"_blank\" rel=\"noopener noreferrer\">\n    <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo_dark_mode.png\" width=200>\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    <img alt=\"vl logo.\" src=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    </picture>\n    </a><br><br>\n    <a href=\"https://github.com/visual-layer/fastdup\" target=\"_blank\" style=\"text-decoration: none;\"> GitHub </a> •\n    <a href=\"https://visual-layer.slack.com/\" target=\"_blank\" style=\"text-decoration: none;\"> Join Slack Community </a> •\n    <a href=\"https://visual-layer.readme.io/discuss\" target=\"_blank\" style=\"text-decoration: none;\"> Discussion Forum </a>\n</center>\n\n<center> \n    <a href=\"https://medium.com/visual-layer\" target=\"_blank\" style=\"text-decoration: none;\"> Blog </a> •\n    <a href=\"https://visual-layer.readme.io/\" target=\"_blank\" style=\"text-decoration: none;\"> Documentation </a> •\n    <a href=\"https://visual-layer.com/about\" target=\"_blank\" style=\"text-decoration: none;\"> About Us </a> \n</center>\n\n<center> \n    <a href=\"https://www.linkedin.com/company/visual-layer/\" target=\"_blank\" style=\"text-decoration: none;\"> LinkedIn </a> •\n    <a href=\"https://twitter.com/visual_layer\" target=\"_blank\" style=\"text-decoration: none;\"> Twitter </a>\n</center>"
+}
+[/block]

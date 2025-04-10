@@ -1,0 +1,777 @@
+---
+title: "Analyzing Object Detection Dataset"
+excerpt: "In this tutorial, we will analyze an object detection dataset with bounding boxes and identify potential issues. We will cover the process of loading the annotations, visualizing bounding boxes, and finding objects  that are possibly mislabeled or not useful for training (tiny, blurry, etc.)."
+hidden: false
+metadata: 
+  image: []
+  robots: "index"
+createdAt: "Thu Feb 16 2023 11:54:14 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Thu Oct 26 2023 05:37:19 GMT+0000 (Coordinated Universal Time)"
+---
+When analyzing an object bounding box dataset, it is often useful to start with an image level analysis, to uncover low hanging fruits such as broken images and and duplicates. More on that in our [Analyzing Image Classification](https://visual-layer.readme.io/docs/analyzing-labeled-images) tutorial.
+
+In this tutorial we will analyze the image at the bounding box level. 
+
+# Setting Up
+
+You can follow along this tutorial by running [this notebook on Google Colab](https://colab.research.google.com/github/visual-layer/fastdup/blob/main/examples/analyzing-object-detection-dataset.ipynb)
+
+First, install fastdup with:
+
+```Text bash
+pip install fastdup
+```
+
+And verify the installation.
+
+```Text Python
+import fastdup
+fastdup.__version__
+```
+
+This tutorial runs on version `0.906`.
+
+# Download Dataset
+
+We will be using the [`coco minitrain`](https://github.com/giddyyupp/coco-minitrain) dataset for this tutorial.
+
+`coco-minitrain`is a curated mini training set (25K images ≈ 20% of train2017) from the original [COCO dataset](https://cocodataset.org/#home).
+
+Let's download the images and .csv annotations of the `coco-minitrain` dataset.
+
+```shell
+# Download images from mini-coco
+!gdown --fuzzy https://drive.google.com/file/d/1iSXVTlkV1_DhdYpVDqsjlT4NJFQ7OkyK/view
+!unzip coco_minitrain_25k.zip
+
+# Download csv annotations
+!cd coco_minitrain_25k/annotations && gdown --fuzzy https://drive.google.com/file/d/1i12p23cXlqp1QrXjAD_vu467r4q67Mq9/view
+```
+
+# Load annotations
+
+We will use a simple converter to convert the COCO format JSON annotation file into the fastdup annotation dataframe. This converter is applicable to any dataset which uses COCO format.
+
+```python
+import fastdup
+import pandas as pd
+
+coco_csv = 'coco_minitrain_25k/annotations/coco_minitrain2017.csv'
+coco_annotations = pd.read_csv(coco_csv, header=None, names=['filename', 'col_x', 'row_y',
+                                                             'width', 'height', 'label', 'ext'])
+
+coco_annotations['split'] = 'train'  # Only train files were loaded
+coco_annotations = coco_annotations.drop_duplicates()
+```
+
+```python
+coco_annotations.head(3)
+```
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+```
+.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+```
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>img_filename</th>
+      <th>bbox_x</th>
+      <th>bbox_y</th>
+      <th>bbox_w</th>
+      <th>bbox_h</th>
+      <th>label</th>
+      <th>ext</th>
+      <th>split</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>000000131075.jpg</td>
+      <td>20</td>
+      <td>55</td>
+      <td>313</td>
+      <td>326</td>
+      <td>tv</td>
+      <td>0</td>
+      <td>train</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>000000131075.jpg</td>
+      <td>176</td>
+      <td>381</td>
+      <td>286</td>
+      <td>136</td>
+      <td>laptop</td>
+      <td>0</td>
+      <td>train</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>000000131075.jpg</td>
+      <td>369</td>
+      <td>361</td>
+      <td>72</td>
+      <td>73</td>
+      <td>laptop</td>
+      <td>0</td>
+      <td>train</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+# Run fastdup
+
+```python
+image_dir = 'coco_minitrain_25k/images/train2017/'  # Train data only
+work_dir = 'fastdup_coco_25k'
+fd = fastdup.create(work_dir, image_dir)
+fd.run(annotations=coco_annotations, overwrite=True)
+```
+
+```
+FastDup Software, (C) copyright 2022 Dr. Amir Alush and Dr. Danny Bickson.
+2023-02-26 11:34:40 [WARNING] Warning: test_dir and input_dir should not point to the same directory 
+2023-02-26 11:34:40 [INFO] Going to loop over dir /var/folders/27/6tpv2d5j2yd9rtg1ml23f5h40000gn/T/tmpxnmh4kii.csv
+2023-02-26 11:34:40 [INFO] Found total 183546 images to run on
+[■■■■                                              ] 7% Estimated: 5 Minutes 0 Features
+
+Error: found invalid bounding box for image /Users/amirm/vl_data/coco_minitrain_25k/images/train2017/000000402248.jpg. Please check bounding box file 14 241 3 0
+Error: found invalid bounding box for image /Users/amirm/vl_data/coco_minitrain_25k/images/train2017/000000141426.jpg. Please check bounding box file 106 224 2 0
+Error: found invalid bounding box for image /Users/amirm/vl_data/coco_minitrain_25k/images/train2017/000000564557.jpg. Please check bounding box file 30 271 5 0
+Error: found invalid bounding box for image /Users/amirm/vl_data/coco_minitrain_25k/images/train2017/000000183338.jpg. Please check bounding box file 241 287 3 0
+Error: found invalid bounding box for image /Users/amirm/vl_data/coco_minitrain_25k/images/train2017/000000088835.jpg. Please check bounding box file 292 200 3 0
+Error: found invalid bounding box for image /Users/amirm/vl_data/coco_minitrain_25k/images/train2017/000000168890.jpg. Please check bounding box file 7 95 1 0
+Error: found invalid bounding box for image /Users/amirm/vl_data/coco_minitrain_25k/images/train2017/000000171360.jpg. Please check bounding box file 339 181 8 0
+Error: found invalid bounding box for image /Users/amirm/vl_data/coco_minitrain_25k/images/train2017/000000256896.jpg. Please check bounding box file 210 350 3 0
+Error: found invalid bounding box for image /Users/amirm/vl_data/coco_minitrain_25k/images/train2017/000000389655.jpg. Please check bounding box file 372 438 3 0
+
+
+2023-02-26 11:39:33 [ERROR] Error: found invalid bounding box for image /Users/amirm/vl_data/coco_minitrain_25k/images/train2017/000000389655.jpg. Please check bounding box file 372 438 3 0
+2023-02-26 11:39:42 [INFO] Found total 183546 images to run onated: 0 Minutes 0 Features
+2023-02-26 11:42:49 [INFO] 186133) Finished write_index() NN model
+2023-02-26 11:42:49 [INFO] Stored nn model index file /Users/amirm/vl_workdir/coco_minitrain_25k/tutorial_bboxes/nnf.index
+2023-02-26 11:43:18 [INFO] Total time took 517522 ms
+2023-02-26 11:43:18 [INFO] Found a total of 163 fully identical images (d>0.990), which are 0.03 %
+2023-02-26 11:43:18 [INFO] Found a total of 5895 nearly identical images(d>0.980), which are 1.07 %
+2023-02-26 11:43:18 [INFO] Found a total of 93110 above threshold images (d>0.900), which are 16.91 %
+2023-02-26 11:43:18 [INFO] Found a total of 16495 outlier images         (d<0.050), which are 3.00 %
+2023-02-26 11:43:18 [INFO] Min distance found 0.483 max distance 1.000
+2023-02-26 11:43:18 [INFO] Running connected components for ccthreshold 0.960000 
+
+ ########################################################################################
+
+Dataset Analysis Summary: 
+
+    Dataset contains 183546 images
+    Valid images are 89.87% (164,954) of the data, invalid are 10.13% (18,592) of the data
+    For a detailed analysis, use `.invalids()`.
+
+    Similarity:  3.96% (7,261) belong to 72 similarity clusters (components).
+    96.04% (176,285) images do not belong to any similarity cluster.
+    Largest cluster has 674 (0.37%) images.
+    For a detailed analysis, use `.connected_components()`
+(similarity threshold used is 0.9, connected component threshold used is 0.96).
+
+    Outliers: 5.75% (10,553) of images are possible outliers, and fall in the bottom 5.00% of similarity values.
+    For a detailed list of outliers, use `.outliers(data=True)`.
+```
+
+# Get class statistics
+
+```python
+fd.annotations()['label'].value_counts()
+```
+
+```
+person           50336
+chair             7870
+car               7703
+bottle            4330
+cup               4154
+                 ...  
+toothbrush         309
+bear               296
+parking meter      183
+toaster             46
+hair drier          40
+Name: label, Length: 80, dtype: int64
+```
+
+## Class distribution
+
+The dataset contains 25k images and 183k objects, an average of 7.3 objects per image. 
+
+Interestingly, we see a highly unbalanced class distribution, where all 80 coco classes are present here, but there is a strong balance towards the person class, that accounts for over 56k instances (30.6%). Car and Chair classes also contain over 8k instances each, while at the bottom of the list the toaster and hair drier classes contain as few as 40 instances. 
+
+Using `Plotly` we get a useful interactive histogram. 
+
+```python
+import plotly.express as px
+fig = px.histogram(coco_annotations, x="label")
+fig.show()
+```
+
+![](https://i.imgur.com/0zqCWpG.png)
+
+# Find outliers and duplicates for specific classes
+
+## Similarity Clusters
+
+First we visualize the general lists of duplicates and outliers, by default it is sorted by the number of elements:
+
+```python
+fd.vis.component_gallery()
+```
+
+![](https://files.readme.io/e887e2d-Screen_Shot_2023-02-26_at_16.09.57.png)
+
+![](https://i.imgur.com/1OJmqnF.png)
+
+![](https://i.imgur.com/2lSfXvZ.png)
+
+## Sorting by the largest objects
+
+```python
+fd.vis.component_gallery(metrix='size')
+```
+
+![](https://files.readme.io/8b08dde-Screen_Shot_2023-02-26_at_17.06.47.png)
+
+### A few notable examples
+
+Further down the gallery, a few examples of objects that might be erroneous or mislabeled. 
+
+![](https://i.imgur.com/ukwQt71.png)
+
+![](https://i.imgur.com/8VnZeWh.png)
+
+1. In the red cup image, we see individual cups in the sleeve that are barely visible get a small bounding box that captures only the lip of the cup. For many cases, this kind of annotation is not useful.
+2. In the cake image we can see the same object, annotated three times, each time with a different label (fork, knife and spoon) - in reality, it is very hard to tell what it actually is.
+
+## Showing galleries for a specific object class
+
+Now we'll slice the gallery according specific classes - let's look at the 'person' class
+
+```python
+fd.vis.component_gallery(metrix='size', slice='person', max_width=900)
+```
+
+![](https://files.readme.io/d3d8b7e-Screen_Shot_2023-02-26_at_17.11.41.png)
+
+## Visualizing outliers
+
+```python
+fd.vis.outliers_gallery()
+```
+
+![](https://files.readme.io/98ac757-Screen_Shot_2023-02-26_at_12.32.39.png)
+
+![](https://i.imgur.com/RBvC8QX.png)
+
+# Find size and shape issues
+
+Objects come in various shapes and sizes, and some times objects might be incorrectly labeled or too small to be useful. We will now find the smallest, narrowest and widest objects, and asses their usefulness. 
+
+```python
+df = fd.annotations()
+df['area'] = df['width'] * df['height']
+df['aspect'] = df['width'] / df['height']
+```
+
+```python
+# Smallest 5% of objects:
+smallest_objects = df[df['area'] < df['area'].quantile(0.05)].sort_values(by=['area'])
+# 5% of extreme aspect ratios
+aspect_ratio_objects = df[(df['aspect'] < df['aspect'].quantile(0.05))
+                         |(df['aspect'] > df['aspect'].quantile(0.95))].sort_values(by=['aspect'])
+
+```
+
+```python
+smallest_objects.head(3)
+```
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+```
+.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+```
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>img_filename</th>
+      <th>bbox_x</th>
+      <th>bbox_y</th>
+      <th>bbox_w</th>
+      <th>bbox_h</th>
+      <th>label</th>
+      <th>ext</th>
+      <th>split</th>
+      <th>fastdup_id</th>
+      <th>error_code</th>
+      <th>is_valid</th>
+      <th>area</th>
+      <th>aspect</th>
+    </tr>
+    <tr>
+      <th>fd_index</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>16444</th>
+      <td>000000535145.jpg</td>
+      <td>185</td>
+      <td>227</td>
+      <td>10</td>
+      <td>10</td>
+      <td>apple</td>
+      <td>0</td>
+      <td>train</td>
+      <td>16444</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>100</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>44855</th>
+      <td>000000553446.jpg</td>
+      <td>332</td>
+      <td>229</td>
+      <td>10</td>
+      <td>10</td>
+      <td>sports ball</td>
+      <td>0</td>
+      <td>train</td>
+      <td>44855</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>100</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>32115</th>
+      <td>000000283323.jpg</td>
+      <td>138</td>
+      <td>200</td>
+      <td>10</td>
+      <td>10</td>
+      <td>car</td>
+      <td>0</td>
+      <td>train</td>
+      <td>32115</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>100</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+```python
+aspect_ratio_objects.head(3)
+```
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+```
+.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+```
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>img_filename</th>
+      <th>bbox_x</th>
+      <th>bbox_y</th>
+      <th>bbox_w</th>
+      <th>bbox_h</th>
+      <th>label</th>
+      <th>ext</th>
+      <th>split</th>
+      <th>fastdup_id</th>
+      <th>error_code</th>
+      <th>is_valid</th>
+      <th>area</th>
+      <th>aspect</th>
+    </tr>
+    <tr>
+      <th>fd_index</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>134869</th>
+      <td>000000093298.jpg</td>
+      <td>230</td>
+      <td>1</td>
+      <td>16</td>
+      <td>419</td>
+      <td>kite</td>
+      <td>0</td>
+      <td>train</td>
+      <td>134869</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>6704</td>
+      <td>0.038186</td>
+    </tr>
+    <tr>
+      <th>3642</th>
+      <td>000000002444.jpg</td>
+      <td>1</td>
+      <td>136</td>
+      <td>11</td>
+      <td>263</td>
+      <td>person</td>
+      <td>0</td>
+      <td>train</td>
+      <td>3642</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>2893</td>
+      <td>0.041825</td>
+    </tr>
+    <tr>
+      <th>164218</th>
+      <td>000000116502.jpg</td>
+      <td>222</td>
+      <td>63</td>
+      <td>16</td>
+      <td>318</td>
+      <td>spoon</td>
+      <td>0</td>
+      <td>train</td>
+      <td>164218</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>5088</td>
+      <td>0.050314</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+```python
+aspect_ratio_objects.tail(3)
+```
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+```
+.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+```
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>img_filename</th>
+      <th>bbox_x</th>
+      <th>bbox_y</th>
+      <th>bbox_w</th>
+      <th>bbox_h</th>
+      <th>label</th>
+      <th>ext</th>
+      <th>split</th>
+      <th>fastdup_id</th>
+      <th>error_code</th>
+      <th>is_valid</th>
+      <th>area</th>
+      <th>aspect</th>
+    </tr>
+    <tr>
+      <th>fd_index</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>77844</th>
+      <td>000000444692.jpg</td>
+      <td>0</td>
+      <td>177</td>
+      <td>640</td>
+      <td>19</td>
+      <td>bench</td>
+      <td>0</td>
+      <td>train</td>
+      <td>77844</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>12160</td>
+      <td>33.684211</td>
+    </tr>
+    <tr>
+      <th>77850</th>
+      <td>000000444692.jpg</td>
+      <td>1</td>
+      <td>58</td>
+      <td>638</td>
+      <td>15</td>
+      <td>bench</td>
+      <td>0</td>
+      <td>train</td>
+      <td>77850</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>9570</td>
+      <td>42.533333</td>
+    </tr>
+    <tr>
+      <th>173220</th>
+      <td>000000516740.jpg</td>
+      <td>17</td>
+      <td>197</td>
+      <td>601</td>
+      <td>13</td>
+      <td>train</td>
+      <td>0</td>
+      <td>train</td>
+      <td>173220</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>7813</td>
+      <td>46.230769</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+Look at that! The slices reveal many items that are either tiny (10x10 pixels) or have extreme aspect ratios - as extreme at 1:46 - an object 601 pixels wide by only 13 pixels high. 
+
+### Objects that didn't make the cut:
+
+Let's look at objects deemed invalid by fastdup. These are either objects that are too small to be useful in our analysis (smaller than 10px), have bouding boxes with illeagal values (negative or beyond image boundaries), or are part of images that are missing. We can tell which is which by the `error_code` column in our dataframe.
+
+```python
+fd.invalid_instances().head(3)
+```
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+```
+.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+```
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>img_filename</th>
+      <th>bbox_x</th>
+      <th>bbox_y</th>
+      <th>bbox_w</th>
+      <th>bbox_h</th>
+      <th>label</th>
+      <th>ext</th>
+      <th>split</th>
+      <th>fastdup_id</th>
+      <th>error_code</th>
+      <th>is_valid</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>000000262162.jpg</td>
+      <td>437</td>
+      <td>244</td>
+      <td>19</td>
+      <td>9</td>
+      <td>mouse</td>
+      <td>0</td>
+      <td>train</td>
+      <td>16</td>
+      <td>ERROR_BAD_BOUNDING_BOX</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>000000524325.jpg</td>
+      <td>137</td>
+      <td>332</td>
+      <td>8</td>
+      <td>11</td>
+      <td>person</td>
+      <td>0</td>
+      <td>train</td>
+      <td>60</td>
+      <td>ERROR_BAD_BOUNDING_BOX</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>000000524325.jpg</td>
+      <td>177</td>
+      <td>294</td>
+      <td>5</td>
+      <td>11</td>
+      <td>person</td>
+      <td>0</td>
+      <td>train</td>
+      <td>65</td>
+      <td>ERROR_BAD_BOUNDING_BOX</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+#### Distribution of error codes:
+
+A simple `value_counts` will tell us the distribution of the errors. We have found 18,592 (!) bounding boxes that are either too small or go beyond image boundaries. This is 10% of the data! Filtering them would both save us gruesome debugging of training errors and failures and help up provide the model with useful size objects. 
+
+```python
+fd.invalid_instances().error_code.value_counts()
+```
+
+```
+ERROR_BAD_BOUNDING_BOX    18592
+Name: error_code, dtype: int64
+```
+
+# Find possible mislabels
+
+The fastdup similarity search and gallery is a strong tool for finding objects that are possibly mislabeled. By finding each object's nearest neighbors and their classes, we can find objects with classes contradicting their neighbors' - a strong sign for mislabels. 
+
+Let's visualize one of the more popular classes - 'chair':
+
+```python
+fd.vis.components_gallery(slice='diff')
+```
+
+There are many examples in the gallery, but let's look at the first few:
+
+![](https://files.readme.io/7dea38d-_media_dnth_Active-Projects_fastdup_examples_fastdup_minicoco_galleries_similarity.html.png)
+
+In the images above we see the many mislabeled 'chair' bounding boxes. There are multiple 'person' labeled as 'chair'.
+
+This would be a good opportunity to go over the labeling definitions for both classes, and find cases where mix-ups can occur.
+
+A next step could be a deeper dive into all images labeled as either chair or couch, with a lower value of clustering threshold (the `ccthreshold` parameter in `.run()`).
+
+# Summary
+
+> 👍 We have shown multiple annotation issues for the mini-coco 25k image dataset
+> 
+> First, we looked at the class distribution, showing that some classes contain only a few dozen objects, which are not enough for reliable results.
+> 
+> Then we used fastdup to run an analysis and visualize both duplicate and outlier images, sorting according to various metrics - object size, similarity cluster image count, and mean cluster similarity score, surfacing all sorts of objects that could be removed to improve results.
+> 
+> Afterwards, we analyzed the bounding boxes for size and aspect ratio issues, and found over **18k** object bounding boxes that are too small to be useful for most cases.
+> 
+> Finally, for finding mis-labels we looked into the most similar images in a specific class, and uncovered a common mixup between chair and couch classes. This is just a taste of fastdup label capabilities, which will be covered in further tutorials.
+> 
+> **Looking for finding mislabels at scale?** [Sign up for fastdup enterprise.](https://visual-layer.com)
+
+[block:html]
+{
+  "html": "<center> \n    <a href=\"https://www.visual-layer.com\" target=\"_blank\" rel=\"noopener noreferrer\">\n    <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo_dark_mode.png\" width=200>\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    <img alt=\"vl logo.\" src=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    </picture>\n    </a><br><br>\n    <a href=\"https://github.com/visual-layer/fastdup\" target=\"_blank\" style=\"text-decoration: none;\"> GitHub </a> •\n    <a href=\"https://visual-layer.slack.com/\" target=\"_blank\" style=\"text-decoration: none;\"> Join Slack Community </a> •\n    <a href=\"https://visual-layer.readme.io/discuss\" target=\"_blank\" style=\"text-decoration: none;\"> Discussion Forum </a>\n</center>\n\n<center> \n    <a href=\"https://medium.com/visual-layer\" target=\"_blank\" style=\"text-decoration: none;\"> Blog </a> •\n    <a href=\"https://visual-layer.readme.io/\" target=\"_blank\" style=\"text-decoration: none;\"> Documentation </a> •\n    <a href=\"https://visual-layer.com/about\" target=\"_blank\" style=\"text-decoration: none;\"> About Us </a> \n</center>\n\n<center> \n    <a href=\"https://www.linkedin.com/company/visual-layer/\" target=\"_blank\" style=\"text-decoration: none;\"> LinkedIn </a> •\n    <a href=\"https://twitter.com/visual_layer\" target=\"_blank\" style=\"text-decoration: none;\"> Twitter </a>\n</center>"
+}
+[/block]

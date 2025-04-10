@@ -1,0 +1,121 @@
+---
+title: "What's New in Fastdup V1.0"
+excerpt: ""
+hidden: true
+metadata: 
+  image: []
+  robots: "index"
+createdAt: "Thu Feb 16 2023 08:52:12 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Thu Oct 26 2023 05:37:19 GMT+0000 (Coordinated Universal Time)"
+---
+# fastdup By Visual-Layer
+
+ **fastdup** is a tool for gaining insights from large image/video collections. It can find anomalies, duplicate and near duplicate images/videos, clusters of similarity, learn the normal behavior and temporal interactions between images/videos. It can be used for smart subsampling of a higher quality dataset,  outlier removal, and novelty detection for new information to be sent for tagging. 
+
+Just 2 lines of code to get you started:  
+`todo: fastdup clip`
+
+**fastdup** is:
+
+Unsupervised: fits any dataset  
+Scalable : handles 400M images on a single machine  
+Efficient: works on **CPU only**
+
+Low Cost: can process 12M images on a $1 cloud machine budget
+
+works on **CPU only** 
+
+ From the authors of [GraphLab](https://github.com/jegonzal/PowerGraph) and [Turi Create](https://github.com/apple/turicreate).
+
+# Quick installation
+
+- Python 3.7, 3.8, 3.9 
+- Supported OS: Ubuntu 20.04, Ubuntu 18.04, Debian 10, Mac OSX M1,  Mac OSX Intel, Windows 10 Server.
+
+```python
+# upgrade pip to its latest version
+python3.XX -m pip install -U pip
+# install fastdup
+python3.XX -m pip install fastdup
+```
+
+Where XX is your python version.  
+For Windows, CentOS 7.X, RedHat 4.8 and other older Linux see our [Insallation instructions](./INSTALL.md).
+
+# What's new in V1.0?
+
+- Better support for labels
+- Better galleries
+- A new Python API
+
+```
+from fastdup.engine import Fastdup
+
+fd = Fastdup()
+fd.run()
+
+# Use .summary() to get a quick overview of your data:
+fd.summary()
+
+# Now you have access to all analysis and galleries using the Fastdup object:
+similarity_df = fd.similarity()
+outliers_df = fd.outliers()
+```
+
+# Running the code
+
+Existing API is fully supported
+
+```python
+import fastdup
+fastdup.run(input_dir="/path/to/your/folder", work_dir='out', nearest_neighbors_k=5, turi_param='ccthreshold=0.96')    #main running function.
+fastdup.create_duplicates_gallery('out/similarity.csv', save_path='.')     #create a visual gallery of found duplicates
+fastdup.create_outliers_gallery('out/outliers.csv',   save_path='.')       #create a visual gallery of anomalies
+fastdup.create_components_gallery('out', save_path='.')                    #create visualiaiton of connected components
+fastdup.create_stats_gallery('out', save_path='.', metric='blur')          #create visualization of images stastics (for example blur)
+fastdup.create_similarity_gallery('out', save_path='.',get_label_func=lambda x: x.split('/')[-2])     #create visualization of top_k similar images assuming data have labels which are in the folder name
+fastdup.create_aspect_ratio_gallery('out', save_path='.')                  #create aspect ratio gallery
+```
+
+## Getting started examples
+
+- [🔥 Finding duplicates, outliers and connected components in the Food-101 dataset, including Tensorboard Projector visualization - Google Colab](https://bit.ly/3ydvtVJ)
+- [🔥🔥 Visualizing and understanding a new dataset, looking at dats outliers and label outliers, Training a baseline KNN classifier and getting to accuracy of 0.99 by removing confusing labels](https://www.kaggle.com/code/graphlab/horse-pork-meat-fastdup)  
+- [Finding wrong lables via image similarity](./examples/fastdup_wrong_labels.ipynb)
+- [Computing image statistics](./examples/fastdup_image_stats.ipynb)
+- [Using your own onnx model for extraction](./examples/fastdup_model_support.ipynb)
+- [Getting started on a Kaggle dataset](https://bit.ly/3OUqj7u)
+- [Deduplication of videos - Google Colab](https://github.com/visualdatabase/fastdup/tree/main/examples/fastdup_video.ipynb)
+- [Analyzing video of the MEVA dataset - Google Colab](https://bit.ly/3yE29ZW)
+- [Working with multipe labels per image](https://github.com/visualdatabase/fastdup/blob/main/examples/fastdup_peta.ipynb)
+
+## Detailed instructions
+
+- [Detailed instructions, install from stable release and installation issues](https://bit.ly/3yDc2qw)
+- [Detailed running instructions](https://bit.ly/3OFLlY5)
+
+## User community contributions
+
+[Stroke AIS Data](https://www.kaggle.com/code/mpwolke/stroke-ais-fastdup)  
+[Tire Data](https://www.kaggle.com/code/taranmarley/fastdup-image-insights)  
+[Butterfly Mimics](https://www.kaggle.com/code/mpwolke/butterfly-mimics-fastdup)  
+[Drugs and Vitamins](https://www.kaggle.com/code/mpwolke/drugs-and-vitamins-fastdup)  
+[Plastic Bottles](https://www.kaggle.com/code/mpwolke/plastic-bottles-fastdup)  
+[Micro Organisms](https://www.kaggle.com/code/mpwolke/micro-organism-fastdup)  
+[PCB Boards](https://www.kaggle.com/code/mpwolke/pcb-boards-fastdup)  
+[ZebraFish](https://www.kaggle.com/code/mpwolke/danio-rerio-zebrafish-fastdup)  
+[Whats the difference](https://www.kaggle.com/code/ovednagar/whats-the-difference)
+
+# Support and feature requests
+
+<a href="https://bit.ly/3OLojyT">Join our Slack channel</a>
+
+# fastdup enterprise edition
+
+ <a href="https://www.visual-layer.com">Visual Layer</a>
+
+# About us
+
+<a href="https://www.linkedin.com/in/dr-danny-bickson-835b32">Danny Bickson</a>, <a href="https://www.linkedin.com/in/amiralush">Amir Alush</a><br>
+
+</div>

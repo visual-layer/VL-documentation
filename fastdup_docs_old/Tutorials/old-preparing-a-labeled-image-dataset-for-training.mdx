@@ -1,0 +1,496 @@
+---
+title: "Old Preparing a labeled image dataset for training"
+excerpt: "In this page we load and analyze a labeled set of images from a common online dataset, visualize and analyze results.\nThis kind of data cleaning and selection could be used before sending data for labeling, or before any model training step - for both unsupervised and supervised data."
+hidden: true
+metadata: 
+  image: []
+  robots: "index"
+createdAt: "Wed Mar 22 2023 04:15:32 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Thu Oct 26 2023 05:37:19 GMT+0000 (Coordinated Universal Time)"
+---
+We are going to analyze _Imagenette_, a small 10-class, 13k image subset of ImageNet curated by the folks at Fast.ai. 
+
+### Instantiate the fastdup class and run analysis
+
+Use `work_dir` as the location that will hold all analysis. `input_dir` is the dataset's path.
+
+```python
+import pandas as pd
+import fastdup
+```
+
+# Setup and download data
+
+Download imagenette - A 10 class ImageNet subset - from Fast.ai:
+
+```Text shell
+!wget https://s3.amazonaws.com/fast-ai-imageclas/imagenette2-160.tgz && tar -xzf imagenette2-160.tgz
+```
+
+As ImageNet uses codes for classes, we'll map them to their human readable values for ease of analysis ([source](https://gist.githubusercontent.com/aaronpolhamus/964a4411c0906315deb9f4a3723aac57/raw/aa66dd9dbf6b56649fa3fab83659b2acbf3cbfd1/map_clsloc.txt)):
+
+```python
+# Setting local paths
+data_dir = 'imagenette2-160'
+csv_path = 'imagenette2-160/noisy_imagenette.csv'
+
+# imagenette label map
+label_map = {'n02979186': 'cassette_player', 'n03417042': 'garbage_truck', 
+	      	 'n02102040': 'English_springer', 'n03028079': 'church',
+			 'n03888257': 'parachute', 'n03394916': 'French_horn', 
+			 'n03000684': 'chain_saw', 'n03445777': 'golf_ball', 
+			 'n03425413': 'gas_pump', 'n01440764': 'tench', # Kind of fish}
+```
+
+# Load annotations
+
+This is the expected format for the annotation dataframe. Label and split columns are optional but used later in analysis. 
+
+```python
+# Load annotations and adapt format
+df = pd.read_csv(csv_path)
+df = df.rename(columns={'noisy_labels_0': 'label', 'path': 'img_filename'})
+df['split'] = df['img_filename'].apply(lambda x: x.split("/")[0])
+df.label = df.label.map(label_map)
+df
+```
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+```
+.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+```
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>img_filename</th>
+      <th>label</th>
+      <th>split</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>train/n02979186/n02979186_9036.JPEG</td>
+      <td>cassette_player</td>
+      <td>train</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>train/n02979186/n02979186_11957.JPEG</td>
+      <td>cassette_player</td>
+      <td>train</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>13392</th>
+      <td>val/n03425413/n03425413_13831.JPEG</td>
+      <td>gas_pump</td>
+      <td>val</td>
+    </tr>
+    <tr>
+      <th>13393</th>
+      <td>val/n03425413/n03425413_1242.JPEG</td>
+      <td>gas_pump</td>
+      <td>val</td>
+    </tr>
+  </tbody>
+</table>
+<p>13394 rows × 3 columns</p>
+</div>
+
+# Run fastdup
+
+```python
+fd = fastdup.create(work_dir='fastdup_imagenette', input_dir=data_dir) 
+fd.run(annotations=df)
+```
+
+todo: percentages are not calculated correctly
+
+```
+FastDup Software, (C) copyright 2022 Dr. Amir Alush and Dr. Danny Bickson.
+2023-02-19 09:53:43 [INFO] Going to loop over dir 
+2023-02-19 09:53:43 [INFO] Found total 13394 images to run on
+2023-02-19 09:54:00 [INFO] Found total 13394 images to run onimated: 0 Minutes 0 Features
+2023-02-19 09:54:02 [INFO] 1752) Finished write_index() NN model
+2023-02-19 09:54:02 [INFO] Stored nn model index file fastdup_imagenette/nnf.index
+2023-02-19 09:54:03 [INFO] Total time took 19716 ms
+2023-02-19 09:54:03 [INFO] Found a total of 0 fully identical images (d>0.990), which are 0.00 %
+2023-02-19 09:54:03 [INFO] Found a total of 0 nearly identical images(d>0.980), which are 0.00 %
+2023-02-19 09:54:03 [INFO] Found a total of 1189 above threshold images (d>0.900), which are 2.96 %
+2023-02-19 09:54:03 [INFO] Found a total of 1339 outlier images         (d<0.050), which are 3.33 %
+2023-02-19 09:54:03 [INFO] Min distance found 0.467 max distance 0.969
+2023-02-19 09:54:03 [INFO] Running connected components for ccthreshold 0.960000 
+
+########################################################################################
+
+Dataset Analysis Summary: 
+
+    Dataset contains 13394 images
+    Valid images are 100.00% (13,394) of the data, invalid are 0.00% (0) of the data
+    Similarity:  2.73% (366) belong to 19 similarity clusters (components).
+    97.27% (13,028) images do not belong to any similarity cluster.
+    Largest cluster has 40 (0.30%) images.
+    For a detailed analysis, use `.connected_components()`.
+
+    Outliers: 6.23% (835) of images are possible outliers, and fall in the bottom 5.00% of similarity values.
+    For a detailed list of outliers, use `.outliers(data=True)`.
+```
+
+We can see a few interesting statistics in the fastdup report:
+
+1. fastdup analyzed **13,394** images, in **19.7** seconds. Pretty quick! 🚀
+2. **366** images (2.73%) belong to 19 highly-similar clusters. The largest cluster is **40** images. We'll look into it in a bit. 
+3. **835** images (6.23%) are possible outliers and might not be a part of the same distribution as the rest of the data. We'll look into those too. 🔍
+
+# Find similar images
+
+Images are listed and could be referenced using their relative path (`img_filename`) or a running index, sometimes referred to as their `fastdup_id`.
+
+The similarity table lists all the pairs of similar images and their distance. The `data` parameter decides whether annotations are provided along with the image indices. 
+
+```python
+fd.similarity()
+```
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+```
+.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+```
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>from</th>
+      <th>to</th>
+      <th>distance</th>
+      <th>img_filename_from</th>
+      <th>label_from</th>
+      <th>split_from</th>
+      <th>error_code_from</th>
+      <th>is_valid_from</th>
+      <th>img_filename_to</th>
+      <th>label_to</th>
+      <th>split_to</th>
+      <th>error_code_to</th>
+      <th>is_valid_to</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5390</td>
+      <td>11521</td>
+      <td>0.968786</td>
+      <td>train/n03394916/n03394916_44127.JPEG</td>
+      <td>French_horn</td>
+      <td>train</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>val/n03394916/n03394916_30631.JPEG</td>
+      <td>French_horn</td>
+      <td>val</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>11521</td>
+      <td>5390</td>
+      <td>0.968786</td>
+      <td>val/n03394916/n03394916_30631.JPEG</td>
+      <td>French_horn</td>
+      <td>val</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>train/n03394916/n03394916_44127.JPEG</td>
+      <td>French_horn</td>
+      <td>train</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>16748</th>
+      <td>5054</td>
+      <td>5156</td>
+      <td>0.800012</td>
+      <td>train/n03394916/n03394916_32478.JPEG</td>
+      <td>French_horn</td>
+      <td>train</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>train/n03394916/n03394916_35573.JPEG</td>
+      <td>French_horn</td>
+      <td>train</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>16749</th>
+      <td>11053</td>
+      <td>4367</td>
+      <td>0.800002</td>
+      <td>val/n03028079/n03028079_13002.JPEG</td>
+      <td>church</td>
+      <td>val</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>train/n03028079/n03028079_3839.JPEG</td>
+      <td>church</td>
+      <td>train</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+<p>16750 rows × 13 columns</p>
+</div>
+
+# Find and remove outliers
+
+```python
+fd.outliers()
+```
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+```
+.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+```
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>nearest</th>
+      <th>distance</th>
+      <th>img_filename_outlier</th>
+      <th>label_outlier</th>
+      <th>split_outlier</th>
+      <th>error_code_outlier</th>
+      <th>is_valid_outlier</th>
+      <th>img_filename_nearest</th>
+      <th>label_nearest</th>
+      <th>split_nearest</th>
+      <th>error_code_nearest</th>
+      <th>is_valid_nearest</th>
+    </tr>
+    <tr>
+      <th>outlier</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>8</th>
+      <td>469</td>
+      <td>0.644781</td>
+      <td>train/n01440764/ILSVRC2012_val_00010306.JPEG</td>
+      <td>tench</td>
+      <td>train</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>train/n01440764/n01440764_28394.JPEG</td>
+      <td>tench</td>
+      <td>train</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>9799</td>
+      <td>0.719176</td>
+      <td>train/n01440764/n01440764_10183.JPEG</td>
+      <td>tench</td>
+      <td>train</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>val/n01440764/n01440764_8142.JPEG</td>
+      <td>tench</td>
+      <td>val</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>13384</th>
+      <td>9013</td>
+      <td>0.708151</td>
+      <td>val/n03888257/n03888257_9301.JPEG</td>
+      <td>parachute</td>
+      <td>val</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>train/n03888257/n03888257_30158.JPEG</td>
+      <td>parachute</td>
+      <td>train</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>13393</th>
+      <td>3954</td>
+      <td>0.706497</td>
+      <td>val/n03888257/n03888257_9932.JPEG</td>
+      <td>parachute</td>
+      <td>val</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>train/n03028079/n03028079_14664.JPEG</td>
+      <td>church</td>
+      <td>train</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+<p>835 rows × 12 columns</p>
+</div>
+
+## Visualizing the outliers found
+
+```python
+fd.vis.outliers_gallery()
+```
+
+![](https://files.readme.io/9b3c4d8-Screen_Shot_2023-02-27_at_12.28.45.png)
+
+![](https://i.imgur.com/ayoVJ9e.png)
+
+# Using labels in similarity analysis
+
+First, we visualize similarity clusters (clustered using a connected components algorithm).
+
+We see a large cluster from the 'tench' class, showing people holding their tench in a specific pose. Next cluster is of golf balls, where we can see a larger variation of scenes and backgrounds, with some images appearing to be rendered or shot in a studio while others are showing a golf ball over grass.
+
+```python
+fd.vis.component_gallery()
+```
+
+![](https://files.readme.io/cd10e04-Screen_Shot_2023-02-27_at_12.26.40.png)
+
+## Visualizing single class image clusters
+
+A useful gallery feature is selecting just one class to be visualized. Let's find the chain saw clusters in our data:
+
+```python
+fd.vis.component_gallery(slice='chain_saw')
+```
+
+![](https://files.readme.io/3191e26-Screen_Shot_2023-02-27_at_13.01.28.png)
+
+# What can  you find in the cluster dataframes
+
+```python
+cc_df, _ = fd.connected_components()
+cc_df
+```
+
+# Fetching metadata for individual images
+
+Individual images can be accessed using their serial ID ('id' column in any of the dataframes), for example, in `fd.annotations()` table.
+
+```python
+fd[11521]
+```
+
+```
+{'img_filename': 'val/n03394916/n03394916_30631.JPEG',
+ 'label': 'French_horn',
+ 'split': 'val',
+ 'fastdup_id': 11521,
+ 'error_code': 'VALID',
+ 'is_valid': True}
+```
+
+This dictionary contains the relative image path as well as all metadata available for a specific image. For other cases, it may also contain the bounding box coordinates, etc.
+
+# Summary
+
+> 👍 We now added several important label-specific features to run on top of the raw dataset
+> 
+> Building over the image dataset analysis conducted without labels in the [Cleaning and preparing a dataset](doc:abc) tutorial, we've seen how to further slice the data and visualize specific classes of interest.

@@ -1,0 +1,117 @@
+---
+title: "Using cloud storage (S3/GCP/Min.io)"
+excerpt: "fastdup allows you to load data from various sources, including cloud storage services and file lists. S3 is directly supported, while GCP and other services could be used with a Min.io client"
+hidden: false
+metadata: 
+  image: []
+  robots: "index"
+createdAt: "Thu Feb 16 2023 11:56:39 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Thu Oct 26 2023 05:37:19 GMT+0000 (Coordinated Universal Time)"
+---
+# Support for cloud storage
+
+fastdup supports two types of cloud storage:
+
+- Amazon AWS S3 using `awscli`
+- [Min.io](https://github.com/minio/minio) cloud storage API
+
+## Amazon s3 aws cli support
+
+### Preliminaries:
+
+- Install aws cli using the command  
+  `sudo apt install awscli`
+- Configure your aws using the command  
+  `aws configure`
+- Make sure you can access your bucket using  
+  `aws s3 ls s3://<your bucket name>`
+
+### How to run
+
+There are two options to run:
+
+1. In the input_dir command line argument put the full path your bucket for example: `s3://mybucket/myfolder/myother_folder/`  
+   This option is useful for testing but it is not recommended for large corpouses of images as listing files in s3 is a slow operation. In this mode, all the images in the recursive subfolders of the given folders will be used.
+2. Alternatively (and recommended) create a file with the list of all your images in the following format:
+
+```
+s3://mybucket/myfolder/myother_folder/image1.jpg
+s3://mybucket/myfolder2/myother_folder4/image2.jpg
+s3://mybucket/myfolder3/myother_folder5/image3.jpg
+```
+
+Assuming the filename is `files.txt` you can run with `input_dir=’/path/to/files.txt’`
+
+### Using AWS endpoints
+
+fastdup supports the use of an AWS endpoint for accessing data stored on S3, i.e., S3 access done using the following command:
+
+```
+aws --endpoint=http://x.x.x.x:x s3 ls --recursive s3://mybucket/
+```
+
+To enable it in fastdup, set the `FASTDUP_S3_ENDPOINT_URL` environment variable to the endpoint's IP address, by either:
+
+```
+export FASTDUP_S3_ENDPOINT_URL=https://path.to.your.endpoint
+```
+
+Or by prefixing the run command with the variable, e.g.:
+
+```
+FASTDUP_S3_ENDPOINT_URL=https://path.to.your.endpoint python3.8 <Command>
+```
+
+### Notes:
+
+Currently we support a single cloud provider and a single bucket.  
+It is OK to have images with the same name assuming they are nested in different subfolders.
+
+In terms of performance, it is better to copy the full bucket to the local node first in case the local disk is hard enough. Then give the `input_dir` as the local folder location of the copied data. The explanation above is for the case the dataset is larger than the local disk (and potentially multiple nodes run in parallel).
+
+## Min.io support
+
+### Preliminaries
+
+Install the min.io client using the command
+
+```
+wget https://dl.min.io/client/mc/release/linux-amd64/mc
+sudo mv mc /usr/bin/
+chmod +x /usr/bin/mc
+```
+
+Configure the client to point to the cloud provider
+
+```
+mc alias set myminio/ http://MINIO-SERVER MYUSER MYPASSWORD
+```
+
+For example for google cloud:
+
+```
+/usr/bin/mc alias set google  https://storage.googleapis.com/ <access_key> <secret_key> 
+```
+
+Make sure the bucket is accessible using the command:
+
+```
+/usr/bin/mc ls google/mybucket/myfolder/myotherfolder/
+```
+
+### How to run
+
+There are two options to run:
+
+1. In the input_dir command line argument put the full path your cloud storage provider as defined by the minio alias, for example: `minio://google/mybucket/myfolder/myother_folder/`  
+   (Note that google is the alias set for google cloud, and the path has to start with `minio://` prefix).  
+   This option is useful for testing but it is not recommended for large corpouses of images as listing files in s3 is a slow operation. In this mode, all the images in the recursive subfolders of the given folders will be used.
+2. Alternatively (and recommended) create a file with the list of all your images in the following format:
+
+```
+minio://google/mybucket/myfolder/myother_folder/image1.jpg
+minio://google/mybucket/myfolder/myother_folder/image2.jpg
+minio://google/mybucket/myfolder/myother_folder/image3.jpg
+```
+
+Assuming the filename is `files.txt` you can run with `input_dir=’/path/to/files.txt’`

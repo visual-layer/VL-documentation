@@ -1,0 +1,919 @@
+---
+title: "V1 API"
+excerpt: ""
+hidden: false
+createdAt: "Fri Feb 24 2023 13:46:31 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Wed Jun 19 2024 14:02:22 GMT+0000 (Coordinated Universal Time)"
+---
+# Table of Contents
+
+- [fastdup.engine](#fastdup.engine)
+  - [Fastdup](#fastdup.engine.Fastdup)
+    - [run](#fastdup.engine.Fastdup.run)
+    - [num\_instances](#fastdup.fastdup_controller.FastdupController.num_instances)
+    - [annotations](#fastdup.fastdup_controller.FastdupController.annotations)
+    - [similarity](#fastdup.fastdup_controller.FastdupController.similarity)
+    - [outliers](#fastdup.fastdup_controller.FastdupController.outliers)
+    - [embeddings](#fastdup.fastdup_controller.FastdupController.embeddings)
+    - [feature\_vector](#fastdup.fastdup_controller.FastdupController.feature_vector)
+    - [feature\_vectors](#fastdup.fastdup_controller.FastdupController.feature_vectors)
+    - [init\_search](#fastdup.init_search)
+    - [search](#fastdup.search)
+    - [vector_search](#fastdup.vector_search)
+    - [invalid\_instances](#fastdup.fastdup_controller.FastdupController.invalid_instances)
+    - [img\_stats](#fastdup.fastdup_controller.FastdupController.img_stats)
+    - [config](#fastdup.fastdup_controller.FastdupController.config)
+    - [connected\_components](#fastdup.fastdup_controller.FastdupController.connected_components)
+    - [connected\_components\_grouped](#fastdup.fastdup_controller.FastdupController.connected_components_grouped)
+    - [summary](#fastdup.fastdup_controller.FastdupController.summary)
+
+- [fastdup.fastdup\_galleries](#fastdup.fastdup_galleries)
+  - [FastdupVisualizer](#fastdup.fastdup_galleries.FastdupVisualizer)
+    - [\_\_init\_\_](#fastdup.fastdup_galleries.FastdupVisualizer.__init__)
+    - [outliers\_gallery](#fastdup.fastdup_galleries.FastdupVisualizer.outliers_gallery)
+    - [duplicates\_gallery](#fastdup.fastdup_galleries.FastdupVisualizer.duplicates_gallery)
+    - [similarity\_gallery](#fastdup.fastdup_galleries.FastdupVisualizer.similarity_gallery)
+    - [stats\_gallery](#fastdup.fastdup_galleries.FastdupVisualizer.stats_gallery)
+    - [component\_gallery](#fastdup.fastdup_galleries.FastdupVisualizer.component_gallery)
+
+- [fastdup.fastdup\_dataenrichment](#fastdup.enrichments)
+  - [fastdup.caption](#fastdup.caption)
+
+<a id="fastdup.engine"></a>
+
+# fastdup.engine
+
+<a id="fastdup.engine.Fastdup"></a>
+
+## Fastdup Objects
+
+```python
+class Fastdup(FastdupController)
+```
+
+This class provides all fastdup capabilities as a single class.  
+Usage example  
+=============
+
+```
+ import fastdup
+
+ annotation_csv = '/path/to/annotation.csv'
+ data_dir = '/path/to/images/'
+ output_dir = '/path/to/fastdup_analysis'
+
+ fd = fastdup.create(work_dir=output_dir, input_dir=data_dir)
+ fd.run(annotations=pd.read_csv(annotation_csv))
+
+ df_sim  = fdp.similarity()
+ im1_id, im2_id, sim = df_sim.iloc[0]
+ annot_im1, annot_im2 = fdp[im1_id], fdp[im2_id]
+
+ df_cc, cc_info = fd.connected_components()
+
+ image_list, embeddings = fd.embeddings()
+```
+
+<a id="fastdup.engine.Fastdup.run"></a>
+
+### run
+
+```python
+def run(input_dir: Union[str, Path, list] = None,
+        annotations: pd.DataFrame = None,
+        embeddings=None,
+        subset: list = None,
+        data_type: str = 'infer',
+        overwrite: bool = True,
+        model_path=None,
+        distance='cosine',
+        nearest_neighbors_k: int = 2,
+        threshold: float = 0.9,
+        outlier_percentile: float = 0.05,
+        num_threads: int = None,
+        num_images: int = None,
+        verbose: bool = False,
+        license: str = None,
+        high_accuracy: bool = False,
+        cc_threshold: float = 0.96,
+        sync_s3_to_local: bool = False,
+        run_stats: bool = True, 
+        run_advanced_stats: bool = False,
+        nnf_mode: str = "HNSW32",
+        find_regex: str = "",
+        bounding_box: str = None, 
+        augmentation_additive_margin: int = 0, 
+        augmentation_vert: float = 0, 
+        augmentation_horiz: float = 0,
+        **kwargs)
+```
+
+**Arguments**:
+
+`input_dir`: Location of the images/videos to analyze
+
+- A folder
+- A remote folder (s3 or minio starting with s3:// or minio://). When using minio append the minio server name for example minio://google/visual_db/sku110k
+- A file containing absolute filenames each on its own row                                              
+- A file containing s3 full paths or minio paths each on its own row                                    
+- A python list with absolute filenames
+- A python list with absolute folders, all images and videos on those folders are added recursively
+- yolo-v5 yaml input file containing train and test folders (single folder supported for now)           
+- We support jpg, jpeg, tiff, tif, giff, heif, heic, bmp, png, webp, mp4, avi. In addition we support tar, tar.gz, tgz and zip files containing images. Support also 16 bit RGBA, RGB and grayscale images.
+
+If you have other image extensions that are readable by opencv imread() you can give them in a file (each image on its own row) and then we do not check for the known extensions and use opencv to read those formats
+
+Note: It is not possible to mix compressed (videos or tars/zips) and regular images.  
+      Use the flag tar_only=True if you want to ignore images and run from compressed files  
+Note2: We assume image sizes should be larger or equal to 10x10 pixels.  
+      Smaller images (either on width or on height) will be ignored with a warning shown  
+Note3: It is possible to skip small images also by defining minimum allowed file size using  
+      min_file_size=1000 (in bytes)  
+Note4: For performance reasons it is always preferred to copy s3 images from s3 to local disk and then run fastdup on local disk. Since copying images from s3 in a loop is very slow, Alternatively you can use the flag `sync_s3_to_local=True` to copy ahead all images on the remote s3 bucket to disk
+
+Note5: fastdup can read images from other format extensions as well, as long they are supported in opencv.imread(). If the files are not ending with a common image prefix, you can prepare a csv file with full image path, one per row, no commas please!
+
+- `annotations`: Optional dataframe with annotations. Images are given in the column `filename`. Optional class labels are given in the column `label`. 
+  - Optional bounding box structure contains the fields `col_x`, `row_y`, `width`, `height`.
+  - Optional rotated bounding box contains the fields `x1`,`y1`,`x2`,`y2`,`x3`,`y3`,`x4`,`y4`
+  - Alternatively, `annotations` can point to a `json` file containing `COCO` annotations.
+  - Alternatively, `annotationss` can be a dictionary containing `COCO`annotations.
+- `subset`: List of images to run on. If None, run on all the images/bboxes.
+- `data_type`: Type of data to run on. Supported types: 'image', 'bbox'. Default is 'infer'.
+- `model_path`: path for an alternative onnx/ort model for feature vector extraction. supported formats are all onnx, ort files. (Need to make sure model output has a single channel, please reach out to us for adding support for additional models).  
+  Make sure to update `d` parameter (feature vector width) accordingly when changing the model file. Reserved values (models that are automatically downloaded) are:
+  - None - default fastdup model
+- `dinov2s` : Meta's [dinov2](https://dinov2.metademolab.com/) model small
+- `dinov2b`: Meta's [dinov2](https://dinov2.metademolab.com/) model big
+- `clip`: OpenAi's  `ViT-B/32` [clip](https://openai.com/research/clip) model 
+- `clip336` OpenAI's `ViT-L-14@336px` [clip](https://openai.com/research/clip) model
+- `resent50` `resnet50-v1-12.onnx` model from [GitHub onnx](https://github.com/onnx/models/tree/main/vision/classification).
+- ```efficientnet``efficientnet-lite4-11``` model from [GitHub onnx](https://github.com/onnx/models/tree/main/vision/classification).
+- Note: need to check model provider license, we do not provide the model it is downloaded directly from the provider and usage should conform to the model license.
+- `distance`: - distance metric for the Nearest Neighbors algorithm.  
+  The default is 'cosine' which works well in most cases. For nn_provider='nnf' the following distance metrics  
+  are supported. When using nnf_mode='Flat': 'cosine', 'euclidean', 'l1','linf','canberra',  
+  'braycurtis','jensenshannon' are supported. Otherwise 'cosine' and 'euclidean' are supported.,
+- `num_images`: Number of images to run on. On default, run on all the images in the image_dir folder. When running from s3 bucket with large number of images, speeds up run as it can limit the number of images consumed.
+- `nearest_neighbors_k`: Number of similarities to compute per image or video frame.
+- `high_accuracy`: Compute a more accurate model. Runtime is increased about 15% and feature vector storage  
+  size/ memory is increased about 60%. The upside is the model can distinguish better of minute details in  
+  images with many objects.
+- `outlier_percentile`: Percentile of the outlier score to use as threshold. Default is 0.5 (50%).
+- `threshold`: Threshold to use for the graph generation. Default is 0.9.
+- `cc_threshold`: Threshold to use for the graph connected component. Default is 0.96.
+- `bounding_box`: Optional bounding box to crop images, given as  
+  `bounding_box='row_y=xx,col_x=xx,height=xx,width=xx'`. This defines a global bounding box to be used  
+  for all images. 
+  - `bounding_box='face'`  runs a face detection model and crops the face from the image (in case a face is present). 
+  - `bounding_box='ocr'` runs `OCR` model on the image and crops any text images.
+  - `bounding_box='yolov5s'`runs `yolov5s` model on the image and crops and objects.
+  - In both `'face' / 'ocr' / 'yolov5s'` modes, an output file named `atrain_crops.csv` is created in the `work_dir` listing all crop dimensions and source images.
+  - For the face crop the margin around the face is defined by `augmentation_horiz=0.2, augmentation_vert=0.2` where 0.2 mean 20% additional margin around the face relative to the width and height respectively. Lower value is 0 (no margin) and upper allowed  value is 1. Default is 0.2. Another parameter is `augmentation_additive_margin` which ads X pixels around the object frames. The margin arguments can not be used together, it is either multiplicative or additive margin.
+- `num_threads`: Number of threads. By default, autoconfigured by the number of cores.
+- `license`: Optional license key. If not provided, only free features are available.
+- `overwrite`: Optional flag to overwrite existing fastdup results.
+- `verbose`: Verbosity level. Set to True when debugging issues.
+- `kwargs`: Additional parameters for fastdup.
+- `d`: Model Output dimension. Default is 576.
+- `min_offset`: Optional min offset to start iterating on the full file list. When using a folder lists the folder and then starts from position min_offset in the list. This allows for parallel feature extraction.
+- `max_offset`: Optional max offset to start iterating on the full file list. When using a folder lists the folder and then starts from position min_offset in the list. This allows for parallel feature extraction.
+- `nnf_mode`: Selects the nnf model mode. default is `HNSW32`. `Flat` is exact and not an approximation.
+- `nnf_param`: Selects and assigns optional parameters.
+- `resume`: Optional flag to resume tar extraction from a previous run.
+- `run_cc`: Run connected components on the resulting similarity graph. Default is True.
+- `delete_tar :` Delete tar after download from s3/minio.
+- `delete_img` : Delete images after download from s3/minio.
+- `run_stats` : Computer image statistics (default is True)
+- `run_advanced_stats`: Compute enhanced image statistics like hue, saturation, contrast etc.
+- `sync_s3_to_local`: When using aws s3 bucket, sync s3 to local folder to improve performance (recommended).  Assumes there is enough local disk space to contain the data. Default is False.
+- `find_regex` optional regex to control the images selected for run when running from a local folder.
+
+<a id="fastdup.fastdup_controller"></a>
+
+# fastdup.fastdup\_controller
+
+<a id="fastdup.fastdup_controller.FastdupController"></a>
+
+## FastdupController Objects
+
+```python
+class FastdupController()
+```
+
+<a id="fastdup.fastdup_controller.FastdupController.__init__"></a>
+
+### \_\_init\_\_
+
+```python
+def __init__(work_dir: Union[str, Path], input_dir: Union[str, Path] = None)
+```
+
+This class serves as a proxy for fastdup basic usage,
+
+the class wraps fastdup-run call provides quick access to  
+fastdup files such as: similarity,  csv outlier csv, etc...
+
+Moreover, the class provides several extra features:  
+    - Ability to run connected component analysis on splits without calling fastdup run again  
+    - Ability to add annotation file and quickly merge it to any of fastdup inputs  
+Currently the class support running fastdup on images and object
+
+**Arguments**:
+
+- `work_dir`: target output dir or existing output dir
+- `input_dir`: (Optional) path to data dir
+
+<a id="fastdup.fastdup_controller.FastdupController.num_instances"></a>
+
+### num\_instances
+
+```python
+def num_instances(valid_only=True)
+```
+
+Get number of instances in the dataset
+
+**Arguments**:
+
+- `valid_only`: if True, return only valid annotations
+
+<a id="fastdup.fastdup_controller.FastdupController.annotations"></a>
+
+### annotations
+
+```python
+def annotations(valid_only=True)
+```
+
+Get annotation as data frame
+
+**Arguments**:
+
+- `valid_only`: if True, return only valid annotations
+
+**Returns**:
+
+pandas dataframe
+
+<a id="fastdup.fastdup_controller.FastdupController.similarity"></a>
+
+### similarity
+
+```python
+def similarity(data: bool = True,
+               split: str = None,
+               include_unannotated=False) -> pd.DataFrame
+```
+
+Get fastdup similarity file
+
+**Arguments**:
+
+- `data`: add annotation
+- `split`: filter by split
+- `include_unannotated`: include instances that are not represented in the annotations
+
+**Returns**:
+
+requested dataframe
+
+<a id="fastdup.fastdup_controller.FastdupController.outliers"></a>
+
+### outliers
+
+```python
+def outliers(data: bool = True,
+             split: str = None,
+             include_unannotated=False) -> pd.DataFrame
+```
+
+Get fastdup outlier file
+
+**Arguments**:
+
+- `data`: add annotation
+- `split`: filter by split
+- `include_unannotated`: include instances that are not represented in the annotations
+
+**Returns**:
+
+requested dataframe of outliers, sorted by furthest away images first. Each row is one outlier image.
+
+<a id="fastdup.fastdup_controller.FastdupController.embeddings"></a>
+
+### embeddings
+
+```python
+def embeddings(d: int = 576) -> tuple: [list, pd.DataFrame]
+```
+
+Get fastdup embeddings.
+
+**Arguments**:
+
+- `d`: feature vector width (on default 576). 
+
+**Returns**:
+
+A tuple containing the list of all image names, and `np.ndarray` containing a matrix with the embedding, each row is on image and matrix width is `d`.
+
+<a id="fastdup.fastdup_controller.FastdupController.feature_vector"></a>
+
+### feature_vector
+
+```python
+def feature_vector(img_path: str, model_path: str = None, d: int = 576) -> tuple: [list, pd.DataFrame]
+```
+
+ Compute feature vector for a single image.
+
+**Arguments**:
+
+- `img_path` (str): a path pointing to an image, could be local or s3 or a minio path, see run() documentation
+- `model_path` (str) : optional path pointing to onnx/ort model, see run() documentation
+- `d` (int) : feature vector width (on default 576). 
+
+**Returns**:
+
+- `embeddings`: 1 x d numpy matrix contains feature embeddings (row vector)
+- `files`: the image filename used to generate the embedding (should be equal to `img_path`)
+
+<a id="fastdup.fastdup_controller.FastdupController.feature_vector"></a>
+
+### feature\_vectors
+
+```python
+def feature_vectors(img_path: str, model_path: str = None, d: int = 576) -> tuple: [list, pd.DataFrame]
+```
+
+ Compute feature vectors for a group of images.
+
+**Arguments**:
+
+- `img_path` (str): a path pointing to a folder, could be local or s3 or a minio path, or a list of images, see run() documentation
+- `model_path` (str) : optional path pointing to onnx/ort model, see run() documentation
+- `d` (int) : feature vector width (on default 576). 
+
+**Returns**:
+
+- `embeddings`: n x d numpy matrix contains feature embeddings (row vector)
+- `files`: the image filenames used to generate the embedding (this is important since in case of broken images no embedding are created, in adition the order of the images may change based on your file system.
+
+<a id="fastdup.init_search"></a>
+
+## init\_search
+
+```python
+def init_search(k, work_dir, d=576, model_path=model_path_full, verbose=False)
+```
+
+Initialize real time search and precomputed nnf data.  
+This function should be called only once before running searches. The search function is search().
+
+**Arguments**:
+
+- `k` (int): number of nearest neighbors to search fo
+- `work_dir` (str): working directory where `fastdup.run` was run.       
+- `d` (int): (Optional) dimension of the feature vector. Defualt is 576.  
+- `model_path` (str): (Optional): path to the onnx model file. .
+- `verbose` (bool): (Optional): True for verbose mode
+- `license` (str): License key for using search.
+- `store_int` (int): 0 to return filename, 1 to return offset
+- `turi_param` (str): optional additional direction
+- `threshold` (float): optional threshold to find images similar >= threshold, default 
+
+```
+
+```
+
+Example:
+
+```Text Python
+	  >>> import fastdup
+    >>> input_dir = "/my/input/dir"
+    >>> work_dir = /my/work/dir"
+    >>> fastdup.run(input_dir, work_dir)
+    # point to the work_dir where fastdup was run
+    >>> fastdup.init_search(10, work_dir, verbose=True, license=<my license>)
+    # The below code can be executed multiple times, each time with a new searched image
+    >>> df = fastdup.search("myimage.jpg", None, verbose=True)
+    # optional: display search output
+    >>> fastdup.create_duplicates_gallery(df, ".",input_dir=input_dir)
+```
+
+Note: fastdup model was trained with Image resize via Resampling.NEAREST and the BGR channel swapped to RGB.  
+In case you use other models, need to check their requirements.
+
+**Returns**:
+
+- `ret` _int_ - 0 in case of success, otherwise 1.
+
+<a id="fastdup.search"></a>
+
+### search
+
+```python
+def search(filename, image, verbose=0)
+```
+
+Search for similar images in the image database.
+
+**Arguments**:
+
+- `filename` (str): full path pointing to an image.
+- `img` (PIL.Image): (Optional) loaded and resized PIL.Image, in case given it is not red from filename    
+- `verbose `(bool): (Optiona) run in verbose mode, default is False  
+      Returns:
+
+**Returns**:
+
+- `ret` (pd.DataFrame): `None` in case of error, otherwise a `pd.DataFrame` with `from,to,distance` columns
+
+<a id="fastdup.vector_search"></a>
+
+### vector\_search
+
+```python
+def vector_search(filename = "query_vector", vec=None, verbose=False)
+```
+
+Search for similar images in the image database, given a feature vector.
+
+**Arguments**:
+
+- `filename`: vector name (used for debugging)       
+- `vec` (numpy): Mandatory numpy matrix of size `1xd` or a vector of size `d`
+- `verbose` (bool): (Optiona) run in verbose mode, default is `False`
+
+**Returns**:
+
+- `ret` (pd.DataFrame): `None` in case of error, otherwise a `pd.DataFrame` with `from,to,distance columns`
+
+<a id="fastdup.fastdup_controller.FastdupController.invalid_instances"></a>
+
+### invalid\_instances
+
+```python
+def invalid_instances()
+```
+
+Get fastdup invalid file
+
+**Returns**:
+
+requested dataframe
+
+<a id="fastdup.fastdup_controller.FastdupController.img_stats"></a>
+
+### img\_stats
+
+```python
+def img_stats(data: bool = True,
+              split: bool = None,
+              include_unannotated=False) -> pd.DataFrame
+```
+
+Get fastdup stats file
+
+**Arguments**:
+
+- `data`: add annotation
+- `split`: filter by split
+- `include_unannotated`: include instances that are not represented in the annotations
+
+**Returns**:
+
+requested dataframe
+
+<a id="fastdup.fastdup_controller.FastdupController.config"></a>
+
+### config
+
+```python
+@property
+def config() -> dict
+```
+
+Get fastdup config file
+
+**Returns**:
+
+config dict
+
+<a id="fastdup.fastdup_controller.FastdupController.connected_components"></a>
+
+### connected\_components
+
+```python
+def connected_components(
+        data: bool = True,
+        split: str = None,
+        include_unannotated=False) -> Tuple[pd.DataFrame, pd.DataFrame]
+```
+
+Get fastdup connected components file
+
+**Arguments**:
+
+- `data`: add annotation
+- `split`: filter by split
+- `include_unannotated`: include instances that are not represented in the annotations
+
+**Returns**:
+
+requested dataframe, each row contains an image and the column 'component_id' include the component (cluster) for that image. In addition returns statistic information dataframe about component sizes. 
+
+<a id="fastdup.fastdup_controller.FastdupController.connected_components_grouped"></a>
+
+### connected\_components\_grouped
+
+```python
+def connected_components_grouped(
+        sort_by: str = "comp_size",
+        ascending: bool = True,
+        metric: str = None, 
+				load_crops: bool = False) -> pd.DataFrame
+```
+
+Get image clusters. Each row contains a cluster (a group of similar images) and the columns contain information about images on that cluster, including image names, image ids, labels (if existing) and statistics about the cluster (optional).
+
+**Arguments**:
+
+- `sort_by`: column to sort_by, on default give the largest components first
+- `ascending`: sort_by ascending or descending
+- `metric`: optional stats metric for the component for example blur, min (color), max (color), mean (color)
+
+**Returns**:
+
+requested dataframe, each row contains a cluster and the column contains list of images on that cluster.
+
+<a id="fastdup.fastdup_controller.FastdupController.run"></a>
+
+### run
+
+```python
+def run(input_dir: Union[str, Path] = None,
+        annotations: pd.DataFrame = None,
+        subset: list = None,
+        embeddings=None,
+        data_type: str = 'infer',
+        overwrite: bool = False,
+        print_summary: bool = True,
+        **fastdup_kwargs)
+```
+
+This function:
+
+1. Calculates a subset of images to analyze
+2. Runs fastdup
+3. Maps images/bounding boxes to fastdup index
+4. Expands annotation csv to include files that are not in annotation but is in subset
+5. Creates a version of annotation that is grouped by image
+
+**Arguments**:
+
+- `input_dir`: input directory containing images
+- `annotations`: (Optional) annotations file, the expected column convention is:
+- img_filename: input_dir-relative filenames
+- img_h, img_w (Optional): image height and width
+- col_x, row_y, width, height (Optional): bounding box arguments
+- split (Optional): data split, e.g. train, test, etc ...
+- `subset`: (Optional) subset of images to analyze
+- `embeddings`: (Optional) pre-calculated embeddings
+- `data_type`: (Optional) data type, one of 'infer', 'image', 'bbox'
+- `overwrite`: (Optional) overwrite existing files
+- `print_summary`: Print summary report of fastdup run results
+- `fastdup_kwargs`: (Optional) fastdup run arguments, see fastdup.run() documentation
+
+<a id="fastdup.fastdup_controller.FastdupController.summary"></a>
+
+### summary
+
+```python
+def summary(verbose=True,
+            blur_threshold: float = 150.0,
+            brightness_threshold: float = 253.0,
+            darkness_threshold: float = 4.0) -> List[str]
+```
+
+This function provides a summary of the dataset statistics and issues uncovered
+
+using fastdup. This includes total number of images, invalid images, duplicates, outliers,  
+blurry and dark/bright images. Count and percent for each.
+
+**Arguments**:
+
+- `verbose`: 
+- `blur_threshold`: 
+- `brightness_threshold`: 
+- `darkness_threshold`: 
+
+<a id="fastdup.fastdup_controller.FastdupController.img_grouped_annot"></a>
+
+### img\_grouped\_annot
+
+```python
+def img_grouped_annot(image_level_columns=None) -> pd.DataFrame
+```
+
+This function groups annotation according to fastdup-im-id and returns the grouped file.
+
+Because this process takes significant time the process is done once and the result is cached
+
+**Returns**:
+
+grouped annotation dataframe
+
+<a id="fastdup.fastdup_controller.set_fastdup_kwargs"></a>
+
+### set\_fastdup\_kwargs
+
+```python
+def set_fastdup_kwargs(input_kwargs: dict) -> dict
+```
+
+override default arguments in fastdup args with users-input
+
+**Arguments**:
+
+- `input_kwargs`: iunput kwargs to init function
+
+**Returns**:
+
+updated dict
+
+<a id="fastdup.fastdup_controller.fastdup_convert_to_relpath"></a>
+
+### fastdup\_convert\_to\_relpath
+
+```python
+def fastdup_convert_to_relpath(work_dir: Union[Path, str],
+                               input_dir: Union[Path, str])
+```
+
+create mapping files, relative path to img-id/features/stats
+
+**Arguments**:
+
+- `work_dir`: location of files
+- `input_dir`: base dir for images
+
+<a id="fastdup.fastdup_controller.s3_folder_exists_and_not_empty"></a>
+
+### s3\_folder\_exists\_and\_not\_empty
+
+```python
+def s3_folder_exists_and_not_empty(s3_path: str) -> bool
+```
+
+Folder should exist.  
+Folder should not be empty.
+
+<a id="fastdup.fastdup_galleries"></a>
+
+# fastdup.fastdup\_galleries
+
+<a id="fastdup.fastdup_galleries.FastdupVisualizer"></a>
+
+## FastdupVisualizer Objects
+
+```python
+class FastdupVisualizer()
+```
+
+<a id="fastdup.fastdup_galleries.FastdupVisualizer.__init__"></a>
+
+### \_\_init\_\_
+
+```python
+def __init__(controller: FastdupController, default_config=None)
+```
+
+Create galleries/plots from fastdup output.
+
+**Arguments**:
+
+- `controller`: FastdupController instance
+- `default_config`: dict of default config for cv2, e.g. {'cv2_imread_flag': cv2.IMREAD_COLOR}
+
+<a id="fastdup.fastdup_galleries.FastdupVisualizer.outliers_gallery"></a>
+
+### outliers\_gallery
+
+```python
+def outliers_gallery(save_path: str = None,
+                     label_col: str = FD.ANNOT_LABEL,
+                     draw_bbox: bool = True,
+                     num_images: int = 20,
+                     max_width: int = None,
+                     lazy_load: bool = False,
+                     how: str = 'one',
+                     slice: Union[str, list] = None,
+                     sort_by: str = FD.OUT_SCORE,
+                     ascending: bool = True,
+                     save_artifacts: bool = False,
+                     show: bool = True,
+                     **kwargs)
+```
+
+Create gallery of outliers, i.e. images that are not similar to any other images in the dataset.
+
+**Arguments**:
+
+- `save_path`: html file-name to save the gallery or directory if lazy_load is True,  
+  if None, save to fastdup work_dir
+- `num_images`: number of images to display
+- `lazy_load`: if True, load images on demand, otherwise load all images into html
+- `label_col`: column name of label in annotation dataframe
+- `how`: (Optional) outlier selection method.
+- one = take the image that is far away from any one image  
+        (but may have other images close to it).
+- all = take the image that is far away from all other images. Default is one.
+- `slice`: (Optional) parameter to select a slice of the outliers file based on a specific label or a list of labels.
+- `max_width`: max width of the gallery
+- `draw_bbox`: if True, draw bounding box on the images
+- `slice`: (Optional) list/single label for filtering outliers
+- `sort_by`: (Optional) column name to sort the outliers by
+- `ascending`: (Optional) sort ascending or descending
+- `save_artifacts`: save artifacts to disk
+- `show`: show gallery in notebook
+- `kwargs`: additional parameters to pass to create_outliers_gallery
+
+<a id="fastdup.fastdup_galleries.FastdupVisualizer.duplicates_gallery"></a>
+
+### duplicates\_gallery
+
+```python
+def duplicates_gallery(save_path: str = None,
+                       label_col: str = FD.ANNOT_LABEL,
+                       draw_bbox: bool = True,
+                       num_images: int = 20,
+                       max_width: int = None,
+                       lazy_load: bool = False,
+                       slice: Union[str, list] = None,
+                       ascending: bool = False,
+                       threshold: float = None,
+                       save_artifacts: bool = False,
+                       show: bool = True,
+                       **kwargs)
+```
+
+Generate gallery of duplicate images, i.e. images that are similar to other images in the dataset.
+
+**Arguments**:
+
+- `save_path`: html file-name to save the gallery or directory if lazy_load is True,  
+  if None, save to fastdup work_dir
+- `num_images`: number of images to display
+- `descending`: display images with highest similarity first
+- `lazy_load`: load images on demand, otherwise load all images into html
+- `label_col`: column name of label in annotation dataframe
+- `slice`: (Optional) parameter to select a slice of the outliers file based on a specific label or a list of labels.
+- `max_width`: max width of the gallery
+- `draw_bbox`: draw bounding box on the images
+- `slice`: (Optional) list/single label for filtering outliers
+- `ascending`: (Optional) sort ascending or descending
+- `threshold`: (Optional) threshold to filter out images with similarity score below the threshold.
+- `save_artifacts`: save artifacts to disk
+- `show`: show gallery in notebook
+- `kwargs`: additional parameters to pass to create_duplicates_gallery
+
+<a id="fastdup.fastdup_galleries.FastdupVisualizer.similarity_gallery"></a>
+
+### similarity\_gallery
+
+```python
+def similarity_gallery(save_path: str = None,
+                       label_col: str = FD.ANNOT_LABEL,
+                       draw_bbox: bool = True,
+                       num_images: int = 20,
+                       max_width: int = None,
+                       lazy_load: bool = False,
+                       slice: Union[str, list] = None,
+                       ascending: bool = False,
+                       threshold: float = None,
+                       show: bool = True,
+                       **kwargs)
+```
+
+Generate gallery of similar images, i.e. images that are similar to other images in the dataset.
+
+**Arguments**:
+
+- `save_path`: html file-name to save the gallery or directory if lazy_load is True,  
+  if None, save to fastdup work_dir
+- `num_images`: number of images to display
+- `descending`: display images with highest similarity first
+- `lazy_load`: load images on demand, otherwise load all images into html
+- `label_col`: column name of label in annotation dataframe
+- `slice`: (Optional) parameter to select a slice of the outliers file based on a specific label or a list of labels.
+- `max_width`: max width of the gallery
+- `draw_bbox`: draw bounding box on the images
+- `get_extra_col_func`: (callable): Optional parameter to allow adding additional column to the report 
+- `threshold`: (Optional) threshold to filter out images with similarity score below the threshold.
+- `slice`: (Optional) list/single label for filtering similarity dataframe
+- `ascending`: (Optional) sort ascending or descending
+- `show`: show gallery in notebook
+- `kwargs`: additional parameters to pass to create_duplicates_gallery
+
+<a id="fastdup.fastdup_galleries.FastdupVisualizer.stats_gallery"></a>
+
+### stats\_gallery
+
+```python
+def stats_gallery(save_path: str = None,
+                  metric: str = 'dark',
+                  slice: Union[str, list] = None,
+                  label_col: str = FD.ANNOT_LABEL,
+                  lazy_load: bool = False,
+                  show: bool = True)
+```
+
+Generate gallery of images sorted by a specific metric.
+
+**Arguments**:
+
+- `save_path`: html file-name to save the gallery or directory if lazy_load is True,  
+  if None, save to fastdup work_dir
+- `metric`: metric to sort images by (dark, bright, blur)
+- `slice`: list/single label for filtering stats dataframe
+- `label_col`: label column name
+- `lazy_load`: load images on demand, otherwise load all images into html
+- `show`: show gallery in notebook
+
+<a id="fastdup.fastdup_galleries.FastdupVisualizer.component_gallery"></a>
+
+### component\_gallery
+
+```python
+def component_gallery(save_path: str = None,
+                      label_col: str = FD.ANNOT_LABEL,
+                      draw_bbox: bool = True,
+                      num_images: int = 20,
+                      max_width: int = None,
+                      lazy_load: bool = False,
+                      slice: Union[str, list] = None,
+                      group_by: str = 'visual',
+                      min_items: int = None,
+                      max_items: int = None,
+                      threshold: float = None,
+                      metric: str = None,
+                      sort_by: str = 'comp_size',
+                      sort_by_reduction: str = None,
+                      ascending: bool = False,
+                      save_artifacts: bool = False,
+                      show: bool = True,
+                      **kwargs)
+```
+
+**Arguments**:
+
+- `save_path`: html file-name to save the gallery
+- `num_images`: number of images to display
+- `lazy_load`: load images on demand, otherwise load all images into html
+- `label_col`: column name of label in annotation dataframe
+- `group_by`: [visual|label]. Group the report using the visual properties of the image or using the labels of the images. Default is visual.
+- `slice`: (Optional) parameter to select a slice of the outliers file based on a specific label or a list of labels.
+- `max_width`: max width of the gallery
+- `min_items`: threshold to filter out components with less than min_items
+- `max_items`: max number of items to display for each component
+- `draw_bbox`: draw bounding box on the images
+- `get_extra_col_func`: (callable): Optional parameter to allow adding additional column to the report 
+- `threshold`: (Optional) threshold to filter out images with similarity score below the threshold.
+- `metric`: (Optional) parameter to set the metric to use (like blur) for chose components. Default is None.
+- `slice`: (Optional) list/single label for filtering  connected component
+- `sort_by`: (Optional) 'area'|'comp_size'|ANY_COLUMN_IN_ANNOTATION  
+  column name to sort the connected component by
+- `sort_by_reduction`: (Optional) 'mean'|'sum' reduction method to use for grouping connected components
+- `ascending`: (Optional) sort ascending or descending
+- `show`: show gallery in notebook
+- `save_artifacts`: save artifacts to disk
+
+# Data Enrichments
+
+<a id="fastdup.enrichments"></a>
+
+## fastdup.caption
+
+<a id="fastdup.caption"></a>
+
+```python
+def caption(model_name = 'automatic',
+            device = 'cpu', 
+            batch_size: int = 8, 
+            subset: list = None, 
+            vqa_prompt: str = None, 
+            kwargs=None)
+```
+
+Generate captions or visual question answers on fastdup output.
+
+**Arguments**:
+
+- `model_name`: (Optional) select the model used for captioning or VQA (ViT-GPT2 by default)
+- `device`: (Optional) select the processor used to compute captions (CPU by default)
+- `batch_size`:  (Optional) set the number of images to process in a single batch (8 by default)
+- `subset`:  (Optional) specify a subset of images to caption 
+- `vqa_prompt`: (Optional) provide a prompt for visual question answering
+- kwargs : additional parameters to pass to caption

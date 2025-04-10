@@ -1,0 +1,66 @@
+---
+title: "Visualizing data"
+excerpt: "In this tutorial, you will learn how to utilize Fastdup's versatile galleries to facilitate visual data analysis and refinement. Fastdup supports various gallery options for all types of analysis, allowing you to easily display labels and bounding boxes over selected images. By the end of this tutorial, you'll be able to efficiently use Fastdup's galleries to streamline your visual data analysis process."
+hidden: false
+metadata: 
+  image: []
+  robots: "index"
+createdAt: "Mon Feb 20 2023 11:35:44 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Thu Oct 26 2023 05:37:19 GMT+0000 (Coordinated Universal Time)"
+---
+# Overview
+
+For visualizing the results or individual parts of the analysis, fastdup generates galleries in the form of `HTML` files that are saved to the `galleries` sub-dir of the work directory and presented interactively when using Jupyter notebooks. 
+
+Starting from V1.0 galleries have a new layer of abstraction that automatically adds bounding boxes and labels to images where available.
+
+## Supported galleries
+
+### Components: `Fastdup.vis.component_gallery`
+
+![](https://files.readme.io/cbfb28a-Screen_Shot_2023-02-27_at_12.26.40.png)
+
+### Duplicates: `Fastdup.vis.duplicates_gallery`
+
+![](https://i.imgur.com/90VfH50.png)
+
+### Outliers: `Fastdup.vis.outliers_gallery`
+
+![](https://files.readme.io/73cd5f8-Screen_Shot_2023-02-27_at_12.28.45.png)
+
+### Image statistics: `Fastdup.vis.stats_gallery`
+
+![](https://files.readme.io/fa9313e-Screen_Shot_2023-02-27_at_12.48.11.png)
+
+### Similarity: `Fastdup.vis.similarity_gallery`
+
+![](https://i.imgur.com/wOQ2Gvv.png)
+
+#### For more detail, see [Galleries API Reference](https://visual-layer.readme.io/docs/v1-api-engine-temp#fastdupfastdup_galleries)
+
+## Gallery configuration
+
+Galleries share a few methods and arguments used for visualizing labels and bounding boxes, and for setting general attributes:
+
+- `slice`: Visualize a subset of the data with the given label, e.g., `slice='dog'`
+
+- `sort_by`:  Sort images by a property, supported are:
+  - default: `comp_size` - Number of images in the component
+  - `distance` - The average distance between cluster members. Clusters where the images are most similar will be presented first
+  - `area` - From the largest to the smallest image or bounding box average size
+
+- `label_col`: Column to use as labels, common options are `label`, `split` and `img_filename`.
+
+- `num_images`: (default=20) The number of images to visualize.
+
+- `max_width`: (default=None) Pixel width of displayed gallery. Useful values are often in the 800-1200 range.
+
+- `lazy_load`: (default=False) When `False`, images are embedded into the gallery `HTML` files. Otherwise images are loaded by the browser using their relative paths. Using `lazy_load` makes galleries lighter and faster to generate, but less portable and shareable. On the other hand, Without lazy loading galleries become very large files.
+
+# Visualizing Images
+
+For most cases, visualization is as simple as `fd.vis.component_gallery()`. The rest of the parameters are optional, and could be selected in hindsight. 
+
+## Adding Labels
+
+The `label_col`  argument controls the labels appended to each image visualized. By default it fetches labels from the label column in the annotations dataframes provided during the `fastdup.run()` call. When labels are not provided, or if the use of another column is desired, the `label_col` argument could be set for using the required column.

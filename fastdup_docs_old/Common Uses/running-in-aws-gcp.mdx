@@ -1,0 +1,29 @@
+---
+title: "COCO Annotations"
+excerpt: ""
+hidden: false
+metadata: 
+  image: []
+  robots: "index"
+createdAt: "Thu Feb 16 2023 10:11:50 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Thu Oct 26 2023 05:37:19 GMT+0000 (Coordinated Universal Time)"
+---
+fastdup supports natively coco annotations. The example below shows how to run bounding box annotations in coco format. (Segmentation masks are not supported yet). 
+
+```Text python
+# let's get some small dataset to play with
+!git clone https://github.com/chongruo/tiny-coco.git
+
+import fastdup
+# create a fastdup object 
+# input_dir is the location of the images referred in the annotation file. Absolute path please!
+# work_dir is the folder containing the resulting outputs
+fd = fastdup.create(work_dir='tiny-coco3', input_dir='/kaggle/working/tiny-coco/small_coco/train_2017_small/')
+
+fd.run(annotations='tiny-coco/small_coco/instances_train2017_small.json')
+
+#run any of fastdup galleries 
+fd.vis.outliers_gallery()
+```
+
+Full example notebook is here: <https://www.kaggle.com/code/graphlab/fastdup-coco-format-tutorial>

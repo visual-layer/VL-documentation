@@ -1,0 +1,350 @@
+---
+title: "Metadata Enrichment with Zero-Shot Segmentation Models"
+excerpt: "Enrich your visual data with zero-shot segmentations models such as Segment Anything and more."
+hidden: false
+metadata: 
+  image: []
+  robots: "index"
+createdAt: "Wed Oct 25 2023 08:27:30 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Wed Nov 08 2023 09:46:54 GMT+0000 (Coordinated Universal Time)"
+---
+[![Open in Colab](https://img.shields.io/badge/Open%20in%20Colab-blue?style=for-the-badge&logo=data:image/png;base64,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&labelColor=gray)](https://colab.research.google.com/github/visual-layer/fastdup/blob/main/examples/enrichment-zero-shot-segmentation.ipynb) [![Kaggle](https://img.shields.io/badge/Open%20in%20Kaggle-blue?style=for-the-badge&logo=data:image/png;base64,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&labelColor=gray)](https://kaggle.com/kernels/welcome?src=https://github.com/visual-layer/fastdup/blob/main/examples/enrichment-zero-shot-segmentation.ipynb) [![GitHub Stars](https://img.shields.io/github/stars/visual-layer/fastdup?style=for-the-badge&logo=github&color=blue&label=GitHub%20Stars)](https://github.com/visual-layer/fastdup)
+
+This notebook is Part 3 of the dataset enrichment notebook series where we utilize various zero-shot models to enrich datasets.
+
+- [Part 1](doc:enrichment-zero-shot-classification) - Dataset Enrichment with Zero-Shot Classification Models
+- [Part 2](doc:enrichment-zero-shot-detection) - Dataset Enrichment with Zero-Shot Detection Models
+- [Part 3](doc:enrichment-zero-shot-segmentation) - Dataset Enrichment with Zero-Shot Segmentation Models
+
+If you haven't checked out [Part 1](doc:enrichment-zero-shot-classification) and [Part 2](doc:enrichment-zero-shot-detection) we highly encourage you to go through them first before proceeding with this notebook.
+
+> 👍 Purpose
+> 
+> This notebook shows how you can enrich the metadata of your visual dataset using open-source zero-shot models image segmentation model [Segment Anything](https://github.com/facebookresearch/segment-anything) (SAM).
+> 
+> By the end of this notebook, you'll learn how to:
+> 
+> - Install and load the SAM in fastdup.
+> - Enrich your dataset using masks generated by the SAM model.
+> - Run inference using SAM on a single image.
+
+# Installation
+
+First, let's install the necessary packages:
+
+- [fastdup](https://github.com/visual-layer/fastdup) - To analyze issues in the dataset.
+- [Segment Anything Model](https://github.com/facebookresearch/segment-anything) - To use the SAM model.
+- [gdown](https://github.com/wkentaro/gdown) - To download demo data hosted on Google Drive.
+
+Run the following to install all the above packages.
+
+```shell
+!pip install -Uq fastdup git+https://github.com/facebookresearch/segment-anything.git gdown
+```
+
+Test the installation. If there's no error message, we are ready to go.
+
+```python
+import fastdup
+fastdup.__version__
+```
+
+```
+'1.57'
+```
+
+> 🚧 CUDA Runtime
+> 
+> fastdup runs perfectly on CPUs, but larger models like SAM runs much slower on CPU compared to GPU.
+> 
+> This codes in this notebook can be run on CPU or GPU.
+> 
+> But, we highly recommend running in CUDA-enabled environment to reduce the run time. Running this notebook in [Google Colab](https://colab.research.google.com/github/visual-layer/fastdup/blob/main/examples/enrichment-zero-shot-segmentation.ipynb) or [Kaggle](https://kaggle.com/kernels/welcome?src=https://github.com/visual-layer/fastdup/blob/main/examples/enrichment-zero-shot-segmentation.ipynb) is a good start!
+
+# Download Dataset
+
+Download the [coco-minitrain](https://github.com/giddyyupp/coco-minitrain) dataset - A curated mini-training set consisting of 20% of [COCO 2017](https://cocodataset.org/#home) training dataset. The `coco-minitrain` consists of 25,000 images and annotations.
+
+![](https://files.readme.io/870c972-image.png)
+
+First, let's load the dataset from the `coco-minitrain` dataset.
+
+```shell
+gdown --fuzzy https://drive.google.com/file/d/1iSXVTlkV1_DhdYpVDqsjlT4NJFQ7OkyK/view
+unzip -qq coco_minitrain_25k.zip
+```
+
+# Zero-Shot Segmentation with SAM
+
+In addition to the zero-shot recognition and detection modes, fastdup also supports zero-shot segmentation using the [Segment Anything Model (SAM)](https://github.com/facebookresearch/segment-anything) from MetaAI.
+
+SAM produces high-quality object masks from input prompts such as points or boxes, and it can be used to generate masks for all objects in an image.
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/3f315f2-masks2.jpg",
+        "",
+        ""
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+## 1. Inference on  a bulk of images
+
+In [Part 2](doc:enrichment-zero-shot-detection) of the enrichment notebook series, we utilized Grounding DINO as a zero-shot detection model and ran an inference over the images in our dataset.
+
+We ended up with a DataFrame consisting of `filename`,`ram_tags`, `grounding_dino_bboxes`, `grounding_dino_scores` and `grounding_dino_labels` column as follows.
+
+[block:html]
+{
+  "html": "<div style=\"overflow-x:auto;\">\n\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: left;\">\n      <th></th>\n      <th>filename</th>\n      <th>ram_tags</th>\n      <th>grounding_dino_bboxes</th>\n      <th>grounding_dino_scores</th>\n      <th>grounding_dino_labels</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>coco_minitrain_25k/images/val2017/000000382734.jpg</td>\n      <td>bath . bathroom . doorway . drain . floor . glass door . room . screen door . shower . white</td>\n      <td>[(94.36, 479.79, 236.6, 589.37), (4.92, 3.73, 475.19, 637.36), (95.94, 514.92, 376.53, 638.46), (41.91, 37.47, 425.01, 637.09), (115.27, 602.26, 164.17, 635.21)]</td>\n      <td>[0.5789, 0.3895, 0.4444, 0.3018, 0.3601]</td>\n      <td>[bath, bathroom, floor, glass door, drain]</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>coco_minitrain_25k/images/val2017/000000508730.jpg</td>\n      <td>baby . bathroom . bathroom accessory . bin . boy . brush . chair . child . comb . diaper . hair . hairbrush . play . potty . sit . stool . tile wall . toddler . toilet bowl . toilet seat . toy</td>\n      <td>[(3.58, 2.77, 635.13, 475.62), (30.91, 104.91, 301.75, 476.29), (68.59, 105.02, 266.22, 267.8), (359.26, 116.82, 576.6, 475.9), (374.37, 116.77, 557.19, 254.07), (466.9, 0.71, 638.7, 117.05), (266.95, 433.87, 291.04, 476.78), (466.53, 349.26, 525.87, 405.73), (350.62, 272.66, 571.98, 476.46)]</td>\n      <td>[0.5898, 0.3738, 0.3679, 0.3641, 0.362, 0.3482, 0.3804, 0.3755, 0.3742]</td>\n      <td>[bathroom, toddler, hair, toddler, hair, bathroom accessory, hairbrush, diaper, chair]</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>coco_minitrain_25k/images/val2017/000000202339.jpg</td>\n      <td>bus . bus station . business suit . carry . catch . city bus . pillar . man . shopping bag . sign . suit . tie . tour bus . walk</td>\n      <td>[(73.28, 256.74, 135.63, 374.42), (103.53, 105.23, 267.7, 410.18), (98.31, 33.85, 271.8, 434.72), (203.78, 63.88, 463.32, 298.29), (147.5, 106.62, 163.49, 172.9), (164.1, 52.93, 272.88, 152.68), (0.49, 0.76, 82.86, 333.41), (1.96, 2.22, 477.75, 636.07), (398.15, 281.2, 479.01, 545.03), (147.02, 106.66, 163.66, 227.86), (400.67, 98.89, 476.48, 318.45), (165.71, 52.9, 372.94, 185.69)]</td>\n      <td>[0.5325, 0.4582, 0.4429, 0.4012, 0.365, 0.3587, 0.3338, 0.3322, 0.3212, 0.3168, 0.3056, 0.2986]</td>\n      <td>[man, bus, shopping bag, bus station, business suit, city bus, pillar, sign, tour bus, carry, catch, walk]</td>\n    </tr>\n  </tbody>\n</table>\n  </div>\n"
+}
+[/block]
+
+
+If you'd like to reproduce the above DataFrame, [Part 2](doc:enrichment-zero-shot-detection) notebook details the code you need to run.
+
+Similar to all previous examples, you can use the `enrich` method to add masks to your DataFrame of images.
+
+In the following code snippet, we load the SAM model and specify `input_col='grounding_dino_bboxes'` to allow SAM to use the bounding boxes as inputs.
+
+```python
+fd = fastdup.create(input_dir='./coco_minitrain_25k')
+
+df = fd.enrich(task='zero-shot-segmentation', 
+               model='segment-anything', 
+               input_df=df, 
+               input_col='grounding_dino_bboxes'
+     )
+```
+
+This creates a new column in the DataFrame named `'sam_masks'`which contains the instance segmentation masks for each bounding box.
+
+> 📘 More on `fd.enrich`
+> 
+> Enriches an input `DataFrame` by applying a specified model to perform a specific task.
+> 
+> Currently supports the following parameters:
+> 
+> [block:parameters]{"data":{"h-0":"Parameter","h-1":"Type","h-2":"Description","h-3":"Optional","h-4":"Default","0-0":"`task`","0-1":"**str**","0-2":"The task to be performed.  \n  \nSupports `\"zero-shot-classification\"`, `\"zero-shot-detection\"` or `\"zero-shot-segmentation\"` as argument.","0-3":"No","0-4":"-","1-0":"`model`","1-1":"**str**","1-2":"The model to be used.  \n  \nSupports `\"segment-anything\"` if `task=='zero-shot-segmentation'`.","1-3":"No","1-4":"-","2-0":"`input_df`","2-1":"**DataFrame**","2-2":"The Pandas `DataFrame` containing the data to be enriched.","2-3":"No","2-4":"-","3-0":"`input_col`","3-1":"**str**","3-2":"The name of the column in `input_df` to be used as input for the model.","3-3":"No","3-4":"-","4-0":"`num_rows`","4-1":"**int**","4-2":"Number of rows from the top of `input_df` to be processed.  \n  \nIf not specified, all rows are processed.","4-3":"Yes","4-4":"`None`","5-0":"`device`","5-1":"**str**","5-2":"The device used to run inference.  \n  \nSupports `'cpu'` or `'cuda'`as argument.  \n  \nDefaults to available devices if not specified.","5-3":"Yes","5-4":"`None`"},"cols":5,"rows":6,"align":[null,null,null,null,null]}[/block]
+
+To verify the results, let's plot the images with bounding boxes and masks.
+
+```python
+from fastdup.models_utils import plot_annotations
+
+plot_annotations(df, 
+                 image_col='filename', 
+                 tags_col='ram_tags', 
+                 bbox_col='grounding_dino_bboxes', 
+                 scores_col='grounding_dino_scores', 
+                 labels_col='grounding_dino_labels', 
+                 masks_col='sam_masks'
+)
+```
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/5ee5c03-download_4.png",
+        "",
+        ""
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+## 2. Inference on a single image
+
+To run an inference using the SAM model, import the `SegmentAnythingModel` class and provide an image-bounding box pair as the input.
+
+Let's suppose we'd like to run an inference on the following image.
+
+```python
+from IPython.display import Image
+Image("coco_minitrain_25k/images/val2017/000000449996.jpg")
+```
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/862ac88-download_2.jpeg",
+        "",
+        ""
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+Call the `run_inference`method and provide the image and bounding box as the input argument.
+
+The value `torch.tensor((1.47, 1.45, 638.46, 241.37)))` is a bounding box of the `sky` for the image above.
+
+```python
+from fastdup.models_sam import SegmentAnythingModel
+import torch
+
+model = SegmentAnythingModel()
+result = model.run_inference(image_path="coco_minitrain_25k/images/val2017/000000449996.jpg", 
+                             bboxes=torch.tensor((1.47, 1.45, 638.46, 241.37))) # bounding box of the sky
+```
+
+The result is a mask of the object based on the given bounding box.
+
+```python
+result.shape
+```
+
+```
+torch.Size([1, 1, 428, 640])
+```
+
+Let's plot an overlay of the mask and image.
+
+```python
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+import numpy as np
+from PIL import Image
+import torch
+
+# Image
+image_path = "coco_minitrain_25k/images/val2017/000000449996.jpg" 
+pil_image = Image.open(image_path)
+image_np = np.array(pil_image)
+
+# Bbox
+bbox = torch.tensor((1.47, 1.45, 638.46, 241.37))  # Replace with your actual bounding box tensor
+xmin, ymin, xmax, ymax = bbox
+
+# Mask
+# Squeeze out the first two dimensions to make it 2D
+mask_2d = result.cpu().squeeze(0).squeeze(0)
+
+plt.imshow(image_np)
+plt.imshow(mask_2d, cmap='jet', alpha=0.5)
+plt.gca().add_patch(Rectangle((xmin, ymin), xmax-xmin, ymax-ymin, linewidth=2.5, edgecolor='limegreen', facecolor='none'))
+
+plt.axis('off')
+plt.show()
+```
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/0046c7b-download_5.png",
+        "",
+        ""
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+You can also load other variants of SAM from the [official SAM repo](https://github.com/facebookresearch/segment-anything) or even your own custom model.
+
+To do so, download the `sam_vit_b` [weights](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_l_0b3195.pth) and the `sam_vit_l` [weights](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_l_0b3195.pth) from into your local folder and load them into the constructor as follows.
+
+```python
+model = SegmentAnythingModel(model_weights="sam_vit_b_01ec64.pth", model_type="vit_b")
+model = SegmentAnythingModel(model_weights="sam_vit_l_0b3195.pth", model_type="vit_l")
+
+```
+
+# Wrap Up
+
+In this tutorial, we showed how you can run Segment Anything Model as a zero-shot segmentation model to enrich your dataset.
+
+This notebook is Part 3 of the dataset enrichment notebook series where we utilize various zero-shot models to enrich datasets.
+
+- [Part 1](`) - Dataset Enrichment with Zero-Shot Classification Models
+- [Part 2](doc:enrichment-zero-shot-detection) - Dataset Enrichment with Zero-Shot Detection Models
+- [Part 3](doc:enrichment-zero-shot-segmentation) - Dataset Enrichment with Zero-Shot Segmentation Models
+
+> 👍 Next Up
+> 
+> Try out the [Google Colab](https://colab.research.google.com/github/visual-layer/fastdup/blob/main/examples/enrichment-zero-shot-detection.ipynb) and [Kaggle](https://kaggle.com/kernels/welcome?src=https://github.com/visual-layer/fastdup/blob/main/examples/enrichment-zero-shot-detection.ipynb) notebook to reproduce this example.
+
+Questions about this tutorial? Reach out to us on our [Slack channel](https://visuallayer.slack.com/)!
+
+# VL Profiler - A faster and easier way to diagnose and visualize dataset issues
+
+The team behind fastdup also recently launched [VL Profiler](https://medium.com/visual-layer/introducing-vl-profiler-1cde3257c76c), a no-code cloud-based platform that lets you leverage fastdup in the browser. 
+
+VL Profiler lets you find:
+
+- Duplicates/near-duplicates.
+- Outliers.
+- Mislabels.
+- Non-useful images.
+
+Here's a highlight of the issues found in the RVL-CDIP test dataset on the VL Profiler.
+
+[block:embed]
+{
+  "html": "<iframe class=\"embedly-embed\" src=\"//cdn.embedly.com/widgets/media.html?src=https%3A%2F%2Fwww.youtube.com%2Fembed%2Fijf8Ag4-3TE%3Ffeature%3Doembed&display_name=YouTube&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dijf8Ag4-3TE&image=https%3A%2F%2Fi.ytimg.com%2Fvi%2Fijf8Ag4-3TE%2Fhqdefault.jpg&key=7788cb384c9f4d5dbbdbeffd9fe4b92f&type=text%2Fhtml&schema=youtube\" width=\"640\" height=\"480\" scrolling=\"no\" title=\"YouTube embed\" frameborder=\"0\" allow=\"autoplay; fullscreen; encrypted-media; picture-in-picture;\" allowfullscreen=\"true\"></iframe>",
+  "url": "https://www.youtube.com/watch?v=ijf8Ag4-3TE",
+  "title": "RVL DCIP Test Dataset - Visual Layer Profiler",
+  "favicon": "https://www.google.com/favicon.ico",
+  "image": "https://i.ytimg.com/vi/ijf8Ag4-3TE/hqdefault.jpg",
+  "provider": "youtube.com",
+  "href": "https://www.youtube.com/watch?v=ijf8Ag4-3TE",
+  "typeOfEmbed": "youtube"
+}
+[/block]
+
+
+> 👍 Free Usage
+> 
+> Use VL Profiler for free to analyze issues on your dataset with up to **1,000,000 images**. 
+> 
+> [Get started for free.](https://app.visual-layer.com?utm_source=fastdupdocs)
+
+Not convinced yet? 
+
+Interact with a collection of datasets like ImageNet-21K, COCO, and DeepFashion [here](https://app.visual-layer.com/vl-datasets?utm_source=fastdupdocs).
+
+No sign-ups needed.
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/d67dc85-GitHub_Banner.gif",
+        null,
+        ""
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+[block:html]
+{
+  "html": "<center> \n    <a href=\"https://www.visual-layer.com\" target=\"_blank\" rel=\"noopener noreferrer\">\n    <picture>\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    <img alt=\"vl logo.\" src=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    </picture>\n    </a><br><br>\n    <a href=\"https://github.com/visual-layer/fastdup\" target=\"_blank\" style=\"text-decoration: none;\"> GitHub </a> •\n    <a href=\"https://visual-layer.slack.com/\" target=\"_blank\" style=\"text-decoration: none;\"> Join Slack Community </a> •\n    <a href=\"https://visual-layer.readme.io/discuss\" target=\"_blank\" style=\"text-decoration: none;\"> Discussion Forum </a>\n</center>\n\n<center> \n    <a href=\"https://medium.com/visual-layer\" target=\"_blank\" style=\"text-decoration: none;\"> Blog </a> •\n    <a href=\"https://visual-layer.readme.io/\" target=\"_blank\" style=\"text-decoration: none;\"> Documentation </a> •\n    <a href=\"https://visual-layer.com/about\" target=\"_blank\" style=\"text-decoration: none;\"> About Us </a> \n</center>\n\n<center> \n    <a href=\"https://www.linkedin.com/company/visual-layer/\" target=\"_blank\" style=\"text-decoration: none;\"> LinkedIn </a> •\n    <a href=\"https://twitter.com/visual_layer\" target=\"_blank\" style=\"text-decoration: none;\"> Twitter </a>\n</center>"
+}
+[/block]

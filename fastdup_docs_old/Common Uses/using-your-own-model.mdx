@@ -1,0 +1,89 @@
+---
+title: "Using your own ONNX model"
+excerpt: "fastdup ships with a highly efficient and powerful embedding model, but we fully support user using their own models for running the analysis."
+hidden: false
+metadata: 
+  image: []
+  robots: "index"
+createdAt: "Thu Feb 16 2023 11:55:18 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Thu Oct 26 2023 05:37:19 GMT+0000 (Coordinated Universal Time)"
+---
+# Running fastdup with a preconfigured  model
+
+fastdup supports multiple preconfigured  models. To run them simply point `model_path` to the preconfigured model name. For example:
+
+```
+import fastdup
+
+fd_clip = fastdup.create(work_dir='clip_work_dir', input_dir=input_dir)  
+fd_clip.run(model_path='dinov2s')
+```
+
+The supported model paths are:
+
+- `dinov2s` : Meta's [dinov2](https://dinov2.metademolab.com/) model small
+- `dinov2b`: Meta's [dinov2](https://dinov2.metademolab.com/) model big
+- `clip`: OpenAi's ViT-B/32 [clip](https://openai.com/research/clip) model
+- `clip336`OpenAI's ViT-L-14@336px [clip](https://openai.com/research/clip) model
+- `resent50` resnet50-v1-12.onnx model from [GitHub onnx](https://github.com/onnx/models/tree/main/vision/classification)
+- `efficientnet` efficientnet-lite4-11 model from [GitHub onnx](https://github.com/onnx/models/tree/main/vision/classification)
+- `None` : fastdup model
+
+Each model create different feature vectors. For example Clip model is very semantic and can find that two different images are identical if they contain the same object. The following two images have zero cosine distance when using clip feature vectors (i.e they are fully identical), as they both contain bitcoin. However they are very different thus fastdup gives them a similarity of 0.63 out of 1.0.
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/2cb2dc6-image.png",
+        null,
+        ""
+      ],
+      "align": "center",
+      "sizing": "300px"
+    }
+  ]
+}
+[/block]
+
+
+# Running fastdup analysis with a general ONNX model
+
+Using a model with fastdup done using the `model_path` and the dimension (`d`) argument in the `.run()` method. In this example we use CLIP-ViT-B-32, that has an output dimension of 512. We list below a few sources for ONNX models, as well as tutorials for converting PyTorch and Tensorflow models as they are different in appearance.
+
+```Text Python
+import fastdup
+
+!wget https://clip-as-service.s3.us-east-2.amazonaws.com/models/onnx/ViT-B-32/visual.onnx -O clip.onnx
+
+fd_clip = fastdup.create(work_dir='clip_work_dir', input_dir=input_dir)
+fd_clip.run(model_path='clip.onnx', d=512)
+```
+
+In this example we downloaded the ONNX model for [CLIP](https://openai.com/blog/clip/), a common deep learning model published by OpenAI in 2021, widely used for its transfer learning abilities and its abilities to generalize across different domains. 
+
+# About ONNX Format:
+
+The ONNX (Open Neural Network Exchange) model format is an open-source format for representing machine  learning models. It provides a standardized way to represent deep learning models, making them portable across different deep learning frameworks. ONNX models are used in the ONNX Runtime, an open-source engine designed to execute machine learning models in the ONNX format with high performance and efficiency.
+
+Most deep learning frameworks support model exports to ONNX format, which serialize a model to the shared format used by inference frameworks, and by the fastdup feature extraction component.
+
+# Sources for ONNX models
+
+- [ONNX model zoo](https://github.com/onnx/models)
+- [The CLIP-ONNX repo](https://github.com/Lednik7/CLIP-ONNX)
+
+# Exporting your own models to ONNX
+
+Follow the tutorials for each individual library:
+
+- [PyTorch - Example: AlexNet from PyTorch to ONNX](https://pytorch.org/docs/stable/onnx.html)
+- [tf2onnx - Convert TensorFlow, Keras, Tensorflow.js and Tflite models to ONNX.](https://github.com/onnx/tensorflow-onnx)
+- Additional tutorials and guides are available in the [official ONNX documentation website](https://onnx.ai/).
+
+# Caveats of using ONNX models
+
+- **Speed**: The model bundled in fastdup is heavily optimized for CPU inference performance. Many public models are meant to be used with GPUs, making CPU inference very slow. This could dramatically increase the runtime of a fastdup analysis.
+- **Accuracy and clustering performance:** A fantastic classification model does not necessarily make for a useful clustering and similarity model. 
+- **Stability:** ONNX models come in many shapes and forms, and are exported in various methods. We have tested fastdup with many common ONNX models, but cannot guarantee the stability and robust operation for every ONNX model.

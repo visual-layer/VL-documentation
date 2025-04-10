@@ -1,0 +1,186 @@
+---
+title: "Face Detection Video Analysis"
+excerpt: "In this tutorial, we will use fastdup with a pretrained face detection model to detect and crop from videos. Following that we analyze the cropped objects for issues such as duplicates, near-duplicates, outliers, bright/dark/blurry objects."
+hidden: false
+metadata: 
+  image: []
+  robots: "index"
+createdAt: "Mon Apr 03 2023 05:54:09 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Thu Oct 26 2023 05:37:19 GMT+0000 (Coordinated Universal Time)"
+---
+Follow along this tutorial by running this [Colab Notebook](https://colab.research.google.com/github/visual-layer/fastdup/blob/main/examples/video-face-detection.ipynb).
+
+# Setting Up
+
+```shell
+!pip install pip -U
+!pip install fastdup
+```
+
+Verify the installation
+
+```python
+import fastdup
+fastdup.__version__
+```
+
+```
+'0.910'
+```
+
+# Download & Extract Dataset
+
+We downloaded a few random TikTok videos for the purpose of this demonstration. Feel free to use your own video dataset.
+
+Let's download the TikTok videos into our local folder.
+
+```shell
+!gdown  --fuzzy https://drive.google.com/file/d/1fzmOgmRu557aU4lEbzL7XCf78KntFCeQ/view
+!unzip data.zip
+```
+
+# From Videos to Images
+
+fastdup works on images. We must first extract frames from the videos using a one-liner fastdup utility function.
+
+```python
+fastdup.extract_video_frames(input_dir="data", work_dir="frames")
+```
+
+This should create a`frames/`folder which stores all the frames extracted from the videos.
+
+# Run fastdup
+
+Now that we have the frames of images, let's run fastdup and analyze the frames.
+
+```python
+fd = fastdup.create(input_dir='frames', work_dir='face_detection_work_dir')
+```
+
+```python
+fd.run(bounding_box='face', overwrite=True)
+```
+
+```
+FastDup Software, (C) copyright 2022 Dr. Amir Alush and Dr. Danny Bickson.
+2023-03-29 17:11:55 [INFO] Going to loop over dir frames
+2023-03-29 17:11:55 [INFO] Found total 99 images to run on
+FastDup Software, (C) copyright 2022 Dr. Amir Alush and Dr. Danny Bickson.utes 0 Features
+2023-03-29 17:11:58 [INFO] Going to loop over dir /tmp/crops_input.csv
+2023-03-29 17:11:58 [INFO] Found total 66 images to run on
+2023-03-29 17:11:59 [INFO] Found total 66 images to run onEstimated: 0 Minutes 0 Features
+Finished histogram 0.091
+Finished bucket sort 0.106
+2023-03-29 17:11:59 [INFO] 10) Finished write_index() NN model
+2023-03-29 17:11:59 [INFO] Stored nn model index file face_detection_work_dir/nnf.index
+2023-03-29 17:11:59 [INFO] Total time took 1017 ms
+2023-03-29 17:11:59 [INFO] Found a total of 0 fully identical images (d>0.990), which are 0.00 %
+2023-03-29 17:11:59 [INFO] Found a total of 2 nearly identical images(d>0.980), which are 1.01 %
+2023-03-29 17:11:59 [INFO] Found a total of 28 above threshold images (d>0.900), which are 14.14 %
+2023-03-29 17:11:59 [INFO] Found a total of 6 outlier images         (d<0.050), which are 3.03 %
+2023-03-29 17:11:59 [INFO] Min distance found 0.528 max distance 0.982
+2023-03-29 17:11:59 [INFO] Running connected components for ccthreshold 0.960000 
+.0
+ ########################################################################################
+
+Dataset Analysis Summary: 
+
+    Dataset contains 66 images
+    Valid images are 100.00% (66) of the data, invalid are 0.00% (0) of the data
+    Similarity:  3.03% (2) belong to 2 similarity clusters (components).
+    96.97% (64) images do not belong to any similarity cluster.
+    Largest cluster has 6 (9.09%) images.
+    For a detailed analysis, use `.connected_components()`
+(similarity threshold used is 0.9, connected component threshold used is 0.96).
+
+    Outliers: 6.06% (4) of images are possible outliers, and fall in the bottom 5.00% of similarity values.
+    For a detailed list of outliers, use `.outliers()`.
+```
+
+# Components Gallery
+
+We can visualize the cluster of similar detections using the components gallery view. Specify `draw_bbox=True` to see the detection bounding box on the original image.
+
+```python
+fd.vis.component_gallery(draw_bbox=True)
+```
+
+![](https://files.readme.io/9142b12-_home_dnth_Downloads_components.html.png)
+
+If you'd like to view just the cropped bounding box images, specify `draw_bbox=False`
+
+```python
+fd.vis.component_gallery(draw_bbox=False)
+```
+
+![](https://files.readme.io/839beca-_home_dnth_Downloads_components.html.png)
+
+# Similarity Gallery
+
+Using the `similarity_gallery` view, we can find similar looking faces (bounding boxes) across all the extracted frames.
+
+```python
+fd.vis.similarity_gallery(draw_bbox=False)
+```
+
+![](https://files.readme.io/af1ca18-_home_dnth_Downloads_similarity.html.png)
+
+# Duplicates Gallery
+
+With the `duplicates_gallery` view, visualize duplicate image pairs across videos.
+
+```
+fd.vis.duplicates_gallery()
+```
+
+![](https://files.readme.io/41107d1-_home_dnth_Downloads_duplicates.html.png)
+
+# Outliers Gallery
+
+Using the `outliers_gallery` we can also visualize faces (detections) that looks visually different from others.
+
+```python
+fd.vis.outliers_gallery()
+```
+
+![](https://files.readme.io/6d2bee0-_home_dnth_Downloads_outliers.html.png)
+
+# Stats Gallery
+
+You can visualize the faces using various metrics using the `stats_gallery`.
+
+## Dark Faces
+
+Specifying `metric='dark'` sorts the detections in an ascending order of image `mean` value.
+
+```python
+fd.vis.stats_gallery(metric='dark')
+```
+
+![](https://files.readme.io/c3f3565-_home_dnth_Downloads_mean.html.png)
+
+## Bright Faces
+
+Conversely, specifying `metric='bright'`sorts the detections in descending order of image `mean` value.
+
+```python
+fd.vis.stats_gallery(metric='bright')
+```
+
+![](https://files.readme.io/d450604-_home_dnth_Downloads_mean.html.png)
+
+## Blurry Faces
+
+Finally, specifying `metric='blur'`ranks the images in ascending 'blurriness'.
+
+```python
+fd.vis.stats_gallery(metric='blur')
+```
+
+![](https://files.readme.io/21894d5-_home_dnth_Downloads_blur.html.png)
+
+[block:html]
+{
+  "html": "<center> \n    <a href=\"https://www.visual-layer.com\" target=\"_blank\" rel=\"noopener noreferrer\">\n    <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo_dark_mode.png\" width=200>\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    <img alt=\"vl logo.\" src=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    </picture>\n    </a><br><br>\n    <a href=\"https://github.com/visual-layer/fastdup\" target=\"_blank\" style=\"text-decoration: none;\"> GitHub </a> •\n    <a href=\"https://visual-layer.slack.com/\" target=\"_blank\" style=\"text-decoration: none;\"> Join Slack Community </a> •\n    <a href=\"https://visual-layer.readme.io/discuss\" target=\"_blank\" style=\"text-decoration: none;\"> Discussion Forum </a>\n</center>\n\n<center> \n    <a href=\"https://medium.com/visual-layer\" target=\"_blank\" style=\"text-decoration: none;\"> Blog </a> •\n    <a href=\"https://visual-layer.readme.io/\" target=\"_blank\" style=\"text-decoration: none;\"> Documentation </a> •\n    <a href=\"https://visual-layer.com/about\" target=\"_blank\" style=\"text-decoration: none;\"> About Us </a> \n</center>\n\n<center> \n    <a href=\"https://www.linkedin.com/company/visual-layer/\" target=\"_blank\" style=\"text-decoration: none;\"> LinkedIn </a> •\n    <a href=\"https://twitter.com/visual_layer\" target=\"_blank\" style=\"text-decoration: none;\"> Twitter </a>\n</center>"
+}
+[/block]

@@ -1,0 +1,255 @@
+---
+title: "Quick Data Analysis"
+excerpt: "This tutorial takes you on a high level tour on how to use fastdup to quickly analyze an image collection. We show how you can get started with using the core functions of fastdup in no time.\n\nBy the end of this tutorial you'll learn how to use fastdup to find:\n\n+ Broken images.\n+ Duplicate image pairs.\n+ Outliers.\n+ Dark, bright and blurry images.\n+ Image clusters.\n\nIf you're new, start here."
+hidden: false
+createdAt: "Wed Feb 15 2023 12:40:10 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Sun Jul 21 2024 06:31:36 GMT+0000 (Coordinated Universal Time)"
+---
+# Installation and Setting Up
+
+If you're running fastdup for the first time, we recommend to [run this tutorial on Google Colab](https://colab.research.google.com/github/visual-layer/fastdup/blob/main/examples/quickstart.ipynb). 
+
+Or if you're feeling adventurous, feel free to install on your machine and proceed. For a detailed list of installation options and supported platforms, see our [installation guide.](https://visual-layer.readme.io/docs/installation)
+
+In most cases you can install fastdup with:
+
+```shell bash
+pip install fastdup
+```
+
+To verify the installation, run:
+
+```Text Python
+import fastdup
+fastdup.__version__
+```
+
+This should show the version of fastdup you've installed.
+
+This tutorial runs on version `0.906`.
+
+# Download a sample dataset
+
+We'll use the [Oxford-IIIT Pet Dataset](https://www.robots.ox.ac.uk/~vgg/data/pets/) which contains  7,300 images of cats and dogs from 37 breeds.
+
+Let's download and unzip the images with:
+
+```shell
+wget https://thor.robots.ox.ac.uk/~vgg/data/pets/images.tar.gz
+tar xvf images.tar.gz 
+```
+
+Once done you should end up with a folder `images/` in your root directory.
+
+# Run fastdup
+
+It only takes 3 lines of code to run fastdup:
+
+```python
+import fastdup
+fd = fastdup.create(work_dir="fastdup_work_dir/", input_dir="images/")
+fd.run()
+```
+
+> 📘 Parameters for `fastdup.create`
+> 
+> - `work_dir` - Path to store the artifacts generated from the run.
+> - `input_dir` - Path to the images.
+
+fastdup will start analyzing the dataset for potential issues. How long it takes to complete the run depends on your computing power. 
+
+> 🚧 Run time
+> 
+> On Google Colab (free version with 2 CPU cores) it take a little over 3 minutes to complete the run!
+
+Once the run finishes, we can visualize all the issues found.
+
+# Invalid Images
+
+This is one of the most common issues with image dataset. The images could be broken or corrupted. fastdup keeps track of all invalid images it encounters during the run.
+
+To view the details of the invalid images, simply run:
+
+```Text Python
+fd.invalid_instances()
+```
+
+which outputs a `Pandas`  `DataFrame`:
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>img_filename</th>
+      <th>fastdup_id</th>
+      <th>error_code</th>
+      <th>is_valid</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Abyssinian_34.jpg</td>
+      <td>135</td>
+      <td>ERROR_ZERO_SIZE_FILE</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Egyptian_Mau_139.jpg</td>
+      <td>2240</td>
+      <td>ERROR_ZERO_SIZE_FILE</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Egyptian_Mau_145.jpg</td>
+      <td>2247</td>
+      <td>ERROR_ZERO_SIZE_FILE</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Egyptian_Mau_167.jpg</td>
+      <td>2268</td>
+      <td>ERROR_ZERO_SIZE_FILE</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Egyptian_Mau_177.jpg</td>
+      <td>2278</td>
+      <td>ERROR_ZERO_SIZE_FILE</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Egyptian_Mau_191.jpg</td>
+      <td>2293</td>
+      <td>ERROR_ZERO_SIZE_FILE</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+
+> 📘 Something unexpected
+> 
+> Broken images is something we did not expect to see especially with a curated dataset like the Oxford IIT Pet Dataset. But this shows how easily you can detect them with fastdup with just one line of code.
+
+# Duplicate Image Pairs
+
+Let's now visualize if there are any duplicates with:
+
+```Text Python
+fd.vis.duplicates_gallery()
+```
+
+which outputs:
+
+![](https://files.readme.io/0529bb4-_home_dnth_Downloads_duplicates.html.png)
+
+> 📘 Under the hood
+> 
+> The above gallery shows duplicate pairs computed using the `cosine` distance. A distance of `1.0` indicate the image pair is an exact duplicate.
+> 
+> **TIP**: You can specify `num_images` as a parameter to `fd.vis.duplicates_gallery`to see more or less image pairs. For example: `fd.vis.duplicates_gallery(num_images=5)`
+
+# Outliers
+
+Similar to duplicate pairs, you can visualize potential outliers in your dataset with:
+
+```Text Python
+fd.vis.outliers_gallery()
+```
+
+which outputs:
+
+![](https://files.readme.io/9bfafc7-_home_dnth_Downloads_outliers.html.png)
+
+> 📘 Verify outliers
+> 
+> As you can see, not all images in the outliers report are true outliers. The images appear on the report simply because it looks different from other images in the dataset (distance wise).
+> 
+> As a curator, you'd need to verify if they are true outliers by inspecting the report.
+
+# Dark, Bright and Blurry Images
+
+fastdup also lets you visualize images from your dataset using statistical metrics. 
+
+For example, with `metric='dark'`we can visualize the darkest images from the dataset.
+
+```Text Python
+fd.vis.stats_gallery(metric='dark')
+```
+
+which outputs:
+
+![](https://files.readme.io/cc4ef17-_home_dnth_Downloads_mean.html.png)
+
+In contrast, `metric='bright'`populates the gallery with the brightest images on top.
+
+```
+fd.vis.stats_gallery(metric='bright')
+```
+
+which outputs:
+
+![](https://files.readme.io/d6afe94-_home_dnth_Downloads_mean201.html.png)
+
+Similarly, `metric='blur'`shows the blurriest images on top.
+
+```Text Python
+fd.vis.stats_gallery(metric='blur')
+```
+
+which outputs:
+
+![](https://files.readme.io/11f872c-_home_dnth_Downloads_blur.html.png)
+
+> 📘 Verify dark, bright and blurry images
+> 
+> Again, we see that not all images in the statistical visualization gallery are problematic. As a curator, you'd need to verify and filter out the problematic images.
+> 
+> Since the Oxford Pets Dataset is a curated dataset, we'd not expect to find extremely bright, dark or blurry images.
+
+# Image Clusters
+
+One of fastdup's coolest feature is visualizing image clusters. In the previous section we saw how to visualize similar image pairs. In this section we group similar looking image (or even duplicates) as a cluster and visualize them in gallery.
+
+To do so, simply run:
+
+```Text Python
+fd.vis.component_gallery()
+```
+
+which outputs:
+
+![](<>)
+
+![](https://files.readme.io/87cb580-_home_dnth_Downloads_components.html.png)
+
+> 📘 Term
+> 
+> Clusters are known as 'components' in fastdup. You'd see the term 'component' used more frequently in code and documentations.
+
+# Summary
+
+So there you have it. With few lines of code you can quickly sift through thousands of images in your dataset for potential issues. Not to mention, you can run it just by using Google Colab, with limited compute resource!
+
+> 👍 TLDR
+> 
+> In this tutorial we've seen how to use fastdup to find:
+> 
+> - Broken images.
+> - Duplicate image pairs.
+> - Outliers.
+> - Dark, bright and blurry images.
+> - Image clusters.
+
+What to do about all the problematic images? You can decide to keep or eliminate them. Check out the next tutorial!
+
+[block:html]
+{
+  "html": "<center> \n    <a href=\"https://www.visual-layer.com\" target=\"_blank\" rel=\"noopener noreferrer\">\n    <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo_dark_mode.png\" width=200>\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    <img alt=\"vl logo.\" src=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    </picture>\n    </a><br><br>\n    <a href=\"https://github.com/visual-layer/fastdup\" target=\"_blank\" style=\"text-decoration: none;\"> GitHub </a> •\n    <a href=\"https://visual-layer.slack.com/\" target=\"_blank\" style=\"text-decoration: none;\"> Join Slack Community </a> •\n    <a href=\"https://visual-layer.readme.io/discuss\" target=\"_blank\" style=\"text-decoration: none;\"> Discussion Forum </a>\n</center>\n\n<center> \n    <a href=\"https://medium.com/visual-layer\" target=\"_blank\" style=\"text-decoration: none;\"> Blog </a> •\n    <a href=\"https://visual-layer.readme.io/\" target=\"_blank\" style=\"text-decoration: none;\"> Documentation </a> •\n    <a href=\"https://visual-layer.com/about\" target=\"_blank\" style=\"text-decoration: none;\"> About Us </a> \n</center>\n\n<center> \n    <a href=\"https://www.linkedin.com/company/visual-layer/\" target=\"_blank\" style=\"text-decoration: none;\"> LinkedIn </a> •\n    <a href=\"https://twitter.com/visual_layer\" target=\"_blank\" style=\"text-decoration: none;\"> Twitter </a>\n</center>"
+}
+[/block]

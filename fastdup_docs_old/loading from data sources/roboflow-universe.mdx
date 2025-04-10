@@ -1,0 +1,509 @@
+---
+title: "Roboflow Universe"
+excerpt: "Analyze any computer vision datasets from [Roboflow Universe](https://universe.roboflow.com/)."
+hidden: false
+metadata: 
+  image: []
+  robots: "index"
+createdAt: "Wed Aug 23 2023 09:04:05 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Thu Oct 26 2023 05:37:19 GMT+0000 (Coordinated Universal Time)"
+---
+[![Open in Colab](https://img.shields.io/badge/Open%20in%20Colab-blue?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAABuCAYAAABxyhyZAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4wYOByseuquXkAAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAUvklEQVR42u2d23YaSbKGv8gqqjjofHRPt+dy3qHbPQ+/V9vTaz/Cvps9u9stA8KWEOJUVbEvskBIBlEgKoGCXEtLlmQJKvKPiD8iIyOELV3aqCoEkBhQH0oRxFXwHu1/iKsQRWASMKPfiuyHiYAEuegJO770tqIkBvBBPYgCwIBvwPO//4U4giixMpQITAySADFy8bh18pTtAHuoSABJBSIfogpINd0QH4YCmj6KepCkv+ip/WzSz36cfj+CZAgyBNOFIAKvC8kAuewXVinGcoxLMCxbecZlC/bYh8iDJH38WECmiELVosao/fBjK88oAa8Hfhf8VJ463Hgjs7FvTutHCmVIQujXQEsQBxCb1Oq/fALN9oj64kcmAS8Bb2AVIuyA6YAZIhftrVcGbVaV5AC0DL2qlWMUWqBPynEsKl0MPq/J0+tCMAB5AOlspHHZqDekt4fKsALJIfTLqZXyUkFrfu9Y0z8sgKh176UhBI9g2lDqIufbowx6W1HiCkQHMDyAQdla+JEc836SsXES+4UXWVmGXTD3YB6Ri81QBlm/hSqrtU7HwBF0A0j8OVbdoVj8GMI+eHdQukMu7zbXazYP9Qn0BzAM1izHKTINBlB6AK8NQRu56MhOKoA2QyWpQf8MhocwKFkeL7phsEpFZBLw+1DugN8Gc7cxVkzrR0pyDN0jGFYtTYQNlOWEPP3YUqRKC/yHtdFN5y+qjVCJj2F4BL0jG5C5cMurcu0i4A2h3IbSV/Dba1MEbZyoleNJyuvNhlj7BeBnEig9QuUBzFfk6l4KqwBaP1X650/A36rNmiI2bwjhHZRbyNVXZ7LUZlUZnEDvwvJ7ZItl+VIRWuC1nAXMTl5EGzVleA69cxgEW75ZU8RXGkCtBX4rd1eu9SulewL9Y0t1pCiyxFLgUgyle6h8Q67qsvUKoDdXSv/M8tOtt1SviVGtGw+byLvVb5w2jpX+KfRP0+C2iHKckGdpAEELKvkaldz+sNaP7Ib1zrec7ixowfyhdePl25VtnNavlc4F9A82KKvjyDZX7qBcR65bsjUKoPVTpXtdcKv/SqBsgPI9lG+Q629Ly1hvK9aIdK93wOq/AtGgC9VGLrHB6l31H6GSvIfOebH46TKKEPas9frbzcJy1sax0ruE7nF6LrLDskTs4eTBNwjrKz2UXKkC6MdQ8RWufJAfoXe6JdVGOVKiahuqfy50gKZfTpTeOwv+nQb+FLjWWlBuIJffVoIss7K9/hQqCvQF6hHon5YG7PIqxVBqLQb++pny+OMe/LPcaucMHt9ZI7EpCqAfQ8VWGNvVGynBfyD8uqP7KDadF95ll+PNlfLwUxrs7sE/Uwm6x/D4ozUW61YA/RjqGPiTxKo36Ql2TQnSNF6liZx3JRv4T5X2OxhU9uDPogTDMsQh+j++rk0BxuDXGdHFriqBSaByi1y1MoL/Qnl8D/Ee/JmSCyaG8mdoNeDWs/TbtQK8Cv6dVgKBsA3B14wB75lNGe8tfzbZejGEn6Ftwc/Qfls/ldWZAowDXs32nndGCZS0Pijb6aVNdb7bc/7MaI2s5X9IwT+i3pEVvn5c3BOYpcDPRMDLXgmePWftLlMphDYPld4VdA/34F+E9rQnwC8TP49ZKuVuFga/jjRuCXAUWQlU7HVKvzH/vzZDpXcOndM9+DN51ZT2PEwB/+T/i1jYC2RWAP0t5fzxGy1kUZXAS2zhVpZ69ugMumd7cGeS6wT4mzPA/wJj+nv2eMAsBN5VgLWQSiBQ+QZea74hqZ8pj5dpgeB+vSrTEe15zfJ/Z1wA1cyZoUwKMI6wdXXP9p0SvOWPjQLy0eX2aR/P/s+KN6o0sGXQcwq1tF5Tuhebm/FZVI6a4/sYBbztBcA/qQQLQHE++FXfRn1ee9DyRO1Q/3Qx0Av2bqmJLTeTQfp54s2qB3iggf23emlrFVmiDcg0E6Jw8Cfyt8/zZXnzXrl/99R7Z1MsrabP4SVWdpJBlni2Y0fkPe3FqjTCZOD8c6mT/R358LpR8ueDNCfwv/QEV39CyBwlSHlYaQDlHiSPUOpaa+ENIbFdyiabMWkzVCsND5KSrawcVsBUoVeGYekN/E4gfLB5/3libJwo7dMNusU1Q5beIAV9zMvueWNZimcp3EplOQH+ZS3/5IqBkg2K5dfZSvCqAiyTV129Ekzcvw0ebaZF2uD3M5UZzLqwrq2K4oegh7bxVr+2WNmxYi+/hM255bnaDJXBuaU+6wT/5KX+kSy9Nkg308X+V2VZqmC7fCwhy8lszyrAP0mFvDdQIP2UFrm52pxndOjsCfjlewjvQe5yuSytjapaRTi0F/ajUgagChx8QX76dwbqc6Xcv0+bfK0R/H70JEu9R657OcryyN5bHpoMIE7r/d9Ke2ZFuWY2FfJfBX/icINeeoKqghoIW7m3HpHLR4FHtNlWSvdW+XpHab9RnU19ggxZny9lpXeyvkstiu2RGrYhbDqW5V0GWb4x4H1jpDvzR/rbAuUOq14B8B6omMzVlCvFTP1IiU6gez79KqKJ4egz8u6v+da/fq3c/Zi2JlwDzy8NoPIFgm9r6d5s212e2Tr+l7LMg/bMDIgF+fC9x/Nncv91gF9SlxWB/LS+rmv2MOserT8onR+e1+ooULnPlvNvVpXO8XqaAgg2vVxpZq5KzeVtnLcF2uhNxxb9TcryZWFbHuAfxz46kyFN/4XEsaRGXO3Xvsg/N6Rx6lVLqP0fVJtpckMgGEJwmy0WiQ5sBzx1jHyjUKtD7a+1gv/Zu3rXFA7+gNptauiWOORadqV/e1pSx/+e+6d5f9fg90B+2cD22Vf3os1YEYHuKQStTC06tBEqvWObJ3eV+VFsJ+aDBoSNtdDH1+ODO9FmpPhDGA7yt/wZMkJm6ndix+CXzQT/U/qvI1Q+w+EfUG1lBGPNdmh2Zv7FBrtHTQi+bBz4n8kyrEOvAa3JQzQHxmGKFzDfZX5idQ/+Xzd/KotcPAqlVvaWHEnNbeArCgdfwG9sTNfqmW/1rCvyj0jGFRauVvT965nvvnJosLYF/E9KkO292pqfWtqt2ZEwK7dQam7VnC75tS8jI+jO6MorChA5DH697QL/YqsGUdWNNVHsmUTlNs3Bb9eSX/syqttxIqtYn12fNM/ojyvxGSh0x6x+ZWLKTc4b6kdQa66sUdSa1MAdHF4U7ZnvBOriDfhMPZQowrJjR2tuKj4Ntgnv1ZetlqV86Fkv4IIxRrNiAHFEf3yQn4s7ipS4bKe15G5NxA6dq9wVQmzyS0qFHDGQUTbIgKOqz5T3F/4K7KBisz95q7hJoPwNufhWHGOi4EQJ4pcewJX11/kXFLZ/E6sOsj8CQS9TOcZ2UaG+ODGQ+sR9zPgbeSuAccTx1on9ek2hkr+XU4XgDrnsFM+YuMBJQjrDePRSrvL/SbEVAPFhkHPZswpUhrbxbhGXM4zYPTL60UH6Uyy325Qit/xkWk6vPOYsS+mAdItpQ/7p6FwgtrGvQcDJra9d6P/klfO/9WUSCNsbX+6w8VhJACMYjOT/gqUdoD+QjoDNGZcSg+kXW45JihkHrMQ4qcUwUnz6AxDlbElUwO8DxVYA+WdfXtbs5EODFEOS86YZ+0JFX/qlrEQ5lz8IthvGVaf4xiTWfLNBaebTzO3xvwoF2AX6I2nvoVxfQ8HfkamDCfkrgBY+M+80Ara3v/JWgGCwF/UKlcw4sc4ie2GvTJbDHXlON5hxowCqO7JheZdAJxDFu6EAjjDzVAqx9wAriFDzxr9n+5/uEEVxowBb/hAbZrpy3K2Y/do2BTA7QoHGwJd8hRkEe3Su9CVc5IF2gQLpssPT9u50vUGwi5Ng3Q+CWw3+fdAdGa3kNAjerxWs2E6ryXsNgr2oV4j+/D1AsiNqpqOpKnkrgGfbLu4C/8+T8clYAXLmPwngFT8GkOue4DuoKx8EoGHxDYon+SuAuKgFAkjUzhso+sq9TkdBAqBcbGf6W6i5F2mmSmacdOYd7ggNCgb5W5NEyL3qdBPoT94VH2oZq0HVTSuKXTgMjnv5H1YlBoZHtgFXYfmkqxhDMbY3ozjRtsLTIOnZWbuasyyjiv0oKv2JHdDykiC/9sUSk0jdaV2hyWsEQZSvCRO1s7YGh8WlPy5WMvlyipteLAU/yLQ3tbpujMnwGG0cF8+jusDJxC3Fp85wLjZN0i7UhdaCR9u5IW9OGYUQHxXLgbrqUG543hhLPqSDCnIPEncgGA66dk5X7qllA4+naOOkOAZFcDOeyzx1JzfPXI+j9tT6e4G9gNdLOzc4OBMYlKF/Ugzr/3uoTvpTvThhfoK8EXdTOiKeTekoFAM67wqmY0eVujCZ3TP05mqrZamfyhb8ruZT6DQFcNm6JIFCt4oLu2ByzgaNYwEfupd2uv32qsDaEiRjBRgPLHOVhoodziVwvjopDXJk0Xo16F2m3am3DPof07y/K7Sb57PpzHfCdKj0aDGVQK46QuXenZcToHsO/Qu0WdWtAn+CWzLw2phU+dlRNmiSCm2JEixcemA6UBq6lWXvHKS8PeB3zYSnjOcyUy3zOpTgX5urBFo/UwYnaPMw+3uUDgQPbtyqAl4MwV9Qb2+8QdGPoY7KY5yS/fiVGODZ8hxLJNncmEDrZ0rnB7h/D9FZdvxf9oXSnb0lpjkrgRdD+BkeGlA3kGyuQRmD33XQ62ViROmb/JRyM9dvUp5Uct1DtLURKvEZPF7awXeopTS1P5F39WwT45tVpfMTdE9z8vVis03lz9BuwK3HuLx91Kcr2YyB5PpbesrrmvNPBr9T5tOZmS51LVJK3dRJgt6cqjbWE9Bp41jp/wDtH57AD7YIbYGUo1w8CpU78Ib5yGoW+Ec/j6zlW7dn1U+h4q0J/HMwPdMy6L9Cd4cTk+skhtNDiN7bU9WwBV7bUoq8ZdSsKoMTGJxDrzr74Q/qUP4r05QW/VJWen9fvRcwE7TnJfinuX/j3hvop5TurIPyTCK8NHs2tf8qL/fJ/2bOpIaepuDvv4eoDFKBwQGU79H6vSJ3uSiCNg+VQQ06J9A/TOd8vQLW7hn4j0B9vvyve6I335T+4YrGJ8nrln/aGtXXS1pykMi4FiY3nj85enedVcA+r7Zrko0JWE5egv/FW/SGEDxC2AFpQ6mPnHWX3kS9rShRBfQQeke2ribJOi5TIHyAgz+Ry/mDqrVZVgY/wv3F27zAKNuzCPin7fhokKWu1iOMga9rpjuTBF9ef8b5m/fJQZHSTPBPs36JrbYs9yB5hFJadmCG49YkL72ENkOFtKlUHMCwAqYKj+lU95cFIlmRVG1C9S/L9efGFSdK++/Qr7zuXeZZ/qy0J4sieBOP7gsMdSGFGJe2j1LnLprjLWj95w1m9zNrUh5eYCrtmfMLiUAS2PYg5tBeQTRpTx6JgQH6v/10Y9LHaweggd3xJB1koenfk2WjfoXemfVKPM7H2+U30ZtDJQrtM+RNe7LIPprY36Ha85j/CnU8oG7SmpuJr0fJimTie5s2tsBktwPzZfWvtF5j1Upwsgj4M0b3s3pKjlrtrZT5iq3/r/0Huc5Aheo1pfvjYgHxKmjPMt5BXjGAymbXMhqmnvourSfySw4lEqsA/+RmjTdNp3/kcutNbZp0cJmpVEKuOkK5bpUm05sR9+BnwuqPPqIXX2964YrJBv4FHMVEOm0Vwl0V+DdiKXRPYHiRTV+vvwnVxvyzgXl5/v16BaOyiK5kNLQf+oLI26cAnRYJ/OmK0+uJ9bNsttFvQaU13/KvKuDdlZXmMxZJ8S7kAeRDT95ULHdSQPCDzeoMKtC9Qpvza/Lloi+Ub6H2dTqqR5b/oQHNPfgXiWbnZX3eRoGYuDizyMtogcE/+ZD9Q+gdZ5PjRdvGA5X2kzAVm9Ha057FwW8WB/9SCjDWMn+BjTktOvjTlRjoX6M3F9lqhS7vhPKNPVTTPe1ZGvz+8gd6yzN65emYWXeQ9swSyjCA/hXa6KpcduY+rVy3RG/SG/SmtQf/EuB/S3r+TSLWT6GOO/nqroP/hXE4rCM//Tv7qeofofKg8GWP+szILVnwL0N93kSBnlGheIYf2VXwjzZnwXYl8lNf+Cp2U/c6MH95bwf/mxVgHBSPKkdlD/7xikv27sACndvk576MqeVeCWYbF2+5jM/KKdBUSnSwB/8z8R7fQOkLctFboMis/DQhJdlj/pm5ltVWsK6+OOD2TLn/AXoHS1Y9Fgj84QPU/kKuWrK0QXF9eXyTKY9Jy3JW7FBWHwPeXCm969dvVRU2ABZboVpuQbmBXN2/LdHw32VloLvtCQzgCfLL6i/x5HcrqHGs9K5snUzmiyYFsPqlAdSa4NVXdntt3KRg1yjRxIFrXlc5c2XoeltRhidpZ4Uyy1082Qarjz3EqtxDcItct/LxrOvq1rGOQHfE9z/ke4fZSYhqvcGlHeszDIqjBCq2C3TQscVtXiv3y/vjIRJxQRXB8JTidHCB312HgGaoRIfQv4B+DRJ/+xUhGELwFcJvme4G7xVhTpA7qun52V3nCudJyjEt6h8/KYLqlqRLxWa2/KGlO95tpptgucnyY3oSD6ylhc2qLP6oGdoH9w281rd5txUlPoLuMUQ1iEr2ruympU5HbQ29BIIeBHfg3a8V+FO9gaZWdNQCJdlw0JN/gLvRCvBEjapKcmC7JcST7UlYo0mbEIsfQ+kBwjvwu8jFt432Vfp7WVF9fq1xU9Yk65V8exNtjQI827z6kRJVgZod+hCV0mZSki9N0gnLJGq7SwSP6aSXNnhdO/pom+LzkVcoiZ0DHbOePvyj0gUdfaFroTpboQDPPcOJkoSQlFPvENh2KIk8eQid9hQ6+/Fe/kg05fQRyMBOdQkGwD2YrpN2jM6UYbSSiedfJVUyL/7uCPS6fpqzlQrwHU0isHdv4zJEFfvZT6Ue++nPZtT2ecnTZy+CJE2dmC54fdtcS4aZGlwVRiH81DOMAmgzkYmBp/KL74wGz0soJ3sLKeBJWqXZ25a0xpZu4rjbW1o6mRjQNKUw8hAmJcGSpE8a2by9RFtHafJXinRqp0mbiCb6HPyj3kBi+TuSNilT3VjrnmX9P9CP0/2YVCGzAAAAAElFTkSuQmCC&labelColor=gray)](https://colab.research.google.com/github/visual-layer/fastdup/blob/main/examples/analyzing-roboflow-datasets.ipynb) [![Open in Kaggle](https://img.shields.io/badge/Open%20in%20Kaggle-blue?style=for-the-badge&logo=data:image/png;base64,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&labelColor=gray)](https://kaggle.com/kernels/welcome?src=https://github.com/visual-layer/fastdup/blob/main/examples/analyzing-roboflow-datasets.ipynb)
+
+# Install fastdup
+
+First, install fastdup and verify the installation.
+
+```shell
+pip install fastdup
+```
+
+Now, test the installation by printing the version. If there's no error message, we are ready to go.
+
+```python
+import fastdup
+fastdup.__version__
+```
+
+```
+'1.38'
+```
+
+# Roboflow Universe
+
+[Roboflow Universe](https://universe.roboflow.com) hosts over 200,000 computer vision datasets.
+
+In order to download datasets from Roboflow Universe, [sign-up](https://app.roboflow.com/) for free.
+
+Now, head over to <https://universe.roboflow.com/> to search for the dataset of interest.
+
+![](https://files.readme.io/a385c67-image.png)
+
+Once you find a dataset, click on the 'Download Dataset' button on the dataset page.
+
+![](https://files.readme.io/03db646-image.png)
+
+A pop-up will appear with a code snippet to download the dataset into your local machine. Copy the code snippet.
+
+![](https://files.readme.io/58fe6eb-image.png)
+
+> 🚧 Warning
+> 
+> The code snippet consists of an API key that is tied to your account. Keep it private.
+
+# Install Roboflow Python
+
+The [Roboflow Python Package](https://github.com/roboflow/roboflow-python) is a Python wrapper around the core Roboflow web application and REST API. To install, run:
+
+```shell
+pip install roboflow
+```
+
+Now you can use the Roboflow Python package to download the dataset programmatically into your local machine.
+
+```python
+from roboflow import Roboflow
+rf = Roboflow(api_key="YOUR_API_KEY")
+```
+
+> ❗️ API Key
+> 
+> Replace `YOUR_API_KEY` with your own API key from Roboflow. Do not share this key beyond your team, it contains a private key that is tied to your Roboflow account.
+
+# Download Dataset
+
+For this tutorial, let's download the [Dash Diet 101 Dataset](https://universe.roboflow.com/dash101/dash-diet-101) in COCO annotations format into our local folder.
+
+```python
+project = rf.workspace("dash101").project("dash-diet-101")
+dataset = project.version(4).download("coco")
+```
+
+Once completed, you should have a folder in your current directory with the name `DASH-DIET-101-4`.
+
+The DASH-DIET-101 dataset was created by Bhavya Bansal, Nikunj Bansal, Dhruv Sehgal, Yogita Gehani, and Ayush Rai with the goal of creating a model to detect food items that reduce Hypertension.
+
+It contains 16,900 images of 101 popular food items with annotated bounding boxes.
+
+![](https://files.readme.io/d05c417-image.png)
+
+# Analyze Bounding Boxes with fastdup
+
+To run fastdup, you only need to point `input_dir` to the folder containing images from the dataset.
+
+```python
+fd = fastdup.create(input_dir='./DASH-DIET-101-4/train')
+```
+
+fastdup works on both labeled and unlabeled datasets. Since this dataset is labeled, let's make use of the labels by passing them into the `run` method.
+
+```python
+fd.run(annotations='DASH-DIET-101-4/train/_annotations.coco.json')
+```
+
+Now sit back and relax as fastdup analyzes the dataset.
+
+# Invalid Bounding Boxes
+
+Since this dataset is annotated with bounding boxes, let's check if all the bounding boxes are valid.
+
+Bounding boxes that are either too small or go beyond image boundaries are flagged as bad bounding boxes in fastdup. 
+
+Let's get the invalid bounding boxes.
+
+```python
+fd.invalid_instances()
+```
+
+[block:html]
+{
+  "html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>Full Table</title>\n    <style>\n        .scrollable-table-container {\n            width: 100%;\n            overflow-x: auto;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"scrollable-table-container\">\n        <table border=\"1\">\n            <thead>\n                <tr style=\"text-align: left;\">\n                    <th></th>\n                    <th>col_x</th>\n                    <th>row_y</th>\n                    <th>width</th>\n                    <th>height</th>\n                    <th>label</th>\n                    <th>crop_filename</th>\n                    <th>filename</th>\n                    <th>index</th>\n                    <th>is_valid</th>\n                </tr>\n            </thead>\n            <tbody>\n                <tr>\n                    <th>20121</th>\n                    <td>0</td>\n                    <td>27</td>\n                    <td>413.638</td>\n                    <td>388.924</td>\n                    <td>Kimchi</td>\n                    <td>work_dir/crops/DASH-DIET-101-4train68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f6j474b624b4c50427234665344673d3d2d3435393632393038312e313464656435353538386337_jpg.rf.9676c410f32974f8bd53b6c47db156e5.jpg_0_27_413_388.jpg</td>\n                    <td>DASH-DIET-101-4/train/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f6j474b624b4c50427234665344673d3d2d3435393632393038312e313464656435353538386337_jpg.rf.9676c410f32974f8bd53b6c47db156e5.jpg</td>\n                    <td>NaN</td>\n                    <td>False</td>\n                </tr>\n                <tr>\n                    <th>20181</th>\n                    <td>20</td>\n                    <td>0</td>\n                    <td>390.749</td>\n                    <td>415.651</td>\n                    <td>Kimchi</td>\n                    <td>work_dir/crops/DASH-DIET-101-4train68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f6j474b624b4c50427234665344673d3d2d3435393632393038312e313464656435353538386337_jpg.rf.a4d236ef9262303f7fc5e96b4304715e.jpg_20_0_390_415.jpg</td>\n                    <td>DASH-DIET-101-4/train/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f6j474b624b4c50427234665344673d3d2d3435393632393038312e313464656435353538386337_jpg.rf.a4d236ef9262303f7fc5e96b4304715e.jpg</td>\n                    <td>NaN</td>\n                    <td>False</td>\n                </tr>\n                <tr>\n                    <th>20492</th>\n                    <td>0</td>\n                    <td>20</td>\n                    <td>413.601</td>\n                    <td>396.000</td>\n                    <td>Kimchi</td>\n                    <td>work_dir/crops/DASH-DIET-101-4train68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f6j474b624b4c50427234665344673d3d2d3435393632393038312e313464656435353538386337_jpg.rf.60d7efa443842a8ea2171337e8b6a49a.jpg_0_20_413_396.jpg</td>\n                    <td>DASH-DIET-101-4/train/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f6j474b624b4c50427234665344673d3d2d3435393632393038312e313464656435353538386337_jpg.rf.60d7efa443842a8ea2171337e8b6a49a.jpg</td>\n                    <td>NaN</td>\n                    <td>False</td>\n                </tr>\n            </tbody>\n        </table>\n    </div>\n</body>\n</html>\n"
+}
+[/block]
+
+
+```python
+import pandas as pd
+bad_bb = pd.read_csv('work_dir/full_image_run/atrain_features.bad.csv')
+bad_bb
+```
+
+[block:html]
+{
+  "html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>Horizontally Scrollable Table</title>\n    <style>\n        .scrollable-table-container {\n            width: 100%;\n            overflow-x: auto;\n        }\n\n        .dataframe {\n            width: max-content;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"scrollable-table-container\">\n        <table border=\"1\" class=\"dataframe\">\n            <thead>\n                <tr style=\"text-align: left;\">\n                    <th></th>\n                    <th>index</th>\n                    <th>filename</th>\n                    <th>error_code</th>\n                </tr>\n            </thead>\n            <tbody>\n                <tr>\n                    <th>0</th>\n                    <td>23513</td>\n                    <td>DASH-DIET-101-4/train/untitled-2-1-_jpg.rf.2cc0804ad0a8d457291b39d72b32ea1f.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>1</th>\n                    <td>24030</td>\n                    <td>DASH-DIET-101-4/train/IMG_1282_jpg.rf.e5d454a356160bd444b71e19c9350f72.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>2</th>\n                    <td>24068</td>\n                    <td>DASH-DIET-101-4/train/IMG_1282_jpg.rf.f669ecf808bd1721e724ef14c7ede206.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>3</th>\n                    <td>29989</td>\n                    <td>DASH-DIET-101-4/train/Almond_13-Original-Size-_jpg.rf.61e38e0da9a2aa99b20ff801c44a47dd.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>4</th>\n                    <td>35693</td>\n                    <td>DASH-DIET-101-4/train/carrot_93_jpg.rf.a242faf4608f26c230f476b5feb9f27c.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>5</th>\n                    <td>47754</td>\n                    <td>DASH-DIET-101-4/train/pistachios-1570x1047_jpg.rf.9b4218a77ea0530cac6db0abb3491392.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>6</th>\n                    <td>53836</td>\n                    <td>DASH-DIET-101-4/train/cabbage-green-50lb-case_jpg.rf.9b8d2677a0a8c7c0d4ceb961cc91aaab.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>7</th>\n                    <td>53941</td>\n                    <td>DASH-DIET-101-4/train/cabbage-green-50lb-case_jpg.rf.5459cd9f2b964dc5e84fb29905f95353.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>8</th>\n                    <td>53945</td>\n                    <td>DASH-DIET-101-4/train/cabbage-green-50lb-case_jpg.rf.546e265a2b83cd03e7d5d7c98c2d51ef.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>9</th>\n                    <td>54123</td>\n                    <td>DASH-DIET-101-4/train/cabbage-green-50lb-case_jpg.rf.6887156a700058674a259ce271ea74fe.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>10</th>\n                    <td>54323</td>\n                    <td>DASH-DIET-101-4/train/cabbage-green-50lb-case_jpg.rf.f83f582b75b3ba9ed396004997edc7a2.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>11</th>\n                    <td>58921</td>\n                    <td>DASH-DIET-101-4/train/Pomegranates-shutterstock_152360780_jpg.rf.8c5c9586aaa67739a99211a76fc21359.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>12</th>\n                    <td>59463</td>\n                    <td>DASH-DIET-101-4/train/Pomegranates-shutterstock_152360780_jpg.rf.71c53b5feee5f6677bddb176380f2b6c.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>13</th>\n                    <td>70884</td>\n                    <td>DASH-DIET-101-4/train/OIP-24-_jpg.rf.23fc31cbd35c1de823b99968a19e6d2c.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>14</th>\n                    <td>71908</td>\n                    <td>DASH-DIET-101-4/train/90d098b212fc9b6d28ae069e150f8f75_jpg.rf.fadbb69263e413a39ed153caf9d23e0c.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>15</th>\n                    <td>79343</td>\n                    <td>DASH-DIET-101-4/train/Potato_38_jpg.rf.2ba6902291f27de4faa2b53291f7a873.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>16</th>\n                    <td>79370</td>\n                    <td>DASH-DIET-101-4/train/Potato_38_jpg.rf.3315d9c2535e1b2eb1e1b9045e4979f1.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>17</th>\n                    <td>85351</td>\n                    <td>DASH-DIET-101-4/train/Single-Blackberries_28_jpg.rf.465b276617c3780db8a717ce58c49ba9.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>18</th>\n                    <td>85775</td>\n                    <td>DASH-DIET-101-4/train/Egg-images_43_jpg.rf.28d73a7161b833d02ef40017086a9948.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>19</th>\n                    <td>85932</td>\n                    <td>DASH-DIET-101-4/train/Egg-images_43_jpg.rf.0c240a42a1d5a122bf0df56c6737ce1f.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>20</th>\n                    <td>85963</td>\n                    <td>DASH-DIET-101-4/train/Egg-images_43_jpg.rf.0d7f52ff01b12da4a0e1860cef3755fa.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n                <tr>\n                    <th>21</th>\n                    <td>86632</td>\n                    <td>DASH-DIET-101-4/train/Egg-images_43_jpg.rf.76de2b114b9b114cfd8262ba6a9b6697.jpg</td>\n                    <td>ERROR_BAD_BOUNDING_BOX</td>\n                </tr>\n            </tbody>\n        </table>\n    </div>\n</body>\n</html>\n"
+}
+[/block]
+
+
+Let's count the number of images with bad bounding boxes.
+
+```python
+bad_bb['error_code'].value_counts()
+```
+
+```
+error_code
+ERROR_BAD_BOUNDING_BOX    22
+Name: count, dtype: int64
+```
+
+The output shows a total of 22 images contains bounding box issues.
+
+Now it is up to you how to deal with these bounding boxes. You can choose to relabel it or simply discard the entiere image from the training set.
+
+# Label Distribution
+
+Let's the label distribution in a bar chart.
+
+> 📘 Info
+> 
+> This code snippet uses plotly to plot, install plotly with:
+> 
+> ```shell
+> pip install plotly
+> ```
+
+```python
+import plotly.express as px
+fig = px.histogram(fd.annotations(), x="label")
+fig.show()
+```
+
+![](https://files.readme.io/3490be0-image.png)
+
+# Bounding Box Size and Shape Issues
+
+Objects come in various shapes and sizes, and sometimes objects might be incorrectly labeled or too small to be useful.
+
+We will now find the smallest, narrowest, and widest objects, and assess their usefulness.
+
+Let's get the annotations and calculate the area and aspect ratio.
+
+```python
+df = fd.annotations()
+df['area'] = df['width'] * df['height']
+df['aspect'] = df['width'] / df['height']
+```
+
+Next,  we filter for the smallest 5% bounding boxes and 5% of extreme aspect ratios.
+
+```python
+# Smallest 5% of objects:
+smallest_objects = df[df['area'] < df['area'].quantile(0.05)].sort_values(by=['area'])
+
+# 5% of extreme aspect ratios
+aspect_ratio_objects = df[(df['aspect'] < df['aspect'].quantile(0.05))
+                         |(df['aspect'] > df['aspect'].quantile(0.95))].sort_values(by=['aspect'])
+```
+
+Now let's create a simple function to visualize the images.
+
+```python
+from PIL import Image
+import matplotlib.pyplot as plt
+
+def plot_image_gallery(df, num_images=5):
+    # Create 1x5 subplots
+    fig, axes = plt.subplots(1, num_images, figsize=(15, 3))
+    
+    # Plot each image in a subplot
+    for ax, (_, row) in zip(axes, df.iterrows()):
+        image_path = row['crop_filename']
+        label = row['label']
+        
+        # Open the image using PIL
+        img = Image.open(image_path)
+        
+        # Display image
+        ax.imshow(img)
+        ax.axis('off')
+        
+        # Set title
+        ax.set_title(label)
+    
+    # Show plot
+    plt.show()
+    
+```
+
+View and visualize the smallest objects DataFrame and plot.
+
+```python
+smallest_objects.head()
+```
+
+[block:html]
+{
+  "html": "<div style=\"width: 100%; overflow-x: auto;\">\n  <table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: left;\">\n      <th></th>\n      <th>area</th>\n      <th>aspect</th>\n      <th>col_x</th>\n      <th>row_y</th>\n      <th>width</th>\n      <th>height</th>\n      <th>label</th>\n      <th>crop_filename</th>\n      <th>filename</th>\n      <th>index</th>\n      <th>is_valid</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>155</th>\n      <td>150.442810</td>\n      <td>1.346547</td>\n      <td>233</td>\n      <td>121</td>\n      <td>14.233</td>\n      <td>10.570</td>\n      <td>Turmeric Powder</td>\n      <td>work_dir/crops/DASH-DIET-101-4trainR-7-_jpg.rf.0d90e4f32bf1dbd2746f6e58e2c0bb90.jpg_233_121_14_10.jpg</td>\n      <td>DASH-DIET-101-4/train/R-7-_jpg.rf.0d90e4f32bf1dbd2746f6e58e2c0bb90.jpg</td>\n      <td>155.0</td>\n      <td>True</td>\n    </tr>\n    <tr>\n      <th>393</th>\n      <td>153.569449</td>\n      <td>0.716413</td>\n      <td>266</td>\n      <td>254</td>\n      <td>10.489</td>\n      <td>14.641</td>\n      <td>Turmeric Powder</td>\n      <td>work_dir/crops/DASH-DIET-101-4trainR-7-_jpg.rf.5389adec93120a33af7fabc41fe89683.jpg_266_254_10_14.jpg</td>\n      <td>DASH-DIET-101-4/train/R-7-_jpg.rf.5389adec93120a33af7fabc41fe89683.jpg</td>\n      <td>393.0</td>\n      <td>True</td>\n    </tr>\n    <tr>\n      <th>203</th>\n      <td>155.627325</td>\n      <td>0.774533</td>\n      <td>143</td>\n      <td>168</td>\n      <td>10.979</td>\n      <td>14.175</td>\n      <td>Turmeric Powder</td>\n      <td>work_dir/crops/DASH-DIET-101-4trainR-7-_jpg.rf.846abfdc68392e5eac134dc55631a439.jpg_143_168_10_14.jpg</td>\n      <td>DASH-DIET-101-4/train/R-7-_jpg.rf.846abfdc68392e5eac134dc55631a439.jpg</td>\n      <td>203.0</td>\n      <td>True</td>\n    </tr>\n    <tr>\n      <th>490</th>\n      <td>156.648294</td>\n      <td>0.792645</td>\n      <td>116</td>\n      <td>165</td>\n      <td>11.143</td>\n      <td>14.058</td>\n      <td>Turmeric Powder</td>\n      <td>work_dir/crops/DASH-DIET-101-4trainR-7-_jpg.rf.b72fbcbb2776b47eb72ef768fb67d2f8.jpg_116_165_11_14.jpg</td>\n      <td>DASH-DIET-101-4/train/R-7-_jpg.rf.b72fbcbb2776b47eb72ef768fb67d2f8.jpg</td>\n      <td>490.0</td>\n      <td>True</td>\n    </tr>\n    <tr>\n      <th>545</th>\n      <td>162.092875</td>\n      <td>1.365055</td>\n      <td>141</td>\n      <td>286</td>\n      <td>14.875</td>\n      <td>10.897</td>\n      <td>Turmeric Powder</td>\n      <td>work_dir/crops/DASH-DIET-101-4trainR-7-_jpg.rf.6162de6a9404060825dfa93613b17879.jpg_141_286_14_10.jpg</td>\n      <td>DASH-DIET-101-4/train/R-7-_jpg.rf.6162de6a9404060825dfa93613b17879.jpg</td>\n      <td>545.0</td>\n      <td>True</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+}
+[/block]
+
+
+```python
+plot_image_gallery(smallest_objects)
+```
+
+![](https://files.readme.io/cdf879c-image.png)
+
+View the top and bottom-most extreme aspect ratio.
+
+```python
+aspect_ratio_objects.head()
+```
+
+[block:html]
+{
+  "html": "<div style=\"width: 100%; overflow-x: auto;\">\n  <table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: left;\">\n      <th></th>\n      <th>area</th>\n      <th>aspect</th>\n      <th>col_x</th>\n      <th>row_y</th>\n      <th>width</th>\n      <th>height</th>\n      <th>label</th>\n      <th>crop_filename</th>\n      <th>filename</th>\n      <th>index</th>\n      <th>is_valid</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>1541</th>\n      <td>13374.457902</td>\n      <td>0.087868</td>\n      <td>141</td>\n      <td>26</td>\n      <td>34.281</td>\n      <td>390.142</td>\n      <td>Okra</td>\n      <td>work_dir/crops/DASH-DIET-101-4trainR-14-_jpg.rf.674cbf78ed81a5afc6400d0604a911ae.jpg_141_26_34_390.jpg</td>\n      <td>DASH-DIET-101-4/train/R-14-_jpg.rf.674cbf78ed81a5afc6400d0604a911ae.jpg</td>\n      <td>1541.0</td>\n      <td>True</td>\n    </tr>\n    <tr>\n      <th>35552</th>\n      <td>14800.000000</td>\n      <td>0.092500</td>\n      <td>0</td>\n      <td>0</td>\n      <td>37.000</td>\n      <td>400.000</td>\n      <td>Carrot</td>\n      <td>work_dir/crops/DASH-DIET-101-4trainnutrilite-protein-recipes-apple-beet-carrot-juice-cover_jpg.rf.882cec540e8fe015b20e9ac9d4ce8515.jpg_0_0_37_400.jpg</td>\n      <td>DASH-DIET-101-4/train/nutrilite-protein-recipes-apple-beet-carrot-juice-cover_jpg.rf.882cec540e8fe015b20e9ac9d4ce8515.jpg</td>\n      <td>35548.0</td>\n      <td>True</td>\n    </tr>\n    <tr>\n      <th>1306</th>\n      <td>14365.950291</td>\n      <td>0.093047</td>\n      <td>144</td>\n      <td>22</td>\n      <td>36.561</td>\n      <td>392.931</td>\n      <td>Okra</td>\n      <td>work_dir/crops/DASH-DIET-101-4trainR-14-_jpg.rf.4bd10c5235e42202a3a0c98af14f0562.jpg_144_22_36_392.jpg</td>\n      <td>DASH-DIET-101-4/train/R-14-_jpg.rf.4bd10c5235e42202a3a0c98af14f0562.jpg</td>\n      <td>1306.0</td>\n      <td>True</td>\n    </tr>\n    <tr>\n      <th>1540</th>\n      <td>14533.513197</td>\n      <td>0.095632</td>\n      <td>172</td>\n      <td>26</td>\n      <td>37.281</td>\n      <td>389.837</td>\n      <td>Okra</td>\n      <td>work_dir/crops/DASH-DIET-101-4trainR-14-_jpg.rf.674cbf78ed81a5afc6400d0604a911ae.jpg_172_26_37_389.jpg</td>\n      <td>DASH-DIET-101-4/train/R-14-_jpg.rf.674cbf78ed81a5afc6400d0604a911ae.jpg</td>\n      <td>1540.0</td>\n      <td>True</td>\n    </tr>\n    <tr>\n      <th>1305</th>\n      <td>15548.185098</td>\n      <td>0.100660</td>\n      <td>175</td>\n      <td>21</td>\n      <td>39.561</td>\n      <td>393.018</td>\n      <td>Okra</td>\n      <td>work_dir/crops/DASH-DIET-101-4trainR-14-_jpg.rf.4bd10c5235e42202a3a0c98af14f0562.jpg_175_21_39_393.jpg</td>\n      <td>DASH-DIET-101-4/train/R-14-_jpg.rf.4bd10c5235e42202a3a0c98af14f0562.jpg</td>\n      <td>1305.0</td>\n      <td>True</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+}
+[/block]
+
+
+```python
+plot_image_gallery(aspect_ratio_objects.head())
+```
+
+![](https://files.readme.io/45b56f6-image.png)
+
+```python
+plot_image_gallery(aspect_ratio_objects.tail())
+```
+
+![](https://files.readme.io/469fbe8-image.png)
+
+# Visualize Issues with fastdup Gallery
+
+There are several other methods we can use to inspect and visualize the issues found.
+
+```python
+fd.vis.duplicates_gallery()    # create a visual gallery of duplicates
+fd.vis.outliers_gallery()      # create a visual gallery of anomalies
+fd.vis.component_gallery()     # create a visualization of connected components
+fd.vis.stats_gallery()         # create a visualization of images statistics (e.g. blur)
+fd.vis.similarity_gallery()    # create a gallery of similar images
+```
+
+# Duplicates & Near-duplicates
+
+First, let's visualize the duplicate images at the bounding box level. 
+
+> 📘 Note
+> 
+> The duplicates visualized here is at the bounding box level, NOT at the image level. 
+> 
+> In other words, the bounding box image is cropped from the original image and compared to other bounding box images for duplicates.
+
+```python
+fd.vis.duplicates_gallery()
+```
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/6d905a6-_home_dnth_Downloads_duplicates.html.png",
+        "",
+        ""
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+Now let's get the number of exact/near duplicates.
+
+```python
+similarity_df = fd.similarity()
+near_duplicates = similarity_df[similarity_df["distance"] >= 0.98]
+
+near_duplicates = near_duplicates[['distance', 'crop_filename_from', 'crop_filename_to']]
+near_duplicates.head()
+```
+
+[block:html]
+{
+  "html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>Horizontally Scrollable Table</title>\n    <style>\n        .scrollable-table-container {\n            width: 100%;\n            overflow-x: auto;\n        }\n\n        .dataframe {\n            width: max-content;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"scrollable-table-container\">\n        <table border=\"1\" class=\"dataframe\">\n            <thead>\n                <tr style=\"text-align: left;\">\n                    <th></th>\n                    <th>distance</th>\n                    <th>crop_filename_from</th>\n                    <th>crop_filename_to</th>\n                </tr>\n            </thead>\n            <tbody>\n                <tr>\n                    <th>0</th>\n                    <td>1.0</td>\n                    <td>work_dir/crops/DASH-DIET-101-4train2_jpg.rf.f8ed956880647f0ee590c0fbbc076f6a.jpg_0_0_416_399.jpg</td>\n                    <td>work_dir/crops/DASH-DIET-101-4train2_jpg.rf.f8ed956880647f0ee590c0fbbc076f6a.jpg_3_20_388_395.jpg</td>\n                </tr>\n                <tr>\n                    <th>1</th>\n                    <td>1.0</td>\n                    <td>work_dir/crops/DASH-DIET-101-4train2_jpg.rf.e8debb99f661a8287bc0fbe26b9415bc.jpg_0_0_377_392.jpg</td>\n                    <td>work_dir/crops/DASH-DIET-101-4train2_jpg.rf.e8debb99f661a8287bc0fbe26b9415bc.jpg_16_0_399_415.jpg</td>\n                </tr>\n                <tr>\n                    <th>2</th>\n                    <td>1.0</td>\n                    <td>work_dir/crops/DASH-DIET-101-4train2_jpg.rf.e8debb99f661a8287bc0fbe26b9415bc.jpg_16_0_399_415.jpg</td>\n                    <td>work_dir/crops/DASH-DIET-101-4train2_jpg.rf.e8debb99f661a8287bc0fbe26b9415bc.jpg_0_0_377_392.jpg</td>\n                </tr>\n                <tr>\n                    <th>3</th>\n                    <td>1.0</td>\n                    <td>work_dir/crops/DASH-DIET-101-4train2_jpg.rf.c2506f976a065ee2f23c30a07a4c349e.jpg_12_38_401_377.jpg</td>\n                    <td>work_dir/crops/DASH-DIET-101-4train2_jpg.rf.c2506f976a065ee2f23c30a07a4c349e.jpg_1_0_415_399.jpg</td>\n                </tr>\n                <tr>\n                    <th>4</th>\n                    <td>1.0</td>\n                    <td>work_dir/crops/DASH-DIET-101-4train2_jpg.rf.c2506f976a065ee2f23c30a07a4c349e.jpg_1_0_415_399.jpg</td>\n                    <td>work_dir/crops/DASH-DIET-101-4train2_jpg.rf.c2506f976a065ee2f23c30a07a4c349e.jpg_12_38_401_377.jpg</td>\n                </tr>\n            </tbody>\n        </table>\n    </div>\n</body>\n</html>\n"
+}
+[/block]
+
+
+Let's see how many near duplicates we find by checking the number of rows in the DataFrame.
+
+```python
+len(near_duplicates)
+```
+
+```
+20394
+```
+
+A `distance` value of `1.0` indicates an exact duplicate.
+
+As a sanity check, let's show the images that are flagged as duplicates here.
+
+```python
+from IPython.display import Image
+Image(filename="work_dir/crops/DASH-DIET-101-4trainR-1_jpg.rf.f5a1151cb95e5bbc7d04efb70c805ab0.jpg_193_107_208_215.jpg")
+```
+
+![](https://files.readme.io/067952b-image.png)
+
+```python
+Image(filename="work_dir/crops/DASH-DIET-101-4trainR-1_jpg.rf.00f7c3e0c3b443aa1b4b5a04dc6f26eb.jpg_180_101_216_209.jpg")
+```
+
+![](https://files.readme.io/1d22d6a-image.png)
+
+# Image Clusters
+
+We can also view similar-looking images forming clusters.
+
+```python
+fd.vis.component_gallery()
+```
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/a16ce38-_home_dnth_Downloads_components.html.png",
+        "",
+        ""
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+# Bright/Dark/Blurry Images
+
+We can show the brightest images from the dataset in a gallery.
+
+Change `metric` to `blur` or `dark` to view blurry and dark images.
+
+```python
+fd.vis.stats_gallery(metric='bright')
+```
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/fb05e69-_home_dnth_Downloads_mean.html.png",
+        "",
+        ""
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+To get a DataFrame with statistical details for each bounding box image.
+
+```python
+fd.img_stats()
+```
+
+[block:html]
+{
+  "html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>Horizontally Scrollable Table</title>\n    <style>\n        .scrollable-table-container {\n            width: 100%;\n            overflow-x: auto;\n        }\n\n        .dataframe {\n            width: max-content;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"scrollable-table-container\">\n        <table border=\"1\" class=\"dataframe\">\n            <thead>\n                <tr style=\"text-align: left;\">\n                    <th></th>\n                    <th>index</th>\n                    <th>img_w</th>\n                    <th>img_h</th>\n                    <th>unique</th>\n                    <th>blur</th>\n                    <th>mean</th>\n                    <th>min</th>\n                    <th>max</th>\n                    <th>stdv</th>\n                    <th>file_size</th>\n                    <th>contrast</th>\n                    <th>col_x</th>\n                    <th>row_y</th>\n                    <th>width</th>\n                    <th>height</th>\n                    <th>label</th>\n                    <th>crop_filename</th>\n                    <th>filename</th>\n                    <th>is_valid</th>\n                </tr>\n            </thead>\n            <tbody>\n                <tr>\n                    <th>0</th>\n                    <td>0</td>\n                    <td>326</td>\n                    <td>259</td>\n                    <td>256</td>\n                    <td>392.7757</td>\n                    <td>169.9534</td>\n                    <td>0.0</td>\n                    <td>255.0</td>\n                    <td>50.3176</td>\n                    <td>23168</td>\n                    <td>1.0</td>\n                    <td>0</td>\n                    <td>73</td>\n                    <td>272.078</td>\n                    <td>185.083</td>\n                    <td>Turmeric Powder</td>\n                    <td>work_dir/crops/DASH-DIET-101-4trainorganic-dry-turmeric-haldi-powder-also-known-as-curcuma-longa-linn-selective-focus-spice-pile-bowl-whole-191159061_jpg.rf.1adae99b28bbcbc9b808181f088bbbcf.jpg_0_73_272_185.jpg</td>\n                    <td>DASH-DIET-101-4/train/organic-dry-turmeric-haldi-powder-also-known-as-curcuma-longa-linn-selective-focus-spice-pile-bowl-whole-191159061_jpg.rf.1adae99b28bbcbc9b808181f088bbbcf.jpg</td>\n                    <td>True</td>\n                </tr>\n                <tr>\n                    <th>1</th>\n                    <td>1</td>\n                    <td>416</td>\n                    <td>320</td>\n                    <td>256</td>\n                    <td>1337.6874</td>\n                    <td>183.2935</td>\n                    <td>0.0</td>\n                    <td>255.0</td>\n                    <td>66.9546</td>\n                    <td>37378</td>\n                    <td>1.0</td>\n                    <td>42</td>\n                    <td>0</td>\n                    <td>358.150</td>\n                    <td>267.799</td>\n                    <td>Turmeric Powder</td>\n                    <td>work_dir/crops/DASH-DIET-101-4trainpci0920-Chemisphere-609811234-900_jpg.rf.1b8cb16482196777ebac596f522a2147.jpg_42_0_358_267.jpg</td>\n                    <td>DASH-DIET-101-4/train/pci0920-Chemisphere-609811234-900_jpg.rf.1b8cb16482196777ebac596f522a2147.jpg</td>\n                    <td>True</td>\n                </tr>\n                <tr>\n                    <th>2</th>\n                    <td>2</td>\n                    <td>187</td>\n                    <td>268</td>\n                    <td>256</td>\n                    <td>623.9651</td>\n                    <td>160.2206</td>\n                    <td>0.0</td>\n                    <td>255.0</td>\n                    <td>79.8649</td>\n                    <td>17050</td>\n                    <td>1.0</td>\n                    <td>10</td>\n                    <td>192</td>\n                    <td>148.320</td>\n                    <td>223.180</td>\n                    <td>Turmeric Powder</td>\n                    <td>work_dir/crops/DASH-DIET-101-4trainpci0920-Chemisphere-609811234-900_jpg.rf.1b8cb16482196777ebac596f522a2147.jpg_10_192_148_223.jpg</td>\n                    <td>DASH-DIET-101-4/train/pci0920-Chemisphere-609811234-900_jpg.rf.1b8cb16482196777ebac596f522a2147.jpg</td>\n                    <td>True</td>\n                </tr>\n                <tr>\n                    <th>3</th>\n                    <td>3</td>\n                    <td>360</td>\n                    <td>319</td>\n                    <td>256</td>\n                    <td>730.4841</td>\n                    <td>156.3619</td>\n                    <td>0.0</td>\n                    <td>255.0</td>\n                    <td>55.2961</td>\n                    <td>42525</td>\n                    <td>1.0</td>\n                    <td>0</td>\n                    <td>135</td>\n                    <td>300.233</td>\n                    <td>229.676</td>\n                    <td>Turmeric Powder</td>\n                    <td>work_dir/crops/DASH-DIET-101-4trainOIP-3-_jpg.rf.1c1b462382e0b3876ee2cbe6b5cc461c.jpg_0_135_300_229.jpg</td>\n                    <td>DASH-DIET-101-4/train/OIP-3-_jpg.rf.1c1b462382e0b3876ee2cbe6b5cc461c.jpg</td>\n                    <td>True</td>\n                </tr>\n                <tr>\n                    <th>4</th>\n                    <td>4</td>\n                    <td>266</td>\n                    <td>48</td>\n                    <td>256</td>\n                    <td>178.8866</td>\n                    <td>172.8911</td>\n                    <td>0.0</td>\n                    <td>255.0</td>\n                    <td>57.3904</td>\n                    <td>4155</td>\n                    <td>1.0</td>\n                    <td>0</td>\n                    <td>0</td>\n                    <td>222.000</td>\n                    <td>40.292</td>\n                    <td>Turmeric Powder</td>\n                    <td>work_dir/crops/DASH-DIET-101-4trainOIP-3-_jpg.rf.1c1b462382e0b3876ee2cbe6b5cc461c.jpg_0_0_222_40.jpg</td>\n                    <td>DASH-DIET-101-4/train/OIP-3-_jpg.rf.1c1b462382e0b3876ee2cbe6b5cc461c.jpg</td>\n                    <td>True</td>\n                </tr>\n                <!-- Add more rows as needed -->\n            </tbody>\n        </table>\n    </div>\n</body>\n</html>\n"
+}
+[/block]
+
+
+# Mislabels
+
+```python
+fd.vis.similarity_gallery(slice='diff')
+```
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/e8d039a-_home_dnth_Downloads_similarity.html.png",
+        "",
+        ""
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+# Wrap Up
+
+That's it! We've just conveniently surfaced many issues with this dataset by running fastdup. By taking care of dataset quality issues, we hope this will help you train better models.
+
+Questions about this tutorial? Reach out to us on our [Slack channel](https://visuallayer.slack.com/)!
+
+# VL Profiler - A faster and easier way to diagnose and visualize dataset issues
+
+The team behind fastdup also recently launched [VL Profiler](https://medium.com/visual-layer/introducing-vl-profiler-1cde3257c76c), a no-code cloud-based platform that lets you leverage fastdup in the browser. 
+
+VL Profiler lets you find:
+
+- Duplicates/near-duplicates.
+- Outliers.
+- Mislabels.
+- Non-useful images.
+
+Here's a preview of VL Profiler.
+
+[block:embed]
+{
+  "html": "<iframe class=\"embedly-embed\" src=\"//cdn.embedly.com/widgets/media.html?src=https%3A%2F%2Fwww.youtube.com%2Fembed%2Fijf8Ag4-3TE%3Ffeature%3Doembed&display_name=YouTube&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dijf8Ag4-3TE&image=https%3A%2F%2Fi.ytimg.com%2Fvi%2Fijf8Ag4-3TE%2Fhqdefault.jpg&key=7788cb384c9f4d5dbbdbeffd9fe4b92f&type=text%2Fhtml&schema=youtube\" width=\"640\" height=\"480\" scrolling=\"no\" title=\"YouTube embed\" frameborder=\"0\" allow=\"autoplay; fullscreen; encrypted-media; picture-in-picture;\" allowfullscreen=\"true\"></iframe>",
+  "url": "https://www.youtube.com/watch?v=ijf8Ag4-3TE",
+  "title": "RVL DCIP Test Dataset - Visual Layer Profiler",
+  "favicon": "https://www.google.com/favicon.ico",
+  "image": "https://i.ytimg.com/vi/ijf8Ag4-3TE/hqdefault.jpg",
+  "provider": "youtube.com",
+  "href": "https://www.youtube.com/watch?v=ijf8Ag4-3TE",
+  "typeOfEmbed": "youtube"
+}
+[/block]
+
+
+> 👍 Free Usage
+> 
+> Use VL Profiler for free to analyze issues on your dataset with up to **1,000,000 images**. 
+> 
+> [Get started for free.](https://app.visual-layer.com?utm_source=fastdupdocs)
+
+Not convinced yet? 
+
+Interact with a collection of dataset like ImageNet-21K, COCO, and DeepFashion [here](https://app.visual-layer.com/vl-datasets?utm_source=fastdupdocs).
+
+No sign-ups needed.
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://github.com/visual-layer/fastdup/raw/main/gallery/github_banner_profiler.gif",
+        null,
+        "ima"
+      ],
+      "align": "center"
+    }
+  ]
+}
+[/block]
+
+
+[block:html]
+{
+  "html": "<center> \n    <a href=\"https://www.visual-layer.com\" target=\"_blank\" rel=\"noopener noreferrer\">\n    <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo_dark_mode.png\" width=200>\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    <img alt=\"vl logo.\" src=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    </picture>\n    </a><br><br>\n    <a href=\"https://github.com/visual-layer/fastdup\" target=\"_blank\" style=\"text-decoration: none;\"> GitHub </a> •\n    <a href=\"https://visual-layer.slack.com/\" target=\"_blank\" style=\"text-decoration: none;\"> Join Slack Community </a> •\n    <a href=\"https://visual-layer.readme.io/discuss\" target=\"_blank\" style=\"text-decoration: none;\"> Discussion Forum </a>\n</center>\n\n<center> \n    <a href=\"https://medium.com/visual-layer\" target=\"_blank\" style=\"text-decoration: none;\"> Blog </a> •\n    <a href=\"https://visual-layer.readme.io/\" target=\"_blank\" style=\"text-decoration: none;\"> Documentation </a> •\n    <a href=\"https://visual-layer.com/about\" target=\"_blank\" style=\"text-decoration: none;\"> About Us </a> \n</center>\n\n<center> \n    <a href=\"https://www.linkedin.com/company/visual-layer/\" target=\"_blank\" style=\"text-decoration: none;\"> LinkedIn </a> •\n    <a href=\"https://twitter.com/visual_layer\" target=\"_blank\" style=\"text-decoration: none;\"> Twitter </a>\n</center>"
+}
+[/block]

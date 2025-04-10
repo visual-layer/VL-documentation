@@ -1,0 +1,60 @@
+---
+title: "Working with tar/tgz/zip files as input"
+excerpt: ""
+hidden: false
+metadata: 
+  image: []
+  robots: "index"
+createdAt: "Thu Feb 16 2023 16:29:09 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Thu Oct 26 2023 05:37:19 GMT+0000 (Coordinated Universal Time)"
+---
+Some popular datasets like LAION 400M use webdataset compressed formats. Fastdup supports the following compressed file formats: tar,tgz,tar.gz,zip. Those compressed files can be located in a local folder or remote s3 or minio path.
+
+For example, the LAION dataset contains the following tar files:
+
+```
+00000.tar containing:  
+000000000.jpg  
+000000001.jpg  
+000000002.jpg
+```
+
+Each tar file contains 10K images.
+
+When working with compressed files you need to run with run_mode=1 for performing the extraction of feature vectors first, since we do not know ahead how many files are in each tar when copied from s3. After the feature vectors are extracted, collect all the output files into the same folder and run again with run_mode=2 to compute the NN model.
+
+The compressed files are first copied locally into the `/tmp/<tarname>/` folder and then extracted. For each compressed tar file we generate two output files: `<tarname>features.dat` for the binary features and `<tarname>features.dat.csv` for the file list.
+
+Example output file for the tar above (the path is given via the work_dir command line argument).
+
+```
+$ cat 00000.tarfeatures.dat.csv  
+filename  
+/tmp/00000.tar/000000000.jpg  
+/tmp/00000.tar/000000001.jpg
+```
+
+...  
+Note that it is possible to configure the behaviour regarding deletion of files. On default, both the downloaded tar files and the extracted images are deleted after the feature vectors are extracted. If you want to keep them locally (assuming there is large enough hard drive) you can run with :
+
+` turi_param='delete_tar=0,delete_img=0'`  
+This keeps all the downloaded tars and images in the /tmp folder.
+
+Running example. Assume you got to the full dataset downloaded into s3://mybucket/myfolder. In total there are 40,000 tar files. Further assume you want to run using 20 compute nodes to extract the feature in parallel. In this case you cam run:
+
+```
+import fastdup  
+fastdup.run('s3://mybucket/myfolder', run_mode=1, work_dir='/path/to/work_dir',  
+            min_offset=0, max_offset=2000)
+```
+
+The first job runs on 2000 tars from 0 to 2000 not including. In parallel you can run with min_offset=2000, max_offset=4000 on another node etc. We estimate the extraction speed in around 4M images per hour on a 32 core machine (no GPU).
+
+Once all jobs are finished, collect all the output files from the work_dir into a single location and run:
+
+```
+import fastdup  
+fastdup.run('s3://mybucket/myfolder', run_mode=2, work_dir='/path/to/work_dir')
+```
+
+For running on 50M images you will need an ubuntu machine with 32 cores and 256GB RAM. We are working on further scaling the implementation for the full dataset - stay tuned!

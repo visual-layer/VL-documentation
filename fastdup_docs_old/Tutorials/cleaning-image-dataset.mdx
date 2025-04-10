@@ -1,0 +1,1769 @@
+---
+title: "Cleaning Image Dataset"
+excerpt: "This tutorial shows how to clean an image collection or dataset from the issues found with fastdup.\n\nBy the end of the tutorial you'll learn how to:\n+ Find various dataset issues with fastdup.\n+ Collect problematic images for further action."
+hidden: false
+createdAt: "Wed Feb 22 2023 16:11:24 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Fri Nov 29 2024 13:43:22 GMT+0000 (Coordinated Universal Time)"
+---
+# Setting Up
+
+You can follow along this tutorial by running [this notebook on Google Colab](https://colab.research.google.com/github/visual-layer/fastdup/blob/main/examples/cleaning-image-dataset.ipynb).
+
+> 🚧 Google Colab free tier
+> 
+> Running this tutorial on Google Colab is possible but may take a while to complete due to the low computing resources provided in the free tier. 
+> 
+> We recommend running this tutorial on your local machine, [Google Colab Pro](https://colab.research.google.com/signup) or equivalent.
+
+If you're running this tutorial on your local machine, install fastdup with:
+
+```Text bash
+pip install fastdup
+```
+
+To verify the installation, run:
+
+```Text Python
+import fastdup
+fastdup.__version__
+```
+
+This tutorial runs on version `0.906`.
+
+For a detailed list of installation options and supported platforms, see our [installation guide](https://visual-layer.readme.io/docs/installation).
+
+# Download Dataset
+
+For the purpose of demonstration, we will be using the [food-101](https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/) dataset which consists of 101 food classes with 1,000 images per class.
+
+Download and extract the dataset by running:
+
+```shell
+!wget http://data.vision.ee.ethz.ch/cvl/food-101.tar.gz
+!tar xzf food-101.tar.gz
+```
+
+Once done, you should have a `food-101/images`folder which contains the images.
+
+> 📘 Why this dataset?
+> 
+> We use the food-101 dataset in this tutorial because of the general availability of the dataset to the public.
+> 
+> Bear in mind this is a highly curated  and we may not find as many issues compared to a non-curated dataset.
+> 
+> Feel free to swap out this dataset for your own!
+
+# Run fastdup
+
+With the folder set in place, let's run fastdup:
+
+```python Python
+import fastdup  
+fd = fastdup.create(work_dir="fastdup_food101_work_dir/",
+                    input_dir="food-101/images/")
+fd.run(ccthreshold=0.9) 
+```
+
+> 📘 Parameters
+> 
+> - `work_dir` - Path to store the artifacts generated from the run.
+> - `input_dir` - Path to the images.
+> - `ccthreshold` - The cluster threshold parameter. Controls the minimal distance for clustering. Defaults to `0.96`. Best value of `ccthreshold`varies depending on use case and data. 
+>   - A **higher** threshold clusters images that are highly similar resulting in lesser images in a cluster.
+>   - A **lower** threshold clusters less similar images together. Clusters have more diversity and a larger possible difference between images in the cluster.
+
+> 👍 Reduce run time on free tier of Google Colab
+> 
+> If you're running this tutorial on the free tier of Google Colab, we recommend to run the analysis on a subset of the dataset instead of the entire dataset. This is done to reduce the waiting time for the run to complete.
+> 
+> You can specify the number of images to run on by specifying the `num_images` argument in `fd.run`. For example `fd.run(num_images=40000)`runs only on 40,000 images in the dataset.
+
+Once the run completes you can get a summary of the run with:
+
+```python
+fd.summary()
+```
+
+which outputs:
+
+```text
+########################################################################################
+
+Dataset Analysis Summary: 
+
+    Dataset contains 40000 images
+    Valid images are 100.00% (40,000) of the data, invalid are 0.00% (0) of the data
+    Similarity:  1.26% (504) belong to 17 similarity clusters (components).
+    98.74% (39,496) images do not belong to any similarity cluster.
+    Largest cluster has 30 (0.07%) images.
+    For a detailed analysis, use `.connected_components()`
+(similarity threshold used is 0.9, connected component threshold used is 0.9).
+
+    Outliers: 6.02% (2,409) of images are possible outliers, and fall in the bottom 5.00% of similarity values.
+    For a detailed list of outliers, use `.outliers()`.
+['Dataset contains 40000 images',
+ 'Valid images are 100.00% (40,000) of the data, invalid are 0.00% (0) of the data',
+ 'Similarity:  1.26% (504) belong to 17 similarity clusters (components).',
+ '98.74% (39,496) images do not belong to any similarity cluster.',
+ 'Largest cluster has 30 (0.07%) images.',
+ 'For a detailed analysis, use `.connected_components()`\n(similarity threshold used is 0.9, connected component threshold used is 0.9).\n',
+ 'Outliers: 6.02% (2,409) of images are possible outliers, and fall in the bottom 5.00% of similarity values.',
+ 'For a detailed list of outliers, use `.outliers()`.']
+```
+
+# Broken Images
+
+Similar to the previous tutorial, let's start with low hanging fruit of finding corrupted images:
+
+```python
+fd.invalid_instances()
+```
+
+which outputs:
+
+[block:html]
+{
+  "html": "<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>img_filename</th>\n      <th>fastdup_id</th>\n      <th>error_code</th>\n      <th>is_valid</th>\n    </tr>\n  </thead>\n  <tbody>\n  </tbody>\n</table>"
+}
+[/block]
+
+
+> 📘 No broken images!
+> 
+> The output shows no broken images. So we are good to go here.
+
+However, if there are broken images present (like in the [previous tutorial](doc:getting-started)), you'd see something like the following:
+
+[block:html]
+{
+  "html": "<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>img_filename</th>\n      <th>fastdup_id</th>\n      <th>error_code</th>\n      <th>is_valid</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>Abyssinian_34.jpg</td>\n      <td>135</td>\n      <td>ERROR_ZERO_SIZE_FILE</td>\n      <td>False</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>Egyptian_Mau_139.jpg</td>\n      <td>2240</td>\n      <td>ERROR_ZERO_SIZE_FILE</td>\n      <td>False</td>\n    </tr>\n    <tr>\n      <th>5</th>\n      <td>Egyptian_Mau_191.jpg</td>\n      <td>2293</td>\n      <td>ERROR_ZERO_SIZE_FILE</td>\n      <td>False</td>\n    </tr>\n  </tbody>\n</table>"
+}
+[/block]
+
+
+# List of Broken Images
+
+To get a list of broken images run:
+
+```
+broken_images = fd.invalid_instances()
+list_of_broken_images = broken_images['img_filename'].to_list()
+list_of_broken_images
+```
+
+Since we did not have any broke images the output of the above code is:
+
+```
+[]
+```
+
+If fastdup encounters broken images, the output of the above snippet would look something like:
+
+```
+['Abyssinian_34.jpg',
+ 'Egyptian_Mau_139.jpg',
+ 'Egyptian_Mau_145.jpg']
+```
+
+> 👍 Tips
+> 
+> You can store these output list somewhere to take further action on. You might want to move the files, delete it, or relabel them.
+
+# Duplicates
+
+Let's visualize duplicate image pairs with:
+
+```python
+fd.vis.duplicates_gallery(num_images=5)
+```
+
+which outputs:
+
+![](https://files.readme.io/ad4483c-_home_dnth_Downloads_duplicates.html.png)
+
+> 👍 Tips
+> 
+> - Setting `num_images=5`shows a gallery of 5 duplicate pairs. Change this value to view more/less.
+> - Running `fd.vis.duplicates_gallery`also saves the resulting `duplicates.html` file into `fastdup_food101_work_dir/gallery/`.
+> - Distance of `1.0` indicates that the image is an exact copy.
+
+# Image Clusters
+
+You can visualize image clusters with:
+
+```python
+fd.vis.component_gallery(num_images=5)
+```
+
+which outputs:
+
+![](https://files.readme.io/ee75af8-_home_dnth_Downloads_components.html.png)
+
+# List of Duplicates
+
+Now let's single out all duplicates and near-duplicates by running using the connected components function:
+
+```python
+connected_components_df , _ = fd.connected_components()
+connected_components_df.head()
+```
+
+ which outputs:
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fastdup_id</th>
+      <th>component_id</th>
+      <th>sum</th>
+      <th>count</th>
+      <th>mean_distance</th>
+      <th>min_distance</th>
+      <th>max_distance</th>
+      <th>img_filename</th>
+      <th>error_code</th>
+      <th>is_valid</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>apple_pie/1005649.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>apple_pie/1011328.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>2</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>apple_pie/101251.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>3</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>apple_pie/1014775.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>4</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>apple_pie/1026328.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+
+Let's now write a utility function to get the clusters:
+
+```python
+# a function to group connected components
+def get_clusters(df, sort_by='count', min_count=2, ascending=False):
+    # columns to aggregate
+    agg_dict = {'img_filename': list, 'mean_distance': max, 'count': len}
+
+    if 'label' in df.columns:
+        agg_dict['label'] = list
+    
+    # filter by count
+    df = df[df['count'] >= min_count]
+    
+    # group and aggregate columns
+    grouped_df = df.groupby('component_id').agg(agg_dict)
+    
+    # sort
+    grouped_df = grouped_df.sort_values(by=[sort_by], ascending=ascending)
+    return grouped_df
+```
+
+And run it:
+
+```python
+clusters_df = get_clusters(connected_components_df)
+clusters_df.head()
+```
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>img_filename</th>
+      <th>mean_distance</th>
+      <th>count</th>
+    </tr>
+    <tr>
+      <th>component_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>23830</th>
+      <td>[clam_chowder/1072684.jpg, clam_chowder/1113834.jpg, clam_chowder/1322415.jpg, clam_chowder/1437241.jpg, clam_chowder/2113399.jpg, clam_chowder/2140703.jpg, clam_chowder/2248997.jpg, clam_chowder/2361787.jpg, clam_chowder/2398168.jpg, clam_chowder/2542800.jpg, clam_chowder/2685745.jpg, clam_chowder/2770581.jpg, clam_chowder/3914755.jpg, clam_chowder/546975.jpg, clam_chowder/75800.jpg, clam_chowder/854517.jpg]</td>
+      <td>0.9163</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>31637</th>
+      <td>[dumplings/1045500.jpg, dumplings/140004.jpg, dumplings/1630799.jpg, dumplings/1695231.jpg, dumplings/1848359.jpg, dumplings/1872410.jpg, dumplings/1918394.jpg, dumplings/2524385.jpg, dumplings/3683752.jpg, dumplings/3739057.jpg, dumplings/3781725.jpg, dumplings/468796.jpg]</td>
+      <td>0.9302</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>31767</th>
+      <td>[dumplings/1450685.jpg, dumplings/1564985.jpg, dumplings/2500721.jpg, dumplings/2600333.jpg, dumplings/2606645.jpg, dumplings/2675187.jpg, dumplings/3030550.jpg, dumplings/3242297.jpg, dumplings/3532122.jpg, dumplings/625116.jpg]</td>
+      <td>0.9127</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>31760</th>
+      <td>[dumplings/1433645.jpg, dumplings/1813271.jpg, dumplings/1881086.jpg, dumplings/1998135.jpg, dumplings/2229749.jpg, dumplings/2561548.jpg, dumplings/2750447.jpg, dumplings/3363745.jpg, dumplings/834049.jpg]</td>
+      <td>0.9119</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>31699</th>
+      <td>[dumplings/1228546.jpg, dumplings/1270308.jpg, dumplings/231028.jpg, dumplings/2373653.jpg, dumplings/2571523.jpg, dumplings/263589.jpg, dumplings/2909040.jpg, dumplings/2950605.jpg, dumplings/3191742.jpg]</td>
+      <td>0.9180</td>
+      <td>9</td>
+    </tr>
+  </tbody>
+</table>
+
+The above shows the  component (clusters) with the highest duplicates/near-duplicates.
+
+Now let's keep one image from each cluster and remove the rest:
+
+```python
+# First sample from each cluster that is kept
+cluster_images_to_keep = []
+list_of_duplicates = []
+
+for cluster_file_list in clusters_df.img_filename:
+    # keep first file, discard rest
+    keep = cluster_file_list[0]
+    discard = cluster_file_list[1:]
+    
+    cluster_images_to_keep.append(keep)
+    list_of_duplicates.extend(discard)
+
+print(f"Found {len(set(list_of_duplicates))} highly similar images to discard")
+```
+
+outputs:
+
+```
+Found 610 highly similar images to discard
+```
+
+Inspecting `list_of_duplicates`:
+
+```python
+list_of_duplicates
+```
+
+outputs:
+
+```
+['clam_chowder/1113834.jpg',
+ 'clam_chowder/1322415.jpg',
+ 'clam_chowder/1437241.jpg',
+ 'clam_chowder/2113399.jpg',
+ 'clam_chowder/2140703.jpg',
+ 'clam_chowder/2248997.jpg',
+ 'clam_chowder/2361787.jpg',
+ 'clam_chowder/2398168.jpg',
+ 'clam_chowder/2542800.jpg',
+ 'clam_chowder/2685745.jpg',
+ 'clam_chowder/2770581.jpg',
+ 'clam_chowder/3914755.jpg',
+ 'clam_chowder/546975.jpg',
+ 'clam_chowder/75800.jpg',
+ 'clam_chowder/854517.jpg',
+ 'dumplings/140004.jpg',
+ 'dumplings/1630799.jpg',
+ 'dumplings/1695231.jpg',
+ 'dumplings/1848359.jpg',
+ 'dumplings/1872410.jpg',
+ 'dumplings/1918394.jpg',
+ 'dumplings/2524385.jpg',
+ 'dumplings/3683752.jpg',
+ 'dumplings/3739057.jpg',
+ 'dumplings/3781725.jpg',
+ 'dumplings/468796.jpg',
+ 'dumplings/1564985.jpg',
+ 'dumplings/2500721.jpg',
+ 'dumplings/2600333.jpg',
+ 'dumplings/2606645.jpg',
+ 'dumplings/2675187.jpg',
+ 'dumplings/3030550.jpg',
+ 'dumplings/3242297.jpg',
+ 'dumplings/3532122.jpg',
+ 'dumplings/625116.jpg',
+ 'dumplings/1813271.jpg',
+ 'dumplings/1881086.jpg',
+ 'dumplings/1998135.jpg',
+ 'dumplings/2229749.jpg',
+ 'dumplings/2561548.jpg',
+ 'dumplings/2750447.jpg',
+ 'dumplings/3363745.jpg',
+ 'dumplings/834049.jpg',
+ 'dumplings/1270308.jpg',
+ 'dumplings/231028.jpg',
+ 'dumplings/2373653.jpg',
+ 'dumplings/2571523.jpg',
+ 'dumplings/263589.jpg',
+ 'dumplings/2909040.jpg',
+ 'dumplings/2950605.jpg',
+ 'dumplings/3191742.jpg',
+ 'dumplings/1276808.jpg',
+ 'dumplings/1308246.jpg',
+ 'dumplings/1598923.jpg',
+ 'dumplings/2546897.jpg',
+ 'dumplings/2630977.jpg',
+ 'dumplings/263764.jpg',
+ 'dumplings/3412861.jpg',
+ 'dumplings/646942.jpg',
+ 'edamame/1714523.jpg',
+ 'edamame/2204418.jpg',
+ 'edamame/2483789.jpg',
+ 'edamame/2670224.jpg',
+ 'edamame/3432193.jpg',
+ 'edamame/3666348.jpg',
+ 'edamame/3788141.jpg',
+ 'edamame/825581.jpg',
+ 'clam_chowder/1945594.jpg',
+ 'clam_chowder/2508514.jpg',
+ 'clam_chowder/2673628.jpg',
+ 'clam_chowder/2789238.jpg',
+ 'clam_chowder/3549975.jpg',
+ 'clam_chowder/758162.jpg',
+ 'clam_chowder/903815.jpg',
+ 'clam_chowder/2509774.jpg',
+ 'clam_chowder/2676197.jpg',
+ 'clam_chowder/2992252.jpg',
+ 'clam_chowder/3264840.jpg',
+ 'clam_chowder/3395059.jpg',
+ 'clam_chowder/906900.jpg',
+ 'clam_chowder/967946.jpg',
+ 'clam_chowder/1511884.jpg',
+ 'clam_chowder/2426821.jpg',
+ 'clam_chowder/2476027.jpg',
+ 'clam_chowder/2869301.jpg',
+ 'clam_chowder/2897057.jpg',
+ 'clam_chowder/3291238.jpg',
+ 'clam_chowder/3830343.jpg',
+ 'dumplings/1563646.jpg',
+ 'dumplings/1897260.jpg',
+ 'dumplings/2444294.jpg',
+ 'dumplings/2951551.jpg',
+ 'dumplings/3101737.jpg',
+ 'dumplings/310672.jpg',
+ 'dumplings/3279575.jpg',
+ 'creme_brulee/1207812.jpg',
+ 'creme_brulee/1742194.jpg',
+ 'creme_brulee/1816938.jpg',
+ 'creme_brulee/312639.jpg',
+ 'creme_brulee/480234.jpg',
+ 'creme_brulee/59534.jpg',
+ 'club_sandwich/1318118.jpg',
+ 'club_sandwich/1775789.jpg',
+ 'club_sandwich/1886101.jpg',
+ 'club_sandwich/2778614.jpg',
+ 'club_sandwich/3106065.jpg',
+ 'club_sandwich/588478.jpg',
+ 'edamame/1086703.jpg',
+ 'edamame/2040753.jpg',
+ 'edamame/2390868.jpg',
+ 'edamame/3325153.jpg',
+ 'edamame/3520889.jpg',
+ 'edamame/677508.jpg',
+ 'club_sandwich/1840706.jpg',
+ 'club_sandwich/2272423.jpg',
+ 'club_sandwich/3526250.jpg',
+ 'club_sandwich/3646665.jpg',
+ 'club_sandwich/3664710.jpg',
+ 'dumplings/2380724.jpg',
+ 'dumplings/2707946.jpg',
+ 'dumplings/587831.jpg',
+ 'dumplings/876327.jpg',
+ 'dumplings/937912.jpg',
+ 'dumplings/1545564.jpg',
+ 'dumplings/1848509.jpg',
+ 'dumplings/3359158.jpg',
+ 'dumplings/3619519.jpg',
+ 'dumplings/3686831.jpg',
+ 'beignets/2399174.jpg',
+ 'beignets/2683786.jpg',
+ 'beignets/3520470.jpg',
+ 'beignets/595743.jpg',
+ 'beignets/832877.jpg',
+ 'edamame/2778957.jpg',
+ 'edamame/3519994.jpg',
+ 'edamame/3546677.jpg',
+ 'edamame/579614.jpg',
+ 'edamame/846598.jpg',
+ 'clam_chowder/3137773.jpg',
+ 'clam_chowder/686716.jpg',
+ 'clam_chowder/762499.jpg',
+ 'clam_chowder/777422.jpg',
+ 'clam_chowder/804904.jpg',
+ 'clam_chowder/3073323.jpg',
+ 'clam_chowder/3142771.jpg',
+ 'clam_chowder/3228022.jpg',
+ 'clam_chowder/513498.jpg',
+ 'bruschetta/2018603.jpg',
+ 'bruschetta/2229245.jpg',
+ 'bruschetta/261311.jpg',
+ 'bruschetta/3743680.jpg',
+ 'breakfast_burrito/1058434.jpg',
+ 'caesar_salad/2599756.jpg',
+ 'caesar_salad/520391.jpg',
+ 'eggs_benedict/2066348.jpg',
+ 'clam_chowder/2894611.jpg',
+ 'clam_chowder/596255.jpg',
+ 'clam_chowder/907742.jpg',
+ 'clam_chowder/947484.jpg',
+ 'edamame/2588718.jpg',
+ 'edamame/2847124.jpg',
+ 'edamame/3558096.jpg',
+ 'edamame/601042.jpg',
+ 'bruschetta/243736.jpg',
+ 'bruschetta/3805917.jpg',
+ 'bruschetta/3836578.jpg',
+ 'bruschetta/3896592.jpg',
+ 'clam_chowder/2396225.jpg',
+ 'clam_chowder/2603953.jpg',
+ 'clam_chowder/3689947.jpg',
+ 'clam_chowder/655847.jpg',
+ 'club_sandwich/1413794.jpg',
+ 'club_sandwich/1811271.jpg',
+ 'club_sandwich/2163422.jpg',
+ 'club_sandwich/3543955.jpg',
+ 'dumplings/1370046.jpg',
+ 'dumplings/1510091.jpg',
+ 'dumplings/2531851.jpg',
+ 'edamame/3185310.jpg',
+ 'edamame/3569901.jpg',
+ 'edamame/965396.jpg',
+ 'edamame/2975349.jpg',
+ 'edamame/3152528.jpg',
+ 'edamame/3301986.jpg',
+ 'bibimbap/1615665.jpg',
+ 'bibimbap/2795629.jpg',
+ 'bibimbap/964368.jpg',
+ 'bibimbap/2519286.jpg',
+ 'bibimbap/2572183.jpg',
+ 'bibimbap/3003579.jpg',
+ 'caesar_salad/3673948.jpg',
+ 'caesar_salad/620905.jpg',
+ 'caesar_salad/709638.jpg',
+ 'dumplings/2975772.jpg',
+ 'dumplings/3888349.jpg',
+ 'dumplings/599168.jpg',
+ 'bibimbap/2534963.jpg',
+ 'bibimbap/3571528.jpg',
+ 'bibimbap/3627919.jpg',
+ 'edamame/3213278.jpg',
+ 'edamame/3634423.jpg',
+ 'edamame/3920329.jpg',
+ 'dumplings/322034.jpg',
+ 'dumplings/3428971.jpg',
+ 'dumplings/432.jpg',
+ 'chicken_quesadilla/3004094.jpg',
+ 'chicken_quesadilla/3779974.jpg',
+ 'dumplings/2736144.jpg',
+ 'dumplings/3430692.jpg',
+ 'caesar_salad/3402604.jpg',
+ 'caesar_salad/3703325.jpg',
+ 'clam_chowder/1942294.jpg',
+ 'clam_chowder/2027156.jpg',
+ 'breakfast_burrito/662423.jpg',
+ 'breakfast_burrito/662424.jpg',
+ 'churros/3303373.jpg',
+ 'churros/3303522.jpg',
+ 'chicken_curry/2701143.jpg',
+ 'chicken_curry/882723.jpg',
+ 'clam_chowder/1063260.jpg',
+ 'clam_chowder/3024138.jpg',
+ 'bibimbap/2041700.jpg',
+ 'bibimbap/2346855.jpg',
+ 'edamame/1622192.jpg',
+ 'edamame/561133.jpg',
+ 'beignets/1728932.jpg',
+ 'beignets/1751352.jpg',
+ 'dumplings/2770853.jpg',
+ 'dumplings/625233.jpg',
+ 'chocolate_cake/51717.jpg',
+ 'chocolate_cake/55122.jpg',
+ 'bruschetta/1890619.jpg',
+ 'bruschetta/3462434.jpg',
+ 'edamame/1620027.jpg',
+ 'edamame/2916151.jpg',
+ 'dumplings/521153.jpg',
+ 'dumplings/882708.jpg',
+ 'edamame/1144040.jpg',
+ 'edamame/1225330.jpg',
+ 'edamame/684483.jpg',
+ 'edamame/952423.jpg',
+ 'crab_cakes/2780621.jpg',
+ 'crab_cakes/2780623.jpg',
+ 'edamame/3253578.jpg',
+ 'edamame/3620419.jpg',
+ 'croque_madame/3163125.jpg',
+ 'croque_madame/3865436.jpg',
+ 'dumplings/2182931.jpg',
+ 'dumplings/3458910.jpg',
+ 'dumplings/1146384.jpg',
+ 'dumplings/2108794.jpg',
+ 'creme_brulee/2418653.jpg',
+ 'creme_brulee/3684311.jpg',
+ 'dumplings/3537145.jpg',
+ 'dumplings/808822.jpg',
+ 'dumplings/231024.jpg',
+ 'dumplings/35818.jpg',
+ 'croque_madame/3224280.jpg',
+ 'croque_madame/3288700.jpg',
+ 'croque_madame/2598646.jpg',
+ 'croque_madame/3036159.jpg',
+ 'falafel/3370784.jpg',
+ 'falafel/438562.jpg',
+ 'dumplings/1557735.jpg',
+ 'dumplings/3635848.jpg',
+ 'escargots/637187.jpg',
+ 'escargots/637188.jpg',
+ 'croque_madame/157692.jpg',
+ 'croque_madame/290729.jpg',
+ 'ceviche/2796501.jpg',
+ 'ceviche/895716.jpg',
+ 'donuts/1774835.jpg',
+ 'donuts/2563686.jpg',
+ 'edamame/3243030.jpg',
+ 'edamame/3313851.jpg',
+ 'chicken_quesadilla/535532.jpg',
+ 'chicken_quesadilla/535546.jpg',
+ 'eggs_benedict/1972975.jpg',
+ 'eggs_benedict/2528340.jpg',
+ 'dumplings/3424747.jpg',
+ 'dumplings/55070.jpg',
+ 'edamame/3028728.jpg',
+ 'edamame/3112981.jpg',
+ 'eggs_benedict/3225684.jpg',
+ 'eggs_benedict/535020.jpg',
+ 'beef_tartare/1361899.jpg',
+ 'beef_tartare/3437886.jpg',
+ 'clam_chowder/2862215.jpg',
+ 'clam_chowder/795839.jpg',
+ 'croque_madame/3776229.jpg',
+ 'croque_madame/3873257.jpg',
+ 'clam_chowder/2641960.jpg',
+ 'clam_chowder/3289212.jpg',
+ 'donuts/2117632.jpg',
+ 'deviled_eggs/3281495.jpg',
+ 'donuts/3089074.jpg',
+ 'deviled_eggs/3902179.jpg',
+ 'deviled_eggs/3058137.jpg',
+ 'deviled_eggs/584369.jpg',
+ 'donuts/3124075.jpg',
+ 'deviled_eggs/3246571.jpg',
+ 'donuts/1954438.jpg',
+ 'deviled_eggs/3806337.jpg',
+ 'deviled_eggs/2671994.jpg',
+ 'apple_pie/1469191.jpg',
+ 'deviled_eggs/3491525.jpg',
+ 'croque_madame/2555777.jpg',
+ 'croque_madame/1870619.jpg',
+ 'croque_madame/3322423.jpg',
+ 'croque_madame/2269229.jpg',
+ 'croque_madame/1306940.jpg',
+ 'croque_madame/1497073.jpg',
+ 'creme_brulee/3245776.jpg',
+ 'creme_brulee/3155386.jpg',
+ 'creme_brulee/3487185.jpg',
+ 'creme_brulee/3054304.jpg',
+ 'creme_brulee/332369.jpg',
+ 'creme_brulee/2610691.jpg',
+ 'creme_brulee/2680133.jpg',
+ 'creme_brulee/2262132.jpg',
+ 'creme_brulee/2602002.jpg',
+ 'creme_brulee/2085820.jpg',
+ 'creme_brulee/2376691.jpg',
+ 'creme_brulee/722718.jpg',
+ 'croque_madame/611043.jpg',
+ 'croque_madame/691718.jpg',
+ 'deviled_eggs/2178531.jpg',
+ 'croque_madame/2962203.jpg',
+ 'deviled_eggs/1923965.jpg',
+ 'deviled_eggs/1721209.jpg',
+ 'deviled_eggs/1619934.jpg',
+ 'deviled_eggs/1568041.jpg',
+ 'deviled_eggs/1527126.jpg',
+ 'deviled_eggs/1378330.jpg',
+ 'donuts/2512789.jpg',
+ 'deviled_eggs/3021655.jpg',
+ 'cup_cakes/556378.jpg',
+ 'cup_cakes/1493261.jpg',
+ 'cup_cakes/1082593.jpg',
+ 'croque_madame/914187.jpg',
+ 'croque_madame/878201.jpg',
+ 'croque_madame/580678.jpg',
+ 'croque_madame/880779.jpg',
+ 'croque_madame/392709.jpg',
+ 'croque_madame/3414159.jpg',
+ 'donuts/2499239.jpg',
+ 'dumplings/2084607.jpg',
+ 'donuts/861022.jpg',
+ 'edamame/3840513.jpg',
+ 'falafel/1206667.jpg',
+ 'escargots/563386.jpg',
+ 'escargots/3688869.jpg',
+ 'escargots/3468449.jpg',
+ 'escargots/2667969.jpg',
+ 'escargots/2646994.jpg',
+ 'escargots/3004581.jpg',
+ 'escargots/2211156.jpg',
+ 'escargots/1637284.jpg',
+ 'escargots/2491502.jpg',
+ 'eggs_benedict/901333.jpg',
+ 'eggs_benedict/3238266.jpg',
+ 'eggs_benedict/3574668.jpg',
+ 'eggs_benedict/721876.jpg',
+ 'edamame/979556.jpg',
+ 'edamame/587222.jpg',
+ 'edamame/453226.jpg',
+ 'falafel/295629.jpg',
+ 'falafel/2505830.jpg',
+ 'falafel/3086998.jpg',
+ 'foie_gras/2870358.jpg',
+ 'foie_gras/459507.jpg',
+ 'foie_gras/3382988.jpg',
+ 'foie_gras/3029045.jpg',
+ 'foie_gras/3105826.jpg',
+ 'foie_gras/2857159.jpg',
+ 'foie_gras/2291174.jpg',
+ 'foie_gras/1721540.jpg',
+ 'foie_gras/21278.jpg',
+ 'falafel/3464997.jpg',
+ 'foie_gras/1051567.jpg',
+ 'filet_mignon/734006.jpg',
+ 'filet_mignon/646511.jpg',
+ 'filet_mignon/1666949.jpg',
+ 'falafel/3882357.jpg',
+ 'falafel/3789344.jpg',
+ 'falafel/3001734.jpg',
+ 'edamame/3831507.jpg',
+ 'edamame/667469.jpg',
+ 'dumplings/2106100.jpg',
+ 'edamame/2900759.jpg',
+ 'edamame/1659005.jpg',
+ 'dumplings/955413.jpg',
+ 'dumplings/774604.jpg',
+ 'dumplings/6201.jpg',
+ 'dumplings/663266.jpg',
+ 'dumplings/2545565.jpg',
+ 'dumplings/633367.jpg',
+ 'dumplings/28220.jpg',
+ 'dumplings/856176.jpg',
+ 'dumplings/267852.jpg',
+ 'dumplings/2800182.jpg',
+ 'dumplings/3554779.jpg',
+ 'dumplings/180290.jpg',
+ 'dumplings/231026.jpg',
+ 'dumplings/3153246.jpg',
+ 'dumplings/2932420.jpg',
+ 'dumplings/2942258.jpg',
+ 'edamame/1346107.jpg',
+ 'edamame/488373.jpg',
+ 'edamame/2977649.jpg',
+ 'edamame/2473555.jpg',
+ 'edamame/2803276.jpg',
+ 'edamame/3041151.jpg',
+ 'edamame/2708664.jpg',
+ 'edamame/2230705.jpg',
+ 'edamame/2545734.jpg',
+ 'edamame/3119358.jpg',
+ 'edamame/336171.jpg',
+ 'edamame/2574083.jpg',
+ 'edamame/2558511.jpg',
+ 'edamame/804283.jpg',
+ 'edamame/1969958.jpg',
+ 'edamame/864875.jpg',
+ 'edamame/2499082.jpg',
+ 'edamame/2302171.jpg',
+ 'edamame/1821106.jpg',
+ 'edamame/2157980.jpg',
+ 'creme_brulee/1888025.jpg',
+ 'clam_chowder/390727.jpg',
+ 'crab_cakes/2194081.jpg',
+ 'bibimbap/1809239.jpg',
+ 'bibimbap/1792799.jpg',
+ 'bibimbap/628343.jpg',
+ 'bibimbap/892182.jpg',
+ 'beignets/727595.jpg',
+ 'beignets/3573964.jpg',
+ 'beignets/492391.jpg',
+ 'beignets/2706264.jpg',
+ 'donuts/708597.jpg',
+ 'beignets/518797.jpg',
+ 'beignets/2004832.jpg',
+ 'beignets/1997437.jpg',
+ 'beignets/2735628.jpg',
+ 'beignets/935415.jpg',
+ 'beignets/1428238.jpg',
+ 'beignets/3873758.jpg',
+ 'beet_salad/3268468.jpg',
+ 'beet_salad/2671983.jpg',
+ 'beet_salad/374126.jpg',
+ 'beet_salad/1855829.jpg',
+ 'bibimbap/2499871.jpg',
+ 'bibimbap/574280.jpg',
+ 'bruschetta/3838937.jpg',
+ 'bibimbap/913532.jpg',
+ 'bruschetta/619290.jpg',
+ 'bruschetta/3696492.jpg',
+ 'bruschetta/3711344.jpg',
+ 'bruschetta/2161394.jpg',
+ 'caprese_salad/2730842.jpg',
+ 'breakfast_burrito/931734.jpg',
+ 'breakfast_burrito/491065.jpg',
+ 'ceviche/1205283.jpg',
+ 'bruschetta/711623.jpg',
+ 'bread_pudding/502700.jpg',
+ 'bibimbap/3884378.jpg',
+ 'bibimbap/3611974.jpg',
+ 'bibimbap/890594.jpg',
+ 'bibimbap/3670923.jpg',
+ 'bibimbap/495544.jpg',
+ 'bibimbap/2988372.jpg',
+ 'bibimbap/3096950.jpg',
+ 'bibimbap/3837493.jpg',
+ 'bibimbap/2399561.jpg',
+ 'beet_salad/1404312.jpg',
+ 'beef_tartare/50036.jpg',
+ 'beef_tartare/3646367.jpg',
+ 'beef_tartare/97478.jpg',
+ 'baklava/3518558.jpg',
+ 'baklava/3158786.jpg',
+ 'baklava/2209150.jpg',
+ 'baklava/2015716.jpg',
+ 'baklava/2186251.jpg',
+ 'baklava/1458610.jpg',
+ 'baklava/1150170.jpg',
+ 'baby_back_ribs/620997.jpg',
+ 'baby_back_ribs/3265047.jpg',
+ 'baby_back_ribs/3620137.jpg',
+ 'baby_back_ribs/3142431.jpg',
+ 'baby_back_ribs/3125728.jpg',
+ 'filet_mignon/2427308.jpg',
+ 'baby_back_ribs/801284.jpg',
+ 'baby_back_ribs/2306066.jpg',
+ 'baby_back_ribs/2129884.jpg',
+ 'apple_pie/839845.jpg',
+ 'apple_pie/3670966.jpg',
+ 'apple_pie/3324492.jpg',
+ 'beef_carpaccio/885771.jpg',
+ 'beef_carpaccio/679379.jpg',
+ 'beef_carpaccio/2290534.jpg',
+ 'beet_salad/686615.jpg',
+ 'beef_tartare/3191961.jpg',
+ 'beef_tartare/3185389.jpg',
+ 'beef_tartare/2561385.jpg',
+ 'beef_tartare/2426755.jpg',
+ 'beef_tartare/2030974.jpg',
+ 'beef_tartare/1562966.jpg',
+ 'beef_tartare/3722200.jpg',
+ 'beef_tartare/2038606.jpg',
+ 'beef_carpaccio/721638.jpg',
+ 'beef_carpaccio/2434359.jpg',
+ 'beef_carpaccio/3323355.jpg',
+ 'beef_carpaccio/3252686.jpg',
+ 'beef_carpaccio/3289048.jpg',
+ 'beef_carpaccio/3394009.jpg',
+ 'beef_carpaccio/2035002.jpg',
+ 'beef_carpaccio/1926900.jpg',
+ 'beef_carpaccio/1801501.jpg',
+ 'beef_carpaccio/2907748.jpg',
+ 'bruschetta/3387732.jpg',
+ 'bruschetta/3790099.jpg',
+ 'crab_cakes/814716.jpg',
+ 'clam_chowder/2385341.jpg',
+ 'clam_chowder/2742139.jpg',
+ 'clam_chowder/2754706.jpg',
+ 'clam_chowder/2148133.jpg',
+ 'clam_chowder/3126055.jpg',
+ 'clam_chowder/3045182.jpg',
+ 'clam_chowder/3457812.jpg',
+ 'clam_chowder/780765.jpg',
+ 'clam_chowder/3588064.jpg',
+ 'clam_chowder/1783836.jpg',
+ 'deviled_eggs/1999024.jpg',
+ 'clam_chowder/2762472.jpg',
+ 'clam_chowder/2553830.jpg',
+ 'clam_chowder/1871262.jpg',
+ 'clam_chowder/3572725.jpg',
+ 'churros/644700.jpg',
+ 'churros/2617186.jpg',
+ 'churros/1683636.jpg',
+ 'chocolate_mousse/2048018.jpg',
+ 'chocolate_mousse/2673864.jpg',
+ 'clam_chowder/2503659.jpg',
+ 'clam_chowder/3031443.jpg',
+ 'caesar_salad/728727.jpg',
+ 'clam_chowder/924933.jpg',
+ 'crab_cakes/20845.jpg',
+ 'crab_cakes/1460400.jpg',
+ 'crab_cakes/2885408.jpg',
+ 'fish_and_chips/359280.jpg',
+ 'club_sandwich/3845195.jpg',
+ 'club_sandwich/3550782.jpg',
+ 'club_sandwich/1377451.jpg',
+ 'club_sandwich/2856571.jpg',
+ 'club_sandwich/1380208.jpg',
+ 'club_sandwich/736461.jpg',
+ 'clam_chowder/948137.jpg',
+ 'clam_chowder/9768.jpg',
+ 'clam_chowder/511201.jpg',
+ 'apple_pie/1487150.jpg',
+ 'clam_chowder/3322877.jpg',
+ 'clam_chowder/3508063.jpg',
+ 'clam_chowder/3307340.jpg',
+ 'clam_chowder/3115414.jpg',
+ 'clam_chowder/2961270.jpg',
+ 'chicken_wings/834669.jpg',
+ 'chicken_wings/811798.jpg',
+ 'chicken_wings/3108137.jpg',
+ 'chicken_quesadilla/2223295.jpg',
+ 'cannoli/3846450.jpg',
+ 'cannoli/2295498.jpg',
+ 'cannoli/1982944.jpg',
+ 'cannoli/1357678.jpg',
+ 'eggs_benedict/1010197.jpg',
+ 'caesar_salad/3791298.jpg',
+ 'caesar_salad/3627251.jpg',
+ 'caesar_salad/3325086.jpg',
+ 'caesar_salad/3381505.jpg',
+ 'eggs_benedict/2748311.jpg',
+ 'caesar_salad/2707518.jpg',
+ 'caesar_salad/2683955.jpg',
+ 'caesar_salad/2319739.jpg',
+ 'caesar_salad/3912473.jpg',
+ 'caesar_salad/3315261.jpg',
+ 'caesar_salad/3479395.jpg',
+ 'chicken_quesadilla/2025030.jpg',
+ 'caesar_salad/3637443.jpg',
+ 'caesar_salad/2874871.jpg',
+ 'caprese_salad/992553.jpg',
+ 'caprese_salad/1473449.jpg',
+ 'caprese_salad/1411082.jpg',
+ 'ceviche/2523261.jpg',
+ 'chicken_quesadilla/1590716.jpg',
+ 'chicken_curry/70091.jpg',
+ 'chicken_curry/3496679.jpg',
+ 'chicken_curry/2617143.jpg',
+ 'cheese_plate/618425.jpg',
+ 'cheese_plate/3545251.jpg',
+ 'cheese_plate/3026695.jpg',
+ 'eggs_benedict/158871.jpg',
+ 'ceviche/172529.jpg',
+ 'caprese_salad/3753434.jpg',
+ 'carrot_cake/527702.jpg',
+ 'carrot_cake/3768473.jpg',
+ 'carrot_cake/3512754.jpg',
+ 'carrot_cake/3374621.jpg',
+ 'carrot_cake/3889387.jpg',
+ 'caprese_salad/763201.jpg',
+ 'caprese_salad/3289013.jpg',
+ 'caprese_salad/87213.jpg',
+ 'foie_gras/79314.jpg']
+```
+
+Additional reading: <https://visual-layer.readme.io/docs/v02xx-api#remove_duplicates>
+
+# Outliers
+
+Now, visualize the outliers with:
+
+```python
+fd.vis.outliers_gallery(num_images=5)
+```
+
+which outputs:
+
+![](https://files.readme.io/39d0fd1-_home_dnth_Downloads_outliers.html.png)
+
+> 👍 Tips
+> 
+> - Lower `Distance` value indicates the image is different than others in the dataset. Hence, the lower the `Distance`  value, the higher the  chances of outliers.
+> - Since we know that the label of the image is by the name of the parent folder, we can already spot a couple of outliers from this gallery. For example, take the last image in the gallery, the label is given as `dumplings` but the image does not contain any dumplings.
+
+# List of Outliers
+
+Let's first get the outliers `DataFrame`:
+
+```python
+outlier_df = fd.outliers()
+outlier_df.head()
+```
+
+Which outputs:
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>index</th>
+      <th>outlier</th>
+      <th>nearest</th>
+      <th>distance</th>
+      <th>img_filename_outlier</th>
+      <th>error_code_outlier</th>
+      <th>is_valid_outlier</th>
+      <th>img_filename_nearest</th>
+      <th>error_code_nearest</th>
+      <th>is_valid_nearest</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>3999</td>
+      <td>9797</td>
+      <td>27221</td>
+      <td>0.295020</td>
+      <td>breakfast_burrito/462294.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>creme_brulee/1661605.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3997</td>
+      <td>21410</td>
+      <td>37470</td>
+      <td>0.556575</td>
+      <td>chocolate_cake/2518457.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>filet_mignon/2685908.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3995</td>
+      <td>11063</td>
+      <td>16727</td>
+      <td>0.563040</td>
+      <td>caesar_salad/1303023.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>cheesecake/358018.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3994</td>
+      <td>21885</td>
+      <td>2669</td>
+      <td>0.564055</td>
+      <td>chocolate_cake/577717.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>baklava/3363412.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>3992</td>
+      <td>32123</td>
+      <td>31207</td>
+      <td>0.578329</td>
+      <td>dumplings/1339572.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+      <td>donuts/1750980.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+
+Let's treat all images with `distance<0.68` as outliers:
+
+```
+list_of_outliers = outlier_df[outlier_df.distance < 0.68].img_filename_outlier.tolist()
+list_of_outliers
+```
+
+Outputs:
+
+```
+['breakfast_burrito/462294.jpg',  
+ 'chocolate_cake/2518457.jpg',  
+ 'caesar_salad/1303023.jpg',  
+ 'chocolate_cake/577717.jpg',  
+ 'dumplings/1339572.jpg',  
+ 'bibimbap/2594394.jpg',  
+ 'ceviche/2363511.jpg',  
+ 'churros/2327883.jpg',  
+ 'chicken_wings/693809.jpg',  
+ 'foie_gras/3776193.jpg',  
+ 'chicken_curry/2523126.jpg',  
+ 'churros/1440917.jpg',  
+ 'creme_brulee/1661605.jpg',  
+ 'apple_pie/484038.jpg',  
+ 'foie_gras/33258.jpg',  
+ 'cheesecake/2160930.jpg',  
+ 'cheesecake/1955517.jpg',  
+ 'chicken_curry/789540.jpg',  
+ 'cup_cakes/451074.jpg',  
+ 'cup_cakes/1005580.jpg',  
+ 'bread_pudding/1375816.jpg',  
+ 'chocolate_mousse/2177988.jpg',  
+ 'bruschetta/1883187.jpg',  
+ 'chocolate_cake/3600589.jpg',  
+ 'apple_pie/236966.jpg',  
+ 'caprese_salad/2719211.jpg',  
+ 'bibimbap/3230839.jpg',  
+ 'apple_pie/2008772.jpg',  
+ 'edamame/2979095.jpg',  
+ 'fish_and_chips/1566646.jpg',  
+ 'cup_cakes/601989.jpg',  
+ 'filet_mignon/2685908.jpg',  
+ 'baklava/3236360.jpg',  
+ 'baby_back_ribs/1676135.jpg',  
+ 'cup_cakes/2590269.jpg',  
+ 'chocolate_cake/2814515.jpg',  
+ 'churros/1972000.jpg',  
+ 'clam_chowder/759125.jpg',  
+ 'falafel/2585154.jpg',  
+ 'cup_cakes/630654.jpg',  
+ 'baklava/1553505.jpg',  
+ 'chocolate_cake/1749296.jpg',  
+ 'beignets/3506219.jpg',  
+ 'cheesecake/811556.jpg',  
+ 'chocolate_cake/1646662.jpg',  
+ 'donuts/921183.jpg',  
+ 'donuts/3316195.jpg',  
+ 'foie_gras/235773.jpg',  
+ 'churros/2550886.jpg',  
+ 'filet_mignon/2685899.jpg',  
+ 'chocolate_cake/2479257.jpg',  
+ 'beet_salad/1456898.jpg',  
+ 'cheesecake/2465886.jpg',  
+ 'churros/1658982.jpg',  
+ 'creme_brulee/107007.jpg',  
+ 'churros/3690003.jpg',  
+ 'chocolate_cake/1244445.jpg',  
+ 'apple_pie/755031.jpg',  
+ 'deviled_eggs/2854885.jpg',  
+ 'cannoli/3300725.jpg',  
+ 'churros/3169818.jpg',  
+ 'donuts/794976.jpg',  
+ 'cannoli/1070382.jpg',  
+ 'beet_salad/1643533.jpg',  
+ 'chocolate_mousse/2048999.jpg',  
+ 'churros/2741606.jpg',  
+ 'beignets/726875.jpg',  
+ 'chocolate_mousse/2287892.jpg',  
+ 'filet_mignon/3030737.jpg',  
+ 'fish_and_chips/876010.jpg',  
+ 'churros/1944265.jpg',  
+ 'cheese_plate/3119696.jpg',  
+ 'donuts/456541.jpg',  
+ 'churros/962826.jpg',  
+ 'churros/679673.jpg',  
+ 'donuts/1452592.jpg',  
+ 'donuts/3347684.jpg',  
+ 'baklava/3278527.jpg',  
+ 'bread_pudding/2585974.jpg',  
+ 'beef_tartare/913291.jpg',  
+ 'creme_brulee/1138671.jpg',  
+ 'chocolate_mousse/3604313.jpg',  
+ 'chocolate_mousse/1320051.jpg',  
+ 'chocolate_cake/985141.jpg',  
+ 'chocolate_cake/51412.jpg',  
+ 'cheesecake/2617496.jpg',  
+ 'club_sandwich/1127992.jpg',  
+ 'escargots/3406878.jpg',  
+ 'carrot_cake/580925.jpg',  
+ 'chocolate_cake/2174801.jpg',  
+ 'chicken_curry/889805.jpg',  
+ 'chocolate_cake/2067510.jpg',  
+ 'creme_brulee/202057.jpg',  
+ 'caprese_salad/2298180.jpg',  
+ 'chocolate_mousse/2688431.jpg',  
+ 'chocolate_mousse/2616372.jpg',  
+ 'chocolate_cake/771009.jpg',  
+ 'churros/1995090.jpg',  
+ 'breakfast_burrito/1229548.jpg',  
+ 'donuts/1167771.jpg',  
+ 'baby_back_ribs/2083106.jpg',  
+ 'bibimbap/2011447.jpg',  
+ 'churros/1977745.jpg',  
+ 'churros/3447996.jpg',  
+ 'chocolate_cake/3169533.jpg',  
+ 'donuts/1828646.jpg',  
+ 'baklava/1452465.jpg',  
+ 'chocolate_cake/2280321.jpg',  
+ 'beignets/3568316.jpg',  
+ 'beef_tartare/1054197.jpg',  
+ 'cup_cakes/3691610.jpg']
+```
+
+# Dark, Bright, Blurry Images
+
+Similar to the [previous tutorial](https://visual-layer.readme.io/docs/getting-started#dark-bright-and-blurry-images), we can visualize the dark, bright, and blurry images with:
+
+```python
+fd.vis.stats_gallery(metric='dark')
+fd.vis.stats_gallery(metric='bright')
+fd.vis.stats_gallery(metric='blur')
+```
+
+# List of Dark Images
+
+Get a DataFrame of dark images:
+
+```python
+stats_df = fd.img_stats()
+```
+
+If an image has a`mean<13` then we conclude it's a dark image:
+
+```python
+dark_images = stats_df[stats_df['mean'] < 13]  
+dark_images
+```
+
+Outputs:
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fastdup_id</th>
+      <th>img_w</th>
+      <th>img_h</th>
+      <th>unique</th>
+      <th>blur</th>
+      <th>mean</th>
+      <th>min</th>
+      <th>max</th>
+      <th>stdv</th>
+      <th>file_size</th>
+      <th>contrast</th>
+      <th>img_filename</th>
+      <th>error_code</th>
+      <th>is_valid</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3090</th>
+      <td>3090</td>
+      <td>512</td>
+      <td>306</td>
+      <td>0</td>
+      <td>535.7338</td>
+      <td>5.5205</td>
+      <td>0.0</td>
+      <td>255.0</td>
+      <td>15.3110</td>
+      <td>27433</td>
+      <td>1.0</td>
+      <td>beef_carpaccio/1259270.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>9797</th>
+      <td>9797</td>
+      <td>511</td>
+      <td>512</td>
+      <td>0</td>
+      <td>9.0875</td>
+      <td>1.8431</td>
+      <td>0.0</td>
+      <td>30.0</td>
+      <td>1.0524</td>
+      <td>8693</td>
+      <td>1.0</td>
+      <td>breakfast_burrito/462294.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+
+To get a list of the dark images:
+
+```python
+list_of_dark_images = dark_images['img_filename'].to_list()
+list_of_dark_images
+```
+
+Which outputs:
+
+```
+['beef_carpaccio/1259270.jpg', 'breakfast_burrito/462294.jpg']
+```
+
+# List of Bright Images
+
+Similar to the above, let's set that if `mean>220.5` we will conclude it's a bright image:
+
+```python
+bright_images = stats_df[stats_df['mean'] > 220.5]
+bright_images.head()
+```
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fastdup_id</th>
+      <th>img_w</th>
+      <th>img_h</th>
+      <th>unique</th>
+      <th>blur</th>
+      <th>mean</th>
+      <th>min</th>
+      <th>max</th>
+      <th>stdv</th>
+      <th>file_size</th>
+      <th>contrast</th>
+      <th>img_filename</th>
+      <th>error_code</th>
+      <th>is_valid</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>81</th>
+      <td>81</td>
+      <td>512</td>
+      <td>512</td>
+      <td>0</td>
+      <td>538.6821</td>
+      <td>225.8266</td>
+      <td>0.0</td>
+      <td>255.0</td>
+      <td>32.2799</td>
+      <td>32229</td>
+      <td>1.0</td>
+      <td>apple_pie/1289014.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>436</th>
+      <td>436</td>
+      <td>512</td>
+      <td>512</td>
+      <td>0</td>
+      <td>1245.6737</td>
+      <td>220.9703</td>
+      <td>0.0</td>
+      <td>255.0</td>
+      <td>40.3034</td>
+      <td>40344</td>
+      <td>1.0</td>
+      <td>apple_pie/2601590.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>589</th>
+      <td>589</td>
+      <td>512</td>
+      <td>512</td>
+      <td>0</td>
+      <td>1468.0642</td>
+      <td>227.5742</td>
+      <td>0.0</td>
+      <td>255.0</td>
+      <td>41.6247</td>
+      <td>50437</td>
+      <td>1.0</td>
+      <td>apple_pie/2997124.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>933</th>
+      <td>933</td>
+      <td>512</td>
+      <td>512</td>
+      <td>0</td>
+      <td>554.9135</td>
+      <td>232.6887</td>
+      <td>0.0</td>
+      <td>255.0</td>
+      <td>41.5226</td>
+      <td>41395</td>
+      <td>1.0</td>
+      <td>apple_pie/817552.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>1115</th>
+      <td>1115</td>
+      <td>512</td>
+      <td>512</td>
+      <td>0</td>
+      <td>1219.0579</td>
+      <td>230.7839</td>
+      <td>0.0</td>
+      <td>255.0</td>
+      <td>32.7307</td>
+      <td>52154</td>
+      <td>1.0</td>
+      <td>baby_back_ribs/1395570.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+
+Get a list of bright images:
+
+```python
+list_of_bright_images = bright_images['img_filename'].to_list()
+list_of_bright_images
+```
+
+Outputs:
+
+```
+['apple_pie/1289014.jpg',
+ 'apple_pie/2601590.jpg',
+ 'apple_pie/2997124.jpg',
+ 'apple_pie/817552.jpg',
+ 'baby_back_ribs/1395570.jpg',
+ 'baby_back_ribs/3841100.jpg',
+ 'baklava/1542333.jpg',
+ 'baklava/2229944.jpg',
+ 'baklava/2663954.jpg',
+ 'beef_carpaccio/1364391.jpg',
+ 'beef_carpaccio/1713850.jpg',
+ 'beef_carpaccio/1990775.jpg',
+ 'beef_carpaccio/3169022.jpg',
+ 'beef_carpaccio/872076.jpg',
+ 'beef_tartare/1282738.jpg',
+ 'beef_tartare/1720794.jpg',
+ 'beef_tartare/3603995.jpg',
+ 'beef_tartare/717367.jpg',
+ 'beignets/1688450.jpg',
+ 'beignets/3723694.jpg',
+ 'beignets/529117.jpg',
+ 'bread_pudding/1256062.jpg',
+ 'bread_pudding/3660360.jpg',
+ 'bread_pudding/3716756.jpg',
+ 'breakfast_burrito/2840993.jpg',
+ 'breakfast_burrito/3635548.jpg',
+ 'bruschetta/1346725.jpg',
+ 'bruschetta/2275519.jpg',
+ 'bruschetta/3269901.jpg',
+ 'bruschetta/770721.jpg',
+ 'caesar_salad/2039808.jpg',
+ 'caesar_salad/2761224.jpg',
+ 'cannoli/1237436.jpg',
+ 'cannoli/1793781.jpg',
+ 'cannoli/2799600.jpg',
+ 'cannoli/2821147.jpg',
+ 'cannoli/421018.jpg',
+ 'caprese_salad/2126956.jpg',
+ 'carrot_cake/1932607.jpg',
+ 'cheesecake/1325649.jpg',
+ 'cheesecake/2572821.jpg',
+ 'cheese_plate/1842697.jpg',
+ 'cheese_plate/3159443.jpg',
+ 'chicken_curry/2051444.jpg',
+ 'chicken_curry/2590404.jpg',
+ 'chicken_curry/3144187.jpg',
+ 'chicken_curry/3679727.jpg',
+ 'chicken_quesadilla/2786630.jpg',
+ 'chicken_quesadilla/3362240.jpg',
+ 'chicken_wings/2693829.jpg',
+ 'chocolate_cake/2584547.jpg',
+ 'churros/1572415.jpg',
+ 'churros/2151645.jpg',
+ 'churros/706007.jpg',
+ 'clam_chowder/1455612.jpg',
+ 'clam_chowder/172055.jpg',
+ 'clam_chowder/2009191.jpg',
+ 'clam_chowder/2054906.jpg',
+ 'clam_chowder/673650.jpg',
+ 'crab_cakes/445057.jpg',
+ 'crab_cakes/761280.jpg',
+ 'creme_brulee/1306834.jpg',
+ 'creme_brulee/1658062.jpg',
+ 'creme_brulee/2318273.jpg',
+ 'creme_brulee/2506003.jpg',
+ 'creme_brulee/3900789.jpg',
+ 'creme_brulee/392008.jpg',
+ 'creme_brulee/730057.jpg',
+ 'creme_brulee/849220.jpg',
+ 'croque_madame/3079934.jpg',
+ 'croque_madame/3484037.jpg',
+ 'deviled_eggs/1276764.jpg',
+ 'deviled_eggs/2218705.jpg',
+ 'deviled_eggs/50398.jpg',
+ 'donuts/2036733.jpg',
+ 'dumplings/1141514.jpg',
+ 'dumplings/1483996.jpg',
+ 'dumplings/2174768.jpg',
+ 'eggs_benedict/2492820.jpg',
+ 'falafel/2437617.jpg',
+ 'falafel/366728.jpg',
+ 'filet_mignon/103497.jpg',
+ 'filet_mignon/1841480.jpg',
+ 'foie_gras/1044237.jpg',
+ 'foie_gras/139942.jpg',
+ 'foie_gras/2721736.jpg',
+ 'foie_gras/302051.jpg',
+ 'foie_gras/3267247.jpg',
+ 'foie_gras/35694.jpg',
+ 'foie_gras/3917886.jpg',
+ 'foie_gras/583722.jpg',
+ 'foie_gras/71445.jpg',
+ 'foie_gras/71461.jpg']
+```
+
+# List of Blurry Images
+
+Similarly with blur images
+
+```python
+blurry_images = stats_df[stats_df['blur'] < 50]
+blurry_images.head()
+```
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fastdup_id</th>
+      <th>img_w</th>
+      <th>img_h</th>
+      <th>unique</th>
+      <th>blur</th>
+      <th>mean</th>
+      <th>min</th>
+      <th>max</th>
+      <th>stdv</th>
+      <th>file_size</th>
+      <th>contrast</th>
+      <th>img_filename</th>
+      <th>error_code</th>
+      <th>is_valid</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2123</th>
+      <td>2123</td>
+      <td>512</td>
+      <td>512</td>
+      <td>0</td>
+      <td>41.3781</td>
+      <td>116.2239</td>
+      <td>2.0</td>
+      <td>198.0</td>
+      <td>30.7362</td>
+      <td>25479</td>
+      <td>0.9800</td>
+      <td>baklava/1413667.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>2768</th>
+      <td>2768</td>
+      <td>384</td>
+      <td>512</td>
+      <td>0</td>
+      <td>45.5609</td>
+      <td>102.8172</td>
+      <td>40.0</td>
+      <td>226.0</td>
+      <td>37.5435</td>
+      <td>18740</td>
+      <td>0.6992</td>
+      <td>baklava/3681797.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>2829</th>
+      <td>2829</td>
+      <td>512</td>
+      <td>512</td>
+      <td>0</td>
+      <td>38.8840</td>
+      <td>214.0211</td>
+      <td>71.0</td>
+      <td>255.0</td>
+      <td>25.0954</td>
+      <td>23869</td>
+      <td>0.5644</td>
+      <td>baklava/3877397.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>2918</th>
+      <td>2918</td>
+      <td>512</td>
+      <td>512</td>
+      <td>0</td>
+      <td>47.2227</td>
+      <td>138.1602</td>
+      <td>0.0</td>
+      <td>255.0</td>
+      <td>24.5464</td>
+      <td>22279</td>
+      <td>1.0000</td>
+      <td>baklava/683225.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>6924</th>
+      <td>6924</td>
+      <td>384</td>
+      <td>512</td>
+      <td>0</td>
+      <td>45.9959</td>
+      <td>75.9253</td>
+      <td>0.0</td>
+      <td>176.0</td>
+      <td>23.9812</td>
+      <td>19018</td>
+      <td>1.0000</td>
+      <td>beignets/726875.jpg</td>
+      <td>VALID</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+
+Get list of blurry images
+
+```python
+list_of_blurry_images = blurry_images['img_filename'].to_list()
+list_of_blurry_images
+```
+
+Outputs:
+
+```
+['baklava/1413667.jpg',
+ 'baklava/3681797.jpg',
+ 'baklava/3877397.jpg',
+ 'baklava/683225.jpg',
+ 'beignets/726875.jpg',
+ 'bread_pudding/444890.jpg',
+ 'breakfast_burrito/462294.jpg',
+ 'carrot_cake/345630.jpg',
+ 'chocolate_mousse/1653769.jpg',
+ 'clam_chowder/1472641.jpg',
+ 'clam_chowder/2250407.jpg',
+ 'clam_chowder/908590.jpg',
+ 'dumplings/2174768.jpg']
+```
+
+# Summary
+
+In this tutorial we found 825 images with potential issues.
+
+```python
+print(f"Broken: {len(list_of_broken_images)}")
+print(f"Duplicates: {len(list_of_duplicates)}")
+print(f"Outliers: {len(list_of_outliers)}")
+print(f"Dark: {len(list_of_dark_images)}")
+print(f"Bright: {len(list_of_bright_images)}")
+print(f"Blurry: {len(list_of_blurry_images)}")
+
+problem_images = list_of_duplicates + list_of_broken_images + list_of_outliers + list_of_dark_images + list_of_bright_images + list_of_blurry_images
+
+print(f"Total unique images: {len(set(problem_images))}")
+```
+
+Outputs:
+
+```
+Broken: 0
+Duplicates: 610
+Outliers: 111
+Dark: 2
+Bright: 93
+Blurry: 13
+Total unique images: 825
+```
+
+In this tutorial, we've seen how to use fastdup to analyze an image dataset for potential problems such as broken image, duplicate, outliers and dark/bright/blurry image. 
+
+For each problem we got a list of file names for further action. Depending on use cases, you might choose to delete the image, relabel them or simply move the image elsewhere.
+
+> 👍 TLDR
+> 
+> In this tutorial we learned how to:
+> 
+> - Find various dataset issues with fastdup.
+> - Collect problematic images for further action.
+
+[block:html]
+{
+  "html": "<center> \n    <a href=\"https://www.visual-layer.com\" target=\"_blank\" rel=\"noopener noreferrer\">\n    <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo_dark_mode.png\" width=200>\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    <img alt=\"vl logo.\" src=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    </picture>\n    </a><br><br>\n    <a href=\"https://github.com/visual-layer/fastdup\" target=\"_blank\" style=\"text-decoration: none;\"> GitHub </a> •\n    <a href=\"https://visual-layer.slack.com/\" target=\"_blank\" style=\"text-decoration: none;\"> Join Slack Community </a> •\n    <a href=\"https://visual-layer.readme.io/discuss\" target=\"_blank\" style=\"text-decoration: none;\"> Discussion Forum </a>\n</center>\n\n<center> \n    <a href=\"https://medium.com/visual-layer\" target=\"_blank\" style=\"text-decoration: none;\"> Blog </a> •\n    <a href=\"https://visual-layer.readme.io/\" target=\"_blank\" style=\"text-decoration: none;\"> Documentation </a> •\n    <a href=\"https://visual-layer.com/about\" target=\"_blank\" style=\"text-decoration: none;\"> About Us </a> \n</center>\n\n<center> \n    <a href=\"https://www.linkedin.com/company/visual-layer/\" target=\"_blank\" style=\"text-decoration: none;\"> LinkedIn </a> •\n    <a href=\"https://twitter.com/visual_layer\" target=\"_blank\" style=\"text-decoration: none;\"> Twitter </a>\n</center>"
+}
+[/block]
