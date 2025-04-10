@@ -1,0 +1,33 @@
+---
+title: Retrieve Dataset Status
+description: Use this endpoint to check the processing status and metadata for a specific dataset in Visual Layer.
+---
+
+<Card title="How This Helps" icon="circle">
+  This API call allows you to programmatically check the current status of a dataset—including readiness, progress, and metadata—using its unique `dataset_id`.
+</Card>
+
+---
+
+## API Request
+
+To retrieve the status of a dataset, send a `GET` request to the following endpoint:
+
+```http
+GET /api/v1/dataset/{dataset_id}
+Headers: Authorization: Bearer <jwt>
+```
+
+---
+
+## Example Request
+
+```bash
+curl -H "Authorization: Bearer <jwt>" https://app.visual-layer.com/api/v1/dataset/{dataset_id}
+```
+
+<Tip>
+Use this endpoint to track dataset readiness before continuing with enrichment, filtering, or export operations.
+</Tip>
+
+📌 For detailed reference, visit the [Dataset Status API](https://app.visual-layer.com/api/v1/docs#/datasets/get_dataset_api_v1_dataset__dataset_id__get).

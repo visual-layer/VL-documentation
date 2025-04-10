@@ -1,0 +1,47 @@
+---
+title: Create a Dataset from a Public S3 Bucket
+description: Learn how to create a new dataset in Visual Layer using data from a public S3 bucket.
+---
+
+<Card title="How This Helps" icon="database">
+  Use this method to quickly create datasets from publicly hosted S3 buckets. Ideal for demos, testing, or ingesting open datasets without manual upload.
+</Card>
+
+---
+
+## Prerequisites
+
+This feature is **only supported in cloud-hosted environments**.
+
+---
+
+## Make the API Request
+
+To create a dataset using a public S3 bucket, send a `POST` request to the following endpoint:
+
+### Request
+
+```http
+POST /api/v1/dataset
+Headers: Authorization: Bearer <jwt>
+```
+
+### Required Form Parameters
+
+- `dataset_name`: *(string)* – The name of the dataset to create  
+- `bucket_name`: *(string)* – The name of the public S3 bucket containing your data  
+
+---
+
+## Example
+
+```bash
+curl -X POST -H "Authorization: Bearer <jwt>" \
+     -F dataset_name=api_test \
+     -F bucket_name=public_test_bucket \
+     https://app.visual-layer.com/api/v1/dataset
+```
+
+<Tip>
+The `dataset_id` returned in the response will be used for all future operations on that dataset.
+</Tip>

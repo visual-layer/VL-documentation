@@ -1,0 +1,159 @@
+---
+title: Exporting a Dataset via `curl`
+description: Learn how to export datasets from Visual Layer using shell commands—no SDK required.
+---
+
+<Card title="How This Helps" icon="cloud-arrow-down">
+Export datasets directly using `curl` without needing Python or SDKs. Ideal for automation scripts or CLI-based workflows.
+</Card>
+
+---
+
+## Initiate Export
+
+Use a `GET` request to trigger export:
+
+```bash
+curl -X GET "https://app.visual-layer.com/api/v1/dataset/<DATASET_ID>/export_context_async" \
+  -H "Accept: application/json, text/plain, */*" \
+  -G \
+  --data-urlencode "file_name=export.zip" \
+  --data-urlencode "export_format=json" \
+  --data-urlencode "include_images=false"
+```
+
+- `<DATASET_ID>`: Your dataset ID  
+- `export_format`: Supported values are `json` or `parquet`  
+- `include_images`: `true` or `false`  
+- `file_name`: Name for the output ZIP  
+
+### Sample Response
+
+```json
+{
+  "id": "fdb84834-d19b-4797-861a-d48b7a16f908"
+}
+```
+
+---
+
+## Poll Export Status
+
+Use the export `id` to monitor progress:
+
+```bash
+curl -X GET "https://app.visual-layer.com/api/v1/dataset/<DATASET_ID>/export_status?export_task_id=<TASK_ID>" \
+  -H "Accept: application/json, text/plain, */*"
+```
+
+Response includes a download URI once `"status": "COMPLETED"`.
+
+---
+
+## Download ZIP
+
+When ready, download your dataset:
+
+```bash
+curl -L "<DOWNLOAD_URI>" --output exported_dataset.zip
+```
+
+Use the `-L` flag to follow redirects (required for S3 links).
+
+---
+
+## Unzip and Explore
+
+Extract the ZIP archive:
+
+```bash
+unzip exported_dataset.zip -d exported_dataset
+```
+
+Example folder structure:
+
+```
+exported_dataset/
+├── metadata.parquet
+└── images/
+    ├── image1.jpg
+    ├── image2.jpg
+```
+
+---
+
+## Full Automation Script
+
+```bash
+#!/bin/bash
+
+DATASET_ID="your-dataset-id"
+FILENAME="export.zip"
+
+echo "Initiating export..."
+EXPORT_TASK_RESPONSE=$(curl -s -G "https://app.visual-layer.com/api/v1/dataset/$DATASET_ID/export_context_async" \
+  -H "Accept: application/json, text/plain, */*" \
+  --data-urlencode "file_name=$FILENAME" \
+  --data-urlencode "export_format=json" \
+  --data-urlencode "include_images=false")
+
+EXPORT_TASK_ID=$(echo $EXPORT_TASK_RESPONSE | grep -o '"id":"[^"]*' | cut -d':' -f2 | tr -d '"')
+
+echo "Export Task ID: $EXPORT_TASK_ID"
+
+echo "Waiting for export to complete..."
+STATUS="PENDING"
+while [ "$STATUS" != "COMPLETED" ]; do
+  STATUS_RESPONSE=$(curl -s "https://app.visual-layer.com/api/v1/dataset/$DATASET_ID/export_status?export_task_id=$EXPORT_TASK_ID" \
+    -H "Accept: application/json, text/plain, */*")
+  STATUS=$(echo $STATUS_RESPONSE | grep -o '"status":"[^"]*' | cut -d':' -f2 | tr -d '"')
+  echo "Status: $STATUS"
+  [ "$STATUS" = "FAILED" ] && echo "Export failed." && exit 1
+  [ "$STATUS" != "COMPLETED" ] && sleep 5
+done
+
+DOWNLOAD_URI=$(echo $STATUS_RESPONSE | grep -o '"download_uri":"[^"]*' | cut -d':' -f2- | sed 's/^"//' | sed 's/"$//' | sed 's/\\//g')
+echo "Downloading ZIP..."
+curl -L "$DOWNLOAD_URI" --output $FILENAME
+
+echo "Unzipping..."
+unzip $FILENAME -d exported_dataset
+
+echo "Done!"
+```
+
+---
+
+## Filter Exported Data by Uniqueness
+
+Use `pandas` to find the most unique images:
+
+```python
+import pandas as pd
+
+df = pd.read_parquet("exported_dataset/metadata.parquet")
+top_unique_images = df.sort_values(by="uniqueness_score", ascending=False).head(100)
+top_unique_images.to_csv("top_unique_images.csv", index=False)
+```
+
+---
+
+## Copy Filtered Images
+
+```python
+import os, shutil
+
+os.makedirs("top_unique_images", exist_ok=True)
+for fname in top_unique_images["image_filename"]:
+    shutil.copy(f"exported_dataset/images/{fname}", f"top_unique_images/{fname}")
+```
+
+---
+
+## Summary
+
+- Initiated export  
+- Polled export status  
+- Downloaded and unzipped archive  
+- Parsed metadata using `pandas`  
+- Used `uniqueness_score` for image filtering
