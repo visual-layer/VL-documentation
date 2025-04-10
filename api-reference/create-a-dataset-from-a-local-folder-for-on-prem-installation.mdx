@@ -1,0 +1,86 @@
+---
+title: Create a Dataset from a Local Folder for On-Prem Installations
+description: Use this API to trigger dataset creation from a local folder on self-hosted Visual Layer installations.
+---
+
+<Card title="How This Helps" icon="folder-open">
+  This method allows teams running Visual Layer on-prem to create datasets directly from local folders, bypassing manual upload or cloud storage.
+</Card>
+
+---
+
+## API Overview
+
+To create a dataset using a local folder, issue a request to the processing endpoint with the dataset name and path.
+
+### Endpoint Format
+
+```http
+http://[host]:2080/api/v1/process?path=[full data folder path]&name=[dataset name]
+```
+
+---
+
+## Parameters
+
+| Parameter | Description                                                           |
+| --------- | --------------------------------------------------------------------- |
+| `host`    | The server address where the Visual Layer API is hosted               |
+| `path`    | Full system path to the folder containing files for processing        |
+| `name`    | The desired name of the dataset                                       |
+
+---
+
+## Example Request
+
+Assume you want to process a dataset located at `/data/project/images` and name it `visual_analysis_01`.
+
+```http
+http://example.com:2080/api/v1/process?path=/data/project/images&name=visual_analysis_01
+```
+
+---
+
+## Example Response
+
+```json
+{
+  "status": "success",
+  "message": "Dataset processing started",
+  "dataset_id": "12345",
+  "name": "visual_analysis_01"
+}
+```
+
+---
+
+## Error Handling
+
+In case of a failure, the API returns a descriptive error response. Common issues include:
+
+- Invalid or non-existent `path`
+- Missing `path` or `name` parameters
+- Server unavailable or internal failure
+
+### Example Error Response
+
+```json
+{
+  "status": "error",
+  "message": "Invalid path specified"
+}
+```
+
+---
+
+## Notes & Considerations
+
+- Only **one dataset** can be processed at a time.
+- If another dataset is already being processed, the request will be rejected.
+- Make sure the server is up and the API port is accessible.
+- The folder path must contain valid files for enrichment and must be readable by the system.
+- Dataset names should be **unique** to prevent overwriting or collisions.
+
+<Tip>
+Contact your system admin or IT team if you encounter connection errors or permission issues during API usage.
+</Tip>

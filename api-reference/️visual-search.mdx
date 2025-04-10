@@ -1,0 +1,55 @@
+---
+title: Visual Search
+description: Learn how to search for visually similar media using an uploaded image as the query.
+---
+
+<Card title="How This Helps" icon="lightbulb">
+  Visual Search lets you upload an external image and use it to find similar content within your dataset. This helps surface lookalikes, variations, or duplicates based on visual similarity—not just metadata.
+</Card>
+
+---
+
+## Step 1: Upload an Image for Search
+
+To begin, upload the query image using this endpoint:
+
+```http
+POST /api/v1/dataset/{dataset-id}/search-image-similarity?entity_type=IMAGES&bounding_box=X,Y,WIDTH,HEIGHT
+Headers: Authorization: Bearer <jwt>
+```
+
+### Request Parameters
+
+- `file`: The image file to use for similarity search  
+- `bounding_box` (optional): X, Y, Width, Height (if you're targeting a region)
+
+---
+
+## Step 2: Explore Similar Images
+
+Once your query is uploaded and processed, use the returned `anchor_media_id` to explore visually similar results:
+
+```http
+GET /api/v1/explore/{dataset-id}?threshold=0&anchor_type={anchor_type}&entity_type={ENTITY_TYPE}&page_number={PAGE_NUMBER}&anchor_media_id={anchor_media_id}
+Headers: Authorization: Bearer <jwt>
+```
+
+### Parameters
+
+- `ENTITY_TYPE`: `IMAGES` or `OBJECTS`  
+- `anchor_media_id`: Retrieved from the upload response  
+- `anchor_type`: Type returned with the media ID  
+- `PAGE_NUMBER`: Which page of results to view (e.g., `0` for start)
+
+---
+
+### Example
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  https://app.visual-layer.com/api/v1/explore/{dataset-id}?threshold=0&entity_type=IMAGES&page_number=0&anchor_media_id={anchor_media_id}
+```
+
+**Response:** Returns a list of Visual Layer image clusters that are visually similar to the uploaded image.
+
+> For a full working example, check out this [API notebook](https://github.com/visual-layer/documentation/blob/main/notebooks/Image%20search%20via%20api/Visual%20Layer%20api%20example.ipynb).

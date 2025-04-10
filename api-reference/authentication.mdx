@@ -1,0 +1,91 @@
+---
+title: Authentication – Cloud Only
+description: Learn how to retrieve API credentials and generate JWT tokens for authenticated API access in Visual Layer Cloud.
+---
+
+<Card title="How This Helps" icon="key">
+  Secure API access is essential for integrating Visual Layer with your pipelines or external tools. This guide shows how to retrieve your API credentials and use them to generate a JWT for authenticated requests.
+</Card>
+
+---
+
+## Step 1: Get Your API Key and Secret
+
+To obtain your API key and secret:
+
+<Steps>
+
+<Step title="Log in to Visual Layer">
+Go to [https://app.visual-layer.com](https://app.visual-layer.com) and sign in with your user account.
+</Step>
+
+<Step title="Visit the API Credentials Page">
+Navigate to [https://app.visual-layer.com/api/v1/api_credentials](https://app.visual-layer.com/api/v1/api_credentials) while logged in.
+</Step>
+
+</Steps>
+
+> You must be authenticated in the browser for this to work. The request depends on your active browser session.
+
+### Request
+
+```http
+GET /api/v1/api_credentials
+Cookies: SESSION=<session from authenticated user browser session>
+```
+
+### Example Response
+
+```json
+{
+  "api_key": "<api_key>",
+  "api_secret": "<api_secret>",
+  "message": "API key created. Write down the secret – it's only shown once!"
+}
+```
+
+You can also run this using `curl`:
+
+```bash
+curl -b SESSION=<session from authenticated user browser session> https://app.visual-layer.com/api/v1/api_credentials
+```
+
+---
+
+## Step 2: Generate JWT Token for Authentication
+
+Use your API key and secret to generate a JWT token, which is required for authenticated API requests.
+
+<Card title="JWT Token Authentication">
+JWTs should be passed via the `Authorization` header on every request. They are short-lived and must be regenerated regularly.
+</Card>
+
+### Example Python Code
+
+```python
+import jwt
+from datetime import datetime, timezone, timedelta
+
+def generate_jwt(api_key: str, api_secret: str):
+    jwt_algorithm = "HS256"
+    jwt_header = {
+        'alg': jwt_algorithm,
+        'typ': 'JWT',
+        'kid': api_key,
+    }
+    payload = {
+        'sub': api_key,
+        'iat': datetime.now(tz=timezone.utc),
+        'exp': datetime.now(tz=timezone.utc) + timedelta(minutes=10),
+        'iss': 'sdk'
+    }
+    return jwt.encode(payload=payload, key=api_secret, algorithm=jwt_algorithm, headers=jwt_header)
+```
+
+<Tip>
+JWT tokens expire quickly by design. For best security and performance, regenerate tokens every 10 minutes.
+</Tip>
+
+---
+
+

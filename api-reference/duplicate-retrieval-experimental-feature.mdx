@@ -1,0 +1,59 @@
+---
+title: Duplicate Retrieval
+description: Learn how to retrieve visually duplicate media items from a dataset using the API.
+---
+
+<Card title="How This Helps" icon="copy">
+  Identify duplicate media in your dataset using internal media IDs. This helps streamline cleanup, reduce redundancy, and improve data quality before training or export.
+</Card>
+
+---
+
+## Step 1: Retrieve Internal Media ID
+
+To begin, retrieve the internal media ID for a file based on its `original_media_uri`.
+
+```http
+GET /api/v1/dataset/{dataset_id}/search_media_metadata/id?original_media_uri={url_encoded_original_media_uri}
+Headers: Authorization: Bearer <jwt>
+```
+
+### Example
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+     "https://app.visual-layer.com/api/v1/dataset/{dataset_id}/media/id?original_media_uri={url_encoded_original_media_uri}"
+```
+
+**Response:**
+
+- ✅ `200 OK`: Returns the internal media ID as text
+- ❌ `404`: Media not found in the dataset
+
+---
+
+## Step 2: Retrieve Duplicates Using Media ID
+
+Once you have the media ID, use this endpoint to find duplicates:
+
+```http
+GET /api/v1/dataset/{dataset_id}/media/{media_id}/duplicates
+Headers: Authorization: Bearer <jwt>
+```
+
+### Example
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+     https://app.visual-layer.com/api/v1/dataset/{dataset_id}/media/{media_id}/duplicates
+```
+
+**Response:**
+
+Returns a JSON array containing `0` or more duplicate media IDs.
+
+---
+
+<Tip>
+This feature is currently under development and subject to change.
+</Tip>
