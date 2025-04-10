@@ -1,112 +1,145 @@
 ---
-title: "Enrich Dataset"
-slug: "dataset-enrichment-flow-copy"
-excerpt: "Select models to enrich your dataset and"
-hidden: true
-createdAt: "Tue Mar 11 2025 16:56:24 GMT+0000 (Coordinated Universal Time)"
-updatedAt: "Mon Mar 24 2025 15:53:14 GMT+0000 (Coordinated Universal Time)"
+title: Enrich Dataset
+description: Select AI models to enrich your dataset with labels, captions, and metadata using Visual Layer's enrichment flow.
 ---
 
-# Overview
+## Overview
 
-Enriching your dataset is a 2-step flow:
+Dataset enrichment in Visual Layer is a two-step process:
 
-1. Select Models  
-2. Enrich Dataset  
+1. Select one or more enrichment models  
+2. Run enrichment to generate new metadata for your dataset
 
----
-
-## **Pre-requisites**
-
-### Verify dataset is in the READY state:
-
-1. Navigate to the dataset view and confirm that the dataset status is "READY". Alternatively, go to the dataset inventory, locate your dataset and verify its status.
-
-<img 
-  src="https://files.readme.io/de5b8b7c8562091dcd9e4cce6a8903ebad9edde19b088b9892ea3bce948ed865-image.png" 
-  alt="Dataset View: Verify dataset is in READY state." 
-  style={{ display: "block", margin: "0 auto", border: "1px solid #ccc" }} 
-/>
-
-<img 
-  src="https://files.readme.io/e303b7e0ef2f635b8d9706836f7f4ec8d20d898f9fea63dc4d99bc899110594a-image.png" 
-  alt="Dataset Inventory: Verify dataset is in READY state." 
-  style={{ display: "block", margin: "0 auto", border: "1px solid #ccc", width: "30%" }} 
-/>
+This process adds structured metadata (e.g., labels, captions) to help improve dataset quality, enable better filtering, and power downstream automation.
 
 ---
 
-### On-premise deployment
+## Prerequisites
 
-- For pre-requisites for on-premise deployment please contact [support@visual-layer.com](mailto:support@visual-layer.com)
+<Steps>
 
-## Model Selection
+<Step title="Verify Dataset is Ready">
+Navigate to the dataset view and confirm the status is **READY**.  
+Alternatively, check the dataset status from the Dataset Inventory.
 
-1. Navigate to Enrich tab, select a model and click on "Generate Models Preview" button.
+<Frame>
+  <img src="https://files.readme.io/de5b8b7c8562091dcd9e4cce6a8903ebad9edde19b088b9892ea3bce948ed865-image.png" alt="Dataset View: Verify READY state" />
+</Frame>
 
-<img 
-  src="https://files.readme.io/48d302b7b8975a547fc20895f2261373080d920b4f2f0ce32c3daebb0148bbd0-image.png" 
-  alt="Enrich: Select Model to generate preview" 
-  style={{ display: "block", margin: "0 auto", border: "1px solid #ccc" }} 
-/>
+<Frame>
+  <img src="https://files.readme.io/e303b7e0ef2f635b8d9706836f7f4ec8d20d898f9fea63dc4d99bc899110594a-image.png" alt="Dataset Inventory: READY status" />
+</Frame>
+</Step>
 
-2. Add additional models by clicking on Add Models (optional) 
+<Step title="Check On-Prem Requirements">
+If you're running Visual Layer in an on-premise environment, reach out to [support@visual-layer.com](mailto:support@visual-layer.com) for setup and deployment guidance.
+</Step>
 
-<img 
-  src="https://files.readme.io/4af51591dd776faa73acd1bd869415127750bc4afa8b5e991d62365609a7b58a-image.png" 
-  alt="Enrich: Add Additional Models for Preview" 
-  style={{ display: "block", margin: "0 auto", border: "1px solid #ccc" }} 
-/>
-
-2. Navigate between models to review the model output before enriching the entire dataset. 
-
-<img 
-  src="https://files.readme.io/935f0fd46f8a22191a17bdee3c294b4abc67ed9a0f057669633e759ae2e7734f-image.png" 
-  alt="Enrich: Click on Model Name for view Model Run Preview" 
-  style={{ display: "block", margin: "0 auto", border: "1px solid #ccc" }} 
-/>
-
-2. To initiate the model run, click on "Enrich Dataset".  
-   1. All the images/frames in the dataset will be enriched by the models listed in the Models section.  
-   2. This operation may take some time, depending on the size of the dataset.  
-
-3. Track enrichment progress  
-   1. You can track progress by navigating to the Enrich tab in the dataset view. Alternatively you can track progress by navigating to the Dataset Inventory view - Notifications.  
-   2. Notification will be displayed once process completes.  
-   3. Note: User can explore their dataset throughout the enrichment process.  
-
-<img 
-  src="https://files.readme.io/99f5ed83ecaa06d4131a434a34188d5fdc5121a0097e87d75910e3a5d4c797ec-image.png" 
-  alt="Enrich: Track Enrichment progress - Dataset view - Enrich Tab" 
-  style={{ display: "block", margin: "0 auto", border: "1px solid #ccc" }} 
-/>
-
-<img 
-  src="https://files.readme.io/d30ad5ed33f77fa4aba768ef5ca9e53af5a31aa3b35323c0a426cbd42f618b9b-image.png" 
-  alt="Enrich: Track Enrichment progress - Dataset Inventory view - Notification" 
-  style={{ display: "block", margin: "0 auto", border: "1px solid #ccc", width: "444px" }} 
-/>
+</Steps>
 
 ---
 
-4. Explore Enriched Dataset  
+## Step 1: Select Models
 
-   1. Select Exploration View - Images (default) or Objects.  
-      1. Expand the VL Enrichment section in the right pane to view the metadata added to the dataset.
+<Steps>
 
-<img 
-  src="https://files.readme.io/2a5ab60bf055a614b7e94fdfb7ed99bb9d321ce3437efcc32873266137c1b79e-image.png" 
-  alt="Explore Enriched Dataset: VL enrichment Section in right-pane" 
-  style={{ display: "block", margin: "0 auto", border: "1px solid #ccc" }} 
-/>
+<Step title="Open the Enrich Tab">
+Go to your dataset and click the **Enrich** tab.
+</Step>
 
-   1. Select metadata type to display on cluster card:  
-      1. Labels  
-      2. Captions  
-      3. User Tags (not generated by models but by Users. See [User Tags section](https://docs.visual-layer.com/docs/data-selection-using-visual-layer)).
+<Step title="Choose a Model">
+Select a model from the list and click **Generate Models Preview**.
 
-<img 
-  src="https://files.readme.io/22e16686a578134e328c39e422f16976c622fa79db711fde72766e9109c1d7aa-image.png" 
-  alt="Explore Enriched Dataset: Select Metadata Type to Display" 
-  style={{ display: "block", margin: "0 auto", border: "1px solid #ccc" }} 
-/>
+<Frame>
+  <img src="https://files.readme.io/48d302b7b8975a547fc20895f2261373080d920b4f2f0ce32c3daebb0148bbd0-image.png" alt="Select Model for Preview" />
+</Frame>
+</Step>
+
+<Step title="(Optional) Add More Models">
+Click **Add Models** to include additional enrichment models.
+
+<Frame>
+  <img src="https://files.readme.io/4af51591dd776faa73acd1bd869415127750bc4afa8b5e991d62365609a7b58a-image.png" alt="Add Additional Models" />
+</Frame>
+</Step>
+
+<Step title="Preview Model Outputs">
+Switch between selected models to preview their metadata output before enrichment.
+
+<Frame>
+  <img src="https://files.readme.io/935f0fd46f8a22191a17bdee3c294b4abc67ed9a0f057669633e759ae2e7734f-image.png" alt="View Model Preview" />
+</Frame>
+</Step>
+
+</Steps>
+
+---
+
+## Step 2: Enrich the Dataset
+
+<Steps>
+
+<Step title="Start Enrichment">
+Click **Enrich Dataset** to run all selected models on the dataset.
+
+- All images or frames will be enriched.
+- Processing time varies based on dataset size.
+</Step>
+
+<Step title="Track Progress">
+You can monitor enrichment status in either location:
+
+- **Enrich tab** inside the dataset view  
+- **Notifications panel** in the Dataset Inventory
+
+<Frame>
+  <img src="https://files.readme.io/99f5ed83ecaa06d4131a434a34188d5fdc5121a0097e87d75910e3a5d4c797ec-image.png" alt="Track Progress – Enrich Tab" />
+</Frame>
+
+<Frame>
+  <img src="https://files.readme.io/d30ad5ed33f77fa4aba768ef5ca9e53af5a31aa3b35323c0a426cbd42f618b9b-image.png" alt="Track Progress – Notifications" />
+</Frame>
+
+<Tip>
+You can continue exploring and interacting with your dataset while enrichment is in progress.
+</Tip>
+
+</Step>
+
+</Steps>
+
+---
+
+## Explore the Enriched Dataset
+
+<Steps>
+
+<Step title="Choose Exploration View">
+Open your dataset and select either:
+
+- **Images view** (default)  
+- **Objects view**
+</Step>
+
+<Step title="Review Enrichment Metadata">
+Expand the **VL Enrichment** section in the right panel to view model-generated metadata.
+
+<Frame>
+  <img src="https://files.readme.io/2a5ab60bf055a614b7e94fdfb7ed99bb9d321ce3437efcc32873266137c1b79e-image.png" alt="Enrichment Panel in Right Pane" />
+</Frame>
+</Step>
+
+<Step title="Customize Cluster Card View">
+Choose which metadata to display directly on cluster cards:
+
+- **Labels**
+- **Captions**
+- **User Tags** (manually created by users — see [User Tags doc](/docs/data-selection-using-visual-layer))
+
+<Frame>
+  <img src="https://files.readme.io/22e16686a578134e328c39e422f16976c622fa79db711fde72766e9109c1d7aa-image.png" alt="Select Metadata Type" />
+</Frame>
+
+</Step>
+
+</Steps>

@@ -1,59 +1,72 @@
 ---
-title: "Explore Model Catalog"
-excerpt: ""
-hidden: true
-createdAt: "Tue Mar 11 2025 16:57:51 GMT+0000 (Coordinated Universal Time)"
-updatedAt: "Wed Apr 09 2025 07:20:47 GMT+0000 (Coordinated Universal Time)"
+title: Explore Model Catalog
+description: Browse all available enrichment models in Visual Layer's catalog and learn how each can enhance your dataset.
 ---
-With Visual Layer’s data enrichment hub, you can enhance your data by generating metadata using advanced, cutting-edge models. This will enable you to:
 
-- Gain deeper insights and unlock more value from your data.
-- Easily search, filter, and segment your visual data based on the newly generated metadata.
-- Effortlessly curate and organize your data.
+## Overview
 
-# Model Catalog
+Visual Layer’s Enrichment Hub lets you generate high-value metadata using pre-trained models tailored for image and video datasets. These enrichment models can:
 
-Enhance your dataset with a diverse set of enrichment models, tailored to extract deeper insights:
+- Extract descriptive labels, captions, and tags  
+- Enable advanced semantic and object-level search  
+- Power downstream filtering, QA, and automation  
+- Improve annotation coverage and data understanding  
 
-|           Model Name          |          Task Type         |                                               Description                                              |
-| :---------------------------: | :------------------------: | :----------------------------------------------------------------------------------------------------: |
-|     **VL-Object-Detector**    |      Object Detection      | Identifies and locates objects within images or videos by drawing bounding boxes and classifying them. |
-|      **VL-Image-Tagger**      | Multi-Class Classification |    Assigns labels or tags to an entire image, categorizing content for identification and analysis.    |
-|    **VL-Object-Captioner**    |       Object to Text       |                        Generates descriptive text summarizing detected objects.                        |
-|     **VL-Image-Captioner**    |        Image to Text       |           Generates descriptive text summarizing the content and context of an entire image.           |
-|  **VL-Image-Semantic Search** |    Semantic Image Search   |      Allows image search with conceptual queries, identifying content that matches search intent.      |
-| **VL-Object-Semantic Search** |   Semantic Object Search   |            Finds objects in images/videos based on meaning and context, beyond simple tags.            |
-|       **NVILA-Lite-2B**       |  Image-Text-to-Text (VQA)  |           Optimized for efficiency and accuracy in video understanding and multi-image tasks.          |
-|        **Janus-Pro-1B**       |  Image-Text-to-Text (VQA)  |               Autoregressive framework for multimodal understanding and text generation.               |
+You can apply one or more models during the [enrichment process](/docs/enrich-dataset), depending on the type of insights you want to generate.
 
-> **Note: Object/Image Captioner **and **Object/Image Semantic Search** require labels before enrichment—whether they come from user annotations, the Object Detector model, or the Image Tagger model.
+---
 
-***
+## Available Enrichment Models
 
-## Coming Soon Models
+Visual Layer provides a wide range of built-in models designed for diverse enrichment tasks:
 
-The following models are currently in development and will be available soon in the enrichment catalog:
+<div className="integrations-table">
 
-**GPT-4o** – Multimodal LLM for advanced captioning and reasoning
+| Model Name | Task Type | Description |
+|------------|-----------|-------------|
+| **VL-Object-Detector** | Object Detection | Identifies and localizes objects with bounding boxes and class labels. |
+| **VL-Image-Tagger** | Multi-Class Classification | Applies multiple labels to the entire image for categorization and metadata generation. |
+| **VL-Object-Captioner** | Object to Text | Generates short captions describing individual objects in context. |
+| **VL-Image-Captioner** | Image to Text | Summarizes the scene or image with natural language. |
+| **VL-Image-Semantic Search** | Semantic Image Search | Enables conceptual search over images using natural language queries. |
+| **VL-Object-Semantic Search** | Semantic Object Search | Enables contextual search for specific objects based on semantics. |
+| **NVILA-Lite-2B** | Image-Text-to-Text (VQA) | Efficient VQA model for visual understanding tasks across multiple frames or images. |
+| **Janus-Pro-1B** | Image-Text-to-Text (VQA) | Autoregressive model for multi-modal reasoning and question answering. |
 
-**Nv-grounding dino** – Grounded object detection with natural language queries
+</div>
 
-**Neva-22b** – High-performance image-to-text transformer
+<Card title="Important">
+Some models require pre-existing labels before enrichment.  
+This includes:
 
-**Nvclip** – Vision-language model for fast and efficient embeddings
+- **Object/Image Captioners**
+- **Semantic Search (Object or Image)**
 
-**Qwen-VL-2B** – Vision-language model for captioning and answering questions
+Labels may come from user annotations, the **Object Detector**, or the **Image Tagger** model.
+</Card>
 
-**Moondream2** – Lightweight vision-language understanding
+---
 
-**Molmo-7B **– Multimodal model for contextual enrichment
+## Coming Soon
 
-**Advanced-Image-Search** – Conceptual and semantic image retrieval
+These models are in development and will be available soon in the enrichment catalog:
 
-**Advanced-Object-Search** – Enhanced object-level semantic search
+- **GPT-4o** – Multimodal LLM for advanced captioning and reasoning  
+- **Nv-grounding dino** – Grounded object detection with natural language prompts  
+- **Neva-22B** – High-performance image-to-text transformer  
+- **Nvclip** – Lightweight vision-language model for fast embeddings  
+- **Qwen-VL-2B** – VQA and captioning model for diverse use cases  
+- **Moondream2** – Compact vision-language model  
+- **Molmo-7B** – Multimodal model for contextual enrichment  
+- **Advanced-Image-Search** – Conceptual image retrieval using complex queries  
+- **Advanced-Object-Search** – Enhanced semantic object retrieval  
+- **VL-Object-Tagger** – Assigns tags at the object level across frames or images  
 
-**VL-Object-Tagger** – Model to assign multiple tags at the object level
+---
 
-<br />
+## Want Early Access?
 
-> **Have questions or want early access? [Contact us](<>) for more information.**
+<Card title="Get in Touch">
+Have questions or want to try out upcoming models early?  
+[Contact us](mailto:support@visual-layer.com) to request access or learn more.
+</Card>

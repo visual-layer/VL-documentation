@@ -1,21 +1,57 @@
 ---
-title: "Analyze Enriched Dataset"
-excerpt: ""
-hidden: true
-createdAt: "Mon Mar 17 2025 08:52:38 GMT+0000 (Coordinated Universal Time)"
-updatedAt: "Wed Apr 09 2025 07:31:25 GMT+0000 (Coordinated Universal Time)"
+title: Analyze Enriched Dataset
+description: Learn how to explore, search, and export your enriched metadata using Visual Layer tools.
 ---
-Once your dataset has been enriched with metadata using Visual Layer’s AI models, you can begin to analyze, query, and act on that metadata to uncover valuable insights. This section outlines how to make the most of your enriched data.
 
-## What You Can Do Next
+## Overview
 
-Use the following tools and views to explore and analyze the metadata:
+Once your dataset has been enriched using Visual Layer’s AI models, you can begin analyzing the generated metadata to surface patterns, identify issues, and prepare the dataset for export, training, or delivery.
 
-1. **[Search with Semantic Models:](https://dash.readme.com/project/visual-layer2/v1.0/docs/semantic-search)**  
-   Use semantic search to find images or objects based on concepts.
-2. **[Filter by Issues:](https://dash.readme.com/project/visual-layer2/v1.0/docs/overview-1)**  
-   Automatically identify problems like mislabels, duplicates, and outliers—and fix them quickly.
-3. **[Use Captions & Tags](https://dash.readme.com/project/visual-layer2/v1.0/docs/textually-searching-for-data-copy)**  
-   Review and filter based on model-generated captions, tags, or label descriptions.
-4. **[Export Enriched Data](https://dash.readme.com/project/visual-layer2/v1.0/docs/export-dataset)**  
-   Export enriched metadata in JSON format, with options for filtered subsets or the full dataset.
+Use the tools below to take full advantage of your enriched data.
+
+---
+
+<CardGroup cols={2}>
+
+<Card title="Search with Semantic Models">
+Use [Semantic Search](/docs/semantic-search) to explore your dataset using **natural language queries**.
+
+Common use cases:
+- Search for visual concepts (e.g., “sunset over forest”)
+- Find fine-grained differences across scenes
+- Match by meaning, not just tags
+</Card>
+
+<Card title="Filter by Issues">
+Detect and isolate problematic data using Visual Layer’s automated filters:
+
+- [Mislabels](/docs/mislabels)
+- [Duplicates](/docs/duplicates)
+- [Outliers](/docs/outliers)
+- [Unlabeled Items](/docs/unlabelled)
+
+These tools help you clean your dataset quickly and improve downstream performance.
+</Card>
+
+<Card title="Use Captions & Tags">
+Explore model-generated metadata such as:
+
+- **Captions** for entire images
+- **Tags** and labels for quick filtering
+- **Descriptions** of objects or scenes
+
+Use [Caption Search](/docs/caption-search) or [User Tags](/docs/data-selection-using-visual-layer) to filter and organize your enriched data more effectively.
+</Card>
+
+<Card title="Export Enriched Data">
+Use the [Export tool](/docs/export-dataset) to download either the full dataset or a filtered subset.
+
+Included in the export:
+- Model-generated labels
+- Captions and tags
+- Object metadata and annotations
+
+All exported data is formatted in clean, structured JSON.
+</Card>
+
+</CardGroup>
