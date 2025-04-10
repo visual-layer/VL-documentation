@@ -5,25 +5,24 @@ hidden: false
 createdAt: "Wed Feb 22 2023 16:11:24 GMT+0000 (Coordinated Universal Time)"
 updatedAt: "Fri Nov 29 2024 13:43:22 GMT+0000 (Coordinated Universal Time)"
 ---
+
 # Setting Up
 
 You can follow along this tutorial by running [this notebook on Google Colab](https://colab.research.google.com/github/visual-layer/fastdup/blob/main/examples/cleaning-image-dataset.ipynb).
 
-> 🚧 Google Colab free tier
-> 
+> 🚧 **Google Colab Free Tier** 
 > Running this tutorial on Google Colab is possible but may take a while to complete due to the low computing resources provided in the free tier. 
-> 
-> We recommend running this tutorial on your local machine, [Google Colab Pro](https://colab.research.google.com/signup) or equivalent.
+> We recommend running this tutorial on your local machine, [Google Colab Pro](https://colab.research.google.com/signup), or equivalent.
 
 If you're running this tutorial on your local machine, install fastdup with:
 
-```Text bash
+```bash
 pip install fastdup
 ```
 
 To verify the installation, run:
 
-```Text Python
+```python
 import fastdup
 fastdup.__version__
 ```
@@ -32,32 +31,36 @@ This tutorial runs on version `0.906`.
 
 For a detailed list of installation options and supported platforms, see our [installation guide](https://visual-layer.readme.io/docs/installation).
 
+---
+
 # Download Dataset
 
 For the purpose of demonstration, we will be using the [food-101](https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/) dataset which consists of 101 food classes with 1,000 images per class.
 
 Download and extract the dataset by running:
 
-```shell
-!wget http://data.vision.ee.ethz.ch/cvl/food-101.tar.gz
-!tar xzf food-101.tar.gz
+```bash
+wget http://data.vision.ee.ethz.ch/cvl/food-101.tar.gz
+tar xzf food-101.tar.gz
 ```
 
-Once done, you should have a `food-101/images`folder which contains the images.
+Once done, you should have a `food-101/images` folder which contains the images.
 
 > 📘 Why this dataset?
 > 
 > We use the food-101 dataset in this tutorial because of the general availability of the dataset to the public.
 > 
-> Bear in mind this is a highly curated  and we may not find as many issues compared to a non-curated dataset.
+> Bear in mind this is a highly curated dataset, and we may not find as many issues compared to a non-curated dataset.
 > 
 > Feel free to swap out this dataset for your own!
+
+---
 
 # Run fastdup
 
 With the folder set in place, let's run fastdup:
 
-```python Python
+```python
 import fastdup  
 fd = fastdup.create(work_dir="fastdup_food101_work_dir/",
                     input_dir="food-101/images/")
@@ -68,17 +71,17 @@ fd.run(ccthreshold=0.9)
 > 
 > - `work_dir` - Path to store the artifacts generated from the run.
 > - `input_dir` - Path to the images.
-> - `ccthreshold` - The cluster threshold parameter. Controls the minimal distance for clustering. Defaults to `0.96`. Best value of `ccthreshold`varies depending on use case and data. 
->   - A **higher** threshold clusters images that are highly similar resulting in lesser images in a cluster.
+> - `ccthreshold` - The cluster threshold parameter. Controls the minimal distance for clustering. Defaults to `0.96`. Best value of `ccthreshold` varies depending on use case and data. 
+>   - A **higher** threshold clusters images that are highly similar resulting in fewer images in a cluster.
 >   - A **lower** threshold clusters less similar images together. Clusters have more diversity and a larger possible difference between images in the cluster.
 
 > 👍 Reduce run time on free tier of Google Colab
 > 
-> If you're running this tutorial on the free tier of Google Colab, we recommend to run the analysis on a subset of the dataset instead of the entire dataset. This is done to reduce the waiting time for the run to complete.
+> If you're running this tutorial on the free tier of Google Colab, we recommend running the analysis on a subset of the dataset instead of the entire dataset. This is done to reduce the waiting time for the run to complete.
 > 
-> You can specify the number of images to run on by specifying the `num_images` argument in `fd.run`. For example `fd.run(num_images=40000)`runs only on 40,000 images in the dataset.
+> You can specify the number of images to run on by specifying the `num_images` argument in `fd.run`. For example, `fd.run(num_images=40000)` runs only on 40,000 images in the dataset.
 
-Once the run completes you can get a summary of the run with:
+Once the run completes, you can get a summary of the run with:
 
 ```python
 fd.summary()
@@ -86,7 +89,7 @@ fd.summary()
 
 which outputs:
 
-```text
+```plaintext
 ########################################################################################
 
 Dataset Analysis Summary: 
@@ -113,7 +116,7 @@ Dataset Analysis Summary:
 
 # Broken Images
 
-Similar to the previous tutorial, let's start with low hanging fruit of finding corrupted images:
+Similar to the previous tutorial, let's start with low-hanging fruit of finding corrupted images:
 
 ```python
 fd.invalid_instances()
@@ -121,12 +124,11 @@ fd.invalid_instances()
 
 which outputs:
 
-[block:html]
-{
-  "html": "<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>img_filename</th>\n      <th>fastdup_id</th>\n      <th>error_code</th>\n      <th>is_valid</th>\n    </tr>\n  </thead>\n  <tbody>\n  </tbody>\n</table>"
-}
-[/block]
-
+| img_filename        | fastdup_id | error_code          | is_valid |
+|---------------------|------------|---------------------|----------|
+| Abyssinian_34.jpg   | 135        | ERROR_ZERO_SIZE_FILE| False    |
+| Egyptian_Mau_139.jpg| 2240       | ERROR_ZERO_SIZE_FILE| False    |
+| Egyptian_Mau_145.jpg| 2247       | ERROR_ZERO_SIZE_FILE| False    |
 
 > 📘 No broken images!
 > 
@@ -179,13 +181,15 @@ fd.vis.duplicates_gallery(num_images=5)
 
 which outputs:
 
-![](https://files.readme.io/ad4483c-_home_dnth_Downloads_duplicates.html.png)
+![Duplicate Image Pairs](https://files.readme.io/ad4483c-_home_dnth_Downloads_duplicates.html.png)
 
 > 👍 Tips
 > 
-> - Setting `num_images=5`shows a gallery of 5 duplicate pairs. Change this value to view more/less.
-> - Running `fd.vis.duplicates_gallery`also saves the resulting `duplicates.html` file into `fastdup_food101_work_dir/gallery/`.
+> - Setting `num_images=5` shows a gallery of 5 duplicate pairs. Change this value to view more/less.
+> - Running `fd.vis.duplicates_gallery` also saves the resulting `duplicates.html` file into `fastdup_food101_work_dir/gallery/`.
 > - Distance of `1.0` indicates that the image is an exact copy.
+
+---
 
 # Image Clusters
 
@@ -1032,7 +1036,7 @@ fd.vis.outliers_gallery(num_images=5)
 
 which outputs:
 
-![](https://files.readme.io/39d0fd1-_home_dnth_Downloads_outliers.html.png)
+![Outliers](https://files.readme.io/39d0fd1-_home_dnth_Downloads_outliers.html.png)
 
 > 👍 Tips
 > 
@@ -1753,7 +1757,7 @@ Total unique images: 825
 
 In this tutorial, we've seen how to use fastdup to analyze an image dataset for potential problems such as broken image, duplicate, outliers and dark/bright/blurry image. 
 
-For each problem we got a list of file names for further action. Depending on use cases, you might choose to delete the image, relabel them or simply move the image elsewhere.
+For each problem, we got a list of file names for further action. Depending on use cases, you might choose to delete the images, relabel them, or simply move the images elsewhere.
 
 > 👍 TLDR
 > 
@@ -1761,9 +1765,3 @@ For each problem we got a list of file names for further action. Depending on us
 > 
 > - Find various dataset issues with fastdup.
 > - Collect problematic images for further action.
-
-[block:html]
-{
-  "html": "<center> \n    <a href=\"https://www.visual-layer.com\" target=\"_blank\" rel=\"noopener noreferrer\">\n    <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo_dark_mode.png\" width=200>\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    <img alt=\"vl logo.\" src=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    </picture>\n    </a><br><br>\n    <a href=\"https://github.com/visual-layer/fastdup\" target=\"_blank\" style=\"text-decoration: none;\"> GitHub </a> •\n    <a href=\"https://visual-layer.slack.com/\" target=\"_blank\" style=\"text-decoration: none;\"> Join Slack Community </a> •\n    <a href=\"https://visual-layer.readme.io/discuss\" target=\"_blank\" style=\"text-decoration: none;\"> Discussion Forum </a>\n</center>\n\n<center> \n    <a href=\"https://medium.com/visual-layer\" target=\"_blank\" style=\"text-decoration: none;\"> Blog </a> •\n    <a href=\"https://visual-layer.readme.io/\" target=\"_blank\" style=\"text-decoration: none;\"> Documentation </a> •\n    <a href=\"https://visual-layer.com/about\" target=\"_blank\" style=\"text-decoration: none;\"> About Us </a> \n</center>\n\n<center> \n    <a href=\"https://www.linkedin.com/company/visual-layer/\" target=\"_blank\" style=\"text-decoration: none;\"> LinkedIn </a> •\n    <a href=\"https://twitter.com/visual_layer\" target=\"_blank\" style=\"text-decoration: none;\"> Twitter </a>\n</center>"
-}
-[/block]

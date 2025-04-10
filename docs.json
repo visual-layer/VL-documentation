@@ -25,14 +25,6 @@
                   "docs/getting-started/definitions-entities",
                   "docs/getting-started/understanding-clusters"
                 ]
-              },
-              {
-                "group": "Orientation",
-                "pages": [
-                  "docs/getting-started/orientation",
-                  "docs/getting-started/dataset-inventory",
-                  "docs/getting-started/view-panels"
-                ]
               }
             ]
           },
@@ -128,32 +120,32 @@
         "tab": "Workflows"
       },
       {
-        "tab": "API reference",
+        "tab": "API Reference",
         "groups": [
           {
             "group": "API Documentation",
             "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoint Examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "api-reference/authentication",
+              "api-reference/create-a-dataset-from-a-public-s3-bucket",
+              "api-reference/create-a-dataset-from-a-local-folder-for-on-prem-installation",
+              "api-reference/retrieve-dataset-status",
+              "api-reference/share-a-dataset-with-another-user",
+              "api-reference/duplicate-retrieval-experimental-feature",
+              "api-reference/️visual-search",
+              "api-reference/semantic-search",
+              "api-reference/caption-search",
+              "api-reference/exporting-a-dataset-via-curl-from-visual-layer"
             ]
           }
         ]
       }, 
       {
-        "tab": "Fastdup",
+        "tab": "fastdup",
         "groups": [
           {
             "group": "First Steps",
             "pages": [
-              "fastdup_docs_old/First Steps/quick-dataset-analysis-–-old",
+              "fastdup_docs_old/First Steps/getting-started",
               "fastdup_docs_old/First Steps/installation"
             ]
           },
@@ -166,7 +158,7 @@
             ]
           },
           {
-            "group": "Loading From Data Sources",
+            "group": "Loading from Data Sources",
             "pages": [
               "fastdup_docs_old/loading from data sources/roboflow-universe",
               "fastdup_docs_old/loading from data sources/kaggle",
@@ -178,8 +170,7 @@
             "pages": [
               "fastdup_docs_old/data enrichment/enrichment-zero-shot-classification",
               "fastdup_docs_old/data enrichment/enrichment-zero-shot-detection",
-              "fastdup_docs_old/data enrichment/enrichment-zero-shot-segmentation",
-              "fastdup_docs_old/data enrichment/enrichment-zero-shot"
+              "fastdup_docs_old/data enrichment/enrichment-zero-shot-segmentation"
             ]
           },
           {
@@ -202,11 +193,10 @@
               "fastdup_docs_old/Common Uses/visualizing-data",
               "fastdup_docs_old/Common Uses/outlier-detection-and-analysis",
               "fastdup_docs_old/Common Uses/file-list-s3-inputs",
-              "fastdup_docs_old/Common Uses/using-your-own-model",
-              "fastdup_docs_old/Common Uses/running-over-a-subset-or-a-file-list",
+              "fastdup_docs_old/Common Uses/running-in-aws-gcp",
+              "fastdup_docs_old/Common Uses/tuning-run-parameters",
               "fastdup_docs_old/Common Uses/using-labels-and-bounding-boxes",
-              "fastdup_docs_old/Common Uses/exporting-results",
-              "fastdup_docs_old/Common Uses/tuning-run-parameters"
+              "fastdup_docs_old/Common Uses/using-your-own-model"
             ]
           },
           {
@@ -220,13 +210,12 @@
           {
             "group": "About Us",
             "pages": [
-              "fastdup_docs_old/About Us/visual-layer",
-              "fastdup_docs_old/About Us/license"
+              "fastdup_docs_old/About Us/license",
+              "fastdup_docs_old/About Us/visual-layer"
             ]
           }
         ]
-      }
-      
+      }      
     ],
     "global": {
       "anchors": [
