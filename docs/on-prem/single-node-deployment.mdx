@@ -1,10 +1,10 @@
 ---
-title: "Single-node deployment"
+title: "Overview"
 description: ""
 ---
-# Minimal system requirements
+## Minimal system requirements
 
-## System configuration
+### System configuration
 
 - Operating System: Ubuntu LTS 20/22/24
 - X86 architecture
@@ -13,25 +13,25 @@ description: ""
 - CPU: 16 cores
 - Optional: GPU: Common Nvidia GPU types (Nvidia A10, A100, H100, RTX 4090, etc.)
 
-## Dependencies
+### Dependencies
 
 - Docker v.27 or above - follow [the official instructions](https://docs.docker.com/engine/install/ubuntu/) and [the post-install guide](https://docs.docker.com/engine/install/linux-postinstall/).
 - jq - json data parsing library
 - psql - postgres command line client
 - zip/unzip
 
-## Advised tools for troubleshooting/maintenance
+### Advised tools for troubleshooting/maintenance
 
 - vi - or equivalent required for file editing
 - object store CLIs if applicable (aws cli, mc)
 
-## Required permissions and access
+### Required permissions and access
 
 - Make sure you run the installation as a regular user (not a root user), with sudo privileges.
 
-# Setting Up the Environment
+## Setting Up the Environment
 
-## Log into Docker Image Repo
+### Log into Docker Image Repo
 
 To authenticate with Docker, run:
 
@@ -43,42 +43,42 @@ When prompted for a password, copy and paste the **Docker Hub access token** pro
 
 - If you do not have the token or it is incorrect, contact [support@visual-layer.com](mailto:support@visual-layer.com).
 
-## Run the installer
+### Run the installer
 
-### GPU Deployment (Full Enrichment Enabled)
+#### GPU Deployment (Full Enrichment Enabled)
 
 ```smarty Shell
-HARDWARE=gpu VL_VERSION="2.33.1-rc10" bash -c "$(curl -fsSL https://vl-public-bucket.s3.us-east-2.amazonaws.com/installer/new/install_helper.sh)"
+HARDWARE=gpu VL_VERSION="2.33.3-rc4" bash -c "$(curl -fsSL https://vl-public-bucket.s3.us-east-2.amazonaws.com/installer/new/install_helper.sh)"
 ```
 
-### CPU Deployment (No Enrichment)
+#### CPU Deployment (No Enrichment)
 
 ```shell
-HARDWARE=cpu VL_VERSION="2.33.1-rc10" bash -c "$(curl -fsSL https://vl-public-bucket.s3.us-east-2.amazonaws.com/installer/new/install_helper.sh)"
+HARDWARE=cpu VL_VERSION="2.33.3-rc4" bash -c "$(curl -fsSL https://vl-public-bucket.s3.us-east-2.amazonaws.com/installer/new/install_helper.sh)"
 ```
 
-# Operations
+## Operations
 
-## Connect to the Application
+### Connect to the Application
 
 Once the system is running, connect to the application using your browser:
 
 - **HTTP\**: `http://<server name>:2080`
 - **HTTPS\**: `https://<server name>:2443`
 
-## Start the System
+### Start the System
 
 ```sh
-./srart.sh
+./start.sh
 ```
 
-## Stop the System
+### Stop the System
 
 ```sh
 ./stop.sh
 ```
 
-## Creating Datasets
+### Creating Datasets
 
 ```sh
 ./run_profiler.sh -n "<desired dataset name>" -p "<dataset source dir>"
@@ -87,11 +87,11 @@ Once the system is running, connect to the application using your browser:
 - This process **can take several hours**, depending on data size.
 - If the dataset name includes spaces, use **quotation marks**(e.g., `"My Dataset"`).
 
-# Troubleshooting
+## Troubleshooting
 
-## Resolving Common Errors
+### Resolving Common Errors
 
-### Problem: Image Not Found
+#### Problem: Image Not Found
 
 ```sh
 docker: Error response from daemon: pull access denied for visuallayer/onprem-installer, repository does not exist or may require 'docker login'.
@@ -99,7 +99,7 @@ docker: Error response from daemon: pull access denied for visuallayer/onprem-in
 
  **Solution***Solution**: Ensure you are logged into Docker.
 
-### Problem: Docker Daemon Not Running
+#### Problem: Docker Daemon Not Running
 
 ```sh
 docker: Cannot connect to the Docker daemon at unix:///var/run/docker.sock.
@@ -107,7 +107,7 @@ docker: Cannot connect to the Docker daemon at unix:///var/run/docker.sock.
 
  **Solution***Solution**: Start the Docker daemon.
 
-### Problem: Image Pulling Fails
+#### Problem: Image Pulling Fails
 
 ```sh
 manifest for visuallayer/onprem-cd:2.25.6-rc6 not found: manifest unknown
@@ -115,7 +115,7 @@ manifest for visuallayer/onprem-cd:2.25.6-rc6 not found: manifest unknown
 
 **Solution **: Verify the** software version**and that you are logged into Docker with the correct user.
 
-### Problem: Platform Mismatch Warning
+#### Problem: Platform Mismatch Warning
 
 ```sh
 WARNING: The requested image's platform (linux/arm64) does not match the detected host platform (linux/amd64/v3).
@@ -123,7 +123,7 @@ WARNING: The requested image's platform (linux/arm64) does not match the detecte
 
 **Solution **: This is a** warning only**—can be ignored.
 
-### Problem: `docker compose` Not Found
+#### Problem: `docker compose` Not Found
 
 ```sh
 ./run_profiler.sh: line 159: docker compose: command not found
@@ -131,7 +131,7 @@ WARNING: The requested image's platform (linux/arm64) does not match the detecte
 
  **Solution***Solution**: Install or reinstall Docker following the official installation instructions.
 
-### Problem: PostgreSQL Operational Error
+#### Problem: PostgreSQL Operational Error
 
 ```sh
 sqlalchemy.exc.OperationalError: (psycopg.OperationalError) [Errno -3] Temporary failure in name resolution
@@ -141,9 +141,9 @@ sqlalchemy.exc.OperationalError: (psycopg.OperationalError) [Errno -3] Temporary
 
 ***
 
-# Accessing Logs & Support
+## Accessing Logs & Support
 
-### Debugging Run
+#### Debugging Run
 
 Use the following environment variables to enable debugging:
 

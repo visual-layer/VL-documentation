@@ -38,7 +38,7 @@
           {
             "group": "Integrations",
             "pages": [
-              "docs/Integrations/preparing-a-private-aws-s3-bucket",
+              "docs/Integrations/Amazon-s3",
               "docs/Integrations/cvat-coming-soon",
               "docs/Integrations/labelbox-coming-soon"
             ]
@@ -89,6 +89,7 @@
               {
                 "group": "Dataset quality",
                 "pages": [
+                  "docs/Exploring-datasets/dataset-quality",
                   "docs/Exploring-datasets/blurry-imagesobjects",
                   "docs/Exploring-datasets/dark-imagesobjects",
                   "docs/Exploring-datasets/bright-imagesobjects"
@@ -207,8 +208,7 @@
           {
             "group": "About Us",
             "pages": [
-              "fastdup_docs_old/About Us/license",
-              "fastdup_docs_old/About Us/visual-layer"
+              "fastdup_docs_old/About Us/license"
             ]
           }
         ]
@@ -216,11 +216,6 @@
     ],
     "global": {
       "anchors": [
-        {
-          "anchor": "Blog",
-          "href": "https://www.visual-layer.com/blog",
-          "icon": "newspaper"
-        }
       ]
     }
   },
@@ -230,14 +225,15 @@
   },
   "navbar": {
     "links": [
+
+      {
+        "type": "button",
+        "label": "VL-Blog",
+        "href": "https://www.visual-layer.com/blog"
+      },
       {
         "label": "Support",
         "href": "mailto:support@visual-layer.com"
-      },
-      {
-        "type": "button",
-        "label": "Get a Demo",
-        "href": "https://www.visual-layer.com/"
       }
     ],
     "primary": {

@@ -7,92 +7,100 @@ This glossary provides definitions and explanations for key terms and entities r
 
 ---
 
-### **Annotations**  
+### <span id="annotations">**Annotations** </span> 
 Descriptive metadata or markers added to images or objects, such as bounding boxes or class labels, to enhance dataset usability.
 
-### **Bounding Box**  
+### <span id="bounding-box">**Bounding Box** </span>  
 A shape annotation drawn around an object in an image to define its position and size for object detection tasks.
 
-### **Cluster**  
+### <span id="cluster">**Cluster** </span>  
 A set of data entities grouped by a common characteristic. Images are grouped by a sophisticated similarity algorithm.
 
-### **Cluster View**  
+### <span id="cluster-view">**Cluster View** </span>  
 A structured interface that visually presents groups of similar images, allowing users to explore related data efficiently.
 
-### **Dataset**  
+### <span id="dataset">**Dataset** </span>  
 A collection of visual data, such as images or videos, that users upload to Visual Layer for organization, exploration, and analysis.
 
-### **Dataset Analysis**  
-A process that tests images in a dataset for known issue types and groups them for easy visualization. Results may include issue instances and clusters.
+### <span id="dataset-analysis">**Dataset Analysis** </span>  
+A process in which the images in a given dataset are tested for possible issues from the known issue types and are grouped together for easy visualization. The result of the analysis is zero or more issues and zero or more Clusters.
 
-### **Dataset Exploration**  
+### <span id="dataset-exploration">**Dataset Exploration** </span>  
 The process of browsing, filtering, and searching through dataset contents, typically for data selection or inspection.
 
-### **Dataset Exploration View**  
+### <span id="dataset-exploration-view">**Dataset Exploration View** </span>
 The primary view for exploring and analyzing a dataset. It provides access to images, objects, clusters, metadata filters, and search tools.
 
-### **Dataset Inventory**  
+### <span id="dataset-inventory">**Dataset Inventory** </span> 
 An overview of all available datasets in your Visual Layer environment.
 
-### **Duplicates**  
+### <span id="duplicates">**Duplicates** </span>  
 Identical or near-identical images or videos within a dataset. Identifying and removing duplicates improves data quality and prevents redundancy.
 
-### **Enrichment**  
+### <span id="filtering">**Filtering** </span>  
+The process of reducing a set of items by applying conditions to metadata properties. Filters can be applied to the entire dataset, a cluster, or a similar images.
+
+### <span id="enrichment">**Enrichment** </span>  
 The process of adding metadata or attributes to dataset items to enhance their value. This includes annotations, tags, or external data sources.
 
-### **Filtering**  
-The process of reducing a set of items by applying conditions to metadata properties. Filters can be applied to datasets, clusters, or groups of similar images.
+### <span id="image">**Image** </span>  
+A visual file (e.g., PNG, JPG, GIF) representing an object or scene. It can be an artifact, such as a photograph or other two-dimensional picture, that resembles a subject.
 
-### **Image**  
-A visual file (e.g., PNG, JPG, GIF) representing an object or scene. In Visual Layer, images are the core unit of analysis and annotation.
-
-### **Image View**  
+### <span id="image-view">**Image View** </span>  
 Displays clusters of visually similar images across your dataset, enabling efficient visual browsing.
 
-### **Issue**  
+### <span id="issue">**Issue** </span>  
 A concrete instance of an issue type, typically linked to one or more images (e.g., train/test leakage, duplicates, or data drift).
 
-### **Issue Type**  
+### <span id="issue-type">**Issue Type** </span>  
 A predefined category of problem identified during dataset analysis. It generates issue instances based on specific patterns or anomalies.
 
-### **Metadata**  
+### <span id="metadata">**Metadata** </span>  
 Information associated with each visual item, such as filename, dimensions, timestamps, and user-defined tags. Crucial for organizing and filtering datasets.
 
-### **Mislabel**  
+### <span id="mislabel">**Mislabel** </span>  
 An incorrect or inconsistent label applied to a dataset item. Detecting and correcting mislabels ensures dataset accuracy.
 
-### **Object**  
+### <span id="object">**Object** </span>  
 A region of interest within an image, usually representing an instance of a specific class (e.g., a face, vehicle, or product).
 
-### **Object View**  
+### <span id="object-view">**Object View** </span>  
 Displays clusters of annotated or enriched objects grouped by visual similarity. This view focuses on object-level insights rather than whole images.
 
-### **Outliers**  
+### <span id="outliers">**Outliers** </span>  
 Data points that differ significantly from the rest of the dataset. Identifying outliers can improve data quality and uncover unique patterns.
 
-### **Saved Views**  
+### <span id="saved-views">**Saved View(s)** </span>  
 Custom configurations of filters and sorting applied to a dataset. Saved Views allow users to revisit specific subsets of data and share them with collaborators.
 
-### **Selected Item(s)**  
+### <span id="selected-items">**Selected Item(s)** </span>  
 The image, object, or cluster a user selects to view in detail or perform an action on.
 
-### **Semantic Search**  
+### <span id="semantic-search">**Semantic Search** </span>  
 A search technique based on meaning and context rather than exact keyword matches, enabling more intuitive dataset queries.
 
-### **Similarity Results**  
+### <span id="similarity-results">**Similarity Results** </span>  
 Images or clusters that are visually similar to a selected item (the "vertex").
 
-### **Similarity Search**  
+### <span id="similarity-search">**Similarity Search** </span>  
 The process of finding visually similar images or clusters for a given query item.
 
-### **Similarity Vertex**  
+### <span id="similarity-vertex">**Similarity Vertex** </span>  
 The reference item (image, object, or cluster) used as the starting point for similarity search.
 
-### **User Tags**  
+### <span id="user-tags">**User Tags** </span>  
 Custom labels applied by users to annotate or categorize dataset items. Tags support better organization, search, and collaboration.
 
-### **Video**  
+### <span id="video">**Video** </span>  
 A media file containing a sequence of moving images. Videos are treated as datasets and can be analyzed frame-by-frame.
 
-### **Video Frame**  
+### <span id="video-frame">**Video Frame** </span>  
 An individual still image extracted from a video sequence. Each frame can be analyzed or annotated independently.
+
+---
+{/* 
+Filter Menu  
+Query Modal  
+Query Tab  
+Query Panel
+*/}

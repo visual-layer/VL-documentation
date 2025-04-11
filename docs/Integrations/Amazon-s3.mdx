@@ -8,7 +8,7 @@ description: ""
 
 VisualLayer requires the following permissions on an S3 bucket to be able to access files in the bucket:
 
-- s3:GetBucket\*
+- s3:GetBucket
 - s3:GetObject
 - s3:GetObjectVersion
 - s3:ListBucket
@@ -19,13 +19,13 @@ The following step-by-step instructions describe how to configure access permiss
 
 1. Log into the AWS Management Console
 
-2. From the home dashboard, search for and select**IAM**
+2. From the home dashboard, search for and select **IAM**
 
-3. From the left-hand navigation pane, select**Account settings**
+3. From the left-hand navigation pane, select **Account settings**
 
-4. From the left-hand navigation pane, select**Policies**
+4. From the left-hand navigation pane, select **Policies**
 
-5. Select**Create Policy**
+5. Select **Create Policy**
 
 6. For **Policy editor**, select ** JSON**
 
@@ -63,9 +63,9 @@ The following step-by-step instructions describe how to configure access permiss
 
 To configure access permissions for VisualLayer in the AWS Management Console, do the following:
 
-1. From the left-hand navigation pane in the Identity and Access Management (IAM) Dashboard, select**Roles**
+1. From the left-hand navigation pane in the Identity and Access Management (IAM) Dashboard, select **Roles**
 
-2. Select**Create role**
+2. Select **Create role**
 
 3. Select **AWS account** as the trusted entity type
 
@@ -73,9 +73,9 @@ To configure access permissions for VisualLayer in the AWS Management Console, d
 
 5. Select the **Require external ID** option. An external ID is used to grant access to your AWS resources (such as S3 buckets) to a third party like VisualLayer. Enter a placeholder ID such as 0000
 
-6. In a later step, you will modify the trust relationship for your IAM role and specify the external ID for your storage integration and click**Next**
+6. In a later step, you will modify the trust relationship for your IAM role and specify the external ID for your storage integration and click **Next**
 
-7. Select the policy you created in Step 1 and click**Next**
+7. Select the policy you created in Step 1 and click **Next**
 
 8. Enter a name and description for the role, then select **Create role**. You have now created an IAM policy for a bucket, created an IAM role, and attached the policy to the role
 
@@ -89,9 +89,9 @@ The following step-by-step instructions describe how to configure IAM access per
 
 1. Log in to the AWS Management Console
 
-2. Select**IAM**
+2. Select **IAM**
 
-3. From the left-hand navigation pane, select**Roles**
+3. From the left-hand navigation pane, select **Roles**
 
 4. Select the role you created in Step 2
 
