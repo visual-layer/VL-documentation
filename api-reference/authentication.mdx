@@ -73,13 +73,21 @@ def generate_jwt(api_key: str, api_secret: str):
         'typ': 'JWT',
         'kid': api_key,
     }
+    
+    # Convert datetime objects to Unix timestamps (seconds since epoch)
+    now = datetime.now(tz=timezone.utc)
+    expiration = now + timedelta(minutes=10)
+    
     payload = {
         'sub': api_key,
-        'iat': datetime.now(tz=timezone.utc),
-        'exp': datetime.now(tz=timezone.utc) + timedelta(minutes=10),
+        'iat': int(now.timestamp()),  # Convert to Unix timestamp
+        'exp': int(expiration.timestamp()),  # Convert to Unix timestamp
         'iss': 'sdk'
     }
+    
     return jwt.encode(payload=payload, key=api_secret, algorithm=jwt_algorithm, headers=jwt_header)
+
+api_token = generate_jwt(api_key, api_secret)
 ```
 
 <Tip>
