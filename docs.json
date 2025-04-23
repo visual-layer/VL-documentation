@@ -132,7 +132,8 @@
               "api-reference/️visual-search",
               "api-reference/semantic-search",
               "api-reference/caption-search",
-              "api-reference/exporting-a-dataset-via-curl-from-visual-layer"
+              "api-reference/exporting-a-dataset-via-curl-from-visual-layer",
+              "api-reference/running-visual-layer-within-an-iframe"
             ]
           }
         ]

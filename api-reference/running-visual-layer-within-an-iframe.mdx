@@ -1,0 +1,121 @@
+---
+title: "Running Visual Layer within an iframe"
+excerpt: ""
+hidden: false
+createdAt: "Thu Apr 17 2025 12:30:22 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Thu Apr 17 2025 14:23:18 GMT+0000 (Coordinated Universal Time)"
+---
+
+## Embedding Visual Layer Search with Seamless Authentication
+
+You can easily integrate **Visual Layer's** powerful visual search engine into your web application via an iframe.  
+This guide also explains how to automatically authenticate your users when embedding the search engine.
+
+---
+
+## Step 1: Basic Iframe Integration
+
+Embed Visual Layer into your web page with a simple iframe:
+
+```html
+<iframe
+  src="https://vl.customer.com/"
+  width="100%"
+  height="800px"
+  style="border: none;"
+  title="Visual Layer Search">
+</iframe>
+```
+
+✅ **What this does**:
+
+- Displays the Visual Layer search engine inside your app.
+- Fills the width of the container (`width="100%"`).
+- Uses a custom domain `vl.customer.com` for seamless authentication (see Step 2).
+
+---
+
+## Step 2: Cross-Domain Authentication Setup
+
+To **automatically authenticate** your users into Visual Layer without requiring a manual login:
+
+### DNS Configuration
+
+- Create a CNAME DNS record:
+  ```
+  vl.customer.com → app.visual-layer.com
+  ```
+
+This allows the iframe source to stay under the same parent domain (`.customer.com`).
+
+---
+
+### Authentication Cookie
+
+When a user accesses your app (`vl.customer.com/vl`), you need to **set a special cookie**:
+
+- **Cookie Name:** `VL_AUTH`
+- **Cookie Domain:** `vl.customer.com`
+- **Cookie Value:**  
+  An **encrypted token** consisting of:  
+  ```
+  "customer_name+<current timestamp in unix seconds>"
+  ```
+
+---
+
+### Cookie Encryption
+
+Use **Fernet symmetric encryption** for securing the cookie value.
+
+#### Example in Python
+
+```python
+from cryptography.fernet import Fernet
+import time
+
+# Load your shared secret key
+cipher = Fernet(shared_key)
+
+# Generate token
+current_time = str(int(time.time()))
+plain_text = f"customer_name+{current_time}"
+
+# Encrypt
+encrypted_token = cipher.encrypt(plain_text.encode('utf-8'))
+
+# Set the cookie VL_AUTH to encrypted_token
+```
+
+#### Example in PHP
+
+```php
+use Defuse\Crypto\Crypto;
+use Defuse\Crypto\Key;
+
+$currentTime = time();
+$cookieValue = "customer_name+" . $currentTime;
+$key = Key::loadFromAsciiSafeString($sharedKey);
+
+$ciphertext = Crypto::encrypt($cookieValue, $key);
+// Set VL_AUTH cookie with $ciphertext
+```
+
+🔒 Make sure both sides (your server and Visual Layer) share the **same encryption key** securely.
+
+---
+
+### Visual Layer Server Setup
+
+- Create a **read-only Visual Layer user** limited to a specific dataset.
+- Visual Layer will validate the `VL_AUTH` cookie for iframe sessions.
+
+---
+
+## Full Example Flow
+
+1. User logs into `customer.com`.
+2. Your app sets the encrypted `VL_AUTH` cookie.
+3. User navigates to a page with the Visual Layer iframe.
+4. Visual Layer reads the cookie, decrypts it, and logs the user in automatically.
+5. User enjoys seamless visual search!
