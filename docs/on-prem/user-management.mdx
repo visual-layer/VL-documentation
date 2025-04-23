@@ -1,0 +1,118 @@
+---
+title: "User Management"
+excerpt: ""
+hidden: false
+createdAt: "Thu Apr 10 2025 14:26:37 GMT+0000 (Coordinated Universal Time)"
+updatedAt: "Thu Apr 17 2025 10:45:48 GMT+0000 (Coordinated Universal Time)"
+---
+
+# Visual Layer ADFS (OIDC) Integration Guide
+
+This document provides all necessary instructions to integrate your Identity Provider (IdP) — such as ADFS — with Visual Layer's platform using the OpenID Connect (OIDC) protocol.
+
+We will work together to ensure a smooth Single Sign-On (SSO) experience.
+
+---
+
+## Overview: OIDC Flow
+
+1. The user tries to log in to Visual Layer and is redirected to your IdP (OpenID Provider, OP) with the client ID.
+2. The IdP authenticates the user.
+3. The user is redirected back to a predefined Redirect URI with an authorization code.
+4. Visual Layer exchanges this code, along with the client ID and secret, for Access and ID tokens.
+5. Optionally, additional user details can be retrieved using the Access Token via the UserInfo endpoint.
+
+---
+
+## Information Required from Your Side
+
+### 1. Well-Known Configuration URL
+
+- Please provide your IdP’s OpenID configuration URL (e.g.,  
+  `https://<your-adfs-domain>/adfs/.well-known/openid-configuration`).
+- This allows us to automatically fetch metadata like authorization endpoints.
+
+### 2. Client ID and Client Secret
+
+- Generate these credentials on your IdP (ADFS or any OIDC-compliant provider).
+- We will use these securely to authenticate against your IdP.
+
+### 3. Allowed Scopes
+
+- Please confirm which scopes are supported.
+- Typical scopes include:  
+  `openid, profile, email`
+
+### 4. Example Tokens
+
+- No need to send real user tokens.
+- Please provide an example ID token and, if possible, a UserInfo response showing the available user claims.
+
+```json
+{
+  "sub": "abc123",
+  "email": "user@company.com",
+  "given_name": "Example",
+  "family_name": "User",
+  "preferred_username": "example.user"
+}
+```
+
+---
+
+## Information We Will Provide
+
+### 1. Redirect URI
+
+- Please configure this URI in your IdP:
+  ```
+  https://<VL-onprem-domain>/api/v1/oidc/callback
+  ```
+- This is where users will be redirected after authentication.
+
+---
+
+## Required Changes in Your OpenShift Settings
+
+### Update or Add the Following Settings:
+
+```yaml
+# Existing settings
+DISABLE_AUTH: 'false'
+USAGE_REPORT_ENABLED: 'false'
+STORAGE_KEY: <randomly generated key>
+
+# New settings
+OIDC_ISSUER: <value from well-known URL>
+OIDC_CLIENT_ID: <CLIENT_ID>
+OIDC_CLIENT_SECRET: <CLIENT_SECRET>
+OIDC_REDIRECT_URI: 'https://<VL-onprem-domain>/api/v1/oidc/callback'
+```
+
+### Frontend (FE) Settings:
+
+```yaml
+REACT_APP_IS_AUTHENTICATION_DISABLED: false
+```
+
+> **Tip:** To generate a random storage key:
+>
+> ```bash
+> openssl rand -base64 32
+> ```
+
+---
+
+## Permissions Management
+
+- User access will be managed via the **Dataset Manager Script**.
+- The customer-facing script is available here:  
+  [Dataset Manager Script on GitHub](https://github.com/visual-layer/vl-product/commit/41379ddc28b6445528d224da3399b3d329e591cf)
+
+---
+
+## Additional Notes
+
+- If needed, we can assist you with ADFS configuration, token structure validation, or claim mapping.
+- We support both cloud and on-premises deployments.
+- On-prem users: if you're interested in an evaluation, we can provide a trial version to test before committing.
