@@ -4,13 +4,28 @@ description: Learn how to use advanced operators when searching by image caption
 ---
 
 <Card title="How this Helps" icon="lightbulb">
-  Caption Search allows you to query your dataset using natural language and logical operators. By refining how you search captions, you can surface specific data points, remove noise, and discover relevant content faster.
+  Caption Search directly matches queries to labels and captions, relying on exact or logical matches to surface content. It’s ideal for precise searches where explicit labeling is crucial. 
 </Card>
+---
+<img 
+  src="/images/caption.gif" 
+  alt="Caption Search Example" 
+  style={{ borderRadius: '10px', width: '100%', maxWidth: '854px', height: 'auto' }} 
+/>
 
 ## Caption Search Operators
 
-Visual Layer supports several search operators to help you build flexible, accurate caption queries. These include `AND`, `OR`, `NOT`, exact match using quotes, and combinations of all of the above.
+Visual Layer supports several search operators to help you build flexible, accurate caption queries:
 
+| **Operator**      | **Description**                                                                                  | **Usage Example**                                      |
+|-------------------|--------------------------------------------------------------------------------------------------|--------------------------------------------------------|
+| **AND Operator**   | Finds results that contain both terms.                                                           | `black AND cat`,   `black and cat`, `black + cat`, `black cat`             |
+| **OR Operator**    | Finds results that contain either one term or the other—or both.                                 | `black cat OR black dog`, `black cat or black dog`      |
+| **NOT Operator**   | Excludes results containing the specified term.                                                  | `dog -black`                                           |
+| **Exact Match**    | Matches results with the exact phrase, wrapping terms in double quotes.                          | `"yellow flower"`                                      |
+
+
+{/*
 ## AND Operator
 
 The `AND` operator is implied when you separate terms with a space, or you can write it explicitly.
@@ -22,12 +37,6 @@ The `AND` operator is implied when you separate terms with a space, or you can w
   `black + cat`  
   `black cat`
 
-- **Result**:  
-  Returns captions that include both “black” and “cat” in any order.
-
-<Frame>
-  <img src="https://files.readme.io/69b2c83-Screenshot_2024-06-05_at_10.56.55.png" alt="AND Operator Example" />
-</Frame>
 
 ## OR Operator
 
@@ -38,13 +47,6 @@ Use the `OR` operator to find results that contain either one term or the other�
   `black cat OR black dog`  
   `black cat or black dog`
 
-- **Result**:  
-  Returns images that mention “black cat,” “black dog,” or both.
-
-<Frame>
-  <img src="https://files.readme.io/88a1799-Screenshot_2024-06-05_at_11.02.05.png" alt="OR Operator Example" />
-</Frame>
-
 ## NOT Operator
 
 Use the `NOT` operator to exclude terms from search results.
@@ -53,13 +55,6 @@ Use the `NOT` operator to exclude terms from search results.
   Prefix a word with a minus sign `-`. Example:  
   `dog -black`
 
-- **Result**:  
-  Returns captions that contain “dog” but exclude any that also include “black.”
-
-<Frame>
-  <img src="https://files.readme.io/7a1fe3a-Screenshot_2024-06-05_at_11.11.35.png" alt="NOT Operator Example" />
-</Frame>
-
 ## Exact Match
 
 Wrap terms in double quotes to return captions that match the exact phrase.
@@ -67,13 +62,7 @@ Wrap terms in double quotes to return captions that match the exact phrase.
 - **Usage**:  
   Use double quotation marks `" "` around a phrase. Example:  
   `"yellow flower"`
-
-- **Result**:  
-  Returns captions with the exact phrase “yellow flower.”
-
-<Frame>
-  <img src="https://files.readme.io/34b756c-Screenshot_2024-06-05_at_17.33.37.png" alt="Exact Match Example" />
-</Frame>
+*/}
 
 ## Combining Operators
 
