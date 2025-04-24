@@ -1,0 +1,58 @@
+---
+title: "Troubleshooting"
+description: ""
+---
+
+### Resolving Common Errors
+
+#### Problem: Image Not Found
+
+```sh
+docker: Error response from daemon: pull access denied for visuallayer/onprem-installer, repository does not exist or may require 'docker login'.
+```
+
+ **Solution**: Ensure you are logged into Docker.
+
+#### Problem: Docker Daemon Not Running
+
+```sh
+docker: Cannot connect to the Docker daemon at unix:///var/run/docker.sock.
+```
+
+ **Solution**: Start the Docker daemon.
+
+#### Problem: Image Pulling Fails
+
+```sh
+manifest for visuallayer/onprem-cd:2.25.6-rc6 not found: manifest unknown
+```
+
+**Solution **: Verify the** software version**and that you are logged into Docker with the correct user.
+
+#### Problem: Platform Mismatch Warning
+
+```sh
+WARNING: The requested image's platform (linux/arm64) does not match the detected host platform (linux/amd64/v3).
+```
+
+**Solution **: This is a** warning only**—can be ignored.
+
+#### Problem: `docker compose` Not Found
+
+```sh
+./run_profiler.sh: line 159: docker compose: command not found
+```
+
+ **Solution**: Install or reinstall Docker following the official installation instructions.
+
+#### Problem: PostgreSQL Operational Error
+
+```sh
+sqlalchemy.exc.OperationalError: (psycopg.OperationalError) [Errno -3] Temporary failure in name resolution
+```
+
+ **Solution**: Ensure the system was brought up using the `docker up` command.
+
+***
+
+
