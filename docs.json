@@ -33,7 +33,7 @@
             "pages": [
               "docs/on-prem/single-node-deployment",
               "docs/on-prem/user-management",
-              "docs/on-prem/command-line-flags"
+              "docs/on-prem/Configuration"
             ]
           },
           {
