@@ -141,21 +141,18 @@
       }, 
       {
         "tab": "fastdup",
-        "groups": [
-          {
-            "group": "First Steps",
-            "pages": [
-              "fastdup_docs_old/First Steps/getting-started",
-              "fastdup_docs_old/First Steps/installation"
-            ]
-          }
-        ]
+          "groups": [
+            {
+              "group": "First Steps",
+              "pages": [
+                "fastdup_docs_old/First Steps/getting-started",
+                "fastdup_docs_old/First Steps/installation",
+                "fastdup_docs_old/First Steps/docs"
+              ]
+            }
+          ]
       }      
-    ],
-    "global": {
-      "anchors": [
-      ]
-    }
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",
