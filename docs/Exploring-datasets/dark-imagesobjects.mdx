@@ -2,6 +2,15 @@
 title: Dark
 description: Understand how low-light or underexposed images impact dataset quality, and how to detect and correct them using Visual Layer.
 ---
+<video
+  autoPlay
+  muted
+  loop
+  playsInline
+  className="w-full aspect-video"
+  src="/images/dark.mp4"
+  style={{ borderRadius: '10px' }}
+></video>
 
 ## What Are Dark Images and Objects?
 
@@ -25,14 +34,15 @@ Dark images are underexposed visuals that lack sufficient brightness, making it 
 
 </div>
 
-## How to Handle Dark Images with Visual Layer
+## How to Detect and Remove Dark Images
 
-Dark images can be surfaced and reviewed using Visual Layer's built-in issue filters. Once identified, there are several paths forward depending on severity:
+- **Detect Dark Images:**  
+  Go to **"Add Filter"** → **"Quality Issue"** → select **"Dark"** → choose **"IS"** as the logic operator → set the desired confidence threshold (default is 0.5).  
+  Export the dark images using **Export** → **"Matching the applied filter."**
 
-### Recommended Actions
+- **Remove Dark Images:**  
+  Go to **"Add Filter"** → **"Quality Issue"** → select **"Dark"** → choose **"IS NOT"** as the logic operator → set the desired confidence threshold (default is 0.5).  
+  Export the images without dark issues using **Export** → **"Matching the applied filter."**
 
-- **Apply enhancement techniques**: Post-processing methods like brightness correction, histogram equalization, or contrast adjustment can make images more usable.
-- **Retake with better lighting**: If feasible, recapture scenes with improved lighting conditions or camera calibration.
-- **Filter out extreme cases**: Use Visual Layer filters to isolate and exclude images that fall below acceptable brightness thresholds before training or export.
 
 By detecting and resolving dark visuals early, you can improve dataset quality, annotation accuracy, and model performance—especially in environments where lighting is a critical factor.

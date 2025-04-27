@@ -2,7 +2,15 @@
 title: Duplicates
 description: Learn how duplicate images and objects affect your dataset, and how to detect and remove them using Visual Layer.
 ---
-
+<video
+  autoPlay
+  muted
+  loop
+  playsInline
+  className="w-full aspect-video"
+  src="/images/duplicates.mp4"
+  style={{ borderRadius: '10px' }}
+></video>
 ## What Are Duplicate Images and Objects?
 
 Duplicate images refer to multiple copies or near-identical versions of the same visual content. These duplicates can occur within the same dataset or across different datasets and may differ in file format, resolution, or size—but share the same or nearly the same visual data.
@@ -14,7 +22,7 @@ Duplicate images refer to multiple copies or near-identical versions of the same
 - **Data augmentation**: Slight transformations applied during augmentation (e.g., small rotations, brightness tweaks) may result in visually similar but redundant images.
 - **Annotation overlap**: Duplicate bounding boxes can occur when the same object is labeled more than once, usually with slight variation in position or size.
 
-## Why It Matters
+### Why It Matters
 
 <div className="integrations-table">
 
@@ -27,19 +35,21 @@ Duplicate images refer to multiple copies or near-identical versions of the same
 
 </div>
 
-## How to Prevent and Fix Duplicates
+### How to Prevent and Fix Duplicates
 
 Maintaining a clean dataset improves training efficiency and reduces risk of performance degradation. It's good practice to scan for duplicates before fine-tuning or model evaluation.
 
 Visual Layer provides built-in tools to identify and clean up duplicate content using **visual similarity detection**. This approach looks at image features rather than just metadata or file hashes, making it effective even when duplicates vary slightly in format or compression.
 
-## Detecting and Removing Duplicates in Visual Layer
+## How to Detect and Correct Duplicates
 
 Visual Layer supports multiple workflows to help eliminate redundancy:
 
-- Use built-in **similarity filters** to flag highly similar or identical items.
-- Surface clusters with dense visual overlap and mark them for exclusion.
-- Remove or export duplicates in batch before training or QA review.
-- Combine this workflow with [data selection](https://dash.readme.com/project/visual-layer2/v1.0/docs/data-selection-using-visual-layer) and [export](https://dash.readme.com/project/visual-layer2/v1.0/docs/export-data) for flexible handoff to downstream tools or annotators.
+- **Detect Duplicates:**  
+  Go to **"Add Filter"** → **"Duplicates"** → select **"IS"** as the logic operator → set the desired confidence threshold (default is 1).  
+  Export the results using **"Matching the applied filter."**
 
+- **Correct Duplicates:**  
+  Go to **"Add Filter"** → **"Duplicates"** → select **"IS NOT"** as the logic operator → set the desired confidence threshold (default is 1).  
+  Export the results using **"Matching the applied filter."**
 Regular deduplication is key to keeping your dataset lean, fair, and performant.

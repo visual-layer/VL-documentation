@@ -91,11 +91,11 @@
               "docs/Exploring-datasets/outlier-imagesobjects",
               "docs/Exploring-datasets/select-unique-items",
               {
-                "group": "Dataset quality",
+                "group": "Quality issues",
                 "pages": [
                   "docs/Exploring-datasets/dataset-quality",
-                  "docs/Exploring-datasets/blurry-imagesobjects",
                   "docs/Exploring-datasets/dark-imagesobjects",
+                  "docs/Exploring-datasets/blurry-imagesobjects",
                   "docs/Exploring-datasets/bright-imagesobjects"
                 ]
               }

@@ -1,11 +1,20 @@
 ---
-title: Blurry
+title: Blur
 description: Understand how blurriness impacts visual datasets and how to detect and address blurry images or objects using Visual Layer.
 ---
+<video
+  autoPlay
+  muted
+  loop
+  playsInline
+  className="w-full aspect-video"
+  src="/images/blur-.mp4"
+  style={{ borderRadius: '10px' }}
+></video>
 
-## What Are Blurry Images and Objects?
+## What Are blur Images and Objects?
 
-Blurry images lack sharpness and clarity, often making it difficult to recognize objects or extract visual detail. This can significantly reduce the performance of machine learning models, lower data quality, and hinder accurate human annotation.
+Blur images lack sharpness and clarity, often making it difficult to recognize objects or extract visual detail. This can significantly reduce the performance of machine learning models, lower data quality, and hinder accurate human annotation.
 
 ### Common Causes of Blurriness
 
@@ -26,14 +35,15 @@ Blurry images lack sharpness and clarity, often making it difficult to recognize
 
 </div>
 
-## How to Handle Blurry Data with Visual Layer
+## How to Detect and Remove Blur Images
 
-Visual Layer detects blurry content automatically using quality filters. You can identify, isolate, or exclude blurry images and objects to maintain high dataset quality.
+- **Detect Blur Images:**  
+  Go to **"Add Filter"** → **"Quality Issue"** → select **"Blur"** → choose **"IS"** as the logic operator → set the desired confidence threshold (default is 0.5).  
+  Export the blur images using **Export** → **"Matching the applied filter."**
 
-### Recommended Actions
+- **Remove Blur Images:**  
+  Go to **"Add Filter"** → **"Quality Issue"** → select **"Blur"** → choose **"IS NOT"** as the logic operator → set the desired confidence threshold (default is 0.5).  
+  Export the images without blur issues using **Export** → **"Matching the applied filter."**
 
-- **Remove severe blur**: For unusable images where critical information is lost, it’s best to exclude or discard them.
-- **Apply sharpening techniques**: In borderline cases, you may attempt image restoration using filters or deblurring algorithms.
-- **Detect and filter in Visual Layer**: Use issue filters in the UI to surface blurry content before training, annotation, or export.
 
 Managing blurriness helps improve data clarity, annotation quality, and downstream model performance—especially in high-precision environments.

@@ -3,6 +3,17 @@ title: Mislabels
 description: Understand how mislabels occur, why they matter, and how to detect and fix them using Visual Layer.
 ---
 
+<video
+  autoPlay
+  muted
+  loop
+  playsInline
+  className="w-full aspect-video"
+  src="/images/mislabels.mp4"
+  style={{ borderRadius: '10px' }}
+></video>
+
+
 ## What Are Mislabeled Images and Objects?
 
 Mislabeled images are those that have been assigned incorrect or inaccurate labels or annotations. This can happen during manual annotation or when using automated labeling systems. Errors like these negatively impact model performance by introducing noise and bias into the dataset.
@@ -16,7 +27,7 @@ Visual Layer’s state-of-the-art detection system helps accurately identify and
 - **Algorithmic error**: Auto-labeling models may produce poor results when trained on insufficient or biased data.
 - **Evolving knowledge**: As domain definitions evolve, previously accurate labels may become outdated.
 
-## Why Is This a Problem?
+### Why Is This a Problem?
 
 <div className="integrations-table">
 
@@ -58,11 +69,16 @@ High-quality labeling workflows are essential for reliable ML models. Consider i
 
 Visual Layer provides automated detection tools that make this process easier and more scalable.
 
-## Tools to Detect and Fix Mislabels in Visual Layer
+## How to Detect and Correct Mislabels
 
 Visual Layer offers multiple built-in workflows to detect, review, and correct mislabeled content:
 
-- [Find mismatches using label filters](https://dash.readme.com/project/visual-layer2/v1.0/docs/find-mislabeled-data-using-visual-layer-label-filters)  
-- [Run native auto-detection](https://dash.readme.com/project/visual-layer2/v1.0/docs/mislabeled-data-auto-detection) to automatically surface potential issues  
-- [Use data selection tools](https://dash.readme.com/project/visual-layer2/v1.0/docs/data-selection-using-visual-layer) to isolate clusters with questionable labeling  
-- [Export for re-labeling](https://dash.readme.com/project/visual-layer2/v1.0/docs/export-data) and route the data to your QA or annotation provider
+- **Detect mislabeled:**  
+  Go to **"Add Filter"** → **"Mislabels"** → select **"IS"** as the logic operator → set the desired confidence threshold (default is 0.5).  
+  Export the results using **"Matching the applied filter."**
+
+- **Correct mislabeled:**  
+  Go to **"Add Filter"** → **"Mislabels"** → select **"IS NOT"** as the logic operator → set the desired confidence threshold (default is 0.5).  
+  Export the results using **"Matching the applied filter."**
+
+
