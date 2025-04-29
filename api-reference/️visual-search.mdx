@@ -32,16 +32,18 @@ Headers: Authorization: Bearer <jwt>
 
 ### Query Parameters
 
-- `entity_type` either IMAGES or OBJECTS
-- `anchor_type`, `anchor_media_id` from previous endpoint response
-
+- `entity_type` IMAGES or OBJECTS
+- `anchor_type` MEDIA or UPLOAD for when you uploaded the image using the upload endpoint
+- `anchor_media_id` id of the image you want to use as anchor, returned from the upload for search endpoint
+- `threshold` similarity threshold(0-4) the search results are clustered according to this value 
+- `PAGE_NUMBER`: Which page of results to view (e.g., 0 for start)
 ## Sample Response
 
 ```json
   {  
     "clusters": \[  
       {  
-        "id": "4e0e4d51-0fef-4fe1-a8ec-1a82b6f4880b",  
+        "id": "4e0e4d51-0fef-4fe1-a8ec-1a82b6f4880b", 
         "dataset_id": "95233006-eddc-11ef-b303-76dbc3993eb2",  
         "cluster_type": "IMAGES",  
         "display_name": "Cluster 1",  
