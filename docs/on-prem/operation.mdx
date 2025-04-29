@@ -1,0 +1,45 @@
+---
+title: "Basic operations"
+description: ""
+---
+
+### Connect to the Application
+
+Once the system is running, connect to the application using your browser:
+
+- **HTTP\**: `http://<server name>:2080`
+- **HTTPS\**: `https://<server name>:2443`
+
+### Start the System
+
+```sh
+./start.sh
+```
+
+### Stop the System
+
+```sh
+./stop.sh
+```
+
+### Creating Datasets
+
+```sh
+./run_profiler.sh -n "<desired dataset name>" -p "<dataset source dir>"
+```
+
+- This process **can take several hours**, depending on data size.
+- If the dataset name includes spaces, use **quotation marks**(e.g., `"My Dataset"`).
+
+## Accessing Logs & Support
+
+#### Debugging Run
+
+Use the following environment variables to enable debugging:
+
+```sh
+LOG_LEVEL=10  # Set log level to debug
+REPORTING_LOG_PATH="/path/to/log.txt"  # Write pipeline log to file
+```
+
+

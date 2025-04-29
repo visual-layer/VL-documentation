@@ -2,6 +2,15 @@
 title: Bright
 description: Understand how overexposed or excessively bright images affect dataset quality and how to detect and correct them using Visual Layer.
 ---
+<video
+  autoPlay
+  muted
+  loop
+  playsInline
+  className="w-full aspect-video"
+  src="/images/Bright.mp4"
+  style={{ borderRadius: '10px' }}
+></video>
 
 ## What Are Bright Images and Objects?
 
@@ -26,14 +35,15 @@ Bright images are overexposed visuals with elevated brightness levels that wash 
 
 </div>
 
-## How to Handle Bright Images with Visual Layer
+## How to Detect and Remove Bright Images
 
-Bright images can be detected using Visual Layer's automated **issue filters**, which help surface overexposed samples prior to training, export, or annotation.
+- **Detect Bright Images:**  
+  Go to **"Add Filter"** → **"Quality Issue"** → select **"Bright"** → choose **"IS"** as the logic operator → set the desired confidence threshold (default is 0.5).  
+  Export the bright images using **Export** → **"Matching the applied filter."**
 
-### Recommended Actions
+- **Correct Bright Images:**  
+  Go to **"Add Filter"** → **"Quality Issue"** → select **"Bright"** → choose **"IS NOT"** as the logic operator → set the desired confidence threshold (default is 0.5).  
+  Export the images without bright issues using **Export** → **"Matching the applied filter."**
 
-- **Adjust exposure or contrast**: Use post-processing tools to tone down brightness and recover details from highlights.
-- **Use histogram-based techniques**: Apply histogram equalization or tone mapping to normalize pixel intensity distributions.
-- **Filter or exclude extreme cases**: Visual Layer makes it easy to isolate bright images and either exclude or fix them before they reach downstream systems.
 
 Improving brightness balance ensures your dataset retains visual clarity, maintains labeling accuracy, and supports better-performing models.

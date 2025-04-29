@@ -3,6 +3,16 @@ title: Outliers
 description: Learn what outliers are, why they affect dataset quality, and how to detect and manage them using Visual Layer.
 ---
 
+<video
+  autoPlay
+  muted
+  loop
+  playsInline
+  className="w-full aspect-video"
+  src="/images/outliers.mp4"
+  style={{ borderRadius: '10px' }}
+></video>
+
 ## What Are Outlier Images and Objects?
 
 Outlier images are visuals that differ significantly from the majority of your dataset. They may appear unusual due to content, quality, or context and can affect the representativeness of your data.
@@ -33,26 +43,14 @@ These may include:
 
 ## How to Detect Outliers in Visual Layer
 
-Visual Layer provides a one-click method for detecting outliers using automated issue detection. You can filter and isolate outlier data directly from the dataset interface.
+Visual Layer provides a one-click method for detecting and correcting outliers using automated issue detection.
 
-### Steps to Apply the Outlier Filter
+- **Detect Outliers:**  
+  Go to **"Add Filter"** → **"Outliers"** → select **"IS"** as the logic operator → set the desired confidence threshold (default is 0.5).  
+  Export the results using **"Matching the applied filter."**
 
-1. Go to the [Dataset Inventory](https://dash.readme.com/project/visual-layer2/v1.0/docs/browsing-datasets) and open the dataset you want to inspect.
-2. Choose either **Images view** or [ **Objects view**](https://dash.readme.com/project/visual-layer2/v1.0/docs/understanding-and-exploring-objects).
-3. In the top filter bar, open the **Issues** filter.
-4. Select **"Outliers"** and apply the filter.
-
-<Frame>
-  <img src="https://files.readme.io/d7dd161-image.png" alt="Top bar Issues filter - select Outliers" />
-</Frame>
-
-### What You Can Do Next
-
-Once the outliers are visible, you can choose how to proceed:
-
-- **Organize**: Add the outliers to the [Selected Items list](https://dash.readme.com/project/visual-layer2/v1.0/docs/data-selection-using-visual-layer) for review or isolation.
-- **Export**: Use the [Export tool](https://dash.readme.com/project/visual-layer2/v1.0/docs/export-data) to send either:
-  - Only the outliers for data cleaning, or
-  - All data **except** the outliers (by using exclusion logic), to keep your training dataset clean.
+- **Correct Outliers:**  
+  Go to **"Add Filter"** → **"Outliers"** → select **"IS NOT"** as the logic operator → set the desired confidence threshold (default is 0.5).  
+  Export the results using **"Matching the applied filter."**
 
 Managing outliers is an essential step in building reliable, balanced models.
