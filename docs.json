@@ -54,8 +54,7 @@
             {
               "group": "Importing annotations",
               "pages": [
-                  "docs/Creating-Datasets/importing-annotations/annotations-overview",
-                  "docs/Creating-Datasets/importing-annotations/upload-annotations",
+                  "docs/Creating-Datasets/importing-annotations/annotations-overview-new",
                   "docs/Creating-Datasets/importing-annotations/preparing-annotation-data-file",
                   "docs/Creating-Datasets/importing-annotations/bounding-box",
                   "docs/Creating-Datasets/importing-annotations/converting-yolo",
@@ -104,7 +103,7 @@
           },
           {
             "group":"Dataset enrichment",
-            "pages": [
+            "pages": [ 
               "docs/Dataset-Enrichment/enrich_overview",
               "docs/Dataset-Enrichment/model-catalog",
               "docs/Dataset-Enrichment/analyze-enriched-dataset",

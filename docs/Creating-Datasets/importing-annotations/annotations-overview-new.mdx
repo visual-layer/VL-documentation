@@ -1,5 +1,5 @@
 ---
-title: "Upload annotations"
+title: "Annotations overview"
 description: "Learn how annotations enhance dataset structure, improve search-ability, and support AI training in Visual Layer."
 ---
 ## What Are Annotations?
@@ -21,22 +21,35 @@ Annotations play a critical role in machine learning and AI model training by:
 
 ***
 
-## Supported Annotation Formats
+## Supported Formats
 
-1.**Parquet / CSV**
-2.**JSON (COCO format)**
+1. **Parquet / CSV**
+2. **JSON (COCO format)**
 
-## ⚠️ Limitations
-
-- **Important**: Annotations must be added when creating a dataset. Currently, you cannot add them afterward.
-- Your annotation file must be named exactly as one of the following:
+Your annotation **file must be named exactly** as one of the following:
   - `annotations.json`
   - `image_annotations.csv`
   - `object_annotations.csv`
   - `image_annotations.parquet`
   - `object_annotations.parquet`
 
- **For more details, visit**:
+<Note>
+**Important**: Annotations must be added when creating a dataset. 
+</Note>
 
-- [importing annotations](https://dash.readme.com/project/visual-layer2/v1.0/docs/importing-annotations-copy-1)
-- Preparing Annotation file
+---
+
+## <span id="annotation">**How to Import Annotations**</span>  
+
+1. Upload your annotation file **during dataset creation**.  
+   Files can be uploaded from your **local machine** and **S3 bucket**.
+2. Ensure that your file follows the **required format** and has the correct name.
+
+![](https://files.readme.io/e76e5a9d515f756143072f47d2ef7320856c99bb64cec6da5859677bd2eda88a-image.png)
+
+---
+<Note>
+
+ For more details about creating your annotation file, visit - [Preparing annotation file](/docs/Creating-Datasets/importing-annotations/preparing-annotation-data-file)
+
+ </Note>
