@@ -43,15 +43,12 @@ Maintaining a clean dataset improves training efficiency and reduces risk of per
 
 Visual Layer provides built-in tools to identify and clean up duplicate content using **visual similarity detection**. This approach looks at image features rather than just metadata or file hashes, making it effective even when duplicates vary slightly in format or compression.
 
-## How to Detect and Correct Duplicates
+## How to Detect Duplicates
 
-Visual Layer supports multiple workflows to help eliminate redundancy:
+Visual Layer supports multiple workflows to help detect redundancy:
 
-- **Detect Duplicates:**  
-  Go to **"Add Filter"** → **"Duplicates"** → select **"IS"** as the logic operator → set the desired confidence threshold (default is 1).  
-  Export the results using **"Matching the applied filter."**
+Detect Duplicates:
+Go to "Add Filter" → select "Duplicates" → set the desired confidence threshold (default is 1).
+Export the results using "Matching the applied filter."
 
-- **Correct Duplicates:**  
-  Go to **"Add Filter"** → **"Duplicates"** → select **"IS NOT"** as the logic operator → set the desired confidence threshold (default is 1).  
-  Export the results using **"Matching the applied filter."**
-Regular deduplication is key to keeping your dataset lean, fair, and performant.
+
