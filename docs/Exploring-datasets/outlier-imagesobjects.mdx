@@ -2,6 +2,11 @@
 title: Outliers
 description: Learn what outliers are, why they affect dataset quality, and how to detect and manage them using Visual Layer.
 ---
+<Tip>
+
+Outlier images are visuals that differ significantly from the majority of your dataset. These anomalies may affect model performance, skew results, or reveal labeling issues.
+
+</Tip>
 
 <iframe 
   width="600"
@@ -14,21 +19,31 @@ description: Learn what outliers are, why they affect dataset quality, and how t
   allowfullscreen
 />
 
-## What Are Outlier Images and Objects?
 
-Outlier images are visuals that differ significantly from the majority of your dataset. They may appear unusual due to content, quality, or context and can affect the representativeness of your data.
 
-These may include:
+Outliers typically fall into one of the following categories:
 
-- Images from the wrong source or domain
-- Objects captured in rare or unexpected ways
-- Files with artifacts like blur, noise, or extreme lighting
+<div className="integrations-table">
+
+| Categories            | Description |
+|-----------------------|-------------|
+| **Domain or Content Outliers** | Images that feel "out of place" compared to the rest of your data. From a different source, domain, or modality (e.g., a drawing in a photo dataset). Captured in unexpected conditions (e.g., extreme lighting, occlusions). Showing objects in rare or ambiguous contexts. |
+| **Quality Outliers**  | Images that are technically flawed or inconsistent with the rest of the set. Blurry, overexposed, or too dark. Containing heavy compression artifacts or noise. Corrupted or visually incomplete. |
+| **Class (Label) Outliers** | Images that don’t semantically match any class in your label vocabulary. True outliers: e.g., an image of a sheep in a dog/cat dataset — it doesn't belong to any existing class. Out-of-distribution examples: e.g., a sketch of a dog in a dataset of real dog photos. These are different from mislabels, where an image is mislabeled but still belongs to a known class. |
+
+</div>
 
 ### Common Causes of Outliers
 
-- **Data collection errors**: Samples from unrelated categories or domains may be incorrectly included.
-- **Artifacts and anomalies**: Distortions like blur, noise, or overexposure can make an image an outlier.
-- **Rare instances**: Rare objects, edge-case events, or unconventional perspectives may introduce visual outliers.
+<div className="integrations-table">
+
+| Cause                  | Description |
+|------------------------|-------------|
+| **Data collection errors** | Samples from unrelated categories or domains may be incorrectly included. |
+| **Artifacts and anomalies** | Distortions like blur, noise, or overexposure can make an image an outlier. |
+| **Rare instances**       | Rare objects, edge-case events, or unconventional perspectives may introduce visual outliers. |
+
+</div>
 
 ## Why It Matters
 
@@ -36,9 +51,9 @@ These may include:
 
 | Problem | Impact |
 |---------|--------|
-| **Reduced data quality** | Outliers introduce noise and reduce consistency across your dataset. |
-| **Weaker model performance** | Models trained on unfiltered outliers may generalize poorly or become unstable in production. |
-| **Hidden skew** | Outliers may distort validation results or inflate perceived class diversity. |
+| Reduced data quality | Outliers introduce noise and reduce consistency across your dataset. |
+| Weaker model performance | Models trained on unfiltered outliers may generalize poorly or become unstable in production. |
+| Hidden skew | Outliers may distort validation results or inflate perceived class diversity. |
 
 </div>
 
@@ -46,12 +61,12 @@ These may include:
 
 Visual Layer provides a one-click method for detecting and correcting outliers using automated issue detection.
 
-- **Detect Outliers:**  
-  Go to **"Add Filter"** → **"Outliers"** → select **"IS"** as the logic operator → set the desired confidence threshold (default is 0.5).  
-  Export the results using **"Matching the applied filter."**
+- Detect Outliers:  
+  Go to "Add Filter" → "Outliers" → select "IS" as the logic operator → set the desired confidence threshold (default is 0.5).  
+  Export the results using "Matching the applied filter."
 
-- **Correct Outliers:**  
-  Go to **"Add Filter"** → **"Outliers"** → select **"IS NOT"** as the logic operator → set the desired confidence threshold (default is 0.5).  
-  Export the results using **"Matching the applied filter."**
+- Correct Outliers:  
+  Go to "Add Filter" → "Outliers" → select "IS NOT" as the logic operator → set the desired confidence threshold (default is 0.5).  
+  Export the results using "Matching the applied filter."
 
 Managing outliers is an essential step in building reliable, balanced models.

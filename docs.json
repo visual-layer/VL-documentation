@@ -154,7 +154,19 @@
               ]
             }
           ]
-      }      
+      },
+      {
+        "tab": "Release Notes",
+        "groups": [
+          {
+            "group": "Release Notes",
+            "pages": [
+              "docs/release-notes/rn-2025-05-08"
+            ]
+          }
+        ]
+
+      } 
     ]
   },
   "logo": {
