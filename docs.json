@@ -88,6 +88,7 @@
               "docs/Exploring-datasets/unlabeled-data-detection",
               "docs/Exploring-datasets/duplicate-imagesobjects",
               "docs/Exploring-datasets/outlier-imagesobjects",
+              "docs/Exploring-datasets/class-outlier",
               "docs/Exploring-datasets/select-unique-items",
               {
                 "group": "Quality issues",
