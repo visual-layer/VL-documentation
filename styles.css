@@ -13,6 +13,14 @@
   background: linear-gradient(90deg, rgba(167,56,149,1) 0%, rgba(0,152,217,1) 50%, rgba(41,183,135,1) 100%);
 }
 
+h-4 w-4 fill-gray-800 dark:fill-gray-100 text-gray-800 dark:text-gray-100 {
+  color:#0097D9;
+}
+
+.bg-gray-800 {
+  background-color:#0097D9;
+}
+
 /* Footer email under socials */
 footer .footer-socials::after {
   content: "info@visual-layer.com";
@@ -20,6 +28,31 @@ footer .footer-socials::after {
   margin-top: 0.75rem;
   color: var(--muted-text-color, #888);
   font-size: 0.875rem;
+}
+th {
+  display: table-cell;
+  vertical-align: inherit;
+  font-weight: bold;
+  text-align: left !important
+}
+
+.integration-table table {
+  margin: -30px !important;
+}
+
+
+.integration-table, .integration-table th,
+.integration-table td {
+  /* left-align table */
+  margin-left: 0;
+  margin-right: auto;
+  border-collapse: collapse;
+
+  /* left-align text in both headers and data cells */
+  text-align: left !important;
+
+ /* breathing room */
+  padding: 0.5em 1em;
 }
 
 
