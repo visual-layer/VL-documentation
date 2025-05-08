@@ -1,37 +1,40 @@
 ---
-title: Class Outlier
-description: Identify images whose labels belong to your defined classes but don’t visually match the typical appearance of that class. This filter helps surface unexpected or inconsistent samples that may degrade model performance.
+title: Class outlier
+description: Learn how to identify and manage class outliers in your dataset using Visual Layer.
 ---
 
+Visual Layer enables you to identify images with labels belonging to your defined classes that don’t visually match the standard appearance of that class. The class outlier filter helps surface unexpected or inconsistent samples that may degrade model performance.
 
 ## What Are Class Outliers?
+
 Class outliers are images that are technically assigned a valid label but don’t visually align with the common patterns for that label. They typically fall into one of two categories:
 
-**Unusual visual appearance**
-Labeled correctly, but the image looks very different from others in the same class
-Example: A drawing of a dog in a dataset of real dog photographs
+- **Unusual visual appearance**
 
-**No matching class exists**
-The image visually belongs to a different category, even though its label is technically valid
-Example: A photo of a sheep labeled as “dog” in a dataset that only includes “dog” and “cat” classes
+    Labeled correctly, but the image looks very different from others in the same class
+    Example: A drawing of a dog in a dataset of real dog photographs
 
-## Examples
+- **No matching class exists**
 
-| Example Type  | Description                                                             |
-| ------------- | ----------------------------------------------------------------------- |
-| Class Outlier | A drawing of a dog in a dataset of real dog photos                      |
-| Class Outlier | A sheep labeled as “dog” in a dataset with only “dog” and “cat” classes |
+    The image visually belongs to a different category, even though its label is technically valid
+    Example: A photo of a sheep labeled as “dog” in a dataset that only includes “dog” and “cat” classes
 
----
+<Accordion icon="lightbulb" title="Examples of Class Outliers">
+    - A drawing of a dog in a dataset of real dog photos
+    - A sheep labeled as “dog” in a dataset with only “dog” and “cat” classes
+</Accordion>
+
 ## Why It Matters
-- Model confusion – Outliers within a class can distort the learned distribution
 
-- Cleaner training – Identifying and optionally excluding such samples can improve performance
-
-- Dataset debugging – Helps uncover unexpected edge cases or data drift
-
----
+<div classname="integration-table">
+| Need             | Description                                                                 |
+| ---------------- | --------------------------------------------------------------------------- |
+| Model confusion  | Outliers within a class can distort the learned distribution               |
+| Cleaner training | Identifying and optionally excluding such samples can improve performance  |
+| Dataset debugging| Helps uncover unexpected edge cases or data drift                          |
+</div>
 
 ## How to Detect
-Go to **Add Filter** → **Class Outlier** → Set your **confidence threshold** (default set to 1)
-Export results using **Export** → **Matching the applied filter**
+1. Navigate to **Add Filter** → **Class Outlier**.
+2. Set the **confidence threshold** (default set to 1).
+3. Export results using **Export** → **Matching the applied filter**.
