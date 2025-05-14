@@ -1,43 +1,58 @@
 # Prerequisites
 
-Before you start, ensure you have these installed:
-- Git: Download Git (for version control)
-- Node.js: Download Node.js (LTS version recommended)
-- A GitHub account
-- A code editor like Visual Studio Code
+Before you start, ensure you have the following installed:
 
-# Setting Up Your Local Environment
+- **Git**: [Download Git](https://git-scm.com/) (for version control)
+- **Node.js**: [Download Node.js](https://nodejs.org/) (LTS version recommended)
+- **A GitHub account**
+- **A code editor**: e.g., [Visual Studio Code](https://code.visualstudio.com/)
 
-Step 1: Clone the Repository
-Open your terminal (MacOS/Linux) or Git Bash (Windows).
+## Setting Up Your Local Environment
 
-Clone the documentation repository:
+### 🛠️ Installing the Mintlify CLI
 
+#### Step 1: Ensure Node.js is Installed
+Mintlify CLI requires **Node.js version 19 or higher**.
+
+- **Check your current version**:
+    ```bash
+    node -v
+    ```
+- **If needed, install or upgrade Node.js**:
+    - Using Node Version Manager (nvm):
+        ```bash
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+        nvm install node
+        ```
+    - Direct download: Visit the [official Node.js website](https://nodejs.org/) and download the latest version.
+
+#### Step 2: Install the Mintlify CLI Globally
+Install via npm:
 ```bash
-git clone https://github.com/visual-layer/VL-documentation.git
+npm install -g mintlify
 ```
+This command installs the Mintlify CLI globally, allowing you to use it from any directory.
 
-Navigate into the project folder:
-
+#### Step 3: Verify the Installation
+Check the installed version:
 ```bash
-cd VL-documentation
+mintlify --version
 ```
+This ensures that the CLI is installed correctly and is accessible from your terminal.
 
-Step 2: Install Dependencies
-Install project dependencies by running:
+### 🚀 Using the Mintlify CLI in Your Workflow
 
+#### Preview Documentation Locally
+1. Navigate to your project directory (ensure it contains the `docs.json` file).
+2. Run the development server:
+     ```bash
+     mintlify dev
+     ```
+3. Open your browser and visit `http://localhost:3000` to view your documentation.
+
+#### Customize the Development Server Port
+If port 3000 is in use or you prefer a different port:
 ```bash
-npm install
+mintlify dev --port 3333
 ```
-Step 3: Launch Local Docs Server
-Run the local documentation preview:
-
-```bash
-npm run dev
-```
-
-Once running, open your browser and visit:
-http://localhost:3000
-
-Your local copy of the docs should now be visible, reflecting real-time changes you make.
-
+This starts the server on port 3333.
