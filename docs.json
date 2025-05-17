@@ -191,6 +191,10 @@
       "href": "https://www.visual-layer.com/"
     }
   },
+  "contextual": {
+    "actions": ["copy", "view", "chatgpt", "claude"]
+
+  },
 "footer": {
   "socials": {
     "x": "https://x.com/visual_layer",
