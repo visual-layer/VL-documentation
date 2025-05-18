@@ -194,6 +194,11 @@
   "contextual": {
     "options": ["copy", "view", "chatgpt", "claude"]
   },
+  "integrations": {
+    "amplitude": {
+      "apiKey": "OUtoNOlcFHjNpYFxWJo5M81pjOJLIpcC"
+    }
+  },
 "footer": {
   "socials": {
     "x": "https://x.com/visual_layer",
