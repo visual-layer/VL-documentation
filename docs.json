@@ -34,6 +34,7 @@
               "docs/on-prem/System_requirements",
               "docs/on-prem/setting_up",
               "docs/on-prem/operation",
+              "docs/on-prem/profiler",
               "docs/on-prem/user-management",
               "docs/on-prem/Configuration",
               "docs/on-prem/Troubleshooting"
@@ -116,7 +117,8 @@
             "pages": [
               "docs/Help-Support/troubleshooting",
               "docs/Help-Support/faqs",
-              "docs/Help-Support/community"
+              "docs/Help-Support/community",
+              "docs/Help-Support/expiration"
             ]
           }
         ]

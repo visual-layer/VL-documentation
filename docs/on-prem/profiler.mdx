@@ -1,0 +1,251 @@
+---
+title: "run_profiler.sh"
+---
+
+The `run_profiler.sh` script enables processing and profiling of image datasets for the Visual Layer platform. It supports multiple data sources, including local directories, S3 buckets, HTTP/HTTPS URLs, and file lists in `.txt`, `.csv`, or `.parquet` formats. With flexible execution modes and broad data compatibility, the script adapts to a wide range of environments and workflows.
+
+The rest of this article outlines script usage syntax and provides detailed explanations for each command-line parameter.
+
+## Usage
+
+Following is the command-line syntax for running the script:
+
+```bash
+./run_profiler.sh [-h] [-p <path> -n <dataset_name>] [-e compose|local] [-r]
+```
+
+
+## Parameters
+
+Following are the command-line parameters supported by the script:
+
+---
+
+### Dataset Path (`-p`, *required*)
+
+Specifies the source location of your dataset. Multiple formats are supported:
+
+<ParamField path="-p" type="string" required>
+|         |                                        |
+|---------------------|--------------------------------------------------------|
+| Local directory     | `~/data/images`                                        |
+| S3 bucket           | `s3://mybucket/images`                                 |
+| HTTP/HTTPS URL      | `https://example.com/dataset`                          |
+| File list           | Path to a `.txt`, `.csv`, or `.parquet` file containing image paths |
+</ParamField>
+
+---
+
+### Dataset Name (`-n`, *required*)
+
+A human-readable name for your dataset. This name will be used for identification in logs and results.
+
+<ParamField path="-n" type="string" required>
+</ParamField>
+
+---
+
+### Execution Mode (`-e`)
+
+Determines how the processing pipeline is executed.
+
+**default**: `compose`
+
+<ParamField path="-e" default="compose" type="string">
+
+|      |                                                                                    |
+|----------|-----------------------------------------------------------------------------------------------|
+| `compose`  | Uses Docker Compose and the Visual Layer API (recommended for most users, default mode)        |
+| `local`    | Runs directly on your local machine using a Python virtual environment (advanced)              |
+</ParamField>
+
+---
+
+### Reduce Disk Space (`-r`)
+
+Enables reduced disk space consumption mode. Useful for large datasets or environments with limited storage.
+
+**default**: `false`
+
+When enabled, activates `serve_mode=reduce_disk_space` for optimized storage usage.
+
+<ParamField path="-r" default="false" type="boolean">
+</ParamField>
+
+---
+
+### Help (`-h`)
+
+Displays usage information and example commands.
+
+<ParamField path="-h" type="boolean">
+
+</ParamField>
+
+## Examples
+
+<CodeGroup>
+
+```bash Local Directory
+./run_profiler.sh -p ~/data/ds1 -n 'dataset1'
+```
+
+
+```bash S3 Directory
+./run_profiler.sh -p s3://mybucket/images -n 'dataset1'
+```
+
+
+```bash File List (Local)
+./run_profiler.sh -p ~/filelist.txt -n 'dataset1'
+```
+
+
+```bash File List (S3)
+./run_profiler.sh -p s3://mybucket/images/filelist.parquet -n 'dataset1'
+```
+
+
+```bash Reduced Disk Space
+./run_profiler.sh -p ~/data/ds1 -n 'dataset1' -r
+```
+
+</CodeGroup>
+
+## Execution Modes
+
+The script supports two execution modes for processing datasets:
+
+### Compose Mode (Default)
+
+<Info>
+  **Recommended for most users**. Uses Docker Compose to run the processing pipeline with the Visual Layer API.
+</Info>
+
+| Feature                                   | Description                                         |
+|--------------------------------------------|-----------------------------------------------------|
+| Processing Method                         | Processes datasets through HTTP API endpoint        |
+| Supported Data Sources                    | Local, S3, HTTP/HTTPS                              |
+| Path Handling                             | Automatically handles path encoding for remote sources |
+| Integration                               | Integrates with the full Visual Layer service stack |
+
+**API Endpoint**: `POST http://localhost:2080/api/v1/process`
+
+**Parameters sent to API**:
+
+| Parameter    | Description                                              |
+|--------------|----------------------------------------------------------|
+| `path`       | Dataset source path (URL-encoded for remote sources)     |
+| `name`       | Dataset name                                             |
+| `serve_mode` | Set to `reduce_disk_space` when `-r` flag is used        |
+
+### Local Mode
+
+<Warning>
+  **Advanced users only**. Runs the pipeline directly using Python virtual environment.
+</Warning>
+
+- Executes `pipeline.controller.controller` module directly
+- Requires local Python virtual environment setup
+- Uses manual flow configuration (`MANUAL_FLOW=yes`)
+- Configures device settings based on hardware type (CPU/GPU)
+
+**Environment Variables Set**:
+
+- `MANUAL_FLOW=yes`
+- `FASTDUP_PRODUCTION=1`
+- `PREFECT_LOGGING_SETTINGS_PATH=./.vl/prefect-logging.yaml`
+- Device-specific settings for CPU mode
+
+## Data Source Support
+
+### Local Paths
+
+- Converts relative paths to absolute paths using `realpath`
+- For file inputs (lists), copies to `.vl/` directory for container access
+- Validates path existence before processing
+
+### Remote Paths
+
+| Source Type      | Example/Details                                         |
+|------------------|--------------------------------------------------------|
+| **S3**           | `s3://bucket/path`                                     |
+| **HTTP/HTTPS**   | `http://` or `https://` URLs                           |
+| **File Detection** | Automatically detects file extensions (`.txt`, `.csv`, `.parquet`) |
+| **URL Encoding** | Applies proper encoding for API transmission           |
+
+### Supported File Formats
+
+- **Image Directories**: Any directory containing image files
+- **File Lists**:
+  - `.txt`: Plain text file with one file path per line
+  - `.csv`: CSV file with file paths
+  - `.parquet`: Parquet file containing file path data
+
+## Error Handling
+
+The script includes comprehensive error handling:
+
+| Error Type                | Description                                         |
+|---------------------------|-----------------------------------------------------|
+| **Missing Arguments**     | Displays usage information and exits                |
+| **Invalid Paths**         | Validates local path existence                      |
+| **Invalid Execution Mode**| Ensures mode is either `compose` or `local`         |
+| **API Failures**          | Captures and displays API error responses           |
+| **Pipeline Failures**     | Handles local pipeline execution errors             |
+
+## Dependencies
+
+| Dependency           | Purpose/Usage                                 |
+|----------------------|-----------------------------------------------|
+| **Bash**             | Shell environment                             |
+| **curl**             | API communication (compose mode)              |
+| **Python 3**         | Local execution and URL encoding              |
+| **Docker Compose**   | Compose mode execution                        |
+| **Virtual Environment** (`./venv_local/`) | Local mode Python environment           |
+
+## Output
+
+### Compose Mode
+
+- Success: Displays dataset processing confirmation with response
+- Failure: Shows API error message in red text
+
+### Local Mode
+
+- Runs pipeline with full logging output
+- Returns to original shell environment on completion
+
+## Performance Considerations
+
+### Reduced Disk Space Mode (`-r`)
+
+- Activates `serve_mode=reduce_disk_space` parameter
+- Optimizes storage usage during processing
+- Recommended for large datasets or limited storage environments
+
+### Hardware Configuration
+
+- **CPU Mode**: Automatically configures all processing devices to use CPU
+- **GPU Mode**: Uses default GPU acceleration when available
+
+## Integration
+
+This script integrates with the Visual Layer platform's core components:
+
+| Component             | Description                                               |
+|-----------------------|-----------------------------------------------------------|
+| Pipeline Controller   | Orchestrates the complete processing workflow             |
+| Database              | Stores processed dataset metadata and results             |
+| API Service           | Provides RESTful interface for dataset operations         |
+| Storage Systems       | Supports local filesystem, S3, and HTTP sources           |
+
+## Troubleshooting
+
+<Accordion title="Common Issues">
+  **Path not found errors**
+
+  - Verify local paths exist and are accessible
+  - Check S3 credentials and permissions for S3 paths
+  - Ensure HTTP/HTTPS URLs are accessible
+</Accordion>
