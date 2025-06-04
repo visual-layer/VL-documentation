@@ -1,0 +1,28 @@
+---
+title: "Expiration"
+---
+
+In order to know your version expiration date, you can show the contets of the version.json file:
+
+```
+cat .vl/version.json
+```
+
+example output:
+
+```
+{
+  "version": "2.38.27-rc.10",
+  "release_date": "2025-06-03T13:26:37Z",
+  "obfuscation_duration_days": 90,
+  "license_end_date": "2025-09-01T13:26:37Z",
+  "product": "onprem"
+}
+```
+
+| field                     | example data         | definition                                    |
+| ------------------------- | -------------------- | --------------------------------------------- |
+| version                   | 2.38.27-rc.10        | version of the installed version              |
+| release_date              | 2025-06-03T13:26:37Z | time the version was released                 |
+| obfuscation_duration_days | 90                   | days untill obfuscation from the release date |
+| license_end_date          | 2025-09-01T13:26:37Z | expiration date                               |
