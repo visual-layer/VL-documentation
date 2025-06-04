@@ -2,44 +2,84 @@
 title: "run_profiler.sh"
 ---
 
-## Overview
+The `run_profiler.sh` script enables processing and profiling of image datasets for the Visual Layer platform. It supports multiple data sources, including local directories, S3 buckets, HTTP/HTTPS URLs, and file lists in `.txt`, `.csv`, or `.parquet` formats. With flexible execution modes and broad data compatibility, the script adapts to a wide range of environments and workflows.
 
-The `run_profiler.sh` script is the primary entry point for processing and profiling image datasets in the Visual Layer platform. It supports multiple data sources and execution modes, enabling both local and containerized processing workflows.
+The rest of this article outlines script usage syntax and provides detailed explanations for each command-line parameter.
 
 ## Usage
+
+Following is the command-line syntax for running the script:
 
 ```bash
 ./run_profiler.sh [-h] [-p <path> -n <dataset_name>] [-e compose|local] [-r]
 ```
 
+
 ## Parameters
 
-<ParamField path="-p" type="string" required>
-  **Dataset Path**: Path to the dataset. Supports multiple formats:
+Following are the command-line parameters supported by the script:
 
-  - Local directory (e.g., `~/data/images`)
-  - S3 directory (e.g., `s3://mybucket/images`)
-  - HTTP/HTTPS URL (e.g., `https://example.com/dataset`)
-  - File list in `.txt`, `.csv`, or `.parquet` format
+---
+
+### Dataset Path (`-p`, *required*)
+
+Specifies the source location of your dataset. Multiple formats are supported:
+
+<ParamField path="-p" type="string" required>
+|         |                                        |
+|---------------------|--------------------------------------------------------|
+| Local directory     | `~/data/images`                                        |
+| S3 bucket           | `s3://mybucket/images`                                 |
+| HTTP/HTTPS URL      | `https://example.com/dataset`                          |
+| File list           | Path to a `.txt`, `.csv`, or `.parquet` file containing image paths |
 </ParamField>
+
+---
+
+### Dataset Name (`-n`, *required*)
+
+A human-readable name for your dataset. This name will be used for identification in logs and results.
 
 <ParamField path="-n" type="string" required>
-  **Dataset Name**: Human-readable name for the dataset
 </ParamField>
+
+---
+
+### Execution Mode (`-e`)
+
+Determines how the processing pipeline is executed.
+
+**default**: `compose`
 
 <ParamField path="-e" default="compose" type="string">
-  **Execution Mode**: Processing execution mode
 
-  - `compose`: Run using Docker Compose with API (recommended)
-  - `local`: Run directly on local machine with Python virtual environment
+|      |                                                                                    |
+|----------|-----------------------------------------------------------------------------------------------|
+| `compose`  | Uses Docker Compose and the Visual Layer API (recommended for most users, default mode)        |
+| `local`    | Runs directly on your local machine using a Python virtual environment (advanced)              |
 </ParamField>
+
+---
+
+### Reduce Disk Space (`-r`)
+
+Enables reduced disk space consumption mode. Useful for large datasets or environments with limited storage.
+
+**default**: `false`
+
+When enabled, activates `serve_mode=reduce_disk_space` for optimized storage usage.
 
 <ParamField path="-r" default="false" type="boolean">
-  **Reduce Disk Space**: Enable reduced disk space consumption mode
 </ParamField>
 
+---
+
+### Help (`-h`)
+
+Displays usage information and example commands.
+
 <ParamField path="-h" type="boolean">
-  **Help**: Display usage information and examples
+
 </ParamField>
 
 ## Examples
@@ -74,24 +114,30 @@ The `run_profiler.sh` script is the primary entry point for processing and profi
 
 ## Execution Modes
 
+The script supports two execution modes for processing datasets:
+
 ### Compose Mode (Default)
 
 <Info>
   **Recommended for most users**. Uses Docker Compose to run the processing pipeline with the Visual Layer API.
 </Info>
 
-- Processes datasets through HTTP API endpoint
-- Supports all data source types (local, S3, HTTP/HTTPS)
-- Automatically handles path encoding for remote sources
-- Integrates with the full Visual Layer service stack
+| Feature                                   | Description                                         |
+|--------------------------------------------|-----------------------------------------------------|
+| Processing Method                         | Processes datasets through HTTP API endpoint        |
+| Supported Data Sources                    | Local, S3, HTTP/HTTPS                              |
+| Path Handling                             | Automatically handles path encoding for remote sources |
+| Integration                               | Integrates with the full Visual Layer service stack |
 
 **API Endpoint**: `POST http://localhost:2080/api/v1/process`
 
 **Parameters sent to API**:
 
-- `path`: Dataset source path (URL-encoded for remote sources)
-- `name`: Dataset name
-- `serve_mode`: Set to `reduce_disk_space` when `-r` flag is used
+| Parameter    | Description                                              |
+|--------------|----------------------------------------------------------|
+| `path`       | Dataset source path (URL-encoded for remote sources)     |
+| `name`       | Dataset name                                             |
+| `serve_mode` | Set to `reduce_disk_space` when `-r` flag is used        |
 
 ### Local Mode
 
@@ -121,10 +167,12 @@ The `run_profiler.sh` script is the primary entry point for processing and profi
 
 ### Remote Paths
 
-- **S3**: `s3://bucket/path`
-- **HTTP/HTTPS**: `http://` or `https://` URLs
-- **File Detection**: Automatically detects file extensions (`.txt`, `.csv`, `.parquet`)
-- **URL Encoding**: Applies proper encoding for API transmission
+| Source Type      | Example/Details                                         |
+|------------------|--------------------------------------------------------|
+| **S3**           | `s3://bucket/path`                                     |
+| **HTTP/HTTPS**   | `http://` or `https://` URLs                           |
+| **File Detection** | Automatically detects file extensions (`.txt`, `.csv`, `.parquet`) |
+| **URL Encoding** | Applies proper encoding for API transmission           |
 
 ### Supported File Formats
 
@@ -138,19 +186,23 @@ The `run_profiler.sh` script is the primary entry point for processing and profi
 
 The script includes comprehensive error handling:
 
-- **Missing Arguments**: Displays usage information and exits
-- **Invalid Paths**: Validates local path existence
-- **Invalid Execution Mode**: Ensures mode is either `compose` or `local`
-- **API Failures**: Captures and displays API error responses
-- **Pipeline Failures**: Handles local pipeline execution errors
+| Error Type                | Description                                         |
+|---------------------------|-----------------------------------------------------|
+| **Missing Arguments**     | Displays usage information and exits                |
+| **Invalid Paths**         | Validates local path existence                      |
+| **Invalid Execution Mode**| Ensures mode is either `compose` or `local`         |
+| **API Failures**          | Captures and displays API error responses           |
+| **Pipeline Failures**     | Handles local pipeline execution errors             |
 
 ## Dependencies
 
-- **Bash**: Shell environment
-- **curl**: For API communication (compose mode)
-- **Python 3**: For local execution and URL encoding
-- **Docker Compose**: For compose mode execution
-- **Virtual Environment**: `./venv_local/` for local mode
+| Dependency           | Purpose/Usage                                 |
+|----------------------|-----------------------------------------------|
+| **Bash**             | Shell environment                             |
+| **curl**             | API communication (compose mode)              |
+| **Python 3**         | Local execution and URL encoding              |
+| **Docker Compose**   | Compose mode execution                        |
+| **Virtual Environment** (`./venv_local/`) | Local mode Python environment           |
 
 ## Output
 
@@ -181,10 +233,12 @@ The script includes comprehensive error handling:
 
 This script integrates with the Visual Layer platform's core components:
 
-- **Pipeline Controller**: Orchestrates the complete processing workflow
-- **Database**: Stores processed dataset metadata and results
-- **API Service**: Provides RESTful interface for dataset operations
-- **Storage Systems**: Supports local filesystem, S3, and HTTP sources
+| Component             | Description                                               |
+|-----------------------|-----------------------------------------------------------|
+| Pipeline Controller   | Orchestrates the complete processing workflow             |
+| Database              | Stores processed dataset metadata and results             |
+| API Service           | Provides RESTful interface for dataset operations         |
+| Storage Systems       | Supports local filesystem, S3, and HTTP sources           |
 
 ## Troubleshooting
 
