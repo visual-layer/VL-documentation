@@ -1,0 +1,531 @@
+---
+title: "Working with Exported Metadata.json Files"
+description: "Learn how to extract, parse, and analyze Visual Layer's exported metadata.json files to gain insights from your datasets."
+---
+
+# Working with Exported Metadata.json Files
+
+This tutorial shows you how to work with metadata.json files exported from Visual Layer. You'll learn how to extract data using the API, parse the exported JSON files, and convert them to different formats for analysis.
+
+## Step 1: Extracting Data Using Visual Layer's API
+
+First, let's set up a Python class to handle the API calls for exporting datasets.
+
+### Simplified Python API
+
+We'll use the following class to encapsulate the API calls:
+
+```python
+import time
+from typing import Any, Dict
+
+import requests
+
+
+class DatasetExporter:
+    def __init__(self, base_url: str):
+        self.base_url = base_url.rstrip("/")
+        self.headers = {"Accept": "application/json, text/plain, */*"}
+
+    def initiate_export(
+        self,
+        dataset_id: str,
+        file_name: str,
+        export_format: str = "json",
+        include_images: bool = False,
+    ) -> Dict[str, Any]:
+        """
+        Initiate an export of a dataset.
+
+        Args:
+            dataset_id: The ID of the dataset to export
+            file_name: Name of the export file
+            export_format: Format of the export (default: 'json')
+            include_images: Whether to include images in export (default: False)
+
+        Returns:
+            Dict containing the export task information
+        """
+        url = f"{self.base_url}/api/v1/dataset/{dataset_id}/export_context_async"
+        params = {
+            "file_name": file_name,
+            "export_format": export_format,
+            "include_images": str(include_images).lower(),
+        }
+
+        response = requests.get(url, headers=self.headers, params=params)
+        response.raise_for_status()
+        return response.json()
+
+    def check_export_status(
+        self, dataset_id: str, export_task_id: str
+    ) -> Dict[str, Any]:
+        """
+        Check the status of an export task.
+
+        Args:
+            dataset_id: The ID of the dataset
+            export_task_id: The ID of the export task to check
+
+        Returns:
+            Dict containing the status information
+        """
+        url = f"{self.base_url}/api/v1/dataset/{dataset_id}/export_status"
+        params = {"export_task_id": export_task_id}
+
+        response = requests.get(url, headers=self.headers, params=params)
+        response.raise_for_status()
+        return response.json()
+
+    def wait_for_export(
+        self,
+        dataset_id: str,
+        export_task_id: str,
+        check_interval: int = 5,
+        timeout: int = 300,
+    ) -> Dict[str, Any]:
+        """
+        Wait for an export task to complete.
+
+        Args:
+            dataset_id: The ID of the dataset
+            export_task_id: The ID of the export task to check
+            check_interval: Time in seconds between status checks (default: 5)
+            timeout: Maximum time to wait in seconds (default: 300)
+
+        Returns:
+            Dict containing the final status information
+
+        Raises:
+            TimeoutError: If the export doesn't complete within the timeout period
+        """
+        start_time = time.time()
+        while True:
+            status = self.check_export_status(dataset_id, export_task_id)
+
+            if status["status"] == "COMPLETED":
+                return status
+
+            if status["status"] == "FAILED":
+                raise Exception(f"Export failed: {status.get('result_message')}")
+
+            if time.time() - start_time > timeout:
+                raise TimeoutError("Export timed out")
+
+            time.sleep(check_interval)
+
+    def download_export(self, download_uri: str, output_path: str) -> None:
+        """
+        Download the exported file from the given URI.
+
+        Args:
+            download_uri: The URI path from the export status
+            output_path: Local path where the file should be saved
+
+        Returns:
+            None
+        """
+        url = f"{self.base_url}{download_uri}"
+        response = requests.get(url, headers=self.headers, stream=True)
+        response.raise_for_status()
+
+        with open(output_path, "wb") as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
+```
+
+### Usage Example
+
+You'll need to replace the `url`, `dataset_id`, and `file_name` with your own values:
+
+```python
+import zipfile
+import os
+
+def main():
+    # Replace with your own
+    url = "http://3.129.25.115:2080"
+    dataset_id = "4cd4d9a2-e793-11ef-80a1-0242ac13000a"
+    file_name = "export.zip"
+
+    exporter = DatasetExporter(url)
+
+    try:
+        print("Initiating export...")
+        export_task = exporter.initiate_export(dataset_id, file_name)
+        print(f"Export task created: {export_task}")
+
+        print("Waiting for export to complete...")
+        final_status = exporter.wait_for_export(dataset_id, export_task["id"])
+
+        print("\nExport completed!")
+        print(f"Download URI: {url}{final_status['download_uri']}")
+
+        print("Downloading file...")
+        exporter.download_export(final_status["download_uri"], file_name)
+        print(f"File downloaded successfully to: {file_name}")
+
+        print("Unzipping file...")
+        output_dir = file_name.replace('.zip', '')
+        os.makedirs(output_dir, exist_ok=True)
+        with zipfile.ZipFile(file_name, "r") as zip_ref:
+            zip_ref.extractall(output_dir)
+        print(f"File unzipped successfully to: {output_dir}")
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+### Expected Output
+
+```
+Initiating export...  
+Export task created: {'id': 'cf8b3e78-cb20-4954-a782-436a03006dab', 'dataset_id': '4cd4d9a2-e793-11ef-80a1-0242ac13000a', 'created_at': '2025-02-10T14:41:14.390429', 'download_uri': None, 'progress': 0.0, 'status': 'INIT', 'entities_count': 4203, 'result_message': None}  
+Waiting for export to complete...
+
+Export completed!  
+Download URI: http://3.129.25.115:2080/cdn/4cd4d9a2-e793-11ef-80a1-0242ac13000a/images/cf8b3e78-cb20-4954-a782-436a03006dab/cf8b3e78-cb20-4954-a782-436a03006dab.zip  
+Downloading file...  
+File downloaded successfully to: export.zip  
+Unzipping file...  
+File unzipped successfully to: export
+```
+
+## Step 2: Parsing Exported Metadata
+
+After extracting your data, you'll have a `metadata.json` file. Let's learn how to parse and analyze it.
+
+### Loading the Exported Metadata
+
+First, let's load the exported metadata into a pandas dataframe:
+
+```python
+import pandas as pd
+import json
+
+with open("food101/metadata.json") as f:
+    data = json.load(f)
+
+# This is the dataset level information
+info_df = pd.DataFrame([data["info"]])
+
+# This is the image level information
+media_items_df = pd.json_normalize(data["media_items"])
+```
+
+### View the Dataset Level Information
+
+```python
+info_df
+```
+
+| schema_version | dataset | description                           | dataset_url                                               | export_time                | dataset_creation_time      | exported_by  | total_media_items |
+| -------------- | ------- | ------------------------------------- | --------------------------------------------------------- | -------------------------- | -------------------------- | ------------ | ----------------- |
+| 1.1            | food101 | Exported from food101 at Visual Layer | [Link](http://app.visual-layer.com/dataset/aa3d2a32-e...) | 2025-02-10T14:29:53.740569 | 2024-12-05T05:55:27.725598 | Dickson Neoh | 118               |
+
+### Get Image Level Details
+
+Each row in the dataframe corresponds to an image:
+
+```python
+media_items_df
+```
+
+| media_id                             | media_type | file_name  | file_path  | file_size | uniqueness_score | height | width | url                                                       | cluster_id                           | metadata_items                                     |
+| ------------------------------------ | ---------- | ---------- | ---------- | --------- | ---------------- | ------ | ----- | --------------------------------------------------------- | ------------------------------------ | -------------------------------------------------- |
+| d5227901-22c9-4744-a264-407d9671aa4a | image      | 548938.jpg | 548938.jpg | 32.00KB   | 0.004178         | 512    | 512   | [Link](http://app.visual-layer.com/dataset/aa3d2a32-e...) | fbcad8ef-d863-46c9-83b7-1a3bd85e2e2b | \[{'type': 'issue', 'properties': {'issue_type'... |
+| 2546c70a-e0a4-4bfb-ac59-e2895bb96456 | image      | 548231.jpg | 548231.jpg | 32.00KB   | 0.006069         | 512    | 512   | [Link](http://app.visual-layer.com/dataset/aa3d2a32-e...) | fbcad8ef-d863-46c9-83b7-1a3bd85e2e2b | \[{'type': 'issue', 'properties': {'issue_type'... |
+| 45c226e0-daba-4ca8-8eac-fec9d490ea36 | image      | 835953.jpg | 835953.jpg | 28.18KB   | 0.003515         | 512    | 384   | [Link](http://app.visual-layer.com/dataset/aa3d2a32-e...) | 5bc63415-76d8-49ec-975a-9a021bf98770 | \[{'type': 'issue', 'properties': {'issue_type'... |
+
+## Step 3: Analyzing Your Data
+
+### Filter By Uniqueness Score
+
+By filtering by uniqueness score, you can get a representative sample of the images in the dataset:
+
+```python
+UNIQUENESS_SCORE_THRESHOLD = 0.85
+
+coreset_df = media_items_df[
+    media_items_df["uniqueness_score"] > UNIQUENESS_SCORE_THRESHOLD
+]
+coreset_df
+```
+
+This will show media items with a uniqueness score greater than **0.85**.
+
+### Get Duplicate Images
+
+The `metadata_items` column contains a list of issues for each image. We can filter for images with duplicate issues above a certain confidence threshold:
+
+```python
+def has_duplicate_issue(metadata_items, confidence_threshold=0.8):
+    if not isinstance(metadata_items, list):
+        return False
+
+    for item in metadata_items:
+        if (
+            item.get("type") == "issue"
+            and item.get("properties", {}).get("issue_type") == "duplicates"
+            and item.get("properties", {}).get("confidence", 0) > confidence_threshold
+        ):
+            return True
+    return False
+
+# Replace with your confidence threshold
+CONFIDENCE_THRESHOLD = 0.8
+
+duplicate_df = media_items_df[
+    media_items_df["metadata_items"].apply(
+        lambda x: has_duplicate_issue(x, confidence_threshold=CONFIDENCE_THRESHOLD)
+    )
+]
+
+duplicate_df
+```
+
+This table includes images with duplicate issues above a confidence threshold of 0.8.
+
+### Get Mislabels
+
+We can filter for images with mislabel issues above a certain confidence threshold:
+
+```python
+def has_mislabel_issue(metadata_items, confidence_threshold=0.8):
+    if not isinstance(metadata_items, list):
+        return False
+
+    for item in metadata_items:
+        if (
+            item.get("type") == "issue"
+            and item.get("properties", {}).get("issue_type") == "mislabels"
+            and item.get("properties", {}).get("confidence", 0) > confidence_threshold
+        ):
+            return True
+    return False
+
+# Replace with your confidence threshold
+CONFIDENCE_THRESHOLD = 0.8
+
+mislabel_df = media_items_df[
+    media_items_df["metadata_items"].apply(
+        lambda x: has_mislabel_issue(x, confidence_threshold=CONFIDENCE_THRESHOLD)
+    )
+]
+
+mislabel_df
+```
+
+## Step 4: Converting Video Frame Data to CSV
+
+If your exported JSON contains video frame data, here's how to parse it into CSV format:
+
+### Example Video Frame JSON Structure
+
+```json
+{
+  "info": {
+    "schema_version": "1.1",
+    "dataset": "Extreme",
+    "description": "Exported from Extreme at Visual Layer",
+    "dataset_url": "http://app.visual-layer.com/dataset/42e3b7ae-dd5e-11ef-9fca-1a226f3de670/data",
+    "export_time": "2025-02-15T18:23:34.164184",
+    "dataset_creation_time": "2025-01-24T18:35:57.719308",
+    "exported_by": "Danny Bickson",
+    "total_media_items": 56
+  },
+  "media_items": [
+    {
+      "media_id": "8621054d-1d23-4ca7-a7ca-65feb2c83eb1",
+      "media_type": "video_frame",
+      "file_name": "output_000001.jpg",
+      "file_path": "7370082532203988000_7450129782785756438_2024-12-19_14:28:36.mp4/output_000001.jpg",
+      "file_size": "48.27KB",
+      "uniqueness_score": 0.4989460029187489,
+      "height": 720,
+      "width": 576,
+      "url": "http://app.visual-layer.com/dataset/42e3b7ae-dd5e-11ef-9fca-1a226f3de670/data/image/8621054d-1d23-4ca7-a7ca-65feb2c83eb1",
+      "cluster_id": "49997382-b7c3-4c83-83a3-fa4e0a586f2b",
+      "metadata_items": [
+        {
+          "type": "video_info",
+          "properties": {
+            "video_name": "7370082532203988000_7450129782785756438_2024-12-19_14:28:36.mp4",
+            "frame_timestamp": 0.0
+          }
+        },
+        {
+          "type": "issue",
+          "properties": {
+            "issue_type": "duplicates",
+            "confidence": 0.977624,
+            "duplicate_group_id": "35395121-5cb1-4a92-906f-dd4cb9ff62d3",
+            "duplicate_threshold": 0.96
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Converting Video Frame Data to CSV
+
+```python
+import json  
+import pandas as pd  
+import re
+
+# Load JSON file
+with open("metadata 8.json", "r") as f:  
+    data = json.load(f)
+
+# Prepare list for DataFrame
+records = []
+
+# Iterate over media items
+for item in data.get("media_items", []):  
+    video_name = None  
+    frame_timestamp = None  
+    categories = []  
+    file_name = item.get("file_name", "")
+
+    for metadata in item.get("metadata_items", []):
+        if metadata["type"] == "video_info":
+            video_name = metadata["properties"].get("video_name")
+            frame_timestamp = metadata["properties"].get("frame_timestamp")
+        elif metadata["type"] == "image_label":
+            categories.append(metadata["properties"].get("category_name"))
+
+    # Extract frame number from file name
+    match = re.search(r'output_(\d+).jpg', file_name)
+    frame_number = int(match.group(1)) if match else None
+
+    # Append record with categories as a list
+    records.append({
+        "video_name": video_name,
+        "file_name": file_name,
+        "frame_number": frame_number,
+        "time_in_video": frame_timestamp,
+        "categories": categories
+    })
+
+# Convert to DataFrame
+df = pd.DataFrame(records)  
+print(df.tail())
+```
+
+## Step 5: Converting Object Detection Data to CSV
+
+For datasets with bounding box annotations and user tags, here's how to convert them to CSV format:
+
+### Example Object Detection JSON Structure
+
+```json
+{
+  "info": {
+    "schema_version": "1.1",
+    "dataset": "General pics",
+    "description": "Exported from General pics at Visual Layer",
+    "total_media_items": 2
+  },
+  "media_items": [
+    {
+      "media_id": "01305347-b812-4717-99a3-aab54a206d4c",
+      "file_name": "000000046252.jpg",
+      "width": 640,
+      "height": 480,
+      "metadata_items": [
+        {
+          "type": "object_label",
+          "properties": {
+            "category_name": "person",
+            "bbox": [148, 177, 127, 188],
+            "metadata_items": [
+              {
+                "type": "user_tag",
+                "properties": {"tag_name": "test-tags"}
+              }
+            ]
+          }
+        },
+        {
+          "type": "object_label",
+          "properties": {
+            "category_name": "shirt",
+            "bbox": [192, 194, 75, 65]
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Converting Object Detection Data to CSV
+
+```python
+import json
+import csv
+
+# Load JSON file
+input_file = "metadata_5.json"  # Change this to your actual file path
+output_file = "output.csv"  # Output CSV file name
+
+with open(input_file, "r") as f:
+    data = json.load(f)
+
+# Prepare CSV file
+header = ["filename", "x", "y", "w", "h", "label", "user tag"]
+rows = []
+
+# Extract data
+for media in data.get("media_items", []):
+    filename = media.get("file_name", "")
+    for item in media.get("metadata_items", []):
+        if item.get("type") == "object_label":
+            properties = item.get("properties", {})
+            bbox = properties.get("bbox", [0, 0, 0, 0])
+            label = properties.get("category_name", "")
+            user_tag = ""
+
+            # Extract user tag if available
+            for meta in properties.get("metadata_items", []):
+                if meta.get("type") == "user_tag":
+                    user_tag = meta.get("properties", {}).get("tag_name", "")
+                    break
+
+            # Append row
+            rows.append([filename, bbox[0], bbox[1], bbox[2], bbox[3], label, user_tag])
+
+# Write to CSV
+with open(output_file, "w", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(header)
+    writer.writerows(rows)
+
+print(f"CSV file saved to {output_file}")
+```
+
+### Expected CSV Output
+
+| Filename         | X   | Y   | W   | H   | Label  | User Tag  |
+| ---------------- | --- | --- | --- | --- | ------ | --------- |
+| 000000046252.jpg | 148 | 177 | 127 | 188 | Person | test-tags |
+| 000000046252.jpg | 192 | 194 | 75  | 65  | Shirt  | test-tags |
+| 000000012639.jpg | 28  | 368 | 80  | 118 | Vest   | test-tags |
+
+## Next Steps
+
+Now that you know how to work with exported metadata.json files, you can:
+
+1. **Analyze data quality** by filtering for different issue types and confidence thresholds
+2. **Create data subsets** using uniqueness scores and clustering information
+3. **Export to different formats** for use in other tools and platforms
+4. **Build automated workflows** to process exported datasets at scale
+
+For more information on exporting datasets, see our [Export Dataset guide](/docs/Managing-Datasets/export-dataset).
