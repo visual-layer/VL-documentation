@@ -751,6 +751,205 @@ This analysis helps you identify:
 - The confidence level of similarities
 - Clusters of related video content
 
+## Step 7: Analyzing Mislabel Issues
+
+For datasets with mislabel detection, you can analyze which labels are potentially incorrect and what the suggested corrections are. This is valuable for improving dataset quality and understanding systematic labeling issues.
+
+### Understanding Mislabel Structure
+
+Mislabel issues are stored within object labels and have this structure:
+
+```json
+{
+  "type": "issue",
+  "properties": {
+    "issue_type": "mislabels",
+    "issues_description": "3D-CONTAMINATION",
+    "confidence": 0.8059
+  }
+}
+```
+
+Where:
+- `issues_description`: The suggested correct label
+- `confidence`: How confident the system is about the mislabel (0-1)
+
+### Comprehensive Mislabel Analysis
+
+Here's how to extract and analyze all mislabel information:
+
+```python
+import json
+import pandas as pd
+from collections import defaultdict, Counter
+
+# Load the exported metadata
+with open("metadata.json", "r") as f:
+    data = json.load(f)
+
+print(f"Dataset: {data['info']['dataset']}")
+print(f"Total media items: {data['info']['total_media_items']}")
+
+# Extract mislabel information
+mislabel_records = []
+total_objects = 0
+objects_with_mislabels = 0
+
+for item in data.get("media_items", []):
+    media_id = item.get("media_id")
+    file_name = item.get("file_name")
+    
+    # Look for object labels with mislabel issues
+    for metadata in item.get("metadata_items", []):
+        if metadata.get("type") == "object_label":
+            total_objects += 1
+            object_props = metadata.get("properties", {})
+            original_category = object_props.get("category_name")
+            bbox = object_props.get("bbox", [])
+            
+            # Check for mislabel issues in this object
+            object_mislabels = []
+            for obj_metadata in object_props.get("metadata_items", []):
+                if (obj_metadata.get("type") == "issue" and 
+                    obj_metadata.get("properties", {}).get("issue_type") == "mislabels"):
+                    
+                    mislabel_props = obj_metadata.get("properties", {})
+                    suggested_label = mislabel_props.get("issues_description")
+                    confidence = mislabel_props.get("confidence")
+                    
+                    object_mislabels.append({
+                        "suggested_label": suggested_label,
+                        "confidence": confidence
+                    })
+            
+            if object_mislabels:
+                objects_with_mislabels += 1
+                for mislabel in object_mislabels:
+                    mislabel_records.append({
+                        "media_id": media_id,
+                        "file_name": file_name,
+                        "original_label": original_category,
+                        "suggested_label": mislabel["suggested_label"],
+                        "confidence": mislabel["confidence"],
+                        "bbox": bbox
+                    })
+
+print(f"Total objects analyzed: {total_objects}")
+print(f"Objects with mislabel issues: {objects_with_mislabels}")
+print(f"Total mislabel records: {len(mislabel_records)}")
+
+# Create DataFrame for analysis
+mislabels_df = pd.DataFrame(mislabel_records)
+```
+
+### Mislabel Statistics and Analysis
+
+```python
+# 1. How many mislabels total?
+print(f"TOTAL MISLABELS: {len(mislabels_df)}")
+
+# 2. Confidence distribution
+print(f"\nCONFIDENCE DISTRIBUTION:")
+print(f"Average confidence: {mislabels_df['confidence'].mean():.4f}")
+print(f"Min confidence: {mislabels_df['confidence'].min():.4f}")
+print(f"Max confidence: {mislabels_df['confidence'].max():.4f}")
+print(f"High confidence (>0.8): {len(mislabels_df[mislabels_df['confidence'] > 0.8])}")
+print(f"Medium confidence (0.7-0.8): {len(mislabels_df[(mislabels_df['confidence'] >= 0.7) & (mislabels_df['confidence'] <= 0.8)])}")
+print(f"Lower confidence (<0.7): {len(mislabels_df[mislabels_df['confidence'] < 0.7])}")
+
+# 3. From which classes are the mislabels?
+print(f"\nMISLABELED CLASSES (Original Labels):")
+original_label_counts = mislabels_df['original_label'].value_counts()
+print(original_label_counts.head(10))
+
+# 4. What are the suggested corrections?
+print(f"\nSUGGESTED CORRECTIONS (Most Common):")
+suggested_label_counts = mislabels_df['suggested_label'].value_counts()
+print(suggested_label_counts.head(10))
+
+# 5. Most common mislabel corrections (original -> suggested)
+print(f"\nMOST COMMON MISLABEL CORRECTIONS:")
+correction_pairs = mislabels_df.groupby(['original_label', 'suggested_label']).size().reset_index(name='count')
+correction_pairs = correction_pairs.sort_values('count', ascending=False)
+print("Original Label -> Suggested Label (Count)")
+for _, row in correction_pairs.head(15).iterrows():
+    print(f"{row['original_label']} -> {row['suggested_label']} ({row['count']})")
+```
+
+### High-Confidence Corrections Analysis
+
+```python
+# Analyze high-confidence corrections for the most reliable suggestions
+high_conf_corrections = correction_pairs[
+    correction_pairs.apply(lambda x: mislabels_df[
+        (mislabels_df['original_label'] == x['original_label']) & 
+        (mislabels_df['suggested_label'] == x['suggested_label'])
+    ]['confidence'].mean() > 0.8, axis=1)
+]
+
+print(f"High confidence corrections (>0.8): {len(high_conf_corrections)}")
+print("\nTop high-confidence corrections:")
+for _, row in high_conf_corrections.head(10).iterrows():
+    avg_conf = mislabels_df[
+        (mislabels_df['original_label'] == row['original_label']) & 
+        (mislabels_df['suggested_label'] == row['suggested_label'])
+    ]['confidence'].mean()
+    print(f"{row['original_label']} -> {row['suggested_label']} ({row['count']} times, avg conf: {avg_conf:.3f})")
+```
+
+### Summary Statistics and Export
+
+```python
+# Summary statistics
+print(f"\nSUMMARY STATISTICS:")
+print(f"Unique original labels with issues: {len(mislabels_df['original_label'].unique())}")
+print(f"Unique suggested labels: {len(mislabels_df['suggested_label'].unique())}")
+print(f"Unique correction pairs: {len(correction_pairs)}")
+print(f"Images with mislabels: {len(mislabels_df['file_name'].unique())}")
+
+# Export results
+mislabels_df.to_csv("mislabel_analysis.csv", index=False)
+correction_pairs.to_csv("mislabel_corrections.csv", index=False)
+
+print("\nFiles exported:")
+print("- mislabel_analysis.csv: Detailed mislabel data")
+print("- mislabel_corrections.csv: Correction patterns summary")
+```
+
+### Expected Output
+
+The analysis will produce results like:
+
+```
+TOTAL MISLABELS: 422
+
+CONFIDENCE DISTRIBUTION:
+Average confidence: 0.8059
+High confidence (>0.8): 120
+Medium confidence (0.7-0.8): 300
+
+MISLABELED CLASSES (Original Labels):
+3D-SHINYMARK         52
+3D-SCRATCH           40
+3D-CONTAMINATION     38
+3D-SHINYLINE         28
+3D-DENT              28
+
+MOST COMMON MISLABEL CORRECTIONS:
+Bandslot_discolor -> BS-DISCOLOR-B (20)
+3D-SHINYMARK -> 3D-CONTAMINATION (18)
+3D-SHINYLINE -> 3D-CONTAMINATION (12)
+3D-SCRATCH -> 3D-CONTAMINATION (10)
+3D-CHIP -> 3D2-CHIP (10)
+```
+
+This analysis helps you:
+- **Identify systematic labeling issues**: Classes that are frequently mislabeled
+- **Prioritize corrections**: Focus on high-confidence suggestions first
+- **Understand label confusion**: See which classes are commonly confused with each other
+- **Improve dataset quality**: Apply suggested corrections to improve training data
+- **Analyze labeling patterns**: Understand if certain types of objects are consistently mislabeled
+
 ## Next Steps
 
 Now that you know how to work with exported metadata files, you can:
@@ -760,5 +959,6 @@ Now that you know how to work with exported metadata files, you can:
 3. **Export to different formats** for use in other tools and platforms
 4. **Build automated workflows** to process exported datasets at scale
 5. **Analyze video similarity** to find duplicate content, group related videos, or identify the most unique content
+6. **Analyze mislabel issues** to identify systematic labeling problems and prioritize corrections
 
 For more information on exporting datasets, see our [Export Dataset guide](/docs/Managing-Datasets/export-dataset).
