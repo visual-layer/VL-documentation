@@ -583,7 +583,7 @@ print(frames_df.head())
 
 ### Creating a Video Similarity Aggregation Table
 
-Now let's create a table that shows video-to-video similarity:
+Now let's create a table that shows video-to-video similarity. This analysis only compares frames between different videos, excluding similarities within the same video:
 
 ```python
 # Create a mapping of frames to their duplicate groups
@@ -616,28 +616,32 @@ for video_a in all_videos:
             frames_a = frames_df[frames_df['video_name'] == video_a]['media_id'].tolist()
             frames_b = frames_df[frames_df['video_name'] == video_b]['media_id'].tolist()
             
-            # Find shared similarity groups
+            # Find similarities between frames from different videos
+            inter_video_similarities = []
             shared_groups = set()
-            similarities = []
             
             for frame_a in frames_a:
                 for frame_b in frames_b:
                     groups_a = frame_to_groups.get(frame_a, set())
                     groups_b = frame_to_groups.get(frame_b, set())
                     
+                    # Find groups that contain both frames (cross-video similarity)
                     common_groups = groups_a.intersection(groups_b)
                     if common_groups:
                         shared_groups.update(common_groups)
                         
-                        # Get similarity scores for these groups
+                        # For each shared group, get the similarity confidence
+                        # We know these frames are from different videos by construction
                         for group_id in common_groups:
                             frames_in_group = group_to_frames[group_id]
-                            for media_id, vid_name, confidence in frames_in_group:
-                                if media_id in [frame_a, frame_b]:
-                                    similarities.append(confidence)
+                            # Get confidence scores for frames from both videos in this group
+                            confidences_in_group = [conf for _, _, conf in frames_in_group]
+                            if confidences_in_group:
+                                # Use the average confidence for this similarity group
+                                inter_video_similarities.append(sum(confidences_in_group) / len(confidences_in_group))
             
-            if similarities:
-                avg_similarity = sum(similarities) / len(similarities)
+            if inter_video_similarities:
+                avg_similarity = sum(inter_video_similarities) / len(inter_video_similarities)
                 num_similar_frames = len(shared_groups)
                 
                 video_similarity_records.append({
