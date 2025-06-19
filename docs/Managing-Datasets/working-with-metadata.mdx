@@ -519,6 +519,233 @@ print(f"CSV file saved to {output_file}")
 | 000000046252.jpg | 192 | 194 | 75  | 65  | Shirt  | test-tags |
 | 000000012639.jpg | 28  | 368 | 80  | 118 | Vest   | test-tags |
 
+## Step 6: Analyzing Video Frame Similarity
+
+For datasets with video frames, you can analyze similarity between frames to understand which videos are most similar. This is useful for identifying duplicate content, finding related videos, or grouping similar content.
+
+### Creating a Video Frame Data Table
+
+First, let's extract video frame information along with their similarity data:
+
+```python
+import json
+import pandas as pd
+from collections import defaultdict
+
+# Load the exported metadata
+with open("metadata.json", "r") as f:
+    data = json.load(f)
+
+# Extract video frame data with similarity information
+frame_records = []
+
+for item in data.get("media_items", []):
+    if item.get("media_type") == "video_frame":
+        # Extract basic frame info
+        media_id = item.get("media_id")
+        file_name = item.get("file_name")
+        
+        # Extract video info
+        video_name = None
+        frame_timestamp = None
+        similar_frames = []
+        
+        for metadata in item.get("metadata_items", []):
+            if metadata.get("type") == "video_info":
+                video_name = metadata.get("properties", {}).get("video_name")
+                frame_timestamp = metadata.get("properties", {}).get("frame_timestamp")
+            elif metadata.get("type") == "issue" and metadata.get("properties", {}).get("issue_type") == "duplicates":
+                # Extract similarity information
+                confidence = metadata.get("properties", {}).get("confidence")
+                duplicate_group_id = metadata.get("properties", {}).get("duplicate_group_id")
+                duplicate_threshold = metadata.get("properties", {}).get("duplicate_threshold")
+                
+                similar_frames.append({
+                    "confidence": confidence,
+                    "group_id": duplicate_group_id,
+                    "threshold": duplicate_threshold
+                })
+        
+        frame_records.append({
+            "media_id": media_id,
+            "file_name": file_name,
+            "video_name": video_name,
+            "frame_timestamp": frame_timestamp,
+            "similar_frames": similar_frames,
+            "cluster_id": item.get("cluster_id")
+        })
+
+# Create DataFrame
+frames_df = pd.DataFrame(frame_records)
+print(f"Total video frames: {len(frames_df)}")
+print(frames_df.head())
+```
+
+### Creating a Video Similarity Aggregation Table
+
+Now let's create a table that shows video-to-video similarity:
+
+```python
+# Create a mapping of frames to their duplicate groups
+frame_to_groups = defaultdict(set)
+group_to_frames = defaultdict(set)
+
+for idx, row in frames_df.iterrows():
+    media_id = row['media_id']
+    video_name = row['video_name']
+    
+    for similar_frame in row['similar_frames']:
+        group_id = similar_frame['group_id']
+        confidence = similar_frame['confidence']
+        
+        # Only consider high-confidence similarities (>= 0.95)
+        if confidence >= 0.95:
+            frame_to_groups[media_id].add(group_id)
+            group_to_frames[group_id].add((media_id, video_name, confidence))
+
+# Create video-to-video similarity matrix
+video_similarity_records = []
+
+# Get all unique videos
+all_videos = frames_df['video_name'].unique()
+
+for video_a in all_videos:
+    for video_b in all_videos:
+        if video_a != video_b:
+            # Get frames from both videos
+            frames_a = frames_df[frames_df['video_name'] == video_a]['media_id'].tolist()
+            frames_b = frames_df[frames_df['video_name'] == video_b]['media_id'].tolist()
+            
+            # Find shared similarity groups
+            shared_groups = set()
+            similarities = []
+            
+            for frame_a in frames_a:
+                for frame_b in frames_b:
+                    groups_a = frame_to_groups.get(frame_a, set())
+                    groups_b = frame_to_groups.get(frame_b, set())
+                    
+                    common_groups = groups_a.intersection(groups_b)
+                    if common_groups:
+                        shared_groups.update(common_groups)
+                        
+                        # Get similarity scores for these groups
+                        for group_id in common_groups:
+                            frames_in_group = group_to_frames[group_id]
+                            for media_id, vid_name, confidence in frames_in_group:
+                                if media_id in [frame_a, frame_b]:
+                                    similarities.append(confidence)
+            
+            if similarities:
+                avg_similarity = sum(similarities) / len(similarities)
+                num_similar_frames = len(shared_groups)
+                
+                video_similarity_records.append({
+                    "video_a": video_a,
+                    "video_b": video_b,
+                    "average_similarity": round(avg_similarity, 4),
+                    "number_of_similar_frames": num_similar_frames
+                })
+
+# Create the final similarity DataFrame
+similarity_df = pd.DataFrame(video_similarity_records)
+
+# Remove duplicates (keep only one direction of each pair)
+similarity_df = similarity_df[similarity_df['video_a'] < similarity_df['video_b']]
+
+# Sort by average similarity (descending)
+similarity_df = similarity_df.sort_values('average_similarity', ascending=False)
+
+print(f"Video pairs with similarities: {len(similarity_df)}")
+print("\nTop 10 most similar video pairs:")
+print(similarity_df.head(10))
+```
+
+### Alternative Approach Using Clustering
+
+You can also use the `cluster_id` field to find similar frames:
+
+```python
+# Create similarity table using cluster IDs
+cluster_similarity_records = []
+
+# Group frames by cluster
+cluster_groups = frames_df.groupby('cluster_id')
+
+for cluster_id, cluster_frames in cluster_groups:
+    if len(cluster_frames) > 1:  # Only clusters with multiple frames
+        videos_in_cluster = cluster_frames['video_name'].unique()
+        
+        # Create pairs of videos in the same cluster
+        for i, video_a in enumerate(videos_in_cluster):
+            for video_b in videos_in_cluster[i+1:]:
+                frames_a_in_cluster = len(cluster_frames[cluster_frames['video_name'] == video_a])
+                frames_b_in_cluster = len(cluster_frames[cluster_frames['video_name'] == video_b])
+                
+                cluster_similarity_records.append({
+                    "video_a": video_a,
+                    "video_b": video_b,
+                    "cluster_id": cluster_id,
+                    "frames_from_video_a": frames_a_in_cluster,
+                    "frames_from_video_b": frames_b_in_cluster,
+                    "total_frames_in_cluster": len(cluster_frames)
+                })
+
+# Create DataFrame
+cluster_similarity_df = pd.DataFrame(cluster_similarity_records)
+
+# Aggregate by video pair
+video_cluster_summary = cluster_similarity_df.groupby(['video_a', 'video_b']).agg({
+    'cluster_id': 'count',  # Number of shared clusters
+    'frames_from_video_a': 'sum',
+    'frames_from_video_b': 'sum'
+}).rename(columns={'cluster_id': 'shared_clusters'}).reset_index()
+
+print("\nVideo similarity based on shared clusters:")
+print(video_cluster_summary.sort_values('shared_clusters', ascending=False).head())
+```
+
+### Export Results to CSV
+
+Finally, export your analysis results:
+
+```python
+# Export the main similarity table
+similarity_df.to_csv("video_similarity_analysis.csv", index=False)
+
+# Export the frame-level data
+frames_df.to_csv("video_frames_with_similarity.csv", index=False)
+
+# Export the cluster-based analysis
+video_cluster_summary.to_csv("video_cluster_similarity.csv", index=False)
+
+print("Analysis complete! Files exported:")
+print("- video_similarity_analysis.csv")
+print("- video_frames_with_similarity.csv") 
+print("- video_cluster_similarity.csv")
+```
+
+### Expected Output
+
+The analysis will produce tables like:
+
+**Video Similarity Table:**
+| video_a | video_b | average_similarity | number_of_similar_frames |
+|---------|---------|-------------------|-------------------------|
+| video1.mp4 | video2.mp4 | 0.9850 | 15 |
+| video3.mp4 | video4.mp4 | 0.9720 | 8 |
+
+**Video Cluster Summary:**
+| video_a | video_b | shared_clusters | frames_from_video_a | frames_from_video_b |
+|---------|---------|----------------|-------------------|-------------------|
+| video1.mp4 | video2.mp4 | 5 | 12 | 18 |
+
+This analysis helps you identify:
+- Which videos have the most similar content
+- How many frames are similar between video pairs
+- The confidence level of similarities
+- Clusters of related video content
+
 ## Next Steps
 
 Now that you know how to work with exported metadata files, you can:
@@ -527,5 +754,6 @@ Now that you know how to work with exported metadata files, you can:
 2. **Create data subsets** using uniqueness scores and clustering information
 3. **Export to different formats** for use in other tools and platforms
 4. **Build automated workflows** to process exported datasets at scale
+5. **Analyze video similarity** to find duplicate content, group related videos, or identify the most unique content
 
 For more information on exporting datasets, see our [Export Dataset guide](/docs/Managing-Datasets/export-dataset).
