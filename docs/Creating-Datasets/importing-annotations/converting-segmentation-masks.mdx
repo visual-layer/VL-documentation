@@ -1,0 +1,233 @@
+---
+title: "Converting segmentation masks to visual layer format"
+description: "This guide explains how to convert polygon-based segmentation mask annotations into a CSV file that conforms to Visual Layer's object annotation format."
+---
+
+In this dataset, the images and annotations are organized as follows:
+
+Images: Located in a directory (PNG/JPG format).  
+Annotations: JSON files containing polygon-based segmentation masks.
+
+Each JSON file corresponds to an image and contains polygon annotations with coordinate points defining object boundaries.
+
+## Segmentation Mask Annotation Format
+
+Each annotation file contains polygon shapes in the following JSON structure:
+
+```json
+{
+  "version": "4.5.6",
+  "shapes": [
+    {
+      "label": "QSBD",
+      "points": [
+        [64, 10],
+        [64, 15],
+        [67, 15],
+        [68, 14],
+        [68, 10]
+      ],
+      "shape_type": "polygon"
+    }
+  ],
+  "imagePath": "example_image.png"
+}
+```
+
+Example annotation structure:
+```json
+{
+  "label": "QSBD",
+  "points": [
+    [64, 42], [68, 43], [69, 41], [71, 40], [75, 40],
+    [77, 38], [77, 36], [78, 33], [76, 30], [71, 29],
+    [70, 27], [68, 26], [64, 26], [64, 29]
+  ],
+  "shape_type": "polygon"
+}
+```
+
+`label`: Represents the object class (e.g., "QSBD").  
+`points`: Array of [x, y] coordinates defining the polygon boundary.  
+`shape_type`: Type of annotation ("polygon" for segmentation masks).  
+`imagePath`: Corresponding image filename.
+
+## Conversion Process
+
+The conversion script performs the following steps:
+
+- Load Each JSON File:  
+  The script reads each JSON annotation file to extract polygon coordinates.
+- Extract Polygon Points:  
+  For each shape, it extracts the array of [x, y] coordinate points.
+- Calculate Bounding Box:  
+  The script converts polygon coordinates to bounding boxes by finding the minimum and maximum x,y values:
+
+```
+min_x = minimum x-coordinate from all points
+max_x = maximum x-coordinate from all points  
+min_y = minimum y-coordinate from all points
+max_y = maximum y-coordinate from all points
+
+col_x = min_x (left edge)
+row_y = min_y (top edge)
+width = max_x - min_x
+height = max_y - min_y
+```
+
+- Generate the CSV File:  
+  The CSV is generated with the following columns:
+
+`filename`: The image file name.  
+`col_x`: The x‑coordinate (column) of the top‑left corner.  
+`row_y`: The y‑coordinate (row) of the top‑left corner.  
+`width`: Bounding box width (pixels).  
+`height`: Bounding box height (pixels).  
+`label`: The object label (e.g., "QSBD").
+
+## Python Conversion Script
+
+```python
+import json
+import csv
+import os
+from pathlib import Path
+from typing import List, Tuple, Dict, Any
+
+def extract_polygon_points(shape: Dict[str, Any]) -> List[Tuple[int, int]]:
+    """Extract polygon points from a shape annotation."""
+    if 'points' not in shape:
+        return []
+    
+    points = []
+    for point in shape['points']:
+        if len(point) >= 2:
+            x, y = int(point[0]), int(point[1])
+            points.append((x, y))
+    
+    return points
+
+def polygon_to_bbox(points: List[Tuple[int, int]]) -> Tuple[int, int, int, int]:
+    """Convert polygon points to bounding box coordinates."""
+    if not points:
+        return (0, 0, 0, 0)
+    
+    x_coords = [point[0] for point in points]
+    y_coords = [point[1] for point in points]
+    
+    min_x = min(x_coords)
+    max_x = max(x_coords)
+    min_y = min(y_coords)
+    max_y = max(y_coords)
+    
+    col_x = min_x
+    row_y = min_y
+    width = max_x - min_x
+    height = max_y - min_y
+    
+    return (col_x, row_y, width, height)
+
+def process_json_file(json_path: Path) -> List[Dict[str, Any]]:
+    """Process a JSON annotation file and extract bounding boxes."""
+    try:
+        with open(json_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, FileNotFoundError) as e:
+        print(f"Error reading {json_path}: {e}")
+        return []
+    
+    if 'shapes' not in data:
+        print(f"No 'shapes' key found in {json_path}")
+        return []
+    
+    # Get the corresponding image filename
+    image_filename = data.get('imagePath', json_path.stem + '.png')
+    
+    bboxes = []
+    for shape in data['shapes']:
+        if shape.get('shape_type') != 'polygon':
+            continue
+            
+        label = shape.get('label', 'unknown')
+        points = extract_polygon_points(shape)
+        
+        if not points:
+            continue
+            
+        col_x, row_y, width, height = polygon_to_bbox(points)
+        
+        # Skip invalid bounding boxes (zero width or height)
+        if width <= 0 or height <= 0:
+            continue
+            
+        bbox_info = {
+            'filename': image_filename,
+            'col_x': col_x,
+            'row_y': row_y,
+            'width': width,
+            'height': height,
+            'label': label
+        }
+        bboxes.append(bbox_info)
+    
+    return bboxes
+
+# Paths to your folders
+annotations_folder = "annotations"
+output_csv = "segmentation_annotations.csv"
+
+# Process all JSON files and convert to CSV
+all_bboxes = []
+json_files = list(Path(annotations_folder).glob('*.json'))
+
+for json_file in json_files:
+    print(f"Processing: {json_file.name}")
+    bboxes = process_json_file(json_file)
+    all_bboxes.extend(bboxes)
+    print(f"  Found {len(bboxes)} bounding boxes")
+
+# Write to CSV
+fieldnames = ['filename', 'col_x', 'row_y', 'width', 'height', 'label']
+
+with open(output_csv, 'w', newline='', encoding='utf-8') as csvfile:
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
+    writer.writerows(all_bboxes)
+
+print(f"Conversion complete! Output saved to: {output_csv}")
+print(f"Total bounding boxes: {len(all_bboxes)}")
+```
+
+## Script Explanation
+
+- Input Processing:  
+  The script iterates over all .json files in the annotations folder and extracts polygon shapes from each file.
+- Polygon Extraction:  
+  For each polygon shape, the script extracts the coordinate points and validates the data structure.
+- Bounding Box Calculation:  
+  The polygon coordinates are converted to bounding boxes by finding the minimum and maximum x,y values to determine the rectangular bounds.
+- CSV Output:  
+  The CSV file is written with each bounding box as a row containing the image filename, top-left coordinates, dimensions, and object label.
+
+Example CSV Output  
+After running the script, the CSV output will look similar to this:
+
+| filename     | col_x | row_y | width | height | label |
+| ------------ | ----- | ----- | ----- | ------ | ----- |
+| example.png  | 64    | 10    | 4     | 5      | QSBD  |
+| example.png  | 64    | 26    | 14    | 17     | QSBD  |
+| example.png  | 65    | 68    | 13    | 24     | QSBD  |
+
+`filename`: Name of the image file.  
+`col_x` & `row_y`: Top‑left pixel coordinates of the bounding box.  
+`width` & `height`: Width and height of the bounding box in pixels.  
+`label`: Object label from the segmentation mask.
+
+## Usage
+
+1. Place your JSON annotation files in the `annotations` folder
+2. Run the conversion script: `python convert_segmentation.py`
+3. The output CSV file `segmentation_annotations.csv` will be generated
+4. Import this CSV file into Visual Layer for object detection tasks
+
+The converted bounding boxes provide approximate rectangular bounds for the original polygon segmentation masks, making them compatible with Visual Layer's object annotation format.

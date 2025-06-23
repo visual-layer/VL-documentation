@@ -59,6 +59,7 @@
                   "docs/Creating-Datasets/importing-annotations/preparing-annotation-data-file",
                   "docs/Creating-Datasets/importing-annotations/bounding-box",
                   "docs/Creating-Datasets/importing-annotations/converting-yolo",
+                  "docs/Creating-Datasets/importing-annotations/converting-segmentation-masks",
                   "docs/Creating-Datasets/importing-annotations/creating-annotation-file-with-class-labels"
 
               ]
