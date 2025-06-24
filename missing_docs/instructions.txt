@@ -1,0 +1,174 @@
+This section outlines how we plan, create, edit, and review technical documentation at Visual Layer.
+
+---
+
+Role	Person	Responsibilities
+Technical Writer	Rachel Cheyfitz	Owns documentation structure, writes and edits content, ensures consistency
+Product Manager	Amir Alush,Amit Vizel	Provides feature context, owns accuracy of scope and positioning
+Developer/Engineer	Or Barsheshet	Provides implementation details, samples, error messages, and accuracy checks
+Reviewer	Or Barsheshet,Rachel Cheyfitz	Assigned by the doc owner to give final QA on accuracy, clarity, and usefulness
+Maintainer	Rachel Cheyfitz	Approves pull requests, merges into production, and ensures repo hygiene
+Engineering/Algo/R&D		All team members own: 
+
+* writing content for new and for improved features/areas of VL 
+* technical review of documentation.
+
+
+---
+
+Documentation Writing Process Overview 
+
+Visual Layer documentation is managed using Mintlify, which is synced to GitHub. Documentation can be edited within Mintlify or your local environment. Run git commands via command line or desktop GUI.
+
+1. Feature owner creates a relevant .mdx file for any new or updated feature and adds it to the appropriate section of the public navigation. Polished English and perfect MDX syntax are not required at this stage.
+2. The feature owner opens a pull request (PR) to a separate branch.
+3. The Technical Writer (TW) rewrites the draft for clarity and structure.
+4. The TW sends the revised draft back to the feature owner for a technical accuracy review.
+5. The Product Manager (PM) reviews the content for value and alignment with messaging.
+6. A docs team member (who did not write or rewrite the draft) reviews for English quality, approves, and publishes.
+
+Releasing Documentation (WIP/TBD)
+
+1. For new and updated features, feature owners should add relevant document as above at least 3-5 days prior to production.
+2. QA flags relevant Jira tickets as RN (label) if to be included. 
+
+Working with the Repository
+
+Docs are maintained in our GitHub repository: 
+
+Our Docs Repo
+
+Install Dependencies
+
+If your project uses additional dependencies, install them:
+
+* Install Node.js (version 19 or higher)
+* Install Git
+*  Install the Mintlify CLI globally 
+  * This is a command-line tool that allows you to edit and build documentation in your local environment
+
+npm install -g mintlify
+
+Mac users may face permission errors with global NPM installs. Try using the IDE's terminal or run these commands:
+
+sudo chown -R `whoami` ~/.npm
+sudo chown -R `whoami` /usr/local/lib/node_modules
+
+Clone the Repository
+
+Open your terminal and run:
+
+git clone https://github.com/visual-layer/VL-documentation.git
+cd VL-documentation
+
+This creates a local copy of the VL documentation repository. 
+
+Always Work on a Separate Branch
+
+For new and existing docs, always work on a branch separate from main. The repository opens in the main branch by default. You will need to switch branches using the following command. 
+
+git checkout -b edit-existing-article
+
+This command does two things at once in git:
+
+1. Creates a new branch (-b) called edit-existing-article
+2. Switches to that new branch immediately after creating it (git checkout)
+
+Working on a separate branch ensures that your changes don’t affect the main project before review and approval. Commits on a branch remain independent until merged into another branch:  
+
+Screen Shot 2025-06-03 at 2.25.01 PM.png
+
+Update Your Local Repository Regularly 
+
+While working within this separate branch, regularly fetch and merge changes from the repository to avoid merge conflicts. These commands copy changes from the remote repository onto your local repository.
+
+* The git fetch command downloads updates from a remote repository without modifying your local files.
+* The git merge command merges changes from the remote repository into your working files.
+
+Use git pull to fetch and merge in a single command:
+
+git pull origin main
+
+* orgin specifies the default name of the remote repository 
+* main specifies the name of the remote branch you want to pull changes from
+
+In an IDE, you can simply “sync changes” from source control. Unpulled main repository commits are shown with a downward arrow:
+
+Screen Shot 2025-06-05 at 11.19.28 AM.png
+
+Preview and Test
+
+Start the development server:
+
+mintlify dev
+
+View at http://localhost:3000. You only need to run this command once, since your local host stays synced with your editing environment.
+
+Depending on your editing environment, changes may need to be (1) saved and (2) staged to be reflected in the preview.
+
+Making Changes to the GitHub Repository 
+
+Creating a New Document
+
+1. Create a new .mdx file (e.g., new-article.mdx)
+2. Add frontmatter at the top:
+
+---
+title: "Your Article Title"
+description: "A brief description of your article."
+---
+
+
+3. Add your content using Markdown/MDX syntax (syntax guide) 
+
+4. Update docs.json for navigation within the appropriate pages array:
+
+"docs/<section-folder>/<page-name>"
+
+Adding Content to the Repository
+
+1. Add your new content, updating navigation as necessary 
+2. Stage and commit your code to save it as an independent “snapshot” in version control. Name your commits based on the changes made. 
+3.  Push your changes to the remote repository, making them available for collaborators to view:
+
+git add docs/add-new-article.mdx
+git commit -m "Added article: New content for feature X"
+git push origin add-new-article
+
+Editing Existing Content 
+
+1. Make your edits, maintaining formatting standards
+2. Stage, commit, and push as done above: 
+
+git add docs/edited-article.mdx
+git commit -m "Edit article: Updated content for clarity"
+git push origin edit-existing-article
+
+
+Integrating with the Main Branch 
+
+1. Navigate to the main page of the repository on GitHub
+2. Select the branch that contains your commits
+3. Include a purposeful title and message
+4. Submit the merge to the remote main branch
+
+image.png
+
+Getting a Review
+
+1. All docs must go through a PR-based review before merging
+2. Tag:
+  * At least one technical stakeholder (Roles and Responsibilities ) for feature validation
+  * One peer reviewer (Roles and Responsibilities ) for language/style/flow
+3. Reviewer must check:
+  * Technical accuracy
+  * Readability and logical flow
+  * Clarity and scannability
+  * Use of headers, callouts, and code blocks
+4. Once approved, merge to main → content goes live automatically via Mintlify build
+
+---
+
+Style Guidelines
+
+Follow existing documentation structure and formatting. Reference o

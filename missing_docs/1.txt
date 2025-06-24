@@ -1,0 +1,188 @@
+How to extract data using Visual Layer's API.
+
+This is an example of how to use the API in Python to export a dataset.
+
+## Simplified Python API
+
+We will use the following class to encapsulate the API calls.
+
+```python
+import time
+from typing import Any, Dict
+
+import requests
+
+
+class DatasetExporter:
+    def __init__(self, base_url: str):
+        self.base_url = base_url.rstrip("/")
+        self.headers = {"Accept": "application/json, text/plain, */*"}
+
+    def initiate_export(
+        self,
+        dataset_id: str,
+        file_name: str,
+        export_format: str = "json",
+        include_images: bool = False,
+    ) -> Dict[str, Any]:
+        """
+        Initiate an export of a dataset.
+
+        Args:
+            dataset_id: The ID of the dataset to export
+            file_name: Name of the export file
+            export_format: Format of the export (default: 'json')
+            include_images: Whether to include images in export (default: False)
+
+        Returns:
+            Dict containing the export task information
+        """
+        url = f"{self.base_url}/api/v1/dataset/{dataset_id}/export_context_async"
+        params = {
+            "file_name": file_name,
+            "export_format": export_format,
+            "include_images": str(include_images).lower(),
+        }
+
+        response = requests.get(url, headers=self.headers, params=params)
+        response.raise_for_status()
+        return response.json()
+
+    def check_export_status(
+        self, dataset_id: str, export_task_id: str
+    ) -> Dict[str, Any]:
+        """
+        Check the status of an export task.
+
+        Args:
+            dataset_id: The ID of the dataset
+            export_task_id: The ID of the export task to check
+
+        Returns:
+            Dict containing the status information
+        """
+        url = f"{self.base_url}/api/v1/dataset/{dataset_id}/export_status"
+        params = {"export_task_id": export_task_id}
+
+        response = requests.get(url, headers=self.headers, params=params)
+        response.raise_for_status()
+        return response.json()
+
+    def wait_for_export(
+        self,
+        dataset_id: str,
+        export_task_id: str,
+        check_interval: int = 5,
+        timeout: int = 300,
+    ) -> Dict[str, Any]:
+        """
+        Wait for an export task to complete.
+
+        Args:
+            dataset_id: The ID of the dataset
+            export_task_id: The ID of the export task to check
+            check_interval: Time in seconds between status checks (default: 5)
+            timeout: Maximum time to wait in seconds (default: 300)
+
+        Returns:
+            Dict containing the final status information
+
+        Raises:
+            TimeoutError: If the export doesn't complete within the timeout period
+        """
+        start_time = time.time()
+        while True:
+            status = self.check_export_status(dataset_id, export_task_id)
+
+            if status["status"] == "COMPLETED":
+                return status
+
+            if status["status"] == "FAILED":
+                raise Exception(f"Export failed: {status.get('result_message')}")
+
+            if time.time() - start_time > timeout:
+                raise TimeoutError("Export timed out")
+
+            time.sleep(check_interval)
+
+    def download_export(self, download_uri: str, output_path: str) -> None:
+        """
+        Download the exported file from the given URI.
+
+        Args:
+            download_uri: The URI path from the export status
+            output_path: Local path where the file should be saved
+
+        Returns:
+            None
+        """
+        url = f"{self.base_url}{download_uri}"
+        response = requests.get(url, headers=self.headers, stream=True)
+        response.raise_for_status()
+
+        with open(output_path, "wb") as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
+
+```
+
+## Usage
+
+You'll need to replace the `url`, `dataset_id`, and `file_name` with your own.
+
+```python
+
+import zipfile
+import os
+def main():
+    # Replace with your own
+    url = "http://3.129.25.115:2080"
+    dataset_id = "4cd4d9a2-e793-11ef-80a1-0242ac13000a"
+    file_name = "export.zip"
+
+    exporter = DatasetExporter(url)
+
+    try:
+        print("Initiating export...")
+        export_task = exporter.initiate_export(dataset_id, file_name)
+        print(f"Export task created: {export_task}")
+
+        print("Waiting for export to complete...")
+        final_status = exporter.wait_for_export(dataset_id, export_task["id"])
+
+        print("\nExport completed!")
+        print(f"Download URI: {url}{final_status['download_uri']}")
+
+        print("Downloading file...")
+        exporter.download_export(final_status["download_uri"], file_name)
+        print(f"File downloaded successfully to: {file_name}")
+
+        print("Unzipping file...")
+        output_dir = file_name.replace('.zip', '')
+        os.makedirs(output_dir, exist_ok=True)
+        with zipfile.ZipFile(file_name, "r") as zip_ref:
+            zip_ref.extractall(output_dir)
+        print(f"File unzipped successfully to: {output_dir}")
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+## This is an expected output:
+
+```
+Initiating export...  
+Export task created: {'id': 'cf8b3e78-cb20-4954-a782-436a03006dab', 'dataset_id': '4cd4d9a2-e793-11ef-80a1-0242ac13000a', 'created_at': '2025-02-10T14:41:14.390429', 'download_uri': None, 'progress': 0.0, 'status': 'INIT', 'entities_count': 4203, 'result_message': None}  
+Waiting for export to complete...
+
+Export completed!  
+Download URI: <http://3.129.25.115:2080/cdn/4cd4d9a2-e793-11ef-80a1-0242ac13000a/images/cf8b3e78-cb20-4954-a782-436a03006dab/cf8b3e78-cb20-4954-a782-436a03006dab.zip>  
+Downloading file...  
+File downloaded successfully to: export.zip  
+Unzipping file...  
+File unzipped successfully to: export
+```

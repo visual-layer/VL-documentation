@@ -1,0 +1,114 @@
+How to convert VL exported file by tagging to a csv file
+
+Here is a short version of a JSON file example:
+
+```json
+{
+  "info": {
+    "schema_version": "1.1",
+    "dataset": "General pics",
+    "description": "Exported from General pics at Visual Layer",
+    "total_media_items": 2
+  },
+  "media_items": [
+    {
+      "media_id": "01305347-b812-4717-99a3-aab54a206d4c",
+      "file_name": "000000046252.jpg",
+      "width": 640,
+      "height": 480,
+      "metadata_items": [
+        {
+          "type": "object_label",
+          "properties": {
+            "category_name": "person",
+            "bbox": [148, 177, 127, 188],
+            "metadata_items": [
+              {
+                "type": "user_tag",
+                "properties": {"tag_name": "test-tags"}
+              }
+            ]
+          }
+        },
+        {
+          "type": "object_label",
+          "properties": {
+            "category_name": "shirt",
+            "bbox": [192, 194, 75, 65]
+          }
+        }
+      ]
+    },
+    {
+      "media_id": "1058e9c8-de4f-40a4-901b-c2e1ac442373",
+      "file_name": "000000012639.jpg",
+      "width": 480,
+      "height": 640,
+      "metadata_items": [
+        {
+          "type": "object_label",
+          "properties": {
+            "category_name": "vest",
+            "bbox": [28, 368, 80, 118]
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+This the code to convert the Json to CSV:
+
+```python
+import json
+import csv
+
+# Load JSON file
+input_file = "metadata_5.json"  # Change this to your actual file path
+output_file = "output.csv"  # Output CSV file name
+
+with open(input_file, "r") as f:
+    data = json.load(f)
+
+# Prepare CSV file
+header = ["filename", "x", "y", "w", "h", "label", "user tag"]
+rows = []
+
+# Extract data
+for media in data.get("media_items", []):
+    filename = media.get("file_name", "")
+    for item in media.get("metadata_items", []):
+        if item.get("type") == "object_label":
+            properties = item.get("properties", {})
+            bbox = properties.get("bbox", [0, 0, 0, 0])
+            label = properties.get("category_name", "")
+            user_tag = ""
+
+            # Extract user tag if available
+            for meta in properties.get("metadata_items", []):
+                if meta.get("type") == "user_tag":
+                    user_tag = meta.get("properties", {}).get("tag_name", "")
+                    break
+
+            # Append row
+            rows.append([filename, bbox[0], bbox[1], bbox[2], bbox[3], label, user_tag])
+
+# Write to CSV
+with open(output_file, "w", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(header)
+    writer.writerows(rows)
+
+print(f"CSV file saved to {output_file}")
+```
+
+This is an example of how the output should look (in a CSV format):
+
+<br />
+
+| Filename         | X   | Y   | W   | H   | Label  | User Tag  |
+| ---------------- | --- | --- | --- | --- | ------ | --------- |
+| 000000046252.jpg | 148 | 177 | 127 | 188 | Person | test-tags |
+| 000000046252.jpg | 192 | 194 | 75  | 65  | Shirt  | test-tags |
+| 000000012639.jpg | 28  | 368 | 80  | 118 | Vest   | test-tags |
