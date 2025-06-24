@@ -1,5 +1,5 @@
 ---
-title: "Installed on Air-Gapped Environment"
+title: "Install in an Air-Gapped Environment"
 description: "Tutorial for installing Visual Layer Docker containers in air-gapped environments"
 ---
 
@@ -21,7 +21,7 @@ docker login
 ```
 
 When prompted, use:
-- **Username**: Your DockerHub username
+- **Username**: visuallayer
 - **Password**: Contact [support@visual-layer.com](mailto:support@visual-layer.com) and we will share the password
 
 ## Step 2: Required Docker Images
@@ -55,36 +55,32 @@ docker pull visuallayer/onprem-cd:<VERSION>
 docker pull visuallayer/onprem-model-pack:<VERSION>
 ```
 
-## Step 3: System Installation
+## Step 3: Get Installation Script
+
+First, obtain the `install_helper.sh` script. You can either download it using curl or request it from Visual Layer support:
+
+```bash
+# Download the installation script
+curl -fsSL https://vl-public-bucket.s3.us-east-2.amazonaws.com/installer/new/install_helper.sh -o install_helper.sh
+```
+
+Alternatively, contact [support@visual-layer.com](mailto:support@visual-layer.com) to get the script.
+
+## Step 4: Run Installation
 
 Replace `<VERSION>` with the specific version provided by Visual Layer support.
 
 ### For GPU-enabled Systems:
 ```bash
-HARDWARE=gpu VL_VERSION="<VERSION>" bash -c install_helper.sh
+HARDWARE=gpu VL_VERSION="<VERSION>" bash install_helper.sh
 ```
 
 ### For CPU-only Systems:
 ```bash
-HARDWARE=cpu VL_VERSION="<VERSION>" bash -c install_helper.sh
+HARDWARE=cpu VL_VERSION="<VERSION>" bash install_helper.sh
 ```
 
-## Step 4: Custom Model Installation (Optional)
-
-If you have custom model files (e.g., YOLOv9 model):
-
-1. Copy your model file to the model-pack container:
-```bash
-docker cp <your_model_file.pt> model-pack:/models/yolov9.pt
-```
-
-2. Restart the system to apply changes:
-```bash
-./stop.sh
-./start.sh
-```
-
-## Verification
+## Step 5: Verification
 
 After installation, verify that all containers are running properly:
 
