@@ -1,0 +1,98 @@
+---
+title: "Install in an Air-Gapped Environment"
+description: "Tutorial for installing Visual Layer Docker containers in air-gapped environments"
+---
+
+# Visual Layer Docker Installation Tutorial
+
+This tutorial explains how to download Docker containers from DockerHub and install the Visual Layer system in air-gapped environments.
+
+## Prerequisites
+
+- Docker installed on your system
+- Docker login credentials for Visual Layer repository
+
+## Step 1: Docker Authentication
+
+First, authenticate with DockerHub using the provided credentials:
+
+```bash
+docker login
+```
+
+When prompted, use:
+- **Username**: visuallayer
+- **Password**: Contact [support@visual-layer.com](mailto:support@visual-layer.com) and we will share the password
+
+## Step 2: Required Docker Images
+
+The Visual Layer system consists of the following Docker images that need to be pulled from DockerHub:
+
+| Docker Image | Description |
+|--------------|-------------|
+| `visuallayer/onprem-fe` | Frontend web application interface |
+| `visuallayer/onprem-installer` | Installation and setup utilities |
+| `visuallayer/onprem-healthcheck` | System health monitoring service |
+| `visuallayer/onprem-pl-cpu` | CPU-based processing pipeline |
+| `visuallayer/onprem-pl-gpu` | GPU-accelerated processing pipeline |
+| `visuallayer/onprem-pg` | PostgreSQL database server |
+| `visuallayer/onprem-be` | Backend API services |
+| `visuallayer/onprem-cd` | Continuous deployment service |
+| `visuallayer/onprem-model-pack` | Pre-trained models and model management |
+
+Pull all required images (replace `<VERSION>` with the specific version provided by Visual Layer support):
+
+```bash
+# Pull all required images
+docker pull visuallayer/onprem-fe:<VERSION>
+docker pull visuallayer/onprem-installer:<VERSION>
+docker pull visuallayer/onprem-healthcheck:<VERSION>
+docker pull visuallayer/onprem-pl-cpu:<VERSION>
+docker pull visuallayer/onprem-pl-gpu:<VERSION>
+docker pull visuallayer/onprem-pg:<VERSION>
+docker pull visuallayer/onprem-be:<VERSION>
+docker pull visuallayer/onprem-cd:<VERSION>
+docker pull visuallayer/onprem-model-pack:<VERSION>
+```
+
+## Step 3: Get Installation Script
+
+First, obtain the `install_helper.sh` script. You can either download it using curl or request it from Visual Layer support:
+
+```bash
+# Download the installation script
+curl -fsSL https://vl-public-bucket.s3.us-east-2.amazonaws.com/installer/new/install_helper.sh -o install_helper.sh
+```
+
+Alternatively, contact [support@visual-layer.com](mailto:support@visual-layer.com) to get the script.
+
+## Step 4: Run Installation
+
+Replace `<VERSION>` with the specific version provided by Visual Layer support.
+
+### For GPU-enabled Systems:
+```bash
+HARDWARE=gpu VL_VERSION="<VERSION>" bash install_helper.sh
+```
+
+### For CPU-only Systems:
+```bash
+HARDWARE=cpu VL_VERSION="<VERSION>" bash install_helper.sh
+```
+
+## Step 5: Verification
+
+After installation, verify that all containers are running properly:
+
+```bash
+docker ps
+```
+
+You should see all the Visual Layer containers running.
+
+## Troubleshooting
+
+- If containers fail to start, check the logs: `docker logs <container_name>`
+- Ensure you have sufficient disk space for all images
+- Verify network connectivity to DockerHub
+- Make sure Docker daemon is running

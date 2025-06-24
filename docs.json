@@ -33,6 +33,7 @@
             "pages": [
               "docs/on-prem/System_requirements",
               "docs/on-prem/setting_up",
+              "docs/on-prem/air-gapped-installation",
               "docs/on-prem/operation",
               "docs/on-prem/profiler",
               "docs/on-prem/user-management",
