@@ -1,0 +1,104 @@
+---
+title: "Visual Search"
+slug: "️-visual-search"
+---
+To search by external query image, upload external the image and make it  
+available as a query image by issuing the following call:
+
+## Upload an Image for Search
+
+```http
+POST /api/v1/dataset/{dataset-id}/search-image-similarity?entity_type=IMAGES&bounding_box=X,Y,WIDTH,HEIGHT
+Headers: Authorization: Bearer <jwt>
+```
+
+### Request Parameters:
+
+- `file`: Query image file
+- `bounding_box` (optional): X, Y, Width, Height
+
+## Visual Layer API - Dataset Exploration
+
+After uploading the image you can call exploration endpoint with anchor media id:
+
+`GET /api/v1/explore/{dataset-id}` 
+
+```http
+GET /api/v1/explore/{dataset-id}?threshold=0&anchor_type={anchor_type}&entity_type={ENTITY_TYPE}&page_number={PAGE_NUMBER}&anchor_media_id={anchor_media_id}
+Headers: Authorization: Bearer <jwt>
+```
+
+### Query Parameters
+
+- `entity_type` IMAGES or OBJECTS
+- `anchor_type` MEDIA or UPLOAD for when you uploaded the image using the upload endpoint
+- `anchor_media_id` id of the image you want to use as anchor, returned from the upload for search endpoint
+- `threshold` similarity threshold(0-4) the search results are clustered according to this value 
+- `PAGE_NUMBER`: Which page of results to view (e.g., 0 for start)
+
+### relevance_score
+
+Each result item includes a `relevance_score`, which measures similarity to the anchor image.
+
+- **Scale:**  
+  `0` = Most similar  
+  `2` = Least similar  
+- This score is based on cosine distance and is available per media item in the response.
+
+## Sample Response
+
+```json
+  {
+    "clusters": [
+        {
+            "cluster_id": "bffbc083-f5a6-426d-a9cf-c0b8a3ed232a",
+            "type": "IMAGES",
+            "n_images": 7,
+            "n_objects": -1,
+            "n_videos": -1,
+            "n_frames": -1,
+            "size_display_value": "0B",
+            "similarity_threshold": "1",
+            "previews": [
+                {
+                    "type": "IMAGE",
+                    "media_id": "8c...e4c",
+                    "media_uri": "/.../e4c.jpg",
+                    "media_thumb_uri": "/.../e4c.jpg.webp",
+                    "caption": "The image presents..",
+                    "image_id": "8c...e4c",
+                    "image_uri": "/..3e4c.jpg",
+                    "bounding_box": null,
+                    "file_name": "5049.tif",
+                    "original_uri": "visual-layer/datasets/huji-geo/5049.tif",
+                    "video_uri": "",
+                    "frame_timestamp": null,
+                    "labels": null,
+                    "user_tags": null,
+                    "relevance_score": 0.1304212444996986,
+                    "relevance_score_type": "cosine_distance"
+                }
+      ],
+    "metadata": {
+        "used_duckdb": false
+    }
+}
+```
+
+
+### Example:
+
+```sh
+curl -H "Authorization: Bearer <jwt>" https://app.visual-layer.com/api/v1/explore/{dataset-id}?threshold=0&entity_type=IMAGES&page_number=0&anchor_media_id={anchor_media_id}
+```
+
+
+## Notes:
+
+- Results are paginated with a fixed page size of 100 clusters per page
+- Higher threshold values (0-4 depending on the dataset granularity options) create more granular clusters with stricter similarity requirements
+- When using anchor-based similarity search, results are ordered by similarity to the anchor
+- The entity_type parameter controls whether to return image clusters, object clusters, or both
+- For similarity search with an uploaded image, first use the /search-image-similarity endpoint
+
+More detailed example is [here](https://github.com/visual-layer/documentation/blob/main/notebooks/Image%20search%20via%20api/Visual%20Layer%20api%20example.ipynb)
