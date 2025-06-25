@@ -53,6 +53,7 @@
             "group":"Creating datasets",
             "pages": [
               "docs/Creating-Datasets/createdelete-datasets",
+              "docs/Creating-Datasets/customize-metadata-coming-soon",
             {
               "group": "Importing annotations",
               "pages": [
@@ -76,8 +77,7 @@
               "docs/Managing-Datasets/export-dataset",
               "docs/Managing-Datasets/working-with-metadata",
               "docs/Managing-Datasets/update-data-coming-soon",
-              "docs/Managing-Datasets/update-metadata-coming-soon",
-              "docs/Managing-Datasets/customize-metadata-coming-soon"
+              "docs/Managing-Datasets/update-metadata-coming-soon"
             ]
           },
           {
