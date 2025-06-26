@@ -53,7 +53,7 @@
             "group":"Creating datasets",
             "pages": [
               "docs/Creating-Datasets/createdelete-datasets",
-              "docs/Creating-Datasets/customize-metadata-coming-soon",
+              "docs/Creating-Datasets/custom-metadata",
             {
               "group": "Importing annotations",
               "pages": [
