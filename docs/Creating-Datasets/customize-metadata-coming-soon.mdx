@@ -1,0 +1,150 @@
+---
+title: Custom Metadata
+description: Add custom metadata attributes and values to enrich datasets with user-defined fields.
+---
+
+<Card title="How this Helps" icon="lightbulb">
+  Add searchable, filterable metadata to images in your dataset. Define fields like temperature, lighting, location, or timestamps—then enrich items via the API.
+</Card>
+
+---
+
+## What Is Custom Metadata?
+
+Custom Metadata lets you upload user-defined attributes (as key-value pairs) to media items in your dataset.
+
+Supported value types include:
+- `string`
+- `float`
+- `datetime` (UTC format)
+- `enum` (single or multi-select)
+- `link`
+- `geolocation`
+
+Custom metadata is immutable and must be uploaded only when the dataset is in `READY` state. Each dataset supports one upload per metadata attribute.
+
+---
+
+## Workflow
+
+1. Dataset must be in `READY` state.
+2. Declare a new metadata attribute (field name + type).
+3. Receive a `task_id`.
+4. Upload a JSON file with values for that attribute using the `task_id`.
+5. A background task will:
+   - Validate the file
+   - Parse values
+   - Insert values in batches
+   - Track progress + expose task status
+6. Once completed, the metadata is available for viewing and filtering.
+
+---
+
+## Declare a New Metadata Attribute
+
+```http
+POST /api/v1/datasets/{dataset_id}/custom_metadata/tasks
+```
+
+Request Body:
+```json
+{
+  "field_name": "lighting_condition",
+  "field_type": "enum",
+  "enum_options": ["Sunny", "Cloudy", "Indoor"],
+  "is_multi": false
+}
+```
+
+Response:
+```json
+{
+  "task_id": "1234e567-e89b-12d3-a456-426614174000",
+  "status": "INIT"
+}
+```
+
+---
+
+## Upload Metadata File
+
+```http
+POST /api/v1/datasets/{dataset_id}/custom_metadata/tasks/{task_id}
+```
+
+Upload Format:
+```json
+[
+  { "media_id": "f3e3d00c-1a8e-4a58-85dc-cdea7a8365a0", "value": 23.5 },
+  { "media_id": "b1ac12e7-53dc-4c7c-b93d-1836b4aa4f95", "value": 24.0 }
+]
+```
+
+The system checks that each row contains a valid `media_id` and a value matching the declared attribute.
+
+---
+
+## Check Upload Status
+
+```http
+GET /api/v1/datasets/{dataset_id}/custom_metadata/tasks/{task_id}/status
+```
+
+Response Example:
+```json
+{
+  "task_id": "...",
+  "status": "COMPLETED_WITH_ERRORS",
+  "progress": 100.0,
+  "inserted_rows": 6535,
+  "error_count": 594,
+  "sample_errors": [
+    { "reason": "Expected String", "row_index": 17 }
+  ]
+}
+```
+
+---
+
+## Retrieve Metadata
+
+### List Declared Metadata Fields
+
+```http
+GET /api/v1/datasets/{dataset_id}/custom_metadata/schema
+```
+
+Returns all declared fields and types.
+
+### Get Metadata for an Image
+
+```http
+GET /api/v1/datasets/{dataset_id}/image/{image_id}/custom_metadata
+```
+
+Response:
+```json
+[
+  {
+    "field_name": "lighting",
+    "field_type": "enum",
+    "value": "Sunny"
+  },
+  {
+    "field_name": "temperature",
+    "field_type": "float",
+    "value": 23.5
+  }
+]
+```
+
+---
+
+## Notes
+- Supported only at the image level (not objects—yet).
+- Once uploaded, metadata cannot be modified or replaced.
+- More filtering and validation options coming soon.
+
+<Tip>
+Use metadata to power visual search, filtering, and enrichments across your datasets.
+</Tip>
