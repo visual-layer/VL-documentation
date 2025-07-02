@@ -18,6 +18,7 @@ Custom metadata is associated at the image level and is immutable once uploaded.
 To import custom metadata in Visual Layer, you must:
 - Declare a metadata field (name + type)
 - Upload a JSON file containing values for that field
+> ⚠️ All API requests on Cloud environment require authentication using a valid API token.
 
 ### Supported value types include:
 - `string`
@@ -165,7 +166,7 @@ POST /api/v1/datasets/{dataset_id}/custom_metadata/tasks/{task_id}
     ]
   }
 ]
-
+```
 ---
 
 # Step 3: Check Upload Status
