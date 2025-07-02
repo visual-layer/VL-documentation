@@ -80,8 +80,8 @@ POST /api/v1/datasets/{dataset_id}/custom_metadata/tasks
 
 ```json
 {
-  "field_name": "lighting_condition",
-  "field_type": "sring"
+  "field_name": "Your_field_name",
+  "field_type": "sring" // or float, datetime, link
 }
 ```
 
@@ -112,8 +112,8 @@ POST /api/v1/datasets/{dataset_id}/custom_metadata/tasks
 
 The is_multi flag determines whether each image can have one or multiple values from the enum options.
 
-- is_multi: false (Each image can have only one value.)
-- is_multi: true (Each image can have multiple values.)
+- `is_multi: false` (Each image can have only one value.)
+- `is_multi: true` (Each image can have multiple values.)
 
 
 ## Response Body:
