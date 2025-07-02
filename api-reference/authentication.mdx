@@ -57,10 +57,16 @@ curl -b SESSION=<session from authenticated user browser session> https://app.vi
 Use your API key and secret to generate a JWT token, which is required for authenticated API requests.
 
 <Card title="JWT Token Authentication">
-JWTs should be passed via the `Authorization` header on every request. They are short-lived and must be regenerated regularly.
+JWTs must be included in the `Authorization` header as a `Bearer token` type on every request.  
+These tokens are short-lived and should be regenerated periodically.
 </Card>
 
 ### Example Python Code
+
+> ⚠️  Please make sure you have `PyJWT` installed. If not, install it using: 
+```python
+python -m pip install PyJWT
+```
 
 ```python
 import jwt
@@ -76,7 +82,7 @@ def generate_jwt(api_key: str, api_secret: str):
     
     # Convert datetime objects to Unix timestamps (seconds since epoch)
     now = datetime.now(tz=timezone.utc)
-    expiration = now + timedelta(minutes=10)
+    expiration = now + timedelta(minutes=10) # Time can be modified as needed
     
     payload = {
         'sub': api_key,
@@ -88,6 +94,8 @@ def generate_jwt(api_key: str, api_secret: str):
     return jwt.encode(payload=payload, key=api_secret, algorithm=jwt_algorithm, headers=jwt_header)
 
 api_token = generate_jwt(api_key, api_secret)
+
+print("VL_Token:" + api_token)
 ```
 
 <Tip>
