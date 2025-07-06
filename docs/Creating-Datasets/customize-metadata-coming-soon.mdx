@@ -18,17 +18,21 @@ Custom metadata is associated at the image level and is immutable once uploaded.
 To import custom metadata in Visual Layer, you must:
 - Declare a metadata field (name + type)
 - Upload a JSON file containing values for that field
-> ⚠️ All API requests in the Cloud environment require [authentication using a valid API token](/api-reference/authentication).
+<Tip>
+All API requests in the Cloud environment require [authentication using a valid API token](/api-reference/authentication).
+</Tip>
 
 ### Supported value types include:
 - `string`
 - `float`
 - `datetime` (UTC format)
 - `enum` (single or multi-select)
-- `link`
+- `link` (URL)
 
-> ⚠️ Each upload task handles **one field** only. You can declare multiple fields (even of the same type), but each must have a **unique `field_name`**.
-
+<Note>
+Each upload **task is used to add one metadata field only**.
+If you want to add multiple fields, you’ll need to create a separate task for each - and **make sure each field has a unique field_name**.
+</Note>
 ---
 
 # Steps
@@ -59,14 +63,15 @@ Each entry must include:
 2. The exported JSON file will include all image-level metadata, including the `media_id` assigned to each media item.
 3. Use these `media_id`s to match your custom metadata with the corresponding images.
 
-You can now create your custom metadata file using this structure:
-
+Your custom metadata JSON file should follow this structure:
 ```json
 [
   { "media_id": "f3e3d00c-1a8e-4a58-85dc-cdea7a8365a0", "value": "Sunny" },
   { "media_id": "b1ac12e7-53dc-4c7c-b93d-1836b4aa4f95", "value": "Cloudy" }
 ]
 ```
+[Click here]() for the full explanation on how to create the JSON file.  
+
 --- 
 
 # Step 1: Declare a New Metadata Field
@@ -94,9 +99,9 @@ POST /api/v1/datasets/{dataset_id}/custom_metadata/tasks
 
 ```json
 {
-  "field_name": "lighting_condition",
+  "field_name": "priority",
   "field_type": "enum",
-  "enum_options": ["Sunny", "Cloudy", "Indoor"],
+  "enum_options": ["Low", "Medium", "High"],
   "is_multi": false
 }
 ```
@@ -126,6 +131,9 @@ The is_multi flag determines whether each image can have one or multiple values 
   "status": "INIT"
 }
 ```
+<Tip>
+Make sure to save the `task_id`- you’ll need it for the next steps in the flow.
+</Tip>
 
 ---
 
@@ -154,6 +162,7 @@ POST /api/v1/datasets/{dataset_id}/custom_metadata/tasks/{task_id}
     "value": "yellow"
   }
 ]
+```
 
 
 ### For `enum` - when `is_multi = true`
@@ -184,6 +193,19 @@ GET /api/v1/datasets/{dataset_id}/custom_metadata/tasks/{task_id}/status
 ```json
 {
   "task_id": "...",
+  "status": "COMPLETED",
+  "progress": 100.0,
+  "inserted_rows": 6535,
+  "error_count": 0,
+  "sample_errors": []
+}
+```
+
+### Error Response Example 
+
+```json
+{
+  "task_id": "...",
   "status": "COMPLETED_WITH_ERRORS",
   "progress": 100.0,
   "inserted_rows": 6535,
@@ -193,6 +215,12 @@ GET /api/v1/datasets/{dataset_id}/custom_metadata/tasks/{task_id}/status
   ]
 }
 ```
+<Note>
+At this stage, uploaded metadata is immutable - meaning it cannot be edited or replaced once submitted.  
+If any errors occur during upload, only the problematic rows will fail; all valid rows will proceed successfully.  
+You can always declare a new `field_name` and reupload the data.  
+**Support for updating existing metadata will be added in the future.**
+</Note>
 
 ---
 
@@ -235,19 +263,19 @@ Once your custom metadata is uploaded successfully, the declared `field_name` wi
 
 You can then filter dataset images using these fields — just like any other built-in filter.
 
-### Supported filter types (WIP):
-- **String** — substring match
+### Supported filter types:
+- **String** - substring match
 - **Float** — numeric comparisons (`>`, `<`, `=`)
 - **Datetime** — range queries (`BETWEEN start_date AND end_date`)
 - **Enum** — exact match (single or multi-select, depending on configuration)
+- **Link** - substring or exact match
 
 <Tip>
 Filtering behavior may vary depending on the field type and the selected operator.
 </Tip>
 
 ## Notes
-- Only supported at the **image level** (not object-level—yet).
-- Metadata is **immutable** and cannot be updated or replaced
+- Only supported at the **image level** (not object level—yet!).
+- Metadata is **immutable** and cannot be updated or replaced.
 - Each field must have a **unique name** per dataset.
-- Multiple fields of the same type are supported, each via a separate task.
 
