@@ -1,0 +1,127 @@
+---
+title: "📘 Visual Layer S3 Configuration Tutorial"
+description: "This tutorial explains key configuration flags used in the Visual Layer platform to allow indexing and serving images from S3."
+---
+
+The following configuration should be added to the config.json file inside the .vl/ folder.
+
+## 🔧 Configuration Flags
+
+```json
+{
+  "SERVE_ORIGINAL_IMAGE": true,
+  "CDN_FULLPATH": "/image",
+  "SAVE_THUMBNAILS_METHOD": "crops",
+  "PREPROCESS_IMAGE_TRANSFER": "keep_original_filename",
+  "PREPROCESS_NORMALIZE_OUTPUT": false,
+  "REMOTE_SAVE": "s3://visual-layer/tmp/remove-me-test-folder",
+  "SOURCE_USE_FULLPATH": true,
+  "USE_S5CMD_WHEN_AVAILABLE": true,
+  "SKIP_IMAGE_THUMBNAIL_GENERATION": true
+}
+```
+
+### SERVE_ORIGINAL_IMAGE: true
+- **Purpose**: Forces the UX to serve the original image directly from the remote storage (e.g., S3).
+- **Use case**: Ideal for high-speed networks or when thumbnails are not needed.
+- **Note**: This must be combined with `PREPROCESS_IMAGE_TRANSFER: "keep_original_filename"` to ensure proper file linking.
+
+### PREPROCESS_IMAGE_TRANSFER: "keep_original_filename"
+- **Purpose**: Ensures the original image filenames are preserved during transfer and storage.
+- **Impact**: Required when using `SERVE_ORIGINAL_IMAGE` to allow consistent referencing of images in the frontend.
+
+### CDN_FULLPATH: "/image"
+- **Purpose**: Defines the root path where images are served through a CDN or proxy.
+- **Required**: Yes – this path is mandatory for the UX to resolve asset URLs correctly.
+
+### SOURCE_USE_FULLPATH: true
+- **Purpose**: Maintains the original folder structure (relative paths) of source files during preprocessing and storage.
+- **Use case**: Helps track image provenance and supports hierarchical datasets.
+
+### REMOTE_SAVE: "s3://mybucket/visual-layer-intermediate/"
+- **Purpose**: Specifies the destination path (S3 or other remote store) for intermediate processed assets.
+- **Required**: Yes – used by the UX to access thumbnails, metadata, or originals.
+
+### USE_S5CMD_WHEN_AVAILABLE: true
+- **Purpose**: Uses s5cmd for file transfers instead of AWS CLI or boto3.
+- **Benefit**: Can achieve up to 10× faster S3 copy operations.
+- **Optional**: Yes – recommended for large datasets or high-throughput pipelines.
+
+### SKIP_IMAGE_THUMBNAIL_GENERATION: true
+- **Purpose**: Disables thumbnail generation during preprocessing.
+- **Use case**: For fast uploads when bandwidth is not a concern and `SERVE_ORIGINAL_IMAGE` is enabled.
+- **Optional**: Yes – reduces storage and processing cost in some environments.
+
+### SAVE_THUMBNAILS_METHOD: "crops"
+- **Purpose**: Defines the method used to save thumbnails. "crops" stores only relevant cropped regions (e.g., detections or ROIs).
+- **Effect**: Reduces thumbnail size and focuses on semantically important regions.
+- **Optional**: No
+
+## 🔐 AWS Credentials Setup
+
+To enable remote saving and loading of assets from S3, you must provide AWS credentials. Visual Layer looks for credentials in the file:
+
+```
+.vl/aws_credentials
+```
+
+### 📄 File Format
+
+The file must follow the standard AWS credentials format used by the AWS CLI and boto3:
+
+```ini
+[default]
+aws_access_key_id = YOUR_ACCESS_KEY_ID
+aws_secret_access_key = YOUR_SECRET_ACCESS_KEY
+region = YOUR_AWS_REGION #optional
+```
+
+**Example:**
+```ini
+[default]
+aws_access_key_id = AKIAIOSFODNN7EXAMPLE
+aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+region = us-west-2
+```
+
+### 📁 File Location
+
+Make sure the file is located at:
+```
+<your_project_root>/.vl/aws_credentials
+```
+
+✅ **Tip**: .vl is a hidden folder used by Visual Layer to store configuration and credentials.
+
+### 🔐 Security Best Practices
+
+Use temporary credentials (e.g., via IAM roles or STS) in production if possible.
+
+## 🔒 Custom SSL Certificate (Optional)
+
+If your S3 endpoint requires a custom SSL certificate (e.g., when using a private MinIO or S3-compatible object store behind a proxy), you can set the `AWS_CA_BUNDLE` environment variable.
+
+### 🧪 What it does:
+This tells boto3, s5cmd, and other AWS SDK tools to use a specific .pem certificate file when making HTTPS requests.
+
+### ✅ Usage
+Copy your certificate .pem file into the local .vl folder. Set the environment variable before launching your Visual Layer job:
+
+```bash
+export AWS_CA_BUNDLE=/.vl/custom-ca.pem
+```
+
+## 📂 Folder Structure Summary
+
+```
+project-root/
+├── .vl/
+│   ├── aws_credentials
+│   └── aws_ca_bundle.pem   # Optional
+├── config.json             # Your Visual Layer configuration
+└── run_profiler.sh         # Run a pipeline
+```
+
+## 📞 Need Help?
+
+For support, reach out to your Visual Layer technical contact or email: support@visual-layer.com.

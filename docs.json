@@ -38,6 +38,7 @@
               "docs/on-prem/profiler",
               "docs/on-prem/user-management",
               "docs/on-prem/Configuration",
+              "docs/on-prem/s3-configuration",
               "docs/on-prem/Troubleshooting"
             ]
           },
