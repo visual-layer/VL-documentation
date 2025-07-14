@@ -17,7 +17,8 @@ The following configuration should be added to the config.json file inside the .
   "REMOTE_SAVE": "s3://visual-layer/tmp/remove-me-test-folder",
   "SOURCE_USE_FULLPATH": true,
   "USE_S5CMD_WHEN_AVAILABLE": true,
-  "SKIP_IMAGE_THUMBNAIL_GENERATION": true
+  "SKIP_IMAGE_THUMBNAIL_GENERATION": true,
+  "EXPORT_ENTITIES_RESULT_BUCKET": "s3://mybucket/exports/"
 }
 ```
 
@@ -56,6 +57,11 @@ The following configuration should be added to the config.json file inside the .
 - **Purpose**: Defines the method used to save thumbnails. "crops" stores only relevant cropped regions (e.g., detections or ROIs).
 - **Effect**: Reduces thumbnail size and focuses on semantically important regions.
 - **Optional**: No
+
+### EXPORT_ENTITIES_RESULT_BUCKET: "s3://mybucket/exports/"
+- **Purpose**: Specifies an optional S3 bucket location where export files will be saved.
+- **Use case**: When exporting entities or results, files will be stored in this bucket instead of the default location.
+- **Optional**: Yes – if not specified, exports will use the default export location.
 
 ## 🔐 AWS Credentials Setup
 
