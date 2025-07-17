@@ -18,7 +18,7 @@ The following configuration should be added to the config.json file inside the .
   "SOURCE_USE_FULLPATH": true,
   "USE_S5CMD_WHEN_AVAILABLE": true,
   "SKIP_IMAGE_THUMBNAIL_GENERATION": true,
-  "EXPORT_ENTITIES_RESULT_BUCKET": "s3://mybucket/exports/"
+  "EXPORT_ENTITIES_RESULT_BUCKET": "mybucket"
 }
 ```
 
@@ -58,8 +58,9 @@ The following configuration should be added to the config.json file inside the .
 - **Effect**: Reduces thumbnail size and focuses on semantically important regions.
 - **Optional**: No
 
-### EXPORT_ENTITIES_RESULT_BUCKET: "s3://mybucket/exports/"
-- **Purpose**: Specifies an optional S3 bucket location where export files will be saved.
+### EXPORT_ENTITIES_RESULT_BUCKET: "mybucket"
+- **Purpose**: Specifies an optional S3 bucket name where export files will be saved.
+- **Format**: Should contain just the bucket name without the `s3://` prefix (e.g., `"mybucket"` instead of `"s3://mybucket/"`).
 - **Use case**: When exporting entities or results, files will be stored in this bucket instead of the default location.
 - **Optional**: Yes – if not specified, exports will use the default export location.
 
