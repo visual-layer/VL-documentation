@@ -45,6 +45,20 @@ curl -H "Authorization: Bearer <jwt>" https://app.visual-layer.com/api/v1/datase
 }
 ```
 
+## Dataset Status Values
+
+The `status` field in the response can have the following values:
+
+- `NEW` - Dataset has been created but not yet started processing
+- `PRE_PROCESSING` - Dataset is being prepared for processing
+- `INITIALIZING` - Dataset processing is being initialized
+- `UPLOADING` - Data is being uploaded to the system
+- `SAVING` - Dataset data is being saved
+- `INDEXING` - Dataset is being indexed for search and retrieval
+- `READY` - Dataset is fully processed and ready for use
+- `FATAL_ERROR` - An error occurred during processing that prevents completion
+- `ENRICHING` - Dataset is being enriched with additional metadata or processing
+
 <Tip>
 Use this endpoint to track dataset readiness before continuing with enrichment, filtering, or export operations.
 </Tip>
