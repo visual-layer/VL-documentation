@@ -18,7 +18,8 @@ The following configuration should be added to the config.json file inside the .
   "SOURCE_USE_FULLPATH": true,
   "USE_S5CMD_WHEN_AVAILABLE": true,
   "SKIP_IMAGE_THUMBNAIL_GENERATION": true,
-  "EXPORT_ENTITIES_RESULT_BUCKET": "mybucket"
+  "EXPORT_ENTITIES_RESULT_BUCKET": "mybucket",
+  "OBJECT_STORE_URL": "http://minio:9000"
 }
 ```
 
@@ -63,6 +64,13 @@ The following configuration should be added to the config.json file inside the .
 - **Format**: Should contain just the bucket name without the `s3://` prefix (e.g., `"mybucket"` instead of `"s3://mybucket/"`).
 - **Use case**: When exporting entities or results, files will be stored in this bucket instead of the default location.
 - **Optional**: Yes – if not specified, exports will use the default export location.
+
+### OBJECT_STORE_URL: "http://minio:9000"
+- **Purpose**: Configures a custom S3-compatible object storage endpoint URL for the system.
+- **Use case**: Allows using alternative object storage services (like MinIO or on-premise S3-compatible storage) instead of AWS S3. Enables on-premise or custom object storage deployments.
+- **Behavior**: When set, it overrides the default AWS S3 endpoint for all storage operations including downloads and preprocessing artifact storage.
+- **Technical details**: When URL starts with `http://`, SSL verification is disabled for local deployments. Used for both data downloads and preprocessing operations.
+- **Optional**: Yes – if not specified, the system will use the default AWS S3 endpoint.
 
 ## 🔐 AWS Credentials Setup
 
