@@ -8,10 +8,7 @@
     "dark": "#0097D9" 
   },
   "favicon": "/favicon.svg",
-  "changelog": {
-    "enabled": true,
-    "title": "Release Notes"
-  },
+
   "navigation": {
     "tabs": [
       {
@@ -164,6 +161,12 @@
               ]
             }
           ]
+      }, 
+      {
+        "tab": "Releases",
+        "pages": [
+          "changelog/rn"
+        ]
       }
     ]
   },
