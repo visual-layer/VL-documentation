@@ -2,6 +2,34 @@
 title: Release Notes & Product Updates
 description: "Stay up-to-date with the latest features, enhancements, and bug fixes in Visual Layer. This page provides a comprehensive changelog of all product updates."
 ---
+<Update label="2025-08-10" >
+We are excited to present Visual Layer v3.2.0. This release introduces new features for asset import, performance improvements for raycasting, and critical bug fixes for the rendering engine and core API.
+
+## New Features & Enhancements
+
+### glTF 2.0 Extension Support
+
+We've expanded our asset import capabilities with support for two key glTF 2.0 extensions that enhance material workflows and performance.
+
+**KHR_materials_unlit Extension:** Materials can now be rendered without lighting calculations, providing improved performance for specific use cases where lighting is not required. This is particularly useful for UI elements, skyboxes, or stylized content that doesn't need realistic lighting.
+
+**KHR_texture_transform Extension:** Direct UV transformations can now be defined within the material definition itself, simplifying asset workflows by eliminating the need for external texture coordinate modifications. This enables more flexible texture mapping and reduces preprocessing requirements.
+
+### Performance Improvements
+
+**Optimized Raycasting Algorithm:** We've implemented a Bounding Volume Hierarchy (BVH) acceleration structure that significantly improves raycasting performance in scenes with high object counts. This enhancement results in faster object picking and collision detection, providing a more responsive user experience when interacting with complex scenes.
+
+## Bug Fixes
+
+### Rendering Engine Fixes
+
+**Resolved Alpha Blending Artifacts:** Fixed incorrect alpha blending artifacts that were occurring on transparent materials. The rendering queue now correctly performs depth-sorting for transparent objects, ensuring proper rendering of overlapping surfaces and eliminating visual inconsistencies.
+
+### API Improvements
+
+**Fixed Race Condition in Scene Graph:** Corrected a race condition that could cause the `scene.getObjectByName()` method to fail intermittently after an object was added to the scene. The scene graph's internal name map is now updated synchronously, ensuring the method reliably returns the correct object handle every time.
+
+</Update>
 <Update label="2025-05-08" >
 We are excited to present the latest release of Visual Layer. This update introduces powerful new ways to search, explore, and manage visual datasets while streamlining the UI for speed and clarity.
 
