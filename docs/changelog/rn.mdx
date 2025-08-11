@@ -2,28 +2,46 @@
 title: Release Notes & Product Updates
 description: "Stay up-to-date with the latest features, enhancements, and bug fixes in Visual Layer. This page provides a comprehensive changelog of all product updates."
 ---
-<Update label="2025-08-11" >
-We are excited to present the latest release of Visual Layer. This update introduces powerful new ways to search, explore, and manage visual datasets while streamlining the UI for speed and clarity.
 
-## New Features & Enhancements
+<Update label="2025-08-10">
+We're excited to announce the latest Visual Layer release, featuring enhanced 3D rendering capabilities, significant performance improvements, and critical stability fixes.
 
-We've overhauled the filtering experience for intuitive navigation, custom quality thresholds, and advanced query logic, making it easier to zoom in on what matters or explore freely at scale.
+## New Features
 
-### Add Support for Custom Fonts
+### glTF 2.0 Format Support
 
-Users can now upload and apply custom fonts to projects, enabling greater brand consistency and design flexibility. The system supports `.woff`, `.woff2`, and `.ttf` font file formats. Uploaded fonts are managed via a new API endpoint and are available for selection within the theme editor's font dropdown menu.
+Visual Layer now supports the import and rendering of 3D models using the glTF 2.0 standard. This comprehensive implementation includes:
 
-### Improve Rendering Performance of Large Datasets
+* Support for both `.gltf` and `.glb` file formats
+* Physically Based Rendering (PBR) materials for realistic lighting and surface properties
+* Complete scene hierarchies with proper node relationships
+* Skeletal animations for dynamic 3D content
 
-The rendering engine has been updated to incorporate virtualization (windowing) for lists and tables containing large datasets. This change ensures that only visible UI elements are rendered to the DOM, which significantly reduces initial load times and improves scrolling performance for data-intensive projects.
+This update enables more efficient transmission and loading of 3D content, making it easier to work with complex 3D datasets and visualizations.
 
-## Fixed Issues
+## Performance Improvements
 
-### Correct Header Component Alignment on Mobile
+### Large Scene Rendering Optimization
 
-Resolved a CSS alignment issue where the logo and navigation links in the header component appeared misaligned on viewports narrower than 768px. The fix corrects a Flexbox property to ensure proper vertical alignment of all header elements on mobile devices.
+We've implemented advanced culling algorithms to dramatically improve rendering performance for complex scenes:
 
-We've cleaned up some bugs and made improvements to enhance your experience, including improved search results, fixes to filters and other similar issues.
+* **Frustum culling**: Prevents rendering of geometry outside the camera's view
+* **Occlusion culling**: Skips objects hidden behind other geometry
+* **Significant frame rate improvements** for scenes with high object counts
+
+These optimizations ensure smooth performance even when working with large, complex 3D datasets.
+
+## Bug Fixes
+
+### Texture Memory Management
+
+Resolved a critical memory leak in the texture caching system that was causing progressive memory consumption during application runtime. The fix ensures:
+
+* Proper deallocation of VRAM for unused textures
+* Stable memory usage throughout extended sessions
+* Improved application stability and performance
+
+This fix addresses issues users experienced with memory-intensive workflows and long-running analysis sessions.
 </Update>
 
 <Update label="2025-05-08" >
