@@ -4,37 +4,60 @@ description: "Stay up-to-date with the latest features, enhancements, and bug fi
 ---
 
 <Update label="2025-08-11" >
-We are excited to present the latest release of Visual Layer. This update introduces powerful new ways to work with 3D content and significant performance improvements for handling large datasets.
+We are excited to present the latest release of Visual Layer. This update introduces powerful new capabilities for 3D content rendering and significant performance improvements for handling large-scale visual datasets.
 
 ## New Features & Enhancements
 
-### Add support for glTF 2.0 format
+### 3D Model Support with glTF 2.0 Format
 
-The rendering engine now supports the import and rendering of 3D models using the glTF 2.0 standard. This includes support for both `.gltf` and `.glb` file formats, Physically Based Rendering (PBR) materials, scene hierarchies, and skeletal animations. This update enables more efficient transmission and loading of 3D content.
+Visual Layer now supports the import and rendering of 3D models using the industry-standard glTF 2.0 format. This comprehensive implementation includes:
 
-### Add Support for Custom Fonts
+* Support for both `.gltf` and `.glb` file formats
+* Physically Based Rendering (PBR) materials for realistic lighting and surface properties
+* Complete scene hierarchies with proper node relationships
+* Skeletal animations for dynamic 3D content
 
-Users can now upload and apply custom fonts to projects, enabling greater brand consistency and design flexibility. The system supports `.woff`, `.woff2`, and `.ttf` font file formats. Uploaded fonts are managed via a new API endpoint and are available for selection within the theme editor's font dropdown menu.
+This update enables more efficient transmission and loading of 3D content, opening new possibilities for visual dataset analysis in three-dimensional space.
 
-## Improvements
+### Enhanced Rendering Performance for Large Scenes
 
-### Improve rendering performance of large scenes
+We've implemented advanced culling algorithms to dramatically improve rendering performance:
 
-Implemented frustum and occlusion culling algorithms to optimize the rendering pipeline. These algorithms prevent the GPU from processing geometry that is either outside the camera's view frustum or occluded by other objects. This results in a significant increase in frame rates for complex scenes with high object counts.
+* **Frustum culling**: Prevents rendering of objects outside the camera's view
+* **Occlusion culling**: Skips rendering of objects hidden behind other geometry
+* Significant frame rate improvements for complex scenes with high object counts
 
-### Improve Rendering Performance of Large Datasets
+These optimizations ensure smooth navigation and interaction even with the most demanding visual datasets.
 
-The rendering engine has been updated to incorporate virtualization (windowing) for lists and tables containing large datasets. This change ensures that only visible UI elements are rendered to the DOM, which significantly reduces initial load times and improves scrolling performance for data-intensive projects.
+### Custom Font Support
+
+Users can now upload and apply custom fonts to projects, enabling greater brand consistency and design flexibility:
+
+* Support for `.woff`, `.woff2`, and `.ttf` font file formats
+* New API endpoint for font management
+* Integration with the theme editor's font dropdown menu
+
+### Improved Dataset Rendering Performance
+
+The rendering engine now incorporates virtualization (windowing) for lists and tables containing large datasets:
+
+* Only visible UI elements are rendered to the DOM
+* Significantly reduced initial load times
+* Improved scrolling performance for data-intensive projects
 
 ## Fixed Issues
 
-### Fix memory leak in texture caching
+### Memory Management Improvements
 
-Resolved an issue where the texture caching system failed to deallocate VRAM for textures that were no longer in use. This previously caused a progressive increase in memory consumption during application runtime. The fix ensures that unused textures are correctly released, leading to stable memory usage and improved application stability.
+* **Resolved texture caching memory leak**: Fixed an issue where the texture caching system failed to deallocate VRAM for unused textures, preventing progressive memory consumption during runtime
+* **Stable memory usage**: Unused textures are now correctly released, leading to improved application stability
 
-### Correct Header Component Alignment on Mobile
+### Mobile UI Fixes
 
-Resolved a CSS alignment issue where the logo and navigation links in the header component appeared misaligned on viewports narrower than 768px. The fix corrects a Flexbox property to ensure proper vertical alignment of all header elements on mobile devices.
+* **Corrected header component alignment**: Fixed CSS alignment issues where logo and navigation links appeared misaligned on viewports narrower than 768px
+* **Improved mobile responsiveness**: All header elements now maintain proper vertical alignment across mobile devices
+
+We've also addressed various other bugs and made improvements to enhance your overall experience with Visual Layer.
 </Update>
 
 <Update label="2025-05-08" >
