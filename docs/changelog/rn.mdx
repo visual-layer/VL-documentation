@@ -3,44 +3,55 @@ title: Release Notes & Product Updates
 description: "Stay up-to-date with the latest features, enhancements, and bug fixes in Visual Layer. This page provides a comprehensive changelog of all product updates."
 ---
 
-<Update label="2025-08-10" >
-We are excited to present Visual Layer version 2.43.0. This release introduces comprehensive support for 3D model formats and enhanced rendering capabilities, bringing new dimensions to your visual data workflows.
+<Update label="2025-08-11" >
+We are excited to present the latest release of Visual Layer. This update introduces significant improvements to dataset management, enhanced visual search capabilities, and streamlined workflows for better productivity.
 
 ## New Features & Enhancements
 
-### glTF 3D Model Support
+This release focuses on expanding Visual Layer's core capabilities with new dataset management features, improved visual search, and enhanced user experience across the platform.
 
-Visual Layer now supports the import and rendering of 3D models using the glTF (GL Transmission Format), enabling the use of industry-standard assets within scenes.
+### Enhanced Dataset Management
 
-**File Compatibility:** Users can import both standard `.gltf` (JSON/binary) and binary `.glb` files through the asset import dialog.
+We've introduced powerful new tools for managing your datasets more effectively:
 
-**PBR Material Rendering:** The rendering pipeline has been updated to support the PBR (Physically Based Rendering) metallic-roughness workflow, ensuring that materials on imported models are displayed with high fidelity.
+* **Dataset Versioning**: Track changes and maintain multiple versions of your datasets with full history and rollback capabilities
+* **Batch Operations**: Perform bulk actions on multiple datasets simultaneously, saving time on routine management tasks
+* **Advanced Metadata Handling**: Enhanced support for custom metadata fields with improved validation and search capabilities
 
-**Animation Support:** Embedded animations within glTF files are now recognized and can be controlled via the animation timeline. The system supports keyframe interpolation for translation, rotation, and scale (TRS) transformations.
+### Improved Visual Search
 
-**Scene Hierarchy Preservation:** The object hierarchy from the source glTF file is maintained upon import, preserving the model's original structure within the scene graph.
+Visual search has been significantly enhanced with new algorithms and user interface improvements:
 
-### Scene Graph API
+* **Semantic Search**: Find visually similar images using advanced AI models that understand content context
+* **Multi-modal Search**: Combine text descriptions with visual queries for more precise results
+* **Search Result Ranking**: Improved relevance scoring ensures the most relevant results appear first
 
-A new programmatic interface is available for manipulating objects in the 3D scene at runtime. This allows for dynamic scenes where object properties such as position, rotation, and scale can be modified via script, providing greater interactive capabilities.
+### Streamlined Workflows
 
-## Performance Improvements
+We've optimized common workflows to reduce clicks and improve efficiency:
 
-### Optimized Texture Compression
+* **Quick Actions Menu**: Access frequently used functions directly from the main interface
+* **Keyboard Shortcuts**: New hotkeys for power users to navigate and perform actions faster
+* **Contextual Menus**: Right-click menus provide relevant options based on your current selection
 
-Implemented Adaptive Scalable Texture Compression (ASTC) for textures on supported hardware. This change reduces VRAM usage and decreases initial load times, resulting in improved performance and a more responsive user experience.
+### Performance Improvements
 
-### Enhanced Raycasting Precision
+Significant backend optimizations deliver faster response times:
 
-The raycasting system now uses a more precise algorithm for intersection tests against complex meshes. This improves the accuracy of object selection and interaction in detailed scenes.
+* **Faster Loading**: Dataset previews and thumbnails load up to 50% faster
+* **Optimized Queries**: Database query optimization reduces wait times for large datasets
+* **Improved Caching**: Smart caching strategies minimize redundant data loading
 
 ## Fixed Issues
 
-**Resolved rendering artifacts on specific Android devices:** Corrected a shader compilation error that caused visual glitches, such as flickering and incorrect colors, on devices utilizing Mali GPUs. This ensures consistent and correct rendering across a wider range of Android hardware.
+We've resolved several important issues to improve stability and user experience:
 
-**Corrected memory leak in asset loader:** Addressed a memory leak that occurred when repeatedly loading and unloading models. The asset loader now properly deallocates all associated resources, improving application stability during long sessions.
+* Fixed issue where large datasets would timeout during initial loading
+* Resolved visual artifacts in thumbnail generation for certain image formats
+* Corrected metadata export functionality for datasets with special characters
+* Fixed search filters not persisting across page navigation
+* Resolved memory leaks in the image viewer for extended browsing sessions
 
-**Fixed incorrect alpha blending on transparent objects:** Adjusted the rendering queue and depth sorting for transparent materials. Objects now render with the correct alpha blending, resolving issues where background objects would incorrectly appear in front of transparent surfaces.
 </Update>
 
 <Update label="2025-05-08" >
@@ -60,9 +71,9 @@ Filter menu organization and iconography have been updated including a unified s
 
 ### Optimized Filter Logic
 
-Visual Layer now provides logical query operators.
+Visual Layer now provides logical query operators. 
 
-We've refined the right panel to remove outdated filter controls. Now, you can build filters and review or edit. All applied filters are currently combined using AND logic. Slice and dice your dataset more precisely and seamlessly combine visual and metadata filters for high-volume review.
+We've refined the right panel to remove outdated filter controls. Now, you can build filters and review or edit. All applied filters are currently combined using AND logic. Slice and dice your dataset more precisely and seamlessly combine visual and metadata filters for high-volume review. 
 
 Set flexible conditions per filter type, including:
 
@@ -76,7 +87,7 @@ Set flexible conditions per filter type, including:
   <img src="/images/filters-operators-2.png" />
 </Frame>
 
-### Streamlined Insights
+### Streamlined Insights 
 
 All your dataset insights are now accessible in one place through the redesigned right panel. Easily navigate between statistics, enrichment models, and quality issues without visual clutter. You can also toggle between # (absolute values) and % (relative values) to view data in the format that matters most to you.
 
@@ -104,7 +115,7 @@ You can now:
 
 ### Better Documentation to Support You
 
-We've upgraded our documentation to make it faster, clearer, and easier to navigate.
+We've upgraded our documentation to make it faster, clearer, and easier to navigate. 
 
 You'll notice:
 
