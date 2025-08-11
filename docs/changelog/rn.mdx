@@ -2,70 +2,24 @@
 title: Release Notes & Product Updates
 description: "Stay up-to-date with the latest features, enhancements, and bug fixes in Visual Layer. This page provides a comprehensive changelog of all product updates."
 ---
+<Update label="2025-08-11" >
+This release introduces a highly requested dark mode feature and adds support for Okta single sign-on (SSO) to enhance user experience and security. We've also addressed several bugs to improve stability.
 
-<Update label="2025-08-11">
-We're excited to announce the latest Visual Layer release, featuring significant enhancements to our 3D rendering capabilities and performance optimizations that will transform how you work with complex visual datasets.
+## New Features & Enhancements
 
-## New Features
+- **[VL-4890] Dark Mode:** Added a new "dark mode" to the user interface. This can be enabled in the user settings and will apply a dark theme to the entire application. This is intended to reduce eye strain in low-light environments.
+- **[VL-4891] Okta Single Sign-On (SSO):** The application now supports single sign-on (SSO) with Okta. This allows users to log in with their Okta credentials, which simplifies the login process and improves security.
 
-### glTF 2.0 Format Support
+## Fixed Issues
 
-Visual Layer now supports the industry-standard glTF 2.0 format for 3D model import and rendering. This comprehensive implementation includes:
+- **[VL-4892]** Fixed a bug where the application would crash when uploading a file with a name containing special characters. The application now correctly handles all special characters in file names.
+- **[VL-4893]** Resolved an issue where the user's session would time out after 5 minutes of inactivity. The session timeout has been increased to 30 minutes.
 
-* Support for both `.gltf` and `.glb` file formats
-* Full Physically Based Rendering (PBR) materials compatibility
-* Complete scene hierarchy preservation
-* Skeletal animation support
+## Known Issues
 
-This update enables more efficient transmission and loading of 3D content, making it easier to work with complex 3D datasets and models within Visual Layer.
-
-## Performance Improvements
-
-### Enhanced Rendering Performance for Large Scenes
-
-We've implemented advanced culling algorithms to dramatically improve rendering performance:
-
-* **Frustum culling**: Prevents rendering of geometry outside the camera's view
-* **Occlusion culling**: Skips processing of objects hidden behind other geometry
-
-These optimizations result in significant frame rate increases for complex scenes with high object counts, ensuring smooth navigation even in the most demanding visual datasets.
-
-### Custom Font Support
-
-Users can now upload and apply custom fonts to projects, enabling greater brand consistency and design flexibility:
-
-* Support for `.woff`, `.woff2`, and `.ttf` font formats
-* New API endpoint for font management
-* Integration with the theme editor's font dropdown menu
-
-### Improved Large Dataset Rendering
-
-The rendering engine now incorporates virtualization (windowing) for lists and tables containing large datasets:
-
-* Only visible UI elements are rendered to the DOM
-* Significantly reduced initial load times
-* Improved scrolling performance for data-intensive projects
-
-## Bug Fixes
-
-### Memory Leak Resolution
-
-Fixed a critical memory leak in the texture caching system:
-
-* Resolved VRAM deallocation issues for unused textures
-* Eliminated progressive memory consumption during runtime
-* Improved application stability with consistent memory usage
-
-### Mobile Header Alignment
-
-Corrected CSS alignment issues affecting mobile users:
-
-* Fixed logo and navigation link misalignment on viewports narrower than 768px
-* Improved Flexbox properties for proper vertical alignment
-* Enhanced mobile user experience across all header elements
-
+- **[VL-4894]** When using the new dark mode, some of the text in the application may be difficult to read. We are working on a fix for this and will release it in a future update.
+- **[VL-4895]** Some users have reported issues with the Okta SSO integration. We are investigating these issues and will provide an update as soon as possible.
 </Update>
-
 <Update label="2025-05-08" >
 We are excited to present the latest release of Visual Layer. This update introduces powerful new ways to search, explore, and manage visual datasets while streamlining the UI for speed and clarity.
 
