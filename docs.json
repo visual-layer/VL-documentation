@@ -227,10 +227,6 @@
     },
     "ga4": {
     "measurementId": "G-BHEKD9V7JN"
-    },
-    "posthog": {
-    "apiKey": "phx_mbU5BiGicol1uVjmH5YZaYEBQYN3G8Xq81hqBEtc9qMKr2v",
-    "host": "https://us.posthog.com"
     }
   },
 "footer": {
