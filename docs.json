@@ -8,6 +8,39 @@
     "dark": "#0097D9" 
   },
   "favicon": "/favicon.svg",
+"seo": {
+    "indexing": "all",
+    "metatags": {
+      "robots": "noindex",
+      "charset": "UTF-8",
+      "keywords": "computer vision toolkit, FiftyOne, model evaluation, dataset visualization, ML engineer tools, AI dataset analysis, open source computer vision, data-centric AI, model debugging, dataset curation, visual data cleaning, find duplicate images, mislabel detection, outlier analysis, data quality AI, video understanding API, multimodal video search, video embedding, natural language video search, AI for video, video analysis API, unstructured data search, enterprise visual search, image search API, end-to-end computer vision, image annotation tool, model training, deploy computer vision model, object detection training, data annotation platform, image labeling, video annotation, AI data labeling, training data platform, Labelbox, Google Vision AI, AWS Rekognition, image recognition API, cloud computer vision, facial detection API, intelligence platform, data fusion, Palantir Gotham, government data analysis, geospatial intelligence, Roboflow, Coactive AI, twelve labs, voxel51, data engineering, data analysis, visual content, visual analysis, vector embeddings",
+      "author": "Visual Layer Customer Success and Product Marketing Teams",
+      "googlebot": "index, follow",
+      "google-site-verification": "L9ypOzCr3CoWnSMNt9GDHaLsWaI8IfXMLNBf6snFnyA",
+      "theme-color": "#0A070E",
+      "copyright": "Copyright 2025",
+      "reply-to": "support@visual-layer.com",
+      "distribution": "global",
+      "coverage": "Worldwide",
+      "category": "Documentation",
+      "target": "all",
+      "apple-mobile-web-app-status-bar-style": "black",
+      "apple-mobile-web-app-title": "Visual Layer",
+      "application-name": "Visual Layer",
+      "msapplication-TileColor": "#D5CA29",
+      "msapplication-TileImage": "https://app.visual-layer.com/static/media/VL-Beta-Logo.5cbe251057c228efe91f6281353393d1.svg",
+      "og:title": "Visual Layer Documentation: Visual Intelligence, At Scale",
+      "og:type": "product",
+      "og:url": "https://www.visual-layer.com",
+      "og:image": "https://app.visual-layer.com/static/media/VL-Beta-Logo.5cbe251057c228efe91f6281353393d1.svg",
+      "og:description": "Visual Layer is a unified computer vision platform that helps you build, deploy, and manage visual intelligence applications at scale. Our platform provides tools for dataset visualization, model evaluation, and data-centric AI workflow, in addition to exploratory and historical use cases. We support technical and non-technical users!",
+      "og:site_name": "Visual Layer Documentation",
+      "og:updated_time": "%modified%",
+      "og:locale": "en_US",
+      "og:video": "https://www.youtube.com/watch?v=jucr1Dar_Qw"
+
+      }
+},
   "navigation": {
     "tabs": [
       {
@@ -115,15 +148,6 @@
               "docs/Dataset-Enrichment/analyze-enriched-dataset",
               "docs/Dataset-Enrichment/use-custom-models-coming-soon"
             ]
-          },
-          {
-            "group":"Help & support",
-            "pages": [
-              "docs/Help-Support/troubleshooting",
-              "docs/Help-Support/faqs",
-              "docs/Help-Support/community",
-              "docs/Help-Support/expiration"
-            ]
           }
         ]
       },
@@ -160,19 +184,13 @@
               ]
             }
           ]
-      },
+      }, 
       {
-        "tab": "Release Notes",
-        "groups": [
-          {
-            "group": "Release Notes",
-            "pages": [
-              "docs/release-notes/rn-2025-05-08"
-            ]
-          }
+        "tab": "Releases",
+        "pages": [
+          "changelog/rn"
         ]
-
-      } 
+      }
     ]
   },
   "logo": {
@@ -202,12 +220,18 @@
   },
   "integrations": {
     "amplitude": {
-      "apiKey": "5lXlKHZXAvOWuo_nvcomu8TokSbXLfmn"
+    "apiKey": "5lXlKHZXAvOWuo_nvcomu8TokSbXLfmn"
+    },
+    "gtm": {
+    "tagId": "G-BHEKD9V7JN"
+    },
+    "ga4": {
+    "measurementId": "G-BHEKD9V7JN"
     }
   },
 "footer": {
   "socials": {
-    "x": "https://x.com/visual_layer",
+    "x": "https://x.visual_layer",
     "github": "https://github.com/visual-layer/fastdup",
     "linkedin": "https://www.linkedin.com/company/visual-layer/"
   },
