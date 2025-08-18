@@ -7,7 +7,10 @@
     "light": "#0097D9",
     "dark": "#0097D9" 
   },
-  "favicon": "/favicon.svg",
+"favicon": "/favicon.svg",
+"styling": {
+  "eyebrows": "breadcrumbs"
+},
 "seo": {
     "indexing": "all",
     "metatags": {
@@ -19,7 +22,7 @@
       "google-site-verification": "L9ypOzCr3CoWnSMNt9GDHaLsWaI8IfXMLNBf6snFnyA",
       "theme-color": "#0A070E",
       "copyright": "Copyright 2025",
-      "reply-to": "support@visual-layer.com",
+      "reply-to": "info@visual-layer.com",
       "distribution": "global",
       "coverage": "Worldwide",
       "category": "Documentation",
@@ -28,12 +31,12 @@
       "apple-mobile-web-app-title": "Visual Layer",
       "application-name": "Visual Layer",
       "msapplication-TileColor": "#D5CA29",
-      "msapplication-TileImage": "https://app.visual-layer.com/static/media/VL-Beta-Logo.5cbe251057c228efe91f6281353393d1.svg",
+      "msapplication-TileImage": "Visual Layer new colorful backgrounds for logo_horizontal VL logo copy 5.svg",
       "og:title": "Visual Layer Documentation: Visual Intelligence, At Scale",
       "og:type": "product",
       "og:url": "https://www.visual-layer.com",
-      "og:image": "https://app.visual-layer.com/static/media/VL-Beta-Logo.5cbe251057c228efe91f6281353393d1.svg",
-      "og:description": "Visual Layer is a unified computer vision platform that helps you build, deploy, and manage visual intelligence applications at scale. Our platform provides tools for dataset visualization, model evaluation, and data-centric AI workflow, in addition to exploratory and historical use cases. We support technical and non-technical users!",
+      "og:image": "Visual Layer new colorful backgrounds for logo_horizontal VL logo copy 5.svg",
+      "og:description": "/Visual Layer is a unified computer vision platform that helps you build, deploy, and manage visual intelligence applications at scale. Our platform provides tools for dataset visualization, model evaluation, and data-centric AI workflow, in addition to exploratory and historical use cases. We support technical and non-technical users!",
       "og:site_name": "Visual Layer Documentation",
       "og:updated_time": "%modified%",
       "og:locale": "en_US",
@@ -194,8 +197,8 @@
     ]
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/Visual Layer new colorful backgrounds for logo_horizontal VL logo copy 5.svg",
+    "dark": "/Visual Layer new colorful backgrounds for logo_horizontal VL logo copy 5.svg"
   },
   "navbar": {
     "links": [
@@ -240,7 +243,9 @@
       "header": "Navigation",
       "items": [
         { "label": "Home", "href": "https://www.visual-layer.com" },
-        { "label": "Platform", "href": "https://www.visual-layer.com/#platform" }
+        { "label": "Platform", "href": "https://www.visual-layer.com/#platform" },
+        { "label": "Privacy Policy", "href": "https://www.visual-layer.com/#platform" },
+        { "label": "Terms of Service", "href": "https://www.visual-layer.com/#platform" }
       ]
     },
     {
@@ -248,6 +253,13 @@
       "items": [
         { "label": "Blog", "href": "https://www.visual-layer.com/blog" },
         { "label": "Videos", "href": "https://www.youtube.com/@visual-layer" }
+      ]
+    },
+        {
+      "header": "Legal Notices",
+      "items": [
+        { "label": "Privacy Policy", "href": "https://docs.visual-layer.com/docs/Help-Support/Privacy%20Policy#privacy-policy"},
+        { "label": "Terms of Service", "href": "https://docs.visual-layer.com/docs/Help-Support/Terms#terms-of-service" }
       ]
     }
   ]
