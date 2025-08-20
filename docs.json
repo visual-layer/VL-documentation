@@ -226,10 +226,10 @@
     "apiKey": "5lXlKHZXAvOWuo_nvcomu8TokSbXLfmn"
     },
     "gtm": {
-    "tagId": "G-BHEKD9V7JN"
+    "tagId": "G-L6JTE56ZKP"
     },
     "ga4": {
-    "measurementId": "G-BHEKD9V7JN"
+    "measurementId": "G-L6JTE56ZKP"
     }
   },
 "footer": {
@@ -258,8 +258,8 @@
         {
       "header": "Legal Notices",
       "items": [
-        { "label": "Privacy Policy", "href": "https://docs.visual-layer.com/docs/Help-Support/Privacy%20Policy#privacy-policy"},
-        { "label": "Terms of Service", "href": "https://docs.visual-layer.com/docs/Help-Support/Terms#terms-of-service" }
+        { "label": "Privacy Policy", "href": "https://docs.visual-layer.com/docs/privacy-policy"},
+        { "label": "Terms of Service", "href": "https://docs.visual-layer.com/docs/terms-of-service" }
       ]
     }
   ]
