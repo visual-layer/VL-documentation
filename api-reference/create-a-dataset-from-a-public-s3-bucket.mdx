@@ -29,7 +29,7 @@ Headers: Authorization: Bearer <jwt>
 ### Required Form Parameters
 
 - `dataset_name`: *(string)* – The name of the dataset to create  
-- `bucket_name`: *(string)* – The name of the public S3 bucket containing your data  
+- `bucket_path`: *(string)* – The path to the public S3 bucket containing your data  
 
 ---
 
@@ -38,7 +38,7 @@ Headers: Authorization: Bearer <jwt>
 ```bash
 curl -X POST -H "Authorization: Bearer <jwt>" \
      -F dataset_name=api_test \
-     -F bucket_name=public_test_bucket \
+     -F bucket_path=public_test_bucket \
      https://app.visual-layer.com/api/v1/dataset
 ```
 
