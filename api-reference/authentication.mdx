@@ -40,7 +40,7 @@ Cookies: SESSION=<session from authenticated user browser session>
 {
   "api_key": "<api_key>",
   "api_secret": "<api_secret>",
-  "message": "API key created. Write down the secret – it's only shown once!"
+  "message": "API key created. Write down the secret – it's only shown once! If you need to access your secret again, contact Visual Layer support at support@visual-layer.com."
 }
 ```
 
@@ -82,7 +82,7 @@ def generate_jwt(api_key: str, api_secret: str):
     
     # Convert datetime objects to Unix timestamps (seconds since epoch)
     now = datetime.now(tz=timezone.utc)
-    expiration = now + timedelta(minutes=10) # Time can be modified as needed
+    expiration = now + timedelta(minutes=10) # You can change this to a larger number if needed
     
     payload = {
         'sub': api_key,
@@ -99,7 +99,7 @@ print("VL_Token:" + api_token)
 ```
 
 <Tip>
-JWT tokens expire quickly by design. For best security and performance, regenerate tokens every 10 minutes.
+JWT tokens expire quickly by design. For best security and performance, regenerate tokens periodically based on your security requirements.
 </Tip>
 
 ---
