@@ -38,10 +38,29 @@ exec -l $SHELL
 
 ### Step 2: Authenticate with Google Cloud
 
+Choose one of the following authentication methods:
+
+#### Option A: User Authentication
 Authenticate using your Google account:
 
 ```bash
-gcloud auth login your-email@example.com
+gcloud auth login user@example.com
+```
+
+#### Option B: Service Account Authentication
+For automated processes or production environments, use a service account:
+
+1. Create and download a service account key file from the Google Cloud Console
+2. Set the environment variable:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/service-account-key.json"
+```
+
+3. Authenticate using the service account:
+
+```bash
+gcloud auth activate-service-account --key-file="/path/to/your/service-account-key.json"
 ```
 
 This command will:
@@ -62,16 +81,16 @@ gsutil ls gs://your-bucket-name/
 
 ```bash
 # List all files in a bucket
-gsutil ls gs://visual_db/
+gsutil ls gs://my-example-bucket/
 
 # Copy files from bucket to local machine
-gsutil cp gs://visual_db/file.zip ./
+gsutil cp gs://my-example-bucket/data.zip ./
 
 # Copy files from local machine to bucket
-gsutil cp ./local-file.txt gs://visual_db/
+gsutil cp ./local-file.txt gs://my-example-bucket/
 
 # Sync directories
-gsutil rsync -r ./local-folder gs://visual_db/remote-folder
+gsutil rsync -r ./local-folder gs://my-example-bucket/remote-folder
 ```
 
 ## Method 2: Filesystem Mounting with GCS FUSE
@@ -104,11 +123,15 @@ mkdir -p ~/gcs_mount
 
 ### Step 6: Authenticate for GCS FUSE
 
-Set up application default credentials (this matches your Google login from Step 2):
+Choose the authentication method that matches what you used in Step 2:
 
+#### For User Authentication:
 ```bash
 gcloud auth application-default login
 ```
+
+#### For Service Account Authentication:
+If you're using a service account, the `GOOGLE_APPLICATION_CREDENTIALS` environment variable from Step 2 will be automatically used by GCS FUSE.
 
 ### Step 7: Mount the Bucket
 
@@ -120,7 +143,7 @@ gcsfuse your-bucket-name ~/gcs_mount
 
 **Example:**
 ```bash
-gcsfuse visual_db ~/gcs_mount
+gcsfuse my-example-bucket ~/gcs_mount
 ```
 
 ### Step 8: Verify the Mount
@@ -140,7 +163,7 @@ You should see the same contents as when you ran `gsutil ls gs://your-bucket-nam
 ls -la ~/gcs_mount/
 
 # Read files
-cat ~/gcs_mount/data.csv
+cat ~/gcs_mount/example-data.csv
 
 # Copy files (writes back to GCS)
 cp ~/local-file.txt ~/gcs_mount/
