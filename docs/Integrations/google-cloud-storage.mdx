@@ -3,7 +3,9 @@ title: "Google Cloud Bucket"
 description: "Access GCP buckets from on-premise machines using command-line tools or filesystem mounting"
 ---
 
-This guide explains how to access Google Cloud Storage (GCS) buckets from on-premise machines using two different methods: command-line access with Google Cloud SDK and filesystem mounting with GCS FUSE.
+This guide explains how to access Google Cloud Storage (GCS) buckets from on-premise machines using two different methods: filesystem mounting with GCS FUSE and command-line access with Google Cloud SDK.
+
+> 📌 **Recommended Approach**: We recommend using **Method 1 (Filesystem Mounting)** as it provides seamless integration with Visual Layer's profiler and allows you to work with your data as if it were stored locally.
 
 ## Prerequisites
 
@@ -12,7 +14,11 @@ This guide explains how to access Google Cloud Storage (GCS) buckets from on-pre
 - Google Cloud account with access to the target bucket
 - Appropriate permissions on the GCS bucket
 
-## Method 1: Command-Line Access
+## Method 1: Filesystem Mounting with GCS FUSE (Recommended)
+
+This is the recommended approach for Visual Layer integration as it provides direct access to your GCS bucket without needing to copy files locally.
+
+GCS FUSE allows you to mount a GCS bucket as a local filesystem, making it appear as a regular folder on your machine.
 
 ### Step 1: Install Google Cloud SDK
 
@@ -69,6 +75,142 @@ This command will:
 3. Generate an authentication code
 4. Return the code to paste back into the terminal
 
+### Step 3: Install GCS FUSE
+
+Add the Google Cloud packages repository:
+
+```bash
+curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/cloud.google.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt gcsfuse-jammy main" | sudo tee /etc/apt/sources.list.d/gcsfuse.list
+```
+
+Update package list and install GCS FUSE:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y gcsfuse
+```
+
+### Step 4: Create Mount Point
+
+Create a directory where you want to mount the bucket:
+
+```bash
+mkdir -p ~/gcs_mount
+```
+
+### Step 5: Authenticate for GCS FUSE
+
+Choose the authentication method that matches what you used in Step 2:
+
+#### For User Authentication:
+```bash
+gcloud auth application-default login
+```
+
+#### For Service Account Authentication:
+If you're using a service account, the `GOOGLE_APPLICATION_CREDENTIALS` environment variable from Step 2 will be automatically used by GCS FUSE.
+
+### Step 6: Mount the Bucket
+
+Mount your GCS bucket to the local filesystem:
+
+```bash
+gcsfuse your-bucket-name ~/gcs_mount
+```
+
+**Example:**
+```bash
+gcsfuse my-example-bucket ~/gcs_mount
+```
+
+### Step 7: Verify the Mount
+
+Verify that the bucket is successfully mounted:
+
+```bash
+ls ~/gcs_mount
+```
+
+You should see the same contents as when you run `gsutil ls gs://your-bucket-name/`.
+
+**Working with mounted files:**
+
+```bash
+# List files
+ls -la ~/gcs_mount/
+
+# Read files
+cat ~/gcs_mount/example-data.csv
+
+# Copy files (writes back to GCS)
+cp ~/local-file.txt ~/gcs_mount/
+
+# Navigate directories
+cd ~/gcs_mount/subfolder/
+```
+
+### Step 8: Unmount the Bucket
+
+When you're finished, unmount the bucket:
+
+```bash
+fusermount -u ~/gcs_mount
+```
+
+## Method 2: Command-Line Access
+
+Use this method when you need to copy specific files locally before running Visual Layer profiler, or for one-time data transfers.
+
+### Step 1: Install Google Cloud SDK
+
+If you haven't already installed it for Method 1, update your system and install required dependencies:
+
+```bash
+sudo apt-get update && sudo apt-get install -y curl unzip python3
+```
+
+Download and install the Google Cloud CLI:
+
+```bash
+curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-465.0.0-linux-x86_64.tar.gz
+tar -xf google-cloud-cli-465.0.0-linux-x86_64.tar.gz
+./google-cloud-sdk/install.sh
+```
+
+Restart your shell to apply the changes:
+
+```bash
+exec -l $SHELL
+```
+
+### Step 2: Authenticate with Google Cloud
+
+Choose one of the following authentication methods:
+
+#### Option A: User Authentication
+Authenticate using your Google account:
+
+```bash
+gcloud auth login user@example.com
+```
+
+#### Option B: Service Account Authentication
+For automated processes or production environments, use a service account:
+
+1. Create and download a service account key file from the Google Cloud Console
+2. Set the environment variable:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/service-account-key.json"
+```
+
+3. Authenticate using the service account:
+
+```bash
+gcloud auth activate-service-account --key-file="/path/to/your/service-account-key.json"
+```
+
 ### Step 3: Access Bucket Contents
 
 Once authenticated, you can list and access bucket contents using `gsutil`:
@@ -91,93 +233,6 @@ gsutil cp ./local-file.txt gs://my-example-bucket/
 
 # Sync directories
 gsutil rsync -r ./local-folder gs://my-example-bucket/remote-folder
-```
-
-## Method 2: Filesystem Mounting with GCS FUSE
-
-GCS FUSE allows you to mount a GCS bucket as a local filesystem, making it appear as a regular folder on your machine.
-
-### Step 4: Install GCS FUSE
-
-Add the Google Cloud packages repository:
-
-```bash
-curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/cloud.google.gpg > /dev/null
-echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt gcsfuse-jammy main" | sudo tee /etc/apt/sources.list.d/gcsfuse.list
-```
-
-Update package list and install GCS FUSE:
-
-```bash
-sudo apt-get update
-sudo apt-get install -y gcsfuse
-```
-
-### Step 5: Create Mount Point
-
-Create a directory where you want to mount the bucket:
-
-```bash
-mkdir -p ~/gcs_mount
-```
-
-### Step 6: Authenticate for GCS FUSE
-
-Choose the authentication method that matches what you used in Step 2:
-
-#### For User Authentication:
-```bash
-gcloud auth application-default login
-```
-
-#### For Service Account Authentication:
-If you're using a service account, the `GOOGLE_APPLICATION_CREDENTIALS` environment variable from Step 2 will be automatically used by GCS FUSE.
-
-### Step 7: Mount the Bucket
-
-Mount your GCS bucket to the local filesystem:
-
-```bash
-gcsfuse your-bucket-name ~/gcs_mount
-```
-
-**Example:**
-```bash
-gcsfuse my-example-bucket ~/gcs_mount
-```
-
-### Step 8: Verify the Mount
-
-Verify that the bucket is successfully mounted:
-
-```bash
-ls ~/gcs_mount
-```
-
-You should see the same contents as when you ran `gsutil ls gs://your-bucket-name/`.
-
-**Working with mounted files:**
-
-```bash
-# List files
-ls -la ~/gcs_mount/
-
-# Read files
-cat ~/gcs_mount/example-data.csv
-
-# Copy files (writes back to GCS)
-cp ~/local-file.txt ~/gcs_mount/
-
-# Navigate directories
-cd ~/gcs_mount/subfolder/
-```
-
-### Step 9: Unmount the Bucket
-
-When you're finished, unmount the bucket:
-
-```bash
-fusermount -u ~/gcs_mount
 ```
 
 ## Security Best Practices
@@ -223,10 +278,38 @@ gsutil ls gs://your-bucket-name/
 
 ## Integration with Visual Layer
 
+### Running Visual Layer Profiler
+
+After setting up access to your GCS bucket, you can run Visual Layer's profiler using either method:
+
+#### Option A: Using Mounted Bucket (Recommended)
+With the bucket mounted as a local filesystem, run the profiler directly on the mounted directory:
+
+```bash
+# Ensure bucket is mounted
+gcsfuse my-example-bucket ~/gcs_mount
+
+# Run Visual Layer profiler on the mounted folder
+./run_profiler.sh --input ~/gcs_mount/dataset-folder/
+```
+
+#### Option B: Using Command-Line Copied Data
+First copy the data locally using gsutil, then run the profiler:
+
+```bash
+# Copy data from bucket to local directory
+gsutil -m cp -r gs://my-example-bucket/dataset-folder/ ~/local-dataset/
+
+# Run Visual Layer profiler on the local folder
+./run_profiler.sh --input ~/local-dataset/
+```
+
+### Configuration Options
+
 When using GCS buckets with Visual Layer on-premise installations, you can:
 
-1. **Use mounted buckets** for local file system access patterns
-2. **Use gsutil commands** in scripts and automation
+1. **Use mounted buckets** for seamless file system access (recommended)
+2. **Copy data locally** using gsutil commands for faster processing
 3. **Configure bucket URLs** directly in Visual Layer dataset creation
 
 For Visual Layer specific configuration, refer to the [S3 Configuration](/docs/on-prem/s3-configuration) documentation for similar patterns that can be adapted for GCS.
