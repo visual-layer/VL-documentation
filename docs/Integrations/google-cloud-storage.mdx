@@ -132,31 +132,7 @@ Verify that the bucket is successfully mounted:
 ls ~/gcs_mount
 ```
 
-You should see the same contents as when you run `gsutil ls gs://your-bucket-name/`.
-
-**Working with mounted files:**
-
-```bash
-# List files
-ls -la ~/gcs_mount/
-
-# Read files
-cat ~/gcs_mount/example-data.csv
-
-# Copy files (writes back to GCS)
-cp ~/local-file.txt ~/gcs_mount/
-
-# Navigate directories
-cd ~/gcs_mount/subfolder/
-```
-
-### Step 8: Unmount the Bucket
-
-When you're finished, unmount the bucket:
-
-```bash
-fusermount -u ~/gcs_mount
-```
+You should see the contents of your bucket.
 
 ## Method 2: Command-Line Access
 
@@ -234,47 +210,6 @@ gsutil cp ./local-file.txt gs://my-example-bucket/
 # Sync directories
 gsutil rsync -r ./local-folder gs://my-example-bucket/remote-folder
 ```
-
-## Security Best Practices
-
-### Authentication
-- Use service account keys for automated processes instead of user authentication
-- Store credentials securely and never commit them to version control
-- Consider using Workload Identity if running on Google Cloud infrastructure
-
-### Access Control
-- Follow the principle of least privilege when granting bucket permissions
-- Use IAM roles to control access rather than bucket-level permissions when possible
-- Regularly audit and rotate access credentials
-
-### Network Security
-- Consider using VPC Service Controls for additional network isolation
-- Use HTTPS/TLS encryption for all data transfers (enabled by default)
-
-## Troubleshooting
-
-### Common Issues
-
-**Authentication Errors:**
-```bash
-# Re-authenticate if you encounter permission errors
-gcloud auth login
-gcloud auth application-default login
-```
-
-**Mount Issues:**
-```bash
-# Check if the mount point is already in use
-fusermount -u ~/gcs_mount
-
-# Verify bucket name and permissions
-gsutil ls gs://your-bucket-name/
-```
-
-**Performance Considerations:**
-- GCS FUSE is optimized for sequential access patterns
-- For high-performance random access, consider using `gsutil` commands directly
-- Large file operations may be slower through FUSE compared to direct `gsutil` operations
 
 ## Integration with Visual Layer
 
