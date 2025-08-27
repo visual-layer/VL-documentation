@@ -82,6 +82,7 @@
             "group": "Integrations",
             "pages": [
               "docs/Integrations/Amazon-s3",
+              "docs/Integrations/google-cloud-storage",
               "docs/Integrations/cvat-coming-soon",
               "docs/Integrations/labelbox-coming-soon"
             ]
