@@ -3,6 +3,60 @@ title: Release Notes & Product Updates
 description: "Stay up-to-date with the latest features, enhancements, and bug fixes in Visual Layer. This page provides a comprehensive changelog of all product updates."
 ---
 
+<Update label="2025-08-28" version="2.44.2">
+
+## New Features & Enhancements
+
+### TinyCLIP Base Embedding Model
+
+Visual Layer now includes TinyCLIP, our new base embedding model that delivers more accurate visual similarity search and enhanced clustering capabilities.
+
+**Benefits:**
+- More precise visual similarity matching
+- Better dataset clustering and pattern discovery
+- Improved search result quality across all visual search types
+
+[Learn more about TinyCLIP](/docs/Dataset-Enrichment/tinyclip-model)
+
+### Configurable Visual Similarity Thresholds
+
+You can now customize visual similarity thresholds per model to optimize search precision for your specific use cases.
+
+**Benefits:**
+- Fine-tune similarity sensitivity based on your dataset characteristics
+- Optimize precision vs coverage for different search scenarios
+- Better control over duplicate detection accuracy
+
+### Enhanced Dataset Creation Validation
+
+Improved validation system provides better feedback during dataset creation and upload processes.
+
+**Benefits:**
+- More accurate validation before upload begins
+- Clearer error messages and resolution guidance
+- Reduced minimum folder requirements (now 1 image minimum)
+- Better handling of large folder structures (1000+ images)
+
+### Expanded Custom Metadata Support
+
+Custom metadata enum values limit increased from 20 to 100 values per field.
+
+**Benefits:**
+- Support for more complex categorization schemes
+- Greater flexibility in metadata organization
+- Better alignment with enterprise data structures
+
+## Fixed Issues
+
+- Duplicates filter now available when performing visual search by uploading external images
+- Improved error handling and display during dataset creation
+- Enhanced folder validation for complex directory structures
+- Better upload progress tracking and status reporting
+- Resolved thumbnail generation inefficiencies for S3 buckets
+- Fixed various UI inconsistencies in dataset creation workflow
+
+</Update>
+
 <Update label="2025-05-08" >
 We are excited to present the latest release of Visual Layer. This update introduces powerful new ways to search, explore, and manage visual datasets while streamlining the UI for speed and clarity.
 
