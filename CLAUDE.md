@@ -163,3 +163,6 @@ The repository includes extensive custom styling in `styles.css` with:
 - Legacy fastdup documentation maintained in separate configuration
 - for sections with subsections, there should never be any concluding or summary paragraphs at the end of the last subsection that are related to summaries of the entire main section. instead, all summaries, conclusions, etc. should be part of the intro to the main section.
 - lists with more than 2 items should always use unordered lists even if they also make sense as part of prose paragraphs.
+- <Frame>
+  <img src="/images/highlight-filters-and-insights.png" />
+</Frame>  this is the way to wrap images always
