@@ -203,6 +203,36 @@ Essential components:
 4. **Solution**: Step-by-step resolution
 5. **Prevention**: Tips to avoid future occurrences
 
+### Document Structure Rules
+
+#### Overview and Introduction
+- **No "Overview" headings**: Content after the intro card should flow directly without a separate "Overview" heading
+- **No "Key Features" sections**: Feature information should be integrated into the introduction or presented as tables/subsections
+- **Consolidate introductory content**: All intro material should be together in short, flowing paragraphs without separate top-level headings
+
+#### Procedures and Configuration
+- **Use basic numbering for procedures**: Configuration sections should use simple numbered steps (1, 2, 3) rather than `<Steps>` components
+- **Clear procedure titles**: Name procedure sections based on the action (e.g., "Configuring Visual Similarity Thresholds" not "Configuration Options")
+
+#### Section Organization
+- **Intro text for sections with subsections**: Every section that contains subsections must include introductory text after the main heading before the first subsection
+- **Lead-in sentences for all lists**: Every ordered and unordered list must have an opening sentence that introduces what the list contains
+- **Related Articles section**: When relevant, include a "Related Articles" section as the very last section with links to related documentation, minimally including other articles in the same documentation section
+
+#### Examples
+```markdown
+## Best Practices
+
+Optimize your implementation by following these recommended practices.
+
+### Threshold Configuration
+
+Apply these guidelines when setting up thresholds:
+
+- First guideline
+- Second guideline
+```
+
 ### Quality Checklist
 Before publishing any documentation:
 - [ ] Follows document structure template
@@ -214,6 +244,11 @@ Before publishing any documentation:
 - [ ] Includes descriptive alt text for images
 - [ ] Links use descriptive text (never "click here")
 - [ ] Follows US English conventions
+- [ ] No standalone "Overview" or "Key Features" headings
+- [ ] All procedures use basic numbering (1, 2, 3)
+- [ ] Every section with subsections has intro text
+- [ ] Every list has a lead-in sentence
+- [ ] Includes Related Articles section when relevant
 
 ## Platform-Specific Notes
 - Visual Layer supports both cloud and on-premises deployments

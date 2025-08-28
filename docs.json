@@ -149,7 +149,6 @@
             "pages": [ 
               "docs/Dataset-Enrichment/enrich_overview",
               "docs/Dataset-Enrichment/model-catalog",
-              "docs/Dataset-Enrichment/tinyclip-model",
               "docs/Dataset-Enrichment/analyze-enriched-dataset",
               "docs/Dataset-Enrichment/use-custom-models-coming-soon"
             ]
