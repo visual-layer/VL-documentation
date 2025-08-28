@@ -166,3 +166,11 @@ The repository includes extensive custom styling in `styles.css` with:
 - <Frame>
   <img src="/images/highlight-filters-and-insights.png" />
 </Frame>  this is the way to wrap images always
+- How It Works and other similar high level explanations that include steps or process descriptiosn (empahsize high level/theory) must use the <Step> object for the steps and their descriptins. For How to Apply the Filter as an example, this section must use a regular ordered list, as it does now, but the final paragraph in this case explains benefits and should be the intro para to the process instead of a conclusions.
+- always make sure capitalization is absolutely consistent across content types. so for example, prepositions in titles should ALWAYS be lower case.
+- always double-check your work before finishing an implementation to ensure spacing is correct wherever you made changes. soemtimes spacing can be tricky when using ** ** mid-sentnece.
+- always use active voice unless absolutely unavoidable. that includes preferring opening sentences with active simple present tense instead of gerunds.
+- never use "please" and never use i.e. nor e.g. Only "For example" or "Example:". And always use correct punctuation including periods - even when in ordered lists.Finally, every article must ALWAYS open with an introduction - even if minimal.
+- never use divider lines in the middle of articles unless you consult with me before starting.
+- exception to title case for titles and headings: ensure that sidebarTitle always use sentence case and is always limited to 20 chars at most. This means that sometimes longer title needs to be shortened only for the sidebarTitle
+- steps and processes must always use the formatting we noted in memory already - either ordered lists or <Step> depending on the kind of information and NEVER any other kind of formatting. For complex flows with sublevels (1. a. i. , 2. b. ii. etc.), this is still true, but you can use ** ** to emphasize stages for example.
