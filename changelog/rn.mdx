@@ -5,17 +5,17 @@ description: "Stay up-to-date with the latest features, enhancements, and bug fi
 
 <Update label="2025-08-28" version="2.44.2">
 
-## New Features & Enhancements: New Embedding Model
+## New Features: New Embedding Model
 
 We are excited to announce the introduction of a new embedding model that expands the way teams can explore, organize, and validate their data. By combining these improvements, the model:
 
 - Reduces dependency on expensive infrastructure
 - Strengthens insights through better clustering  
-- Raises the overall trustworthiness of datasets through improved quality checks
+- Raises the overall trustworthiness of datas through improved quality checks
 
 ### Textual Search Without GPUs
 
-Until now, running rich text-based searches across large datasets often required specialized hardware such as GPUs. With this release, our model delivers efficient, accurate textual search on standard CPUs—making it easier and more cost-effective to integrate into everyday workflows.
+Until now, running rich text-based searches across large datasets often required specialized hardware such as GPUs and additional compute time. With this release, our model delivers efficient, accurate textual search on standard CPUs, making it easier and more cost-effective to integrate into everyday workflows.
 
 ### Improved Clustering Capabilities
 
@@ -25,13 +25,22 @@ The new architecture enhances how related items are grouped together, producing 
 
 Identifying mislabeled data has always been a challenge. This version offers a step forward with sharper, more consistent detection methods, reducing noise and improving dataset quality with less manual intervention.
 
-## Fixed Issues
+## Enhancements & Fixes
 
-- Improved error handling and display during dataset creation
-- Enhanced folder validation for complex directory structures
-- Better upload progress tracking and status reporting
-- Resolved thumbnail generation inefficiencies for S3 buckets
-- Fixed various UI inconsistencies in dataset creation workflow
+- Duplicates filter availablity issues after performing a visual search by uploading an external image
+- Custom metadata: Increased the enum values limitation from 20 to 100
+- Resolved thumbnail generation inefficiencies from S3 buckets
+
+
+</Update>
+
+<Update label="2025-08-06" version="2.43.0">
+## New Features: New filter: Filter by object size (width, height)
+
+This filter allows users to view only bounding boxes (objects) above/below a specified size (in squared pixels).
+This is intended to help QA reviewers and annotators quickly focus on large or significant objects without visual noise from very small detections.
+
+Show only objects with area > or < [____] px²
 
 </Update>
 
