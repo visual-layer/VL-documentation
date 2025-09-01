@@ -1,20 +1,24 @@
 ---
 title: "System requirements"
-description: ""
+description: "Hardware, software, and configuration requirements for installing Visual Layer on-premises including GPU setup and dependencies."
 ---
 
-### System configuration
+### System Configuration
 
-- Operating System: Ubuntu LTS 20/22/24
-- X86 architecture
-- RAM: 64G
+The following hardware specifications are required for Visual Layer on-premises deployment:
+
+- Operating System: Ubuntu LTS 20/22/24.
+- X86 architecture.
+- RAM: 64G.
 - Disk space: 256Gb + 2.5 times the estimated amount of data.
-- CPU: 16 cores
-- Optional: GPU: Common Nvidia GPU types (Nvidia A10, A100, H100, RTX 4090, etc.)
+- CPU: 16 cores.
+- Optional: GPU: Common Nvidia GPU types (Nvidia A10, A100, H100, RTX 4090, etc.).
 
 ### Dependencies
 
-- Docker v.27 or above - follow [the official instructions](https://docs.docker.com/engine/install/ubuntu/) and [the post-install guide](https://docs.docker.com/engine/install/linux-postinstall/).
+Install these software dependencies before setting up Visual Layer:
+
+- Docker v.27 or above - follow [the official instructions](https://docs.docker.com/engine/install/ubuntu/) and [the post-install guide](https://docs.docker.com/engine/install/linux-postinstall/)
 - jq - json data parsing library
 - psql - postgres command line client
 - zip/unzip
@@ -49,21 +53,17 @@ If you are using a GPU machine for acceleration, you need to install the NVIDIA 
    ```
    This should display your GPU information if the toolkit is properly installed.
 
-### Advised tools for troubleshooting/maintenance
+### Advised Tools for Troubleshooting/Maintenance
+
+These tools are recommended for system maintenance and troubleshooting:
 
 - vi - or equivalent required for file editing
 - object store CLIs if applicable (aws cli, mc)
 
-### Required permissions and access
+### Required Permissions and Access
 
-- Make sure you run the installation as a regular user (not a root user), with sudo privileges.
+Ensure proper user permissions for installation:
 
-
-
-
-
-
-
-
+- Make sure you run the installation as a regular user (not a root user), with sudo privileges
 
 

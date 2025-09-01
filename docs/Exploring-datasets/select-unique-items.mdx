@@ -3,34 +3,38 @@ title: Select unique items
 description: Surface only the most visually distinctive images or objects in your dataset.
 ---
 
-## Overview
+Visual Layer reduces dataset redundancy by highlighting the most visually distinct samples in your dataset. This workflow:
 
-The **Select Unique Items** tool helps reduce dataset redundancy by highlighting the most visually distinct samples in your dataset. This is especially useful when curating balanced datasets for training or review—ensuring that only diverse, non-repetitive content is prioritized.
+- Reduces redundancy before model training or export.
+- Creates compact datasets that preserve diversity.
+- Reveals long tail content often hidden behind common or repetitive examples.
 
 Visual Layer assigns each image or object a **uniqueness score**, then filters out near-duplicates according to a user-defined threshold.
 
-## Use Cases
-
-- **Reduce redundancy** before model training or export
-- **Create compact datasets** that preserve diversity
-- **Reveal long tail content** often hidden behind common or repetitive examples
-
 ## How It Works
 
-- Every image or object is assigned a **uniqueness score** between `0` and `1`
-  - `0` = highly redundant
-  - `1` = highly unique
-- When the filter is applied, only samples with the highest uniqueness scores are retained
-- The action is automatically applied as an **Exclude rule** in the Query Panel
+<Steps>
+<Step title="Uniqueness Scoring">
+Visual Layer assigns every image or object a **uniqueness score** between `0` and `1`:
+  - `0` = highly redundant.
+  - `1` = highly unique.
+</Step>
+<Step title="Filter Application">
+Visual Layer retains only samples with the highest uniqueness scores when you apply the filter
+</Step>
+<Step title="Query Integration">
+The action is automatically applied as an **Exclude rule** in the Query Panel
+</Step>
+</Steps>
 
 ## How to Apply the Filter
 
-1. Navigate to the**Dataset Exploration View**
-2. Click the **Select Uniques** button (located next to the search bar)
-3. Adjust the **threshold slider** to your preferred level of uniqueness
-4. The filter will appear in the Query Panel under the **Exclude** section
-
 This workflow lets you focus on the most varied content in your dataset—ideal for debugging, QA, or preparing smaller benchmark sets.
+
+1. Navigate to the **Dataset Exploration View**.
+2. Click the **Select Uniques** button (located next to the search bar).
+3. Adjust the **threshold slider** to your preferred level of uniqueness.
+4. The filter will appear in the Query Panel under the **Exclude** section.
 
 ## Uniqueness in Exported Data
 

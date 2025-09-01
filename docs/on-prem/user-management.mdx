@@ -1,26 +1,32 @@
 ---
-title: "User management"
-excerpt: ""
-hidden: false
-createdAt: "Thu Apr 10 2025 14:26:37 GMT+0000 (Coordinated Universal Time)"
-updatedAt: "Thu Apr 17 2025 10:45:48 GMT+0000 (Coordinated Universal Time)"
+title: "User management: ADFS (OIDC) Integration Guide"
+description: "Integrate your Identity Provider with Visual Layer using OpenID Connect (OIDC) for Single Sign-On authentication."
 ---
 
-# Visual Layer ADFS (OIDC) Integration Guide
 
 This document provides all necessary instructions to integrate your Identity Provider (IdP) — such as ADFS — with Visual Layer's platform using the OpenID Connect (OIDC) protocol.
 
 We will work together to ensure a smooth Single Sign-On (SSO) experience.
 
----
+## OIDC Authentication Flow
 
-## Overview: OIDC Flow
-
-1. The user tries to log in to Visual Layer and is redirected to your IdP (OpenID Provider, OP) with the client ID.
-2. The IdP authenticates the user.
-3. The user is redirected back to a predefined Redirect URI with an authorization code.
-4. Visual Layer exchanges this code, along with the client ID and secret, for Access and ID tokens.
-5. Optionally, additional user details can be retrieved using the Access Token via the UserInfo endpoint.
+<Steps>
+<Step title="Login Redirect">
+The user tries to log in to Visual Layer and is redirected to your IdP (OpenID Provider, OP) with the client ID.
+</Step>
+<Step title="User Authentication">
+The IdP authenticates the user.
+</Step>
+<Step title="Authorization Code Return">
+The user is redirected back to a predefined Redirect URI with an authorization code.
+</Step>
+<Step title="Token Exchange">
+Visual Layer exchanges this code, along with the client ID and secret, for Access and ID tokens.
+</Step>
+<Step title="User Info Retrieval">
+Optionally, additional user details can be retrieved using the Access Token via the UserInfo endpoint.
+</Step>
+</Steps>
 
 ---
 
@@ -28,8 +34,7 @@ We will work together to ensure a smooth Single Sign-On (SSO) experience.
 
 ### 1. Well-Known Configuration URL
 
-- Please provide your IdP’s OpenID configuration URL (e.g.,  
-  `https://<your-adfs-domain>/adfs/.well-known/openid-configuration`).
+- Provide your IdP's OpenID configuration URL (For example: `https://<your-adfs-domain>/adfs/.well-known/openid-configuration`).
 - This allows us to automatically fetch metadata like authorization endpoints.
 
 ### 2. Client ID and Client Secret
@@ -39,14 +44,13 @@ We will work together to ensure a smooth Single Sign-On (SSO) experience.
 
 ### 3. Allowed Scopes
 
-- Please confirm which scopes are supported.
-- Typical scopes include:  
-  `openid, profile, email`
+- Confirm which scopes are supported.
+- Typical scopes include: `openid, profile, email`.
 
 ### 4. Example Tokens
 
 - No need to send real user tokens.
-- Please provide an example ID token and, if possible, a UserInfo response showing the available user claims.
+- Provide an example ID token and, if possible, a UserInfo response showing the available user claims.
 
 ```json
 {
