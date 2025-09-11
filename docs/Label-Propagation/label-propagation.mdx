@@ -47,10 +47,6 @@ To set up label propagation you will provide the Visual Layer model seed example
 2. When you receive notification that the dataset is ready to explore, navigate to the dataset.
 2. Click (add image of icon) to enable the **Manage Seed Classes & Samples** tab from the right panel.
 
-{/* PLACEHOLDER: Add screenshot showing how to access Label propagation from the dataset interface */}
-<Frame>
-  <img src="/images/label-propagation/access-label-propagation.png" alt="Accessing Label propagation from Dataset Interface" />
-</Frame>
 
 3. Select classes from the predefined list specific to your use case
 4. Review the terminology used (some implementations use "class" while others use "label")
@@ -60,10 +56,6 @@ To set up label propagation you will provide the Visual Layer model seed example
 **Important**: You must select all classes that may appear in your dataset. The system will attempt to label all data, so any class not defined here cannot be assigned during the process. Consider your complete taxonomy before proceeding.
 </Note>
 
-{/* PLACEHOLDER: Add screenshot showing class selection interface with predefined list */}
-<Frame>
-  <img src="/images/label-propagation/class-selection.png" alt="Class Selection Interface" />
-</Frame>
 
 6. For each class, select a minimum of 5 labeled examples using one of these methods:
    - **Select Items**: Use Visual Layer's exploration features to find similar examples:
@@ -77,15 +69,6 @@ To set up label propagation you will provide the Visual Layer model seed example
 **Current Limitation**: All examples must be selected from within your current dataset. Drag and drop functionality for external entities is not supported.
 </Note>
 
-{/* PLACEHOLDER: Add animated GIF showing drag and drop functionality with visual feedback */}
-<Frame>
-  <img src="/images/label-propagation/drag-drop-examples.gif" alt="Drag and Drop Example Selection" />
-</Frame>
-
-{/* PLACEHOLDER: Add screenshot showing the specialized UI for seed selection with floating action bar */}
-<Frame>
-  <img src="/images/label-propagation/select-items-ui.png" alt="Specialized Seed Selection UI" />
-</Frame>
 
 7. **Assign Examples to Classes**: After selecting items, use the floating action bar that appears:
    - The bar shows the number of selected items
@@ -99,15 +82,6 @@ To set up label propagation you will provide the Visual Layer model seed example
    - Monitor progress indicators showing completion toward minimum requirements
    - Add or remove classes as needed during the seed creation process
 
-{/* PLACEHOLDER: Add animated GIF showing hover interactions with image preview and delete icon timing */}
-<Frame>
-  <img src="/images/label-propagation/hover-interactions.gif" alt="Example Image Hover Interactions" />
-</Frame>
-
-{/* PLACEHOLDER: Add screenshot showing progress indicators and encouragement messages for each class */}
-<Frame>
-  <img src="/images/label-propagation/progress-tracking.png" alt="Class Progress Tracking Interface" />
-</Frame>
 
 ## Important Requirements
 
@@ -122,6 +96,40 @@ To set up label propagation you will provide the Visual Layer model seed example
 <Tip>
 **Best Practice**: Use Visual Layer's clustering and similarity features to quickly identify and select high-quality, diverse examples for each class. The more representative examples you provide, the more accurate your automatic labeling will be.
 </Tip>
+
+<Frame>
+<script>
+function onArcadeIframeMessage(e) {
+  if (e.origin !== 'https://demo.arcade.software' || !e.isTrusted) return;
+  const arcadeIframe = document.querySelector(`iframe[src*=${e.data.id}]`);
+  if (!arcadeIframe || !arcadeIframe.contentWindow) return;
+  if (e.data.event === 'arcade-init') {
+    arcadeIframe.contentWindow.postMessage({event: 'register-popout-handler'}, '*');
+  }
+  if (e.data.event === 'arcade-popout-open') {
+    arcadeIframe.style['position'] = 'fixed';
+    arcadeIframe.style['z-index'] = '9999999';
+  }
+  if (e.data.event === 'arcade-popout-close') {
+    arcadeIframe.style['position'] = 'absolute';
+    arcadeIframe.style['z-index'] = 'auto';
+  }
+}
+window.addEventListener('message', onArcadeIframeMessage);
+</script>
+<div style="position: relative; padding-bottom: calc(70.34559643255295% + 41px); height: 0; width: 100%;">
+  <iframe src="https://demo.arcade.software/xG4ed8Qcjo1Sqxf3OGbd?embed&embed_mobile=inline&embed_desktop=modal&show_copy_link=true" 
+          title="Label Propagation Workflow Demo" 
+          frameborder="0" 
+          loading="lazy" 
+          webkitallowfullscreen 
+          mozallowfullscreen 
+          allowfullscreen 
+          allow="clipboard-write" 
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; color-scheme: light;">
+  </iframe>
+</div>
+</Frame>
 
 ---
 
@@ -165,10 +173,6 @@ Within each predicted class group, you'll see:
 - Zoom functionality available for close inspection
 - After reviewing all items within a class, the carousel automatically progresses to the next class
 
-{/* PLACEHOLDER: Add screenshot showing the high-level review interface with grouping by label and green borders for confident items */}
-<Frame>
-  <img src="/images/label-propagation/high-level-review.png" alt="High-Level Review Interface" />
-</Frame>
 
 **Focus-Level View**
 Double-clicking an image opens a modal carousel view with:
@@ -176,17 +180,9 @@ Double-clicking an image opens a modal carousel view with:
 - Zoom functionality for close inspection
 - Automatic progression to the next class after reviewing all items within a class
 
-{/* PLACEHOLDER: Add screenshot or GIF showing the modal carousel view with navigation and zoom functionality */}
-<Frame>
-  <img src="/images/label-propagation/focus-level-review.gif" alt="Focus-Level Review Modal Carousel" />
-</Frame>
 
 ### Feedback Actions
 
-{/* PLACEHOLDER: Add animated GIF or demo video showing all four feedback actions in sequence */}
-<Frame>
-  <img src="/images/label-propagation/feedback-actions-demo.gif" alt="All Feedback Actions Demonstration" />
-</Frame>
 
 **Incorrect (Reject)**
 - **Use Case**: Item does not belong to its assigned class
@@ -194,10 +190,6 @@ Double-clicking an image opens a modal carousel view with:
 - **Workflow**: If you continue to mark as incorrect, the item moves through all predicted classes. You must eventually provide definitive feedback
 - **Undo**: Available immediately after reassignment via toast notification
 
-{/* PLACEHOLDER: Add screenshot showing the "Incorrect" action with toast notification and undo option */}
-<Frame>
-  <img src="/images/label-propagation/incorrect-feedback.png" alt="Incorrect Feedback Action with Undo Toast" />
-</Frame>
 
 **Ignore**
 - **Use Case**: Item is an outlier and doesn't match any existing class in your taxonomy
@@ -208,10 +200,6 @@ Double-clicking an image opens a modal carousel view with:
 **Important**: The system maintains its quota of asking about maximum 10% of your dataset. Since ignored items don't provide learning feedback, ignoring too many items may result in additional review batches to gather sufficient training data for the algorithm.
 </Warning>
 
-{/* PLACEHOLDER: Add screenshot showing ignored items appearing grayed out in unlabeled cluster */}
-<Frame>
-  <img src="/images/label-propagation/ignore-feedback.png" alt="Ignored Items in Unlabeled Cluster" />
-</Frame>
 
 **Approve**
 - **Use Case**: Item correctly matches the assigned class
@@ -221,26 +209,12 @@ Double-clicking an image opens a modal carousel view with:
 - **Use Case**: Item belongs to a different existing class
 - **Action Result**: User manually reassigns item to another class from the list defined during the Seed step
 
-{/* PLACEHOLDER: Add screenshot showing class reassignment dropdown/interface */}
-<Frame>
-  <img src="/images/label-propagation/class-reassignment.png" alt="Manual Class Reassignment Interface" />
-</Frame>
 
 ### Feedback Methods
 
 **Single-Item Feedback**: Triggered on hover for quick actions
 
-{/* PLACEHOLDER: Add GIF showing single-item feedback on hover */}
-<Frame>
-  <img src="/images/label-propagation/single-item-feedback.gif" alt="Single-Item Feedback on Hover" />
-</Frame>
-
 **Bulk Actions**: Select multiple items to access actions via floating action bar
-
-{/* PLACEHOLDER: Add screenshot showing bulk selection with floating action bar */}
-<Frame>
-  <img src="/images/label-propagation/bulk-actions.png" alt="Bulk Actions with Floating Action Bar" />
-</Frame>
 
 ### Completing Your Review
 
@@ -290,10 +264,6 @@ Training readiness indicators show progress toward your dataset's readiness for 
 **Early Completion Strategy**: If your dataset contains 3,000 images but you reach sufficient labeled data for your model training needs after labeling 1,000 images, you can choose to finish the process early rather than continuing through the full dataset.
 </Tip>
 
-{/* PLACEHOLDER: Add screenshot showing all three progress metrics dashboard */}
-<Frame>
-  <img src="/images/label-propagation/progress-dashboard.png" alt="Label propagation Progress Metrics Dashboard" />
-</Frame>
 
 ---
 
@@ -323,10 +293,6 @@ Label propagation offers flexible completion options depending on your dataset n
    - Leave remaining unlabeled data unchanged
    - Generate an internal model for potential reuse
 
-{/* PLACEHOLDER: Add screenshot showing the Finish button and confirmation dialog */}
-<Frame>
-  <img src="/images/label-propagation/finish-process.png" alt="Finish Label propagation Button and Confirmation" />
-</Frame>
 
 ### Resetting the Process
 
@@ -351,10 +317,6 @@ Label propagation offers flexible completion options depending on your dataset n
 **Data Loss Warning**: Reset permanently deletes all label propagation progress and cannot be undone. Your original dataset and any labels from previous completed label propagation runs remain unchanged.
 </Warning>
 
-{/* PLACEHOLDER: Add screenshot showing the Reset button and warning confirmation dialog */}
-<Frame>
-  <img src="/images/label-propagation/reset-process.png" alt="Reset Process with Warning Dialog" />
-</Frame>
 
 # Related Articles
 
