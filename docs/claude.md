@@ -36,6 +36,12 @@
 - Alt text on all images
 - Relative paths for internal links
 
+## Content restrictions
+- NEVER mention customers, design partners, or specific company names
+- NEVER mention phases, rollouts, or implementation stages
+- NEVER mention future features or roadmap items - only document what currently exists
+- Focus on current functionality and present-state capabilities
+
 ## Git workflow
 - NEVER use --no-verify when committing
 - Ask how to handle uncommitted changes before starting
@@ -48,3 +54,4 @@
 - Use absolute URLs for internal links
 - Include untested code examples
 - Make assumptions - always ask for clarification
+- Reference customers, phases, or future features
