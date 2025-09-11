@@ -1,0 +1,114 @@
+---
+title: "Preparing your dataset for label propagation | Visual Layer"
+description: "Complete guide to structuring and validating your dataset files before uploading to Visual Layer for label propagation."
+sidebarTitle: "Preparing your dataset"
+---
+
+Proper dataset preparation is essential for successful label propagation. This guide walks you through the required file structure, validation process, and common troubleshooting steps.
+
+## Required File Structure
+
+Your dataset must include exactly four components in the following structure:
+
+```
+your-dataset-folder/
+├── db.csv                    # Inspection data
+├── db_export_[id].json      # Job metadata  
+├── classes.json             # Class taxonomy definitions
+└── images/                  # Image files in subdirectories
+    ├── subfolder1/
+    │   ├── image1.jpg
+    │   └── image2.jpg
+    └── subfolder2/
+        ├── image3.jpg
+        └── image4.jpg
+```
+
+### File Requirements
+
+**db.csv**
+- Contains inspection data linking images to their metadata
+- Must be valid CSV format with proper schema
+- Image paths must match actual image file locations
+
+**db_export_[id].json**  
+- Contains job metadata for the dataset
+- Must be valid JSON format
+- The `[id]` should match your specific job identifier
+
+**classes.json**
+- Defines your class taxonomy for label propagation
+- Maps class numbers to meaningful names
+- Must be valid JSON format
+
+Example classes.json:
+```json
+{
+  "1": "Good Quality",
+  "2": "Surface Defect - Minor", 
+  "3": "Surface Defect - Major",
+  "4": "Color Inconsistency",
+  "5": "Structural Damage"
+}
+```
+
+**images/ directory**
+- Contains all JPEG image files
+- Images must be organized in subdirectories
+- Image paths in db.csv must match actual file locations
+- Supports nested folder structures
+
+<Warning>
+**Critical**: The class taxonomy in classes.json cannot be modified after dataset creation. Plan your complete classification system before uploading, as label propagation can only assign labels from this predefined list.
+</Warning>
+
+
+## Best Practices
+
+- **Double-check file names**: Exact naming patterns are required
+- **Validate JSON syntax**: Use a JSON validator before upload
+- **Test with small datasets**: Validate your file structure with a subset before full upload
+- **Document your classes**: Keep clear definitions of what each class represents
+- **Consistent image organization**: Maintain logical subfolder structures in images/
+
+## Troubleshooting
+
+<div className="integrations-table">
+
+| Problem | Description | Recommendations |
+|---------|-------------|-----------------|
+| Missing required files | Upload fails due to incomplete file structure | Ensure all 4 components are present: db.csv, db_export_*.json, classes.json, and images/ directory |
+| Invalid file naming | Metadata file name doesn't match required pattern | Check that your metadata file follows exactly: `db_export_[id].json` |
+| Invalid CSV format | db.csv file has formatting issues | Verify proper CSV formatting, check for special characters or encoding issues, ensure all required columns are present |
+| JSON parsing error | classes.json or db_export files have syntax errors | Use a JSON validator to check formatting, ensure proper quotation marks and bracket matching |
+| Image path mismatch | Paths in db.csv don't match actual file locations | Verify image paths match actual locations, check case sensitivity, ensure proper subfolder nesting |
+| Inconsistent class definitions | Class taxonomy issues affecting label assignment | Plan complete taxonomy before upload, use descriptive non-overlapping names, consider all possible defect types |
+
+</div>
+
+## Next Steps
+
+Once your dataset is properly structured:
+
+1. Upload your dataset to Visual Layer
+2. Visual Layer will validate and process your files automatically  
+3. You'll receive notification when the dataset is ready for exploration
+4. You can then proceed with label propagation setup
+
+<Card title="Ready to Start Labeling?" icon="play" href="/docs/Label-Propagation/label-propagation">
+  Learn how to set up and run label propagation on your prepared dataset.
+</Card>
+
+# Related Articles
+
+<CardGroup cols={3}>
+  <Card title="Introduction to Label Propagation" icon="graduation-cap" href="/docs/Label-Propagation/intro-to-label-propagation">
+    Learn about the concepts, algorithm, and best practices for label propagation.
+  </Card>
+  <Card title="Using Label Propagation" icon="cog" href="/docs/Label-Propagation/label-propagation">
+    Step-by-step guide to running label propagation on your datasets.
+  </Card>
+  <Card title="Dataset Enrichment Overview" icon="wand-magic-sparkles" href="/docs/Dataset-Enrichment/enrich_overview">
+    Explore Visual Layer's comprehensive dataset enrichment capabilities.
+  </Card>
+</CardGroup>

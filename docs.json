@@ -145,6 +145,14 @@
             ]
           },
           {
+            "group":"Label propagation",
+            "pages": [
+              "docs/Label-Propagation/intro-to-label-propagation",
+              "docs/Label-Propagation/preparing-dataset-upload",
+              "docs/Label-Propagation/label-propagation"
+            ]
+          },
+          {
             "group":"Dataset enrichment",
             "pages": [ 
               "docs/Dataset-Enrichment/enrich_overview",

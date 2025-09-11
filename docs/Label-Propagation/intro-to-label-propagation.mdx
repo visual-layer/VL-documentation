@@ -1,0 +1,141 @@
+---
+title: "Introduction to label propagation | Visual Layer"
+description: "Learn how label propagation uses AI to automatically generate labels across datasets using minimal seed examples."
+sidebarTitle: "Introduction"
+---
+
+<Card title="How this Helps" icon="lightbulb">
+  Label propagation enables teams to rapidly scale annotation efforts by automatically labeling large datasets using only a small set of example images. It's particularly valuable for:
+
+  - ML/CV teams - quickly create high-quality training datasets while maintaining human oversight
+  - data scientists - efficiently prepare and validate datasets for your own model development
+  - analysts - generate labeled datasets for insights and reporting with minimal manual effort
+</Card>
+
+Label propagation allows users to automatically generate labels across unlabeled datasets using minimal manual input. This is especially useful for teams looking to accelerate dataset preparation, reduce annotation costs, and maintain consistent labeling quality across large image collections - both for training your own business models and data exploration alike.
+
+## Key Terminology
+
+Understanding these core concepts is essential for successful label propagation:
+
+**Label** is the category or classification you want to assign to your data. Think of it as the answer to "what type is this?" Labels are the actual classifications like "positive," "negative," "spam," "not spam," "urgent," "routine." They're the end goal of your entire process.
+
+**Class** represents each distinct type of label in your classification system. If you're building a sentiment analyzer, your classes might be "positive," "negative," and "neutral." Classes are the buckets that organize your labels. You need at least two classes for any classification task, and each class needs enough examples to teach the system what belongs in that category.
+
+**Seed** refers to the initial labeled examples you provide for each class. These are your training examples that show the system what each class looks like in practice. Seeds are the foundation that makes everything else possible. Without good seed examples, the automatic labeling won't know what patterns to look for.
+
+## How Label Propagation Works
+
+Label propagation follows a structured workflow that combines automated processing with human oversight to efficiently label large datasets. The algorithm uses a confidence-based approach to iteratively label your dataset through the following process:
+
+{/* PLACEHOLDER: Add animated GIF or video showing the complete Label propagation workflow from seed creation through final results */}
+<Frame>
+  <img src="/images/label-propagation/workflow-overview.gif" alt="Label propagation Complete Workflow" />
+</Frame>
+
+<Steps>
+
+<Step title="Seed Creation">
+You provide labeled examples for each class (minimum 5 examples per class). The system uses these examples to learn the characteristics of each class and establish the foundation for automated labeling.
+</Step>
+
+<Step title="Enhanced Embedding Processing">
+For optimal results, an enhanced embedding process may run automatically during dataset creation that:
+- Runs automatically during dataset creation when enabled
+- Learns the distribution patterns of your specific dataset
+- Creates enhanced embeddings that are more tailored to your data
+- Can be a lengthy process for large datasets
+</Step>
+
+<Step title="Confidence-Based Labeling">
+The algorithm analyzes your seed examples and begins labeling images with confidence scores for each possible class. Each image receives percentage scores for all classes using two types of confidence:
+- **Label Detection Confidence**: Probability that an image belongs to a specific class
+- **Mislabel Confidence**: Internal algorithm metric for quality control (not exposed to users)
+
+Example scoring:
+- Class A: 85% confidence
+- Class B: 12% confidence  
+- Class C: 3% confidence
+</Step>
+
+<Step title="Automatic Assignment">
+Images with high confidence scores (typically >80%) are automatically labeled and marked as complete without requiring human review.
+</Step>
+
+<Step title="Review Queue Creation">
+Images with low confidence scores are sent to review in batches for human feedback. The system will ask for feedback on a maximum of 10% of your total dataset.
+</Step>
+
+<Step title="Review and Refinement">
+You review the automatically generated labels in batches, providing feedback to improve accuracy through approval, correction, or reassignment actions. Label propagation stops and waits for your feedback each time a review batch is created.
+</Step>
+
+<Step title="Internal Model Generation">
+Visual Layer's system generates an internal trained model based on your seed examples and feedback. This model can be reused for future label propagation tasks on new data within the same dataset context.
+</Step>
+
+</Steps>
+
+<Note>
+**Process Behavior**: Label propagation is semi-automatic and will not continue without human input. You must complete all review items in the current batch before a new cycle begins. The system waits for 100% completion of current review items before generating the next labeling cycle.
+</Note>
+
+## Best Practices
+
+To maximize success with Label propagation, consider these recommended approaches for optimal results.
+
+- **Seed Quality**: Provide diverse, high-quality examples for each class to help Visual Layer's algorithm learn accurate patterns for automatic labeling
+- **Review Thoroughly**: Take time to review automatically generated labels, especially for items requiring attention
+- **Iterative Improvement**: Run multiple iterations of Label propagation on the same dataset to refine results. Each iteration allows you to adjust your seed examples, provide additional feedback during the review phase, and improve overall labeling accuracy over time
+- **Progress Monitoring**: Regularly check progress indicators to ensure your dataset is becoming ready for training your own models
+
+<Tip>
+Preview images on hover and ensure clickable areas are generous (entire image clickable). Keyboard-based selection is supported for efficient workflow.
+</Tip>
+
+## Limitations and Technical Requirements
+
+Understanding current system limitations and technical requirements helps ensure successful Label propagation implementation.
+
+### Current Limitations
+- **Single Label Support**: Currently supports single label per image only
+- **Single-Source Operation**: Label propagation is a single-source labeling operation - unless new media is added, any new Label propagation run will overwrite previous results
+- **No Stacking**: No "stacking" or partial updates within the same dataset
+- **Class Modification Restrictions**: Adding/editing classes or modifying examples within an existing class requires a complete rerun
+- **Dataset Requirements**: Works best on datasets with clear visual distinctions between classes
+- **Minimum Examples**: Requires minimum of 5 examples per class for effective propagation
+- **Class Dependencies**: Class taxonomy must be predefined during dataset creation
+- **Feature Interactions**: Running Label propagation on datasets previously labeled by Enrichment may cause rendering issues where items appear duplicated
+- **Image Access**: Current implementation uses image embeddings and does not require access to actual image files
+
+### Algorithm Validation
+- **Precision/Recall**: Achieved 0.9863/0.9863 precision and recall on validation datasets
+- **Determinism**: Small variations in embeddings (~0.0001) may occur due to machine/environment differences, but do not affect overall performance
+- **Consistency**: Results maintained within 0.1-0.2 margin across different implementations
+
+## Ready to Get Started?
+
+Now that you understand how label propagation works, prepare your dataset and start implementing it in Visual Layer.
+
+<CardGroup cols={2}>
+  <Card title="Preparing Your Dataset" icon="folder" href="/docs/Label-Propagation/preparing-dataset-upload">
+    Learn how to structure and validate your dataset files for label propagation.
+  </Card>
+  <Card title="Using Label Propagation" icon="play" href="/docs/Label-Propagation/label-propagation">
+    Step-by-step guide to setting up and running label propagation on your datasets.
+  </Card>
+</CardGroup>
+
+# Related Articles
+
+<CardGroup cols={3}>
+  <Card title="Preparing Your Dataset" icon="folder" href="/docs/Label-Propagation/preparing-dataset-upload">
+    Learn how to structure and validate your dataset files for label propagation.
+  </Card>
+  <Card title="Dataset Enrichment Overview" icon="wand-magic-sparkles" href="/docs/Dataset-Enrichment/enrich_overview">
+    Learn about Visual Layer's comprehensive dataset enrichment capabilities.
+  </Card>
+  <Card title="Model Catalog" icon="books" href="/docs/Dataset-Enrichment/model-catalog">
+    Explore available AI models for dataset enrichment and analysis.
+  </Card>
+</CardGroup>

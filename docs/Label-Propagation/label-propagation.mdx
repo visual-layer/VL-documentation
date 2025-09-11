@@ -1,0 +1,371 @@
+---
+title: "Using label propagation | Visual Layer"
+description: "Step-by-step guide to setting up and running label propagation to automatically label your Visual Layer datasets."
+sidebarTitle: "Using label propagation"
+---
+
+Label propagation enables users to automatically generates labels across unlabeled datasets using a small set of seed examples. 
+
+<Note>
+Label propagation has the following key limitations and requirements:
+
+- Must be configured during dataset creation
+- Supports only one label per image
+- New label propagation runs will overwrite previous results
+- Works best with visually distinct classes that are easy to differentiate
+</Note>
+
+<Tip>
+New to label propagation? Learn about the concepts and algorithm behind this feature in our [Introduction to Label Propagation](/docs/Label-Propagation/intro-to-label-propagation).
+</Tip>
+
+The rest of this guide walks you through the complete process from setup to completion.
+
+## Prerequisites
+
+Before starting label propagation, ensure you have:
+
+- **Properly formatted dataset**: Your dataset must include the required file structure with class taxonomy definitions
+- **Dataset uploaded and ready**: Visual Layer has completed dataset processing and validation
+- **Access to label propagation**: The feature is available for your dataset
+
+<Note>
+Need help preparing your dataset? See our comprehensive guide on [Preparing Your Dataset for Label Propagation](/docs/Label-Propagation/preparing-dataset-upload) which covers required file structure, validation process, and troubleshooting.
+</Note>
+
+<Warning>
+Class taxonomy cannot be modified after dataset creation. If you need to change your classes, you must upload a new dataset with the updated taxonomy.
+</Warning>
+
+
+## To Propagate Labels
+
+To set up label propagation you will provide the Visual Layer model seed examples that train our system to automatically label your remaining data. Label propagation can run on either the entire dataset or a subset (for example, newly added data only).
+
+1. Upload your dataset folder or .zip file to Visual Layer, ensuring it includes the `classes.json` file for class taxonomy.
+    Visual Layer uploads and indexes the dataset and stores your classes, making the dataset ready for exploration and label propagation.
+2. When you receive notification that the dataset is ready to explore, navigate to the dataset.
+2. Click (add image of icon) to enable the **Manage Seed Classes & Samples** tab from the right panel.
+
+{/* PLACEHOLDER: Add screenshot showing how to access Label propagation from the dataset interface */}
+<Frame>
+  <img src="/images/label-propagation/access-label-propagation.png" alt="Accessing Label propagation from Dataset Interface" />
+</Frame>
+
+3. Select classes from the predefined list specific to your use case
+4. Review the terminology used (some implementations use "class" while others use "label")
+5. Ensure you select all classes that may appear in your dataset
+
+<Note>
+**Important**: You must select all classes that may appear in your dataset. The system will attempt to label all data, so any class not defined here cannot be assigned during the process. Consider your complete taxonomy before proceeding.
+</Note>
+
+{/* PLACEHOLDER: Add screenshot showing class selection interface with predefined list */}
+<Frame>
+  <img src="/images/label-propagation/class-selection.png" alt="Class Selection Interface" />
+</Frame>
+
+6. For each class, select a minimum of 5 labeled examples using one of these methods:
+   - **Select Items**: Use Visual Layer's exploration features to find similar examples:
+     - Use visual similarity search to find similar defect types
+     - Use semantic search and filtering to locate specific patterns
+     - Select entire clusters of similar items when appropriate
+     - Use keyboard shortcuts for efficient multi-selection
+   - **Drag and Drop**: Drag examples directly into the designated class area (visual feedback provided)
+
+<Note>
+**Current Limitation**: All examples must be selected from within your current dataset. Drag and drop functionality for external entities is not supported.
+</Note>
+
+{/* PLACEHOLDER: Add animated GIF showing drag and drop functionality with visual feedback */}
+<Frame>
+  <img src="/images/label-propagation/drag-drop-examples.gif" alt="Drag and Drop Example Selection" />
+</Frame>
+
+{/* PLACEHOLDER: Add screenshot showing the specialized UI for seed selection with floating action bar */}
+<Frame>
+  <img src="/images/label-propagation/select-items-ui.png" alt="Specialized Seed Selection UI" />
+</Frame>
+
+7. **Assign Examples to Classes**: After selecting items, use the floating action bar that appears:
+   - The bar shows the number of selected items
+   - Choose "Assign Class" to assign selected items to a specific class
+   - During seed creation, only class assignment is available (other exploration features are disabled)
+
+8. **Manage Your Seed Examples**: Review and refine your selections:
+   - Each class shows a preview of assigned examples (8 visible with scroll capability)
+   - Hover over examples to see enlarged preview
+   - Use the delete icon (appears after 300ms delay) to remove incorrect examples
+   - Monitor progress indicators showing completion toward minimum requirements
+   - Add or remove classes as needed during the seed creation process
+
+{/* PLACEHOLDER: Add animated GIF showing hover interactions with image preview and delete icon timing */}
+<Frame>
+  <img src="/images/label-propagation/hover-interactions.gif" alt="Example Image Hover Interactions" />
+</Frame>
+
+{/* PLACEHOLDER: Add screenshot showing progress indicators and encouragement messages for each class */}
+<Frame>
+  <img src="/images/label-propagation/progress-tracking.png" alt="Class Progress Tracking Interface" />
+</Frame>
+
+## Important Requirements
+
+<Warning>
+**Critical Requirements**: 
+- **Minimum Examples**: You need at least 5 examples per class to proceed
+- **Minimum Classes**: You need at least 2 classes to start label propagation  
+- **Complete Coverage**: Select all classes that may appear in your dataset, as Visual Layer will attempt to label all data and cannot assign classes not defined here
+- **No Editing After Start**: Seed examples cannot be edited once label propagation begins. Ensure all examples are correctly assigned to their classes before proceeding.
+</Warning>
+
+<Tip>
+**Best Practice**: Use Visual Layer's clustering and similarity features to quickly identify and select high-quality, diverse examples for each class. The more representative examples you provide, the more accurate your automatic labeling will be.
+</Tip>
+
+---
+
+## Reviewing and Providing Feedback
+
+Visual Layer's algorithm uses a confidence-based approach that creates review batches when it's uncertain about image classifications. This collaborative process ensures labeling accuracy while maintaining efficiency.
+
+### How Review Batches Work
+
+The algorithm assigns confidence scores to each image for every possible class. Images with high confidence scores (typically >80%) are automatically labeled, while images with low confidence scores are sent to review batches for your input.
+
+<Note>
+**Review Quota**: The system will ask for feedback on a maximum of 10% of your total dataset. For example, with 1,000 images, you'll review approximately 100 images maximum.
+</Note>
+
+<Warning>
+**Process Behavior**: Label propagation stops completely when a review batch is created and waits for your feedback. The process will not continue until you complete the entire review batch. This is a semi-automatic process that requires human input to proceed.
+</Warning>
+
+### Review Interface
+
+**Entering Review Mode**
+When you click on a review batch notification, you enter "Review mode" with these characteristics:
+- All exploration features (filters, search, visual similarity) are disabled
+- Data is automatically grouped by predicted class/label
+- You can search for specific classes if you have many classes to review
+
+**What You'll See**
+Within each predicted class group, you'll see:
+- **Items requiring review**: Images the algorithm is uncertain about
+- **High-confidence items**: Images with confident labels (marked with green borders) shown for comparison and context
+- **Class statistics**: Progress indicators showing review completion for each class
+
+<Note>
+**Important Review Behavior**: Items are organized by their suggested class (based on highest confidence score). You can provide feedback on both review items and high-confidence items, and all feedback helps improve subsequent labeling iterations.
+</Note>
+
+**Focus-Level View (Detailed Inspection)**
+- Double-click any image to open a modal carousel view
+- Navigate through individual items using carousel controls
+- Zoom functionality available for close inspection
+- After reviewing all items within a class, the carousel automatically progresses to the next class
+
+{/* PLACEHOLDER: Add screenshot showing the high-level review interface with grouping by label and green borders for confident items */}
+<Frame>
+  <img src="/images/label-propagation/high-level-review.png" alt="High-Level Review Interface" />
+</Frame>
+
+**Focus-Level View**
+Double-clicking an image opens a modal carousel view with:
+- Navigation for reviewing individual items
+- Zoom functionality for close inspection
+- Automatic progression to the next class after reviewing all items within a class
+
+{/* PLACEHOLDER: Add screenshot or GIF showing the modal carousel view with navigation and zoom functionality */}
+<Frame>
+  <img src="/images/label-propagation/focus-level-review.gif" alt="Focus-Level Review Modal Carousel" />
+</Frame>
+
+### Feedback Actions
+
+{/* PLACEHOLDER: Add animated GIF or demo video showing all four feedback actions in sequence */}
+<Frame>
+  <img src="/images/label-propagation/feedback-actions-demo.gif" alt="All Feedback Actions Demonstration" />
+</Frame>
+
+**Incorrect (Reject)**
+- **Use Case**: Item does not belong to its assigned class
+- **Action Result**: Item automatically moves to the next-best predicted class and remains flagged as "Requires Review"
+- **Workflow**: If you continue to mark as incorrect, the item moves through all predicted classes. You must eventually provide definitive feedback
+- **Undo**: Available immediately after reassignment via toast notification
+
+{/* PLACEHOLDER: Add screenshot showing the "Incorrect" action with toast notification and undo option */}
+<Frame>
+  <img src="/images/label-propagation/incorrect-feedback.png" alt="Incorrect Feedback Action with Undo Toast" />
+</Frame>
+
+**Ignore**
+- **Use Case**: Item is an outlier and doesn't match any existing class in your taxonomy
+- **Action Result**: Item excluded from Label propagation labeling, placed in "Unlabeled" cluster, appears grayed out
+- **Review Impact**: Ignored items do not count toward your review progress or the algorithm's learning
+
+<Warning>
+**Important**: The system maintains its quota of asking about maximum 10% of your dataset. Since ignored items don't provide learning feedback, ignoring too many items may result in additional review batches to gather sufficient training data for the algorithm.
+</Warning>
+
+{/* PLACEHOLDER: Add screenshot showing ignored items appearing grayed out in unlabeled cluster */}
+<Frame>
+  <img src="/images/label-propagation/ignore-feedback.png" alt="Ignored Items in Unlabeled Cluster" />
+</Frame>
+
+**Approve**
+- **Use Case**: Item correctly matches the assigned class
+- **Action Result**: Item receives green border indicating approval
+
+**Assign to Other Class**
+- **Use Case**: Item belongs to a different existing class
+- **Action Result**: User manually reassigns item to another class from the list defined during the Seed step
+
+{/* PLACEHOLDER: Add screenshot showing class reassignment dropdown/interface */}
+<Frame>
+  <img src="/images/label-propagation/class-reassignment.png" alt="Manual Class Reassignment Interface" />
+</Frame>
+
+### Feedback Methods
+
+**Single-Item Feedback**: Triggered on hover for quick actions
+
+{/* PLACEHOLDER: Add GIF showing single-item feedback on hover */}
+<Frame>
+  <img src="/images/label-propagation/single-item-feedback.gif" alt="Single-Item Feedback on Hover" />
+</Frame>
+
+**Bulk Actions**: Select multiple items to access actions via floating action bar
+
+{/* PLACEHOLDER: Add screenshot showing bulk selection with floating action bar */}
+<Frame>
+  <img src="/images/label-propagation/bulk-actions.png" alt="Bulk Actions with Floating Action Bar" />
+</Frame>
+
+### Completing Your Review
+
+<Warning>
+**Critical**: You must complete the entire review batch before label propagation continues. Review each item in every class until all items are processed, then click "Submit" to apply your feedback and allow the algorithm to continue.
+</Warning>
+
+The Submit action:
+- Applies all your feedback to Visual Layer's algorithm
+- Updates progress indicators to reflect newly labeled items  
+- Allows label propagation to continue with the next iteration
+- Uses your feedback to improve accuracy in subsequent labeling cycles
+
+---
+
+## Monitoring Progress
+
+Throughout the Label propagation process, Visual Layer provides multiple progress indicators to help you understand completion status and make informed decisions about when to finish.
+
+### Progress Dashboard Cards
+
+**Label Propagation Progress**
+- Shows the total number of images labeled with high confidence
+- Includes your original seed examples plus automatically labeled images
+- Displays current progress against your total dataset size
+- Updates in real-time as the algorithm processes more images
+
+**Review Progress**  
+- Shows the number of images currently awaiting your review
+- Indicates when the process is paused waiting for your feedback
+- Displays a clear call-to-action when review batches are ready
+
+**Seed Overview**
+- Displays your original seed examples for reference
+- Allows you to verify your initial training data
+- Helpful for troubleshooting if results seem unexpected
+
+### Training Readiness Tracking
+
+Training readiness indicators show progress toward your dataset's readiness for training your own models:
+
+- **Overall Progress**: Percentage of total required labels across all classes
+- **Per-Class Progress**: Individual progress for each class toward the minimum threshold
+- **Strategic Completion**: Allows finishing Label propagation early once you have sufficient labeled data for your model training requirements, even if not all data is labeled
+
+<Tip>
+**Early Completion Strategy**: If your dataset contains 3,000 images but you reach sufficient labeled data for your model training needs after labeling 1,000 images, you can choose to finish the process early rather than continuing through the full dataset.
+</Tip>
+
+{/* PLACEHOLDER: Add screenshot showing all three progress metrics dashboard */}
+<Frame>
+  <img src="/images/label-propagation/progress-dashboard.png" alt="Label propagation Progress Metrics Dashboard" />
+</Frame>
+
+---
+
+## Completing or Restarting the Process
+
+Label propagation offers flexible completion options depending on your dataset needs and training requirements.
+
+### Understanding Temporary vs. Final Labels
+
+<Warning>
+**Critical**: All labels during Label propagation are stored in a temporary table and can be edited. Only when you click **Finish** or the process completes naturally are the labels written permanently to your dataset. After finalization, labels cannot be edited without running a new Label propagation iteration.
+</Warning>
+
+### Finishing Label Propagation
+
+**When to Finish Early**: You can finish label propagation before processing your entire dataset if:
+- You've reached sufficient labeled data for your model training needs
+- The training readiness indicators show adequate coverage per class
+- You want to iterate quickly rather than labeling every image
+
+**The Finish Process**:
+1. Click the **Finish** button when satisfied with current progress
+2. Confirm the action in the dialog that appears  
+3. The system will:
+   - Stop label propagation immediately
+   - Write all labeled data permanently to your dataset
+   - Leave remaining unlabeled data unchanged
+   - Generate an internal model for potential reuse
+
+{/* PLACEHOLDER: Add screenshot showing the Finish button and confirmation dialog */}
+<Frame>
+  <img src="/images/label-propagation/finish-process.png" alt="Finish Label propagation Button and Confirmation" />
+</Frame>
+
+### Resetting the Process
+
+**When to Reset**: Use reset when:
+- You notice consistent labeling errors that suggest poor seed examples
+- You want to try a different class taxonomy or seed strategy
+- The results are not meeting your accuracy expectations
+
+**What Reset Does**:
+1. Click the **Reset** button to restart the label propagation process
+2. Confirm the reset action in the warning dialog
+3. The system will completely delete:
+   - All automatically labeled images (high-confidence assignments)
+   - All user review feedback and corrections
+   - All progress and iteration history
+4. You return to the seed creation step where you can:
+   - Modify your seed examples
+   - Add or remove classes (if supported)
+   - Start fresh with improved training data
+
+<Warning>
+**Data Loss Warning**: Reset permanently deletes all label propagation progress and cannot be undone. Your original dataset and any labels from previous completed label propagation runs remain unchanged.
+</Warning>
+
+{/* PLACEHOLDER: Add screenshot showing the Reset button and warning confirmation dialog */}
+<Frame>
+  <img src="/images/label-propagation/reset-process.png" alt="Reset Process with Warning Dialog" />
+</Frame>
+
+# Related Articles
+
+<CardGroup cols={3}>
+  <Card title="Introduction to Label Propagation" icon="graduation-cap" href="/docs/Label-Propagation/intro-to-label-propagation">
+    Learn about the concepts, algorithm, and best practices for label propagation.
+  </Card>
+  <Card title="Preparing Your Dataset" icon="folder" href="/docs/Label-Propagation/preparing-dataset-upload">
+    Complete guide to structuring and validating your dataset files for upload.
+  </Card>
+  <Card title="Dataset Enrichment Overview" icon="wand-magic-sparkles" href="/docs/Dataset-Enrichment/enrich_overview">
+    Explore Visual Layer's comprehensive dataset enrichment capabilities.
+  </Card>
+</CardGroup>

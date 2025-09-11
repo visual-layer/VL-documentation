@@ -85,6 +85,36 @@ description: "Brief description"    # SEO and page description
    - Each card with descriptive title and brief description
    - Clear visual organization for better user experience
 
+**Documentation Structure Guidelines**:
+
+- **Public-Facing Content**: Never mention specific customer names, phases, or roadmap details in public documentation. Use generic terms like "some implementations" or "certain use cases" instead.
+
+- **Component Usage**: 
+  - Use `<Steps>` components ONLY for high-level conceptual "How It Works" explanations
+  - Use numbered ordered lists ONLY when order truly matters for procedures and instructions
+  - Use unordered lists for content where order doesn't matter (requirements, features, options)
+  - All major sections must have 1-2 sentence introductions that explain what the reader will learn
+
+- **Procedure Structure**:
+  - Never break continuous cohesive procedures with artificial "Step 1", "Step 2" headings
+  - Use a single heading indicating the procedure, followed by introduction, then running ordered list
+  - Include necessary ordered and/or unordered sublists within the main procedure
+  - Only use sub-headings when procedures can be broken into different complementary tasks
+  - Name sub-headings for what the procedures achieve, not arbitrary step numbers
+  - Create separate articles for complementary/optional procedures that aren't obligatory for each other
+
+- **Content Organization**:
+  - Limitations sections must ALWAYS appear at the end of articles, immediately before "Related Articles"
+  - Combine limitations with technical requirements in a single section for better organization
+  - Use clear section headings like "Limitations and Technical Requirements"
+
+- **Requirements Terminology**:
+  - Only use "Prerequisites" and/or "System Requirements" - never "conditions", "starting conditions", or other vague terms
+  - Place at the beginning of articles in appropriate position based on existing templates
+  - Prerequisites: Things users must have/do before starting
+  - System Requirements: Technical/environmental requirements for the feature to work
+  - Information about different ways procedures can be run should go in prerequisites, theory intro, or procedure intro depending on relevance
+
 ### Mintlify Configuration
 
 Key configuration in `docs.json` and `fastdup-docs.json`:
