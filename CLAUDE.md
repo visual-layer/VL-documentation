@@ -198,7 +198,7 @@ The repository includes extensive custom styling in `styles.css` with:
   <img src="/images/highlight-filters-and-insights.png" />
 </Frame>  
 - How It Works and other similar high level explanations that include steps or process descriptiosn (empahsize high level/theory) must use the 
-(<Steps></Steps>) 
+**/ <Steps></Steps> **/
 object for the steps and their descriptins. For How to Apply the Filter as an example, this section must use a regular ordered list, as it does now, but the final paragraph in this case explains benefits and should be the intro para to the process instead of a conclusions.
 - always make sure capitalization is absolutely consistent across content types. so for example, prepositions in titles should ALWAYS be lower case.
 - always double-check your work before finishing an implementation to ensure spacing is correct wherever you made changes. soemtimes spacing can be tricky when using ** ** mid-sentnece.
