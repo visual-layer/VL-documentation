@@ -26,7 +26,7 @@ Understanding these core concepts is essential for successful label propagation:
 
 ## How Label Propagation Works
 
-The label propagation feature in Visual Layer combines automated processing with human oversight to efficiently label large datasets. 
+The label propagation feature in Visual Layer combines automated processing with human oversight to efficiently label large datasets.
 
 <Steps>
   <Step title="Seed Creation">
@@ -41,28 +41,13 @@ The label propagation feature in Visual Layer combines automated processing with
     - Can be a lengthy process for large datasets
   </Step>
   <Step title="Confidence-Based Labeling">
-    The algorithm analyzes your seed examples and begins labeling images with confidence scores for each possible class. Each image receives percentage scores for all classes using two types of confidence:
-
-    - **Label Detection Confidence**: Probability that an image belongs to a specific class
-    - **Mislabel Confidence**: Internal algorithm metric for quality control (not exposed to users)
-
-    Example scoring:
-
-    - Class A: 85% confidence
-    - Class B: 12% confidence
-    - Class C: 3% confidence
-  </Step>
-  <Step title="Automatic Assignment">
-    Images with high confidence scores (typically \>80%) are automatically labeled and marked as complete without requiring human review.
+    The algorithm analyzes your seed examples and begins labeling images with confidence scores (label detection confidence and mislabel confidence) for each possible class. 
   </Step>
   <Step title="Review Queue Creation">
-    Images with low confidence scores are sent to review in batches for human feedback. The system will ask for feedback on a maximum of 10% of your total dataset.
+    Sample sets of images are sent to review in batches for human feedback. The system will ask for feedback on a maximum of 10% of your total dataset.
   </Step>
   <Step title="Review and Refinement">
     You review the automatically generated labels in batches, providing feedback to improve accuracy through approval, correction, or reassignment actions. Label propagation stops and waits for your feedback each time a review batch is created.
-  </Step>
-  <Step title="Internal Model Generation">
-    Visual Layer's system generates an internal trained model based on your seed examples and feedback. This model can be reused for future label propagation tasks on new data within the same dataset context.
   </Step>
 </Steps>
 
