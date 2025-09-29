@@ -12,7 +12,7 @@ The following hardware specifications are required for Visual Layer on-premises 
 - RAM: 64G.
 - Disk space: 256Gb + 2.5 times the estimated amount of data.
 - CPU: 16 cores.
-- Optional: GPU: Common Nvidia GPU types (Nvidia A10, A100, H100, RTX 4090, etc.).
+- Optional: GPU: Common Nvidia GPU types with **more** than 24GB of GPU memory (Nvidia A10, A100, H100, RTX 4090, etc.).
 
 ### Dependencies
 
@@ -28,29 +28,31 @@ Install these software dependencies before setting up Visual Layer:
 If you are using a GPU machine for acceleration, you need to install the NVIDIA Container Toolkit:
 
 1. Add NVIDIA package repositories:
+
    ```bash
    curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
    curl -fsSL https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list \
      | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#' \
      | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
    ```
-
 2. Download the nvidia-container-toolkit:
+
    ```bash
    sudo apt-get update
    sudo apt-get install -y nvidia-container-toolkit
    ```
-
 3. Configure Docker to use the NVIDIA runtime:
+
    ```bash
    sudo nvidia-ctk runtime configure --runtime=docker
    sudo systemctl restart docker
    ```
-
 4. Verify the installation:
+
    ```bash
    docker run --rm --runtime=nvidia --gpus all nvidia/cuda:11.5-base-ubuntu20.04 nvidia-smi
    ```
+
    This should display your GPU information if the toolkit is properly installed.
 
 ### Advised Tools for Troubleshooting/Maintenance
@@ -65,5 +67,3 @@ These tools are recommended for system maintenance and troubleshooting:
 Ensure proper user permissions for installation:
 
 - Make sure you run the installation as a regular user (not a root user), with sudo privileges
-
-
