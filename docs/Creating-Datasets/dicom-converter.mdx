@@ -300,16 +300,21 @@ The converter script provides detailed progress information during conversion:
 
 ## DICOM Metadata Upload Script Details
 
-Visual Layer provides a specialized script designed specifically for uploading DICOM metadata extracted by the converter. This script handles the complexities of medical imaging metadata and Visual Layer's API.
+Visual Layer provides a customizable script designed specifically for uploading DICOM metadata extracted by the converter. This script demonstrates how to handle the complexities of medical imaging metadata and Visual Layer's API, and can be modified according to your specific use case requirements.
+
+<Note>
+This script is similar to the [general custom metadata automation script](/docs/Creating-Datasets/custom-metadata-automation-script) but includes DICOM-specific field handling and processing. You can adapt and extend this script for different DICOM workflows and requirements.
+</Note>
 
 ### DICOM-Specific Upload Features
 
-The DICOM metadata upload script (`upload_csv_with_json_mapping.py`) provides advanced features for handling medical imaging metadata:
+The DICOM metadata upload script (`upload_csv_with_json_mapping.py`) includes advanced features for handling medical imaging metadata that can be customized for your specific workflow:
 
 - **Automatic DICOM field recognition** - Detects and converts DICOM date formats (YYYYMMDD) and time formats (HHMMSS)
 - **Medical imaging field categorization** - Automatically determines appropriate data types for patient info, study details, and equipment parameters
 - **Multi-value field handling** - Processes complex fields like `image_type` as multi-select enums
 - **Authentication flexibility** - Supports both cloud (API key/secret) and on-premises installations
+- **Customizable field detection** - Logic can be modified to handle vendor-specific tags or custom DICOM implementations
 
 ### Download the DICOM Upload Script
 
@@ -403,6 +408,8 @@ The DICOM upload script provides detailed progress for medical imaging metadata:
 
 ### Advanced DICOM Upload Features
 
+The script includes several customization options that can be adapted for different use cases:
+
 **Custom Field Type Override:**
 ```bash
 # Force specific fields to be treated as enums
@@ -418,6 +425,10 @@ python upload_csv_with_json_mapping.py dicom_metadata.csv metadata.json \
   --dataset-id=your-dataset-id \
   --resume
 ```
+
+<Tip>
+You can modify the script's field detection logic, add custom preprocessing for specific DICOM tags, or extend it to handle additional metadata fields based on your imaging workflow requirements.
+</Tip>
 
 ## Supported DICOM Features
 
@@ -470,13 +481,16 @@ The converter script handles various DICOM file characteristics:
 - Check Visual Layer logs for any processing errors
 - Use the `--resume` flag to continue from where you left off
 
-### Getting Help
+### Script Customization
 
-For advanced DICOM processing requirements, custom metadata extraction, or integration support:
+The DICOM scripts are designed to be adaptable for different medical imaging workflows:
 
-<Card title="Contact Visual Layer Support" icon="headset">
-Reach out to Visual Layer's support team for assistance with complex DICOM workflows, custom metadata requirements, or troubleshooting conversion issues.
-</Card>
+- **Field detection logic** can be modified to handle specific DICOM tag requirements
+- **Custom preprocessing** can be added for vendor-specific implementations
+- **Additional metadata fields** can be incorporated based on your imaging protocols
+- **Processing workflows** can be extended for specialized DICOM formats
+
+For complex customization requirements, Visual Layer can provide guidance on adapting the scripts to your specific use case.
 
 ## Related Resources
 
