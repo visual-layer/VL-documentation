@@ -1,0 +1,463 @@
+---
+title: "DICOM Converter Script"
+description: "Python script for converting DICOM medical imaging files to JPG format while extracting comprehensive metadata for Visual Layer datasets."
+sidebarTitle: "DICOM converter"
+---
+
+<Card title="What This Helps With" icon="stethoscope">
+Convert DICOM medical imaging files to JPG format and extract comprehensive metadata that can be used to create Visual Layer datasets with rich custom metadata for analysis and exploration.
+</Card>
+
+This page provides a Python script that converts DICOM (Digital Imaging and Communications in Medicine) files to JPG images while extracting comprehensive metadata. The script prepares medical imaging data for use with Visual Layer by creating converted images and structured metadata that can be uploaded as custom metadata fields.
+
+<Note>
+This script is designed for users working with medical imaging data who want to leverage Visual Layer's dataset analysis capabilities. The extracted metadata includes patient information, study details, equipment parameters, and acquisition settings.
+</Note>
+
+## How the Script Works
+
+The DICOM converter demonstrates a complete workflow for preparing medical imaging data for Visual Layer:
+
+1. **Processes DICOM files** from organized series directories or flat folder structures
+2. **Handles multiframe DICOMs** by extracting individual frames as separate JPG images
+3. **Applies DICOM processing** including windowing, rescaling, and photometric interpretation
+4. **Extracts comprehensive metadata** covering patient info, study details, equipment data, and acquisition parameters
+5. **Creates organized output** with converted JPG images and detailed CSV metadata file
+6. **Supports various DICOM formats** including CT scans, MRI images, and other medical modalities
+
+## Prerequisites
+
+Before using the script, ensure you have:
+
+1. **Python environment** with required packages installed
+2. **DICOM files** organized in series directories (preferred) or as individual files
+3. **Sufficient disk space** for converted JPG images and metadata files
+
+### Required Python Packages
+
+```bash
+pip install pandas pydicom dicom2jpg opencv-python numpy
+```
+
+**Package purposes:**
+- `pandas` - CSV metadata file creation and manipulation
+- `pydicom` - DICOM file reading and metadata extraction
+- `dicom2jpg` - DICOM to JPG conversion for single-frame files
+- `opencv-python` - Image processing for multiframe DICOM files
+- `numpy` - Numerical operations for pixel data processing
+
+## Installation and Usage
+
+### Download the Script
+
+The DICOM converter script is available in the Visual Layer scripts repository:
+
+<CardGroup cols={2}>
+  <Card title="View on GitHub" icon="github" href="https://github.com/visual-layer/vl-scripts/blob/main/dicom_converter.py">
+    View the script source code, documentation, and latest updates on GitHub.
+  </Card>
+  <Card title="Direct Download" icon="download" href="https://raw.githubusercontent.com/visual-layer/vl-scripts/main/dicom_converter.py">
+    Download the script file directly to save as `dicom_converter.py`.
+  </Card>
+</CardGroup>
+
+### Basic Usage
+
+```bash
+python dicom_converter.py /path/to/dicom/files
+```
+
+### Advanced Usage Options
+
+```bash
+# Convert with custom output directory
+python dicom_converter.py /path/to/dicom/files --output /custom/output/path
+
+# Convert with verbose logging
+python dicom_converter.py /path/to/dicom/files --verbose
+
+# Convert specific image format
+python dicom_converter.py /path/to/dicom/files --format png
+```
+
+### Command Line Parameters
+
+| Parameter | Required | Description | Default |
+|-----------|----------|-------------|---------|
+| `input_dir` | ✅ | Directory containing DICOM files or series subdirectories | - |
+| `--output` | ⭕ | Output directory path | `input_dir/output_YYYYMMDD_HHMMSS` |
+| `--format` | ⭕ | Output image format (jpg, png, bmp, tiff) | `jpg` |
+| `--verbose` | ⭕ | Enable detailed logging output | `false` |
+| `--series` | ⭕ | Process only specific series (e.g., series-00001) | All series |
+
+## Input Directory Structure
+
+The script supports two DICOM organization patterns:
+
+### Series-Organized Structure (Recommended)
+```
+input_directory/
+├── series-00001/
+│   ├── image001.dcm
+│   ├── image002.dcm
+│   └── image003.dcm
+├── series-00002/
+│   ├── image001.dcm
+│   └── image002.dcm
+└── series-00003/
+    └── multiframe.dcm
+```
+
+### Flat Directory Structure
+```
+input_directory/
+├── scan001.dcm
+├── scan002.dcm
+├── scan003.dcm
+└── multiframe.dcm
+```
+
+<Tip>
+The script automatically detects multiframe DICOM files and extracts each frame as a separate JPG image with individual metadata entries.
+</Tip>
+
+## Output Structure
+
+The script creates an organized output directory with converted images and metadata:
+
+```
+output_directory/
+├── converted_images/
+│   ├── series-00001_image001.jpg
+│   ├── series-00001_image002.jpg
+│   ├── series-00002_image001.jpg
+│   ├── series-00003_multiframe_frame-001.jpg
+│   ├── series-00003_multiframe_frame-002.jpg
+│   └── series-00003_multiframe_frame-003.jpg
+└── metadata/
+    └── dicom_metadata.csv
+```
+
+### Metadata CSV Structure
+
+The generated CSV file contains comprehensive metadata for each converted image:
+
+**File Information:**
+- `image_filename` - Generated JPG filename
+- `original_dicom_path` - Original DICOM file path
+- `series_folder` - Series directory name
+- `conversion_timestamp` - Processing timestamp
+- `is_multiframe` - Boolean indicating multiframe source
+- `frame_number` - Frame number (1 for single-frame)
+- `total_frames` - Total frames in source DICOM
+
+**Patient Information:**
+- `patient_id`, `patient_name`, `patient_birth_date`
+- `patient_sex`, `patient_age`
+
+**Study Information:**
+- `study_instance_uid`, `study_date`, `study_time`
+- `study_description`, `accession_number`
+
+**Equipment Information:**
+- `manufacturer`, `manufacturer_model_name`
+- `device_serial_number`, `software_versions`, `modality`
+
+**Acquisition Parameters:**
+- `slice_thickness`, `slice_location`
+- `kvp`, `tube_current`, `exposure_time`
+- `window_center`, `window_width`
+- `pixel_spacing`, `rows`, `columns`
+
+## Complete DICOM Workflow with Visual Layer
+
+Visual Layer provides a specialized script designed specifically for uploading DICOM metadata extracted by the converter. This creates a complete end-to-end workflow from DICOM files to searchable Visual Layer datasets with comprehensive medical imaging metadata.
+
+### DICOM Metadata Upload Script
+
+The DICOM metadata upload script (`upload_csv_with_json_mapping.py`) is specifically designed to work with the output from the DICOM converter script. It provides advanced features for handling medical imaging metadata:
+
+**DICOM-Specific Features:**
+- **Automatic DICOM field recognition** - Detects and converts DICOM date formats (YYYYMMDD) and time formats (HHMMSS)
+- **Medical imaging field categorization** - Automatically determines appropriate data types for patient info, study details, and equipment parameters
+- **Multi-value field handling** - Processes complex fields like `image_type` as multi-select enums
+- **Authentication flexibility** - Supports both cloud (API key/secret) and on-premises installations
+
+### Download the DICOM Upload Script
+
+<CardGroup cols={2}>
+  <Card title="View on GitHub" icon="github" href="https://github.com/visual-layer/vl-scripts/blob/main/upload_csv_with_json_mapping.py">
+    View the DICOM-specific upload script source code and documentation on GitHub.
+  </Card>
+  <Card title="Direct Download" icon="download" href="https://raw.githubusercontent.com/visual-layer/vl-scripts/main/upload_csv_with_json_mapping.py">
+    Download the script file directly to save as `upload_csv_with_json_mapping.py`.
+  </Card>
+</CardGroup>
+
+### End-to-End DICOM Workflow
+
+Follow this complete workflow to convert DICOM files and create a fully searchable Visual Layer dataset:
+
+<Steps>
+  <Step title="Convert DICOM files to JPG">
+    Use the DICOM converter script to extract images and metadata from your DICOM files
+    ```bash
+    python dicom_converter.py /path/to/dicom/files --verbose
+    ```
+    This creates `converted_images/` directory with JPG files and `metadata/dicom_metadata.csv` with comprehensive metadata.
+  </Step>
+
+  <Step title="Create Visual Layer dataset">
+    Upload the converted JPG images from the `converted_images/` directory to create a new Visual Layer dataset using the Visual Layer UI or API.
+  </Step>
+
+  <Step title="Export dataset for media_id mapping">
+    Export your Visual Layer dataset to obtain the `metadata.json` file containing the critical mapping between filenames and Visual Layer's internal `media_id` values.
+  </Step>
+
+  <Step title="Upload DICOM metadata fields">
+    Use the specialized DICOM upload script to automatically process and upload the extracted metadata as custom fields:
+
+    **For Cloud installations:**
+    ```bash
+    python upload_csv_with_json_mapping.py dicom_metadata.csv metadata.json \
+      --dataset-id=your-dataset-id \
+      --base-url=https://app.visual-layer.com \
+      --api-key=your-api-key \
+      --api-secret=your-api-secret
+    ```
+
+    **For On-premises installations:**
+    ```bash
+    python upload_csv_with_json_mapping.py dicom_metadata.csv metadata.json \
+      --dataset-id=your-dataset-id \
+      --base-url=http://localhost:2080 \
+      --api-key=your-api-key
+    ```
+  </Step>
+
+  <Step title="Analyze medical imaging data">
+    Use Visual Layer's search and filtering capabilities with your uploaded DICOM metadata to analyze patterns in patient data, study parameters, equipment settings, and image quality metrics.
+  </Step>
+</Steps>
+
+### DICOM Field Type Detection
+
+The upload script automatically analyzes your DICOM metadata and assigns appropriate Visual Layer field types:
+
+| DICOM Field Category | Field Type | Examples |
+|---------------------|------------|----------|
+| **Patient Information** | `string` | `patient_id`, `patient_name`, `patient_sex` |
+| **DICOM Dates** | `datetime` | `study_date`, `series_date`, `acquisition_date` |
+| **DICOM Times** | `datetime` | `study_time`, `series_time`, `acquisition_time` |
+| **Numeric Parameters** | `float` | `slice_thickness`, `kvp`, `tube_current`, `window_center` |
+| **Equipment Info** | `enum` | `manufacturer`, `modality`, `manufacturer_model_name` |
+| **Multi-Value Fields** | `multi-enum` | `image_type` (e.g., `['ORIGINAL', 'PRIMARY', 'LOCALIZER']`) |
+| **Technical Details** | `string` | `image_position_patient`, `pixel_spacing`, `study_description` |
+
+### Script Command Options
+
+| Parameter | Required | Description | Default |
+|-----------|----------|-------------|---------|
+| `csv_file` | ✅ | Path to `dicom_metadata.csv` from converter | - |
+| `json_file` | ✅ | Path to `metadata.json` from Visual Layer export | - |
+| `--dataset-id` | ✅ | Visual Layer dataset identifier | - |
+| `--base-url` | ⭕ | Visual Layer installation URL | `https://app.visual-layer.com` |
+| `--api-key` | ✅ | API key for authentication | - |
+| `--api-secret` | ⭕ | API secret (required for cloud) | - |
+| `--enum-fields` | ⭕ | Force specific fields to be enum type | `[]` |
+| `--resume` | ⭕ | Resume from previous progress | `false` |
+
+### Example Upload Output
+
+The DICOM upload script provides detailed progress for medical imaging metadata:
+
+```
+🚀 Starting CSV Metadata Workflow
+📁 CSV metadata: dicom_metadata.csv
+🗂️  JSON metadata: metadata.json
+
+📊 Reading CSV metadata...
+   ✅ Loaded 150 DICOM records
+
+🗂️  Reading JSON metadata...
+   ✅ Loaded 150 media items
+
+🔍 Creating image_id to media_id mapping from export CSV...
+   ✅ Created mapping for 150 unique image IDs covering 150 files
+
+🔍 Analyzing CSV fields...
+   📋 Field analysis:
+      patient_sex: enum - ⏳ Pending
+      modality: enum - ⏳ Pending
+      manufacturer: enum - ⏳ Pending
+      study_date: datetime - ⏳ Pending
+      slice_thickness: float - ⏳ Pending
+      window_center: float - ⏳ Pending
+      image_type: multi-enum - ⏳ Pending
+
+🎯 Processing 7 custom fields...
+
+🔄 Processing field: patient_sex (enum)
+🔧 Creating custom field: patient_sex (enum)
+   📝 Adding 2 enum values
+   ✅ Created field with task ID: task-abc123
+   📤 Uploading data for field: patient_sex
+   📊 Processed 150 image files from 150 CSV rows
+   📁 Created 150 file entries for upload
+   ✅ Upload completed successfully
+   ⏳ Waiting for task completion...
+   ✅ Task completed successfully, 150 rows inserted
+   ✅ Field patient_sex completed
+
+🔄 Processing field: modality (enum)
+...
+
+🎉 Workflow completed!
+✅ Successfully processed 7 fields
+
+💡 Your DICOM metadata fields are now available in Visual Layer!
+   You can use them for filtering and searching medical imaging data.
+```
+
+### Advanced DICOM Features
+
+**Custom Field Type Override:**
+```bash
+# Force specific fields to be treated as enums
+python upload_csv_with_json_mapping.py dicom_metadata.csv metadata.json \
+  --dataset-id=your-dataset-id \
+  --enum-fields patient_sex modality manufacturer study_description
+```
+
+**Resume Interrupted Uploads:**
+```bash
+# Resume from where the script left off
+python upload_csv_with_json_mapping.py dicom_metadata.csv metadata.json \
+  --dataset-id=your-dataset-id \
+  --resume
+```
+
+### DICOM Metadata Use Cases in Visual Layer
+
+Once your DICOM metadata is uploaded, you can perform advanced medical imaging analysis:
+
+**Clinical Research Applications:**
+- Filter patients by age, sex, and study parameters
+- Compare acquisition settings across different equipment manufacturers
+- Analyze image quality metrics across different scanning protocols
+- Group studies by date ranges and clinical indications
+
+**Quality Assurance Workflows:**
+- Identify outliers in exposure parameters (kVp, tube current)
+- Monitor consistency of slice thickness and spacing across studies
+- Track equipment performance and software versions
+- Analyze windowing settings for optimal image display
+
+**Dataset Curation:**
+- Search for specific modalities and study types
+- Filter by patient demographics for research cohorts
+- Identify multiframe vs. single-frame acquisitions
+- Organize by series descriptions and acquisition dates
+
+<Card title="Custom Metadata API Reference" icon="link" href="/docs/Creating-Datasets/custom-metadata">
+Learn more about Visual Layer's custom metadata API and manual upload workflows for advanced use cases.
+</Card>
+
+## Script Output Example
+
+The script provides detailed progress information during conversion:
+
+```
+🏥 DICOM to JPG Converter Starting...
+📂 Input directory: /path/to/dicom/files
+📁 Output directory: /path/to/output
+🖼️  Output format: jpg
+
+🔍 Found 3 series directories and 0 direct DICOM files
+
+📋 Processing series-00001...
+   Found 25 DICOM files in series-00001
+   Converting image001.dcm -> series-00001_image001.jpg
+   Converting image002.dcm -> series-00001_image002.jpg
+   ...
+
+📋 Processing series-00002...
+   Detected multiframe DICOM: multiframe.dcm
+   Processing 10 frames from multiframe DICOM
+   Converted frame 1/10 -> series-00002_multiframe_frame-001.jpg
+   ...
+
+✅ Conversion Complete!
+📊 Summary:
+   • Total files converted: 45
+   • Unique series processed: 3
+   • Output directory: /path/to/output
+   • Images directory: /path/to/output/converted_images
+   • Metadata file: /path/to/output/metadata/dicom_metadata.csv
+
+📋 Sample metadata:
+   image_filename                          series_folder  modality  instance_number
+   series-00001_image001.jpg              series-00001   CT        1
+   series-00001_image002.jpg              series-00001   CT        2
+   series-00002_multiframe_frame-001.jpg  series-00002   MR        1
+```
+
+## Supported DICOM Features
+
+The script handles various DICOM file characteristics:
+
+**Image Types:**
+- Single-frame DICOM files
+- Multiframe DICOM sequences
+- Various modalities (CT, MR, US, etc.)
+
+**Processing Features:**
+- Automatic windowing based on DICOM tags
+- Rescale slope and intercept application
+- Photometric interpretation handling
+- Proper multiframe extraction
+
+**Metadata Extraction:**
+- Comprehensive DICOM tag extraction
+- Patient and study information
+- Equipment and acquisition parameters
+- Image-specific technical details
+
+## Troubleshooting
+
+### Common Issues
+
+**No DICOM files found:**
+- Verify your input directory contains `.dcm` files
+- Check that files are valid DICOM format
+- Ensure proper directory permissions
+
+**Conversion failures:**
+- Some DICOM files may have unsupported formats or corrupted data
+- Check the verbose output for specific error messages
+- Verify DICOM files can be opened with standard DICOM viewers
+
+**Missing metadata fields:**
+- Not all DICOM files contain every possible metadata field
+- Empty or missing values are handled gracefully
+- Customize the script to extract additional vendor-specific tags if needed
+
+**Memory issues with large datasets:**
+- Process large datasets in smaller batches
+- Ensure sufficient disk space for output files
+- Consider processing series directories individually
+
+### Getting Help
+
+For advanced DICOM processing requirements, custom metadata extraction, or integration support:
+
+<Card title="Contact Visual Layer Support" icon="headset">
+Reach out to Visual Layer's support team for assistance with complex DICOM workflows, custom metadata requirements, or troubleshooting conversion issues.
+</Card>
+
+## Related Resources
+
+- [Custom Metadata API Guide](/docs/Creating-Datasets/custom-metadata) - Manual API workflow for uploading extracted metadata
+- [Custom Metadata Automation Script](/docs/Creating-Datasets/custom-metadata-automation-script) - Automated workflow for metadata upload
+- [Creating Datasets](/docs/Creating-Datasets/createdelete-datasets) - Guide to creating Visual Layer datasets

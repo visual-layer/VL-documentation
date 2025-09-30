@@ -93,6 +93,7 @@
               "docs/Creating-Datasets/createdelete-datasets",
               "docs/Creating-Datasets/custom-metadata",
               "docs/Creating-Datasets/custom-metadata-automation-script",
+              "docs/Creating-Datasets/dicom-converter",
             {
               "group": "Importing annotations",
               "pages": [
