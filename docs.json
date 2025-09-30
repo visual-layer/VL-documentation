@@ -92,6 +92,7 @@
             "pages": [
               "docs/Creating-Datasets/createdelete-datasets",
               "docs/Creating-Datasets/custom-metadata",
+              "docs/Creating-Datasets/custom-metadata-automation-script",
             {
               "group": "Importing annotations",
               "pages": [
