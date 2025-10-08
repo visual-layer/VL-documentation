@@ -177,7 +177,20 @@
             ]
           }
         ]
-      }, 
+      },
+      {
+        "tab": "Code Blocks",
+        "groups": [
+          {
+            "group": "Scripts",
+            "pages": [
+              "docs/code-blocks/dicom-converter-script",
+              "docs/code-blocks/dicom-upload-script",
+              "docs/code-blocks/custom-metadata-upload-script"
+            ]
+          }
+        ]
+      },
       {
         "tab": "fastdup",
           "groups": [

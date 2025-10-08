@@ -1,111 +1,111 @@
 ---
 title: "Custom Metadata Automation Script"
-description: "Example Python script for automating custom metadata uploads to Visual Layer using CSV files and exported dataset metadata."
+description: "Example Python script for automating custom metadata uploads to Visual Layer from folders with individual metadata JSON files."
 sidebarTitle: "Automation script"
 ---
 
 <Card title="What This Helps With" icon="code">
-Automate the process of uploading custom metadata from CSV files to Visual Layer datasets, eliminating the need to manually create JSON files and API calls.
+Automate the process of uploading custom metadata from a folder containing images and their metadata files to Visual Layer datasets, with automatic field discovery and type detection.
 </Card>
 
-This page provides an example Python script that demonstrates how to automate custom metadata uploads to Visual Layer. The script handles the complete workflow from CSV input to successful metadata ingestion.
+This page provides an example Python script that demonstrates how to automate custom metadata uploads to Visual Layer. The script scans a folder for images and their corresponding metadata files, automatically discovers all fields, and handles the complete upload workflow.
 
 <Note>
-This is a **specific use case example script**. You can modify the field detection logic and filename matching to suit your particular needs. For advanced scenarios, custom metadata deletion, or additional support, contact Visual Layer for assistance.
+This is a **specific use case example script**. You can modify the field detection logic and processing to suit your particular needs. For advanced scenarios, custom metadata deletion, or additional support, contact Visual Layer for assistance.
 </Note>
 
 <Card title="Working with DICOM Medical Imaging Data?" icon="stethoscope" href="/docs/Creating-Datasets/dicom-converter">
 For medical imaging workflows, check out our specialized DICOM converter and upload scripts that handle DICOM-specific field types, date/time formats, and medical metadata standards.
 </Card>
 
+<Card title="View Complete Script Code" icon="code" href="/docs/code-blocks/custom-metadata-upload-script">
+Access the full custom metadata upload Python script with complete implementation, ready to copy and use.
+</Card>
+
 ## How the Script Works
 
 The automation script demonstrates the complete Visual Layer custom metadata API workflow:
 
-1. **Reads your CSV metadata** and the exported `metadata.json` file from Visual Layer
-2. **Creates filename-to-media_id mapping** using the Visual Layer export data
-3. **Analyzes CSV fields** and automatically detects data types (string, float, datetime, enum)
-4. **Creates custom metadata fields** in Visual Layer via API calls
-5. **Uploads metadata values** for each field using the proper JSON format
-6. **Monitors upload progress** and reports completion status
+1. **Automatically exports dataset** - Calls Visual Layer API to get filename-to-media_id mapping (no manual export needed!)
+2. **Scans folder for metadata** - Finds images and their corresponding `.metadata.json` files
+3. **Discovers all fields** - Auto-detects all metadata fields across your files (or uses manual specification)
+4. **Analyzes field types** - Intelligently detects data types (float, datetime, enum, multi-enum, link, string)
+5. **Creates custom metadata fields** - Creates fields in Visual Layer via API calls
+6. **Uploads metadata values** - Uploads values for each field using the proper JSON format
+7. **Monitors upload progress** - Waits for completion and reports status
+
+## Key Features
+
+**Automatic Dataset Export:**
+- No manual export step required - the script automatically fetches the filename-to-media_id mapping
+
+**Auto-Discovery Mode:**
+- Automatically finds and processes ALL metadata fields without configuration
+- Ideal when you want to upload everything
+
+**Manual Override:**
+- Use `--field` flag to specify only certain fields
+- Useful when you want selective upload or need to force specific types
+
+**Intelligent Type Detection:**
+- `float` - Decimal numbers
+- `datetime` - Date/time values
+- `enum` - Categorical data (up to 100 unique values)
+- `multi-enum` - Array fields with multiple values
+- `link` - URLs with protocols (http://, https://, ftp://)
+- `string` - Default fallback
+
+**Robust Error Handling:**
+- Falls back to string type if conversion fails
+- Automatically truncates strings to Visual Layer's 255-character limit
+- Handles nested objects by serializing to JSON
 
 ## Prerequisites
 
 Before using the script, ensure you have:
 
 1. **Visual Layer on-premises installation** (script designed for no-authentication environments)
-2. **Dataset in READY state** in Visual Layer
+2. **Dataset in READY state** in Visual Layer with images already uploaded
 3. **Python environment** with required packages: `pandas`, `requests`
-4. **Two input files**:
-   - Your CSV file containing metadata
-   - `metadata.json` file exported from Visual Layer
+4. **Folder structure** with images and `.metadata.json` files
 
-### Getting the metadata.json File
+### Expected Folder Structure
 
-The script requires a `metadata.json` file exported from Visual Layer. This file contains the critical mapping between your image filenames and Visual Layer's internal `media_id` values.
+The script expects images with corresponding metadata files:
 
-<Steps>
-  <Step title="Export your dataset">
-    In Visual Layer, navigate to your dataset and use the export functionality to download the metadata.json file
-  </Step>
-  <Step title="Locate the metadata.json file">
-    The export will include a `metadata.json` file containing all image-level metadata with `media_id` and `file_name` fields
-  </Step>
-  <Step title="Place in same directory">
-    Keep the `metadata.json` file accessible to the script along with your CSV metadata file
-  </Step>
-</Steps>
-
-## CSV File Format
-
-Your CSV file should include a filename column and your custom metadata fields:
-
-```csv
-filename,temperature,location,quality_score,status
-image001.jpg,23.5,warehouse_a,0.95,approved
-image002.jpg,24.1,warehouse_b,0.87,pending
-image003.jpg,22.8,warehouse_a,0.92,approved
+```
+your-folder/
+├── image1.jpg
+├── image1.jpg.metadata.json
+├── image2.png
+├── image2.png.metadata.json
+├── image3.jpg
+└── image3.jpg.metadata.json
 ```
 
-**Requirements:**
-- Include a column that matches filenames in your Visual Layer dataset
-- Supported column names: `filename`, `file_name`, or `image_filename`
-- All other columns will be processed as custom metadata fields
-- Empty values are automatically skipped during upload
+### Metadata File Format
 
-## Field Type Detection
+Each `.metadata.json` file should contain field-value pairs:
 
-The script automatically detects field types based on your data:
+```json
+{
+  "annotated_at": "2024-01-15T10:30:00Z",
+  "confidence": 0.95,
+  "category": "approved",
+  "reviewer": "john_doe",
+  "tags": ["quality", "verified"],
+  "notes": "High quality sample"
+}
+```
 
-| Data Type | Detection Logic | Example Values |
-|-----------|----------------|----------------|
-| **float** | Contains decimal points or scientific notation | `23.5`, `1.2e-3` |
-| **datetime** | Recognizable date/time formats | `2024-01-15`, `2024-01-15 14:30:00` |
-| **enum** | Categorical data with ≤10 unique values | `approved`, `pending`, `rejected` |
-| **string** | Default for all other data | `warehouse_a`, `batch_12345` |
-
-<Tip>
-You can customize the field detection logic in the `analyze_csv_fields()` function to match your specific needs. For example, force certain fields to be enum types or skip fields that shouldn't be uploaded.
-</Tip>
+**Supported Value Types:**
+- Strings: `"approved"`, `"warehouse_a"`
+- Numbers: `23.5`, `0.95`, `100`
+- Dates/Times: `"2024-01-15"`, `"2024-01-15T10:30:00Z"`
+- Arrays: `["tag1", "tag2"]` (for multi-enum fields)
+- Objects: `{"key": "value"}` (serialized to JSON string)
 
 ## Installation and Usage
-
-### Download the Script
-
-The automation script is available in the Visual Layer scripts repository:
-
-<CardGroup cols={2}>
-  <Card title="View on GitHub" icon="github" href="https://github.com/visual-layer/vl-scripts/blob/main/custom_metadata_upload_example.py">
-    View the script source code, documentation, and latest updates on GitHub.
-  </Card>
-  <Card title="Direct Download" icon="download" href="https://raw.githubusercontent.com/visual-layer/vl-scripts/main/custom_metadata_upload_example.py">
-    Download the script file directly to save as `custom_metadata_upload_example.py`.
-  </Card>
-</CardGroup>
-
-**To get started:**
-1. Download the script using one of the options above
-2. Install the required Python dependencies
 
 ### Install Dependencies
 
@@ -113,150 +113,255 @@ The automation script is available in the Visual Layer scripts repository:
 pip install pandas requests
 ```
 
-### Basic Usage
+### Basic Usage - Auto-Discovery Mode (Recommended)
+
+The script automatically discovers and uploads ALL metadata fields:
 
 ```bash
-python custom_metadata_upload_example.py metadata.csv metadata.json \
-  --dataset-id=your-dataset-id \
-  --base-url=http://localhost:2080
+python upload_metadata_from_folder.py \
+  --folder /path/to/folder \
+  --dataset-id your-dataset-id \
+  --base-url http://localhost:2080
+```
+
+### Manual Field Specification
+
+Specify only certain fields with explicit types:
+
+```bash
+python upload_metadata_from_folder.py \
+  --folder /path/to/folder \
+  --dataset-id your-dataset-id \
+  --base-url http://localhost:2080 \
+  --field annotated_at datetime \
+  --field confidence float \
+  --field category enum \
+  --field tags multi-enum
 ```
 
 ### Command Line Parameters
 
 | Parameter | Required | Description | Default |
 |-----------|----------|-------------|---------|
-| `csv_file` | ✅ | Path to your CSV metadata file | - |
-| `json_file` | ✅ | Path to exported metadata.json from Visual Layer | - |
+| `--folder` | ✅ | Path to folder containing images and .metadata.json files | - |
 | `--dataset-id` | ✅ | Visual Layer dataset identifier | - |
-| `--base-url` | ⭕ | Visual Layer installation URL | `http://localhost:2080` |
+| `--base-url` | ⭕ | Visual Layer installation URL | `http://localhost:8080` |
+| `--field` | ⭕ | Specify field name and type (repeatable). If omitted, auto-discovers all fields | - |
+
+**Supported Field Types:**
+- `string` - Text values
+- `float` - Decimal numbers
+- `datetime` - Date/time values
+- `enum` - Single categorical value
+- `multi-enum` - Multiple categorical values (array)
+- `link` - URLs
 
 ### Example Commands
 
-**Local development:**
+**Auto-discover all fields (recommended):**
 ```bash
-python custom_metadata_upload_example.py data.csv export.json \
-  --dataset-id=abc123 \
-  --base-url=http://localhost:2080
+python upload_metadata_from_folder.py \
+  --folder ./annotated_images \
+  --dataset-id abc123 \
+  --base-url http://localhost:2080
 ```
 
-**Custom port:**
+**Upload only specific fields:**
 ```bash
-python custom_metadata_upload_example.py metadata.csv metadata.json \
-  --dataset-id=my-dataset \
-  --base-url=http://visual-layer:3000
+python upload_metadata_from_folder.py \
+  --folder ./data \
+  --dataset-id my-dataset \
+  --base-url http://visual-layer:3000 \
+  --field quality_score float \
+  --field status enum
 ```
 
 ## Script Output
 
 The script provides detailed progress information:
 
+### Auto-Discovery Mode Output
+
 ```
-🚀 Starting Custom Metadata Upload
-📁 CSV file: metadata.csv
-🗂️  JSON file: metadata.json
-🎯 Dataset ID: abc123
-🌐 Base URL: http://localhost:2080
+🚀 Starting Folder Metadata Upload Workflow
+📁 Folder: /path/to/folder
 
-📊 Reading CSV metadata from: metadata.csv
-   ✅ Loaded 150 records
+📤 Exporting dataset to get media_id mappings...
+   ✅ Exported 150 media items
 
-🗂️  Reading Visual Layer export from: metadata.json
-   ✅ Loaded 150 media items
+🔍 Scanning folder: /path/to/folder
+   ✅ Found 150 image + metadata pairs
 
-🔍 Creating filename-to-media_id mapping...
-   ✅ Created mapping for 150 files
+📖 Loading metadata files...
+   ✅ Loaded 150 metadata files
 
-🔍 Analyzing CSV fields...
-   📋 Field analysis results:
-      temperature: float
-      location: enum
-      quality_score: float
-      status: enum
+🤖 Auto-detection mode
+🔍 Discovering and analyzing all fields...
+   📋 Found 8 unique fields
+      annotated_at: datetime
+      confidence: float
+      category: enum
+      reviewer: string
+      tags: multi-enum
+      priority: enum
+      notes: string
+      source_url: link
+   ✅ Analyzed 8 fields
 
-🎯 Processing 4 metadata fields...
+🎯 Processing 8 custom fields...
 
-🔄 Processing field: temperature (float)
-🔧 Creating custom field: temperature (float)
+🔄 Processing field: annotated_at (datetime)
+🔧 Creating custom field: annotated_at (datetime)
    ✅ Created field with task ID: task-123
-   📤 Preparing upload data for field: temperature
-   📊 Prepared 150 upload entries from 150 CSV rows
+   📤 Uploading data for field: annotated_at
+   📊 Processed 150 files, skipped 0
    ✅ Upload completed successfully
-   ⏳ Waiting for upload completion...
-   ✅ Upload completed: 150 rows inserted
-   ✅ Field temperature upload completed
+   ⏳ Waiting for task completion... (Press Ctrl+C to stop)
+   ✅ Task completed successfully, 150 rows inserted
+   ✅ Task completed after 3s
+   ✅ Field annotated_at completed
 
-🎉 Upload process completed!
-✅ Successfully uploaded 4 out of 4 fields
+🔄 Processing field: confidence (float)
+...
 
-💡 Your custom metadata fields are now available in Visual Layer!
-   You can use them for filtering and searching in the UI.
+🎉 Workflow completed!
+✅ Successfully processed 8/8 fields
 ```
+
+### Manual Mode Output
+
+```
+🚀 Starting Folder Metadata Upload Workflow
+📁 Folder: /path/to/folder
+
+📤 Exporting dataset to get media_id mappings...
+   ✅ Exported 150 media items
+
+🔍 Scanning folder: /path/to/folder
+   ✅ Found 150 image + metadata pairs
+
+📖 Loading metadata files...
+   ✅ Loaded 150 metadata files
+
+🎯 User-specified fields: 2
+🔍 Validating user-specified fields...
+   Checking field: quality_score (float)
+      ✅ Valid
+   Checking field: status (enum)
+      ✅ Valid
+   ✅ Validated 2/2 fields
+
+🎯 Processing 2 custom fields...
+...
+```
+
+## Field Type Detection Logic
+
+The script uses intelligent heuristics to detect field types in auto-discovery mode:
+
+| Field Type | Detection Criteria | Examples |
+|------------|-------------------|----------|
+| **float** | Contains decimal point or scientific notation | `23.5`, `1.2e-3`, `0.95` |
+| **datetime** | Parseable by pandas as date/time | `2024-01-15`, `2024-01-15T10:30:00Z` |
+| **link** | Starts with http://, https://, or ftp:// | `https://example.com`, `ftp://server.com` |
+| **multi-enum** | Array with ≤20 unique values across all files | `["tag1", "tag2"]` |
+| **enum** | ≤100 unique string values across all files | `"approved"`, `"pending"`, `"rejected"` |
+| **string** | Default for everything else | Any text, nested objects (JSON-serialized) |
+
+<Tip>
+The script samples up to 100 values per field for accurate enum detection. If a field has more than 100 unique values, it's treated as a string type instead of enum.
+</Tip>
 
 ## Customizing the Script
 
+The script is designed to be modified for your specific use case. Here are common customizations:
+
 ### Modifying Field Detection
 
-You can customize how the script detects field types by modifying the `analyze_csv_fields()` function:
+You can customize how the script detects field types by modifying the `_auto_detect_field_type()` function:
 
 ```python
-def analyze_csv_fields(self, csv_data: List[Dict[str, Any]]) -> Dict[str, str]:
-    # Skip additional fields
-    skip_fields = {'filename', 'file_name', 'internal_id', 'batch_number'}
+def _auto_detect_field_type(self, field_name: str, sample_values: List[Any]) -> str:
+    # Force specific fields to certain types
+    if field_name in ['product_id', 'batch_number']:
+        return 'string'  # Never treat as enum
 
-    # Force specific fields to enum type
-    force_enum_fields = {'status', 'priority', 'category'}
+    if field_name.endswith('_url'):
+        return 'link'  # Force URL fields
 
-    for field_name, value in sample_row.items():
-        if field_name in skip_fields:
-            continue
-        elif field_name in force_enum_fields:
-            field_types[field_name] = 'enum'
-        # ... rest of detection logic
+    # Adjust enum threshold
+    if len(unique_values) <= 50:  # Changed from 100
+        return 'enum'
+
+    # ... rest of detection logic
 ```
 
-### Changing Filename Matching
+### Skipping Certain Fields
 
-To modify how filenames are matched, update the `create_filename_mapping()` function:
+Modify the `discover_and_analyze_fields()` function to skip fields:
 
 ```python
-def create_filename_mapping(self, media_items: List[Dict[str, Any]]) -> Dict[str, str]:
-    mapping = {}
-    for item in media_items:
-        media_id = item.get('media_id')
-        file_name = item.get('file_name', '')
+def discover_and_analyze_fields(self, metadata_by_file):
+    # Skip internal fields
+    skip_fields = {'_internal_id', '_batch_number', 'temp_field'}
 
-        if media_id and file_name:
-            # Custom filename extraction logic
-            # Example: extract just the ID from "prefix_ID_suffix.jpg"
-            match = re.search(r'_(\d+)_', file_name)
-            if match:
-                key = match.group(1)
-                mapping[key] = media_id
+    for field_name in sorted(all_fields):
+        if field_name in skip_fields:
+            continue
+        # ... rest of logic
+```
+
+### Custom Value Conversion
+
+Modify the `_convert_value()` function for custom data transformations:
+
+```python
+def _convert_value(self, value: Any, field_name: str, field_type: str) -> Any:
+    # Custom preprocessing
+    if field_name == 'temperature':
+        # Convert Fahrenheit to Celsius
+        return (float(value) - 32) * 5/9
+
+    if field_name.startswith('date_'):
+        # Custom date format handling
+        return custom_date_parser(value)
+
+    # ... rest of conversion logic
 ```
 
 ## Troubleshooting
 
 ### Common Issues
 
-**No filename mappings created:**
-- Verify your CSV filename column matches files in the Visual Layer dataset
-- Check that column is named `filename`, `file_name`, or `image_filename`
-- Ensure the `metadata.json` file is from the correct dataset export
+**No image + metadata pairs found:**
+- Verify your folder contains images with corresponding `.metadata.json` files
+- Check filename format: `image.jpg` should have `image.jpg.metadata.json`
+- Ensure proper file permissions
 
-**Field creation fails:**
+**Export dataset failed:**
 - Confirm your Visual Layer instance is accessible at the specified URL
 - Check that the dataset ID is correct and the dataset is in READY state
-- Verify you have sufficient permissions for the dataset
+- Verify the `/api/v1/dataset/{dataset_id}/export_media_id` endpoint is accessible
+
+**Field validation failed:**
+- Check that specified field names exist in your metadata files
+- Verify field types match your data (e.g., datetime fields have valid dates)
+- Review enum fields don't exceed 20 unique values (API limit)
 
 **Upload timeouts:**
 - Large datasets may take time to process
-- The script waits indefinitely - you can interrupt with Ctrl+C if needed
+- The script polls indefinitely - you can interrupt with Ctrl+C if needed
 - Check Visual Layer logs for any processing errors
 
 **Type conversion errors:**
 - Review the automatic field type detection results
-- Customize the `_convert_value()` function for your data formats
-- Consider preprocessing your CSV to clean data values
+- Use manual mode (`--field`) to specify correct types
+- Modify the `_convert_value()` function for custom data formats
+
+**String truncation warnings:**
+- Visual Layer has a 255-character limit for string fields
+- The script automatically truncates - check if this affects your data
+- Consider using link type for long URLs
 
 ### Getting Help
 
@@ -266,7 +371,29 @@ For advanced use cases, custom metadata deletion, or technical support:
 Reach out to Visual Layer's support team for assistance with complex metadata workflows, custom field requirements, or troubleshooting upload issues.
 </Card>
 
+## Advantages Over Manual Upload
+
+**Automatic Export:**
+- ❌ Manual: Export dataset → download metadata.json → run script
+- ✅ Automatic: Just run script - it exports automatically
+
+**Field Discovery:**
+- ❌ Manual: List all fields and types in configuration
+- ✅ Auto-discovery: Script finds all fields automatically
+
+**Type Detection:**
+- ❌ Manual: Guess field types or trial-and-error
+- ✅ Intelligent: Script detects types from actual data
+
+**Error Handling:**
+- ❌ Manual: Script fails on type conversion errors
+- ✅ Robust: Falls back to string, truncates long values
+
+**Flexibility:**
+- ✅ Both modes: Auto-discovery for convenience, manual for control
+
 ## Related Resources
 
 - [Custom Metadata API Guide](/docs/Creating-Datasets/custom-metadata) - Manual API workflow and field type details
-- [Dataset Export](/docs/Managing-Datasets/export-dataset) - How to export the required metadata.json file
+- [DICOM Converter](/docs/Creating-Datasets/dicom-converter) - Specialized workflow for medical imaging metadata
+- [Creating Datasets](/docs/Creating-Datasets/createdelete-datasets) - Guide to creating Visual Layer datasets
