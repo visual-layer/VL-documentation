@@ -1,7 +1,7 @@
 ---
-title: "Custom Metadata Automation Script"
+title: "Custom Metadata Upload Script"
 description: "Example Python script for automating custom metadata uploads to Visual Layer from folders with individual metadata JSON files."
-sidebarTitle: "Automation script"
+sidebarTitle: "Custom metadata Upload"
 ---
 
 <Card title="What This Helps With" icon="code">
@@ -60,6 +60,12 @@ The automation script demonstrates the complete Visual Layer custom metadata API
 - Automatically truncates strings to Visual Layer's 255-character limit
 - Handles nested objects by serializing to JSON
 
+<Note>
+**Adding vs. Updating Metadata:**
+- **Adding new fields:** In case custom metadata was already uploaded to a dataset, the script will add new fields.
+- **Updating existing fields:** Currently updating existing metadata is not supported. Contact Visual Layer for assistance with updating existing metadata values
+</Note>
+
 ## Prerequisites
 
 Before using the script, ensure you have:
@@ -83,6 +89,34 @@ your-folder/
 └── image3.jpg.metadata.json
 ```
 
+<Tip>
+The `.metadata.json` file naming convention can be customized in the script's `scan_folder()` function to match your specific metadata storage format and naming patterns.
+</Tip>
+
+### Alternative: Single JSON File
+
+If your metadata is in a single JSON file instead of individual files per image:
+
+**Example JSON format:**
+```json
+{
+  "image1.jpg": {
+    "confidence": 0.95,
+    "category": "approved"
+  },
+  "image2.jpg": {
+    "confidence": 0.87,
+    "category": "pending"
+  }
+}
+```
+
+**To use this format:** Add the `load_single_json_metadata()` method to the `FolderMetadataProcessor` class and call it instead of `scan_folder()` + `load_metadata_files()` in the workflow.
+
+<Card title="View Single JSON Implementation" icon="code" href="/docs/code-blocks/custom-metadata-upload-script">
+See the complete code example for handling single JSON files at the bottom of the page.
+</Card>
+
 ### Metadata File Format
 
 Each `.metadata.json` file should contain field-value pairs:
@@ -104,6 +138,16 @@ Each `.metadata.json` file should contain field-value pairs:
 - Dates/Times: `"2024-01-15"`, `"2024-01-15T10:30:00Z"`
 - Arrays: `["tag1", "tag2"]` (for multi-enum fields)
 - Objects: `{"key": "value"}` (serialized to JSON string)
+
+### Expected Result in Visual Layer
+
+After running the script, your custom metadata fields will be visible in Visual Layer's interface for each image:
+
+<Frame>
+  <img src="/images/custom-metadata-example.png" alt="Custom metadata displayed in Visual Layer showing fields like name, float value, list of tags, condition, and date" />
+</Frame>
+
+These fields become searchable and filterable, enabling you to query and analyze your dataset based on your custom metadata.
 
 ## Installation and Usage
 
@@ -145,7 +189,7 @@ python upload_metadata_from_folder.py \
 |-----------|----------|-------------|---------|
 | `--folder` | ✅ | Path to folder containing images and .metadata.json files | - |
 | `--dataset-id` | ✅ | Visual Layer dataset identifier | - |
-| `--base-url` | ⭕ | Visual Layer installation URL | `http://localhost:8080` |
+| `--base-url` | ⭕ | Visual Layer installation URL | `http://localhost:2080` |
 | `--field` | ⭕ | Specify field name and type (repeatable). If omitted, auto-discovers all fields | - |
 
 **Supported Field Types:**

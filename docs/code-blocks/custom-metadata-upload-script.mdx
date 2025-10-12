@@ -27,15 +27,15 @@ Return to the main custom metadata automation guide for setup instructions, usag
 
 Before using this script, install the required Python packages:
 
-\`\`\`bash
+```bash
 pip install pandas requests
-\`\`\`
+```
 
 ## Usage
 
-Save this script as \`upload_metadata_from_folder.py\` and run:
+Save this script as `upload_metadata_from_folder.py` and run:
 
-\`\`\`bash
+```bash
 # Auto-detect all fields (recommended)
 python upload_metadata_from_folder.py \
   --folder /path/to/folder \
@@ -50,13 +50,13 @@ python upload_metadata_from_folder.py \
   --field annotated_at datetime \
   --field confidence float \
   --field category enum
-\`\`\`
+```
 
 ## Expected Folder Structure
 
 The script expects images and their corresponding metadata files:
 
-\`\`\`
+```
 your-folder/
 ├── image1.jpg
 ├── image1.jpg.metadata.json
@@ -64,18 +64,18 @@ your-folder/
 ├── image2.png.metadata.json
 └── image3.jpg
     └── image3.jpg.metadata.json
-\`\`\`
+```
 
-Each \`.metadata.json\` file should contain field-value pairs:
+Each `.metadata.json` file should contain field-value pairs:
 
-\`\`\`json
+```json
 {
   "annotated_at": "2024-01-15T10:30:00Z",
   "confidence": 0.95,
   "category": "approved",
   "tags": ["quality", "verified"]
 }
-\`\`\`
+```
 
 <Note>
 This is an example script designed for on-premises Visual Layer installations. You can modify the field detection logic and processing to suit your specific needs.
@@ -83,7 +83,7 @@ This is an example script designed for on-premises Visual Layer installations. Y
 
 ## Complete Script Code
 
-\`\`\`python
+```python
 #!/usr/bin/env python3
 """
 Folder-based Metadata Upload for Visual Layer
@@ -864,4 +864,50 @@ Example usage:
 
 if __name__ == "__main__":
     main()
+```
+
+## Single JSON File Modification
+
+If your metadata is in one JSON file for all images, add this method to the `FolderMetadataProcessor` class:
+
+```python
+def load_single_json_metadata(self, json_file: str, folder_path: str) -> Dict[str, Dict[str, Any]]:
+    """Load metadata from a single JSON file containing all image metadata."""
+    print(f"📖 Loading metadata from single JSON file: {json_file}")
+
+    with open(json_file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+
+    # Handle dictionary format: {filename: {metadata}}
+    if isinstance(data, dict):
+        metadata_by_file = data
+    # Handle array format: [{filename: ..., field: value, ...}]
+    elif isinstance(data, list):
+        metadata_by_file = {}
+        for item in data:
+            filename = item.get('filename') or item.get('file_name')
+            if filename:
+                item_copy = {k: v for k, v in item.items() if k not in ['filename', 'file_name']}
+                metadata_by_file[filename] = item_copy
+
+    # Verify images exist
+    folder = Path(folder_path)
+    valid_metadata = {}
+    for filename, metadata in metadata_by_file.items():
+        if (folder / filename).exists():
+            valid_metadata[filename] = metadata
+
+    print(f"   ✅ Loaded metadata for {len(valid_metadata)} images")
+    return valid_metadata
+```
+
+**Usage:** In `process_workflow()`, replace the scan/load section with:
+
+```python
+# Replace this:
+pairs = self.scan_folder(folder_path)
+metadata_by_file = self.load_metadata_files(pairs)
+
+# With this:
+metadata_by_file = self.load_single_json_metadata('/path/to/metadata.json', folder_path)
 ```
