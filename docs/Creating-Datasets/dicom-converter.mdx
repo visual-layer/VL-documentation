@@ -42,19 +42,7 @@ This section shows the complete end-to-end process for converting DICOM files an
 
 ### Step 1: Convert DICOM Files
 
-Convert your DICOM files to extract images and metadata:
-
-```bash
-# Basic conversion
-python dicom_converter.py /path/to/dicom/files
-
-# With verbose output
-python dicom_converter.py /path/to/dicom/files --verbose
-```
-
-**Output:**
-- `converted_images/` directory with JPG files
-- `metadata/dicom_metadata.csv` with comprehensive metadata
+Run the DICOM converter script to extract images and metadata. See [Basic Usage](#basic-usage) section below for command examples and output details.
 
 ### Step 2: Create Visual Layer Dataset
 
@@ -87,13 +75,9 @@ python upload_csv_with_json_mapping.py dicom_metadata.csv metadata.json \
 
 ### Step 5: Search and Filter by DICOM Metadata
 
-With DICOM metadata uploaded as custom fields, you can now search and filter your medical imaging dataset by patient demographics, equipment details, study parameters, and technical settings.
-
 <Frame>
   <img src="/images/dicom-custom-metadata-example.png" alt="DICOM custom metadata displayed in Visual Layer showing patient age, manufacturer, modality, and other medical imaging fields" />
 </Frame>
-
-**This demonstrates Visual Layer's custom metadata value:** Any specialized metadata can be extracted from your data and made searchable, enabling domain-specific workflows.
 
 ## Why Custom Metadata Matters
 
@@ -113,8 +97,6 @@ This DICOM example shows how custom metadata transforms your Visual Layer datase
 - **E-commerce:** Product SKU, price, category metadata for inventory analysis
 - **Manufacturing:** Quality metrics, batch numbers, inspection data for QA workflows
 - **Research:** Experiment conditions, sample IDs, measurements for dataset curation
-
-The DICOM scripts demonstrate this workflow: extract metadata from your source files, upload as custom fields, enable powerful search.
 
 ## DICOM Converter Script
 
@@ -191,8 +173,6 @@ The DICOM scripts can be customized for your specific use case:
 - **Modify field extraction** to capture vendor-specific tags
 - **Add preprocessing** for specialized protocols
 - **Extend to other formats** by adapting the extraction logic
-
-This same pattern works for any file type with embedded metadata - adapt the extraction logic to your domain and enable powerful custom metadata search in Visual Layer.
 
 ## Related Resources
 
