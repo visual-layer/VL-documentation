@@ -34,6 +34,23 @@ The automation script demonstrates the complete Visual Layer custom metadata API
 6. **Uploads metadata values** - Uploads values for each field using the proper JSON format
 7. **Monitors upload progress** - Waits for completion and reports status
 
+## Field Type Detection Logic
+
+The script uses intelligent heuristics to detect field types in auto-discovery mode:
+
+| Field Type | Detection Criteria | Examples |
+|------------|-------------------|----------|
+| **float** | Contains decimal point or scientific notation | `23.5`, `1.2e-3`, `0.95` |
+| **datetime** | Parseable by pandas as date/time | `2024-01-15`, `2024-01-15T10:30:00Z` |
+| **link** | Starts with http://, https://, or ftp:// | `https://example.com`, `ftp://server.com` |
+| **multi-enum** | Array with ≤20 unique values across all files | `["tag1", "tag2"]` |
+| **enum** | ≤100 unique string values across all files | `"approved"`, `"pending"`, `"rejected"` |
+| **string** | Default for everything else | Any text, nested objects (JSON-serialized) |
+
+<Tip>
+The script samples up to 100 values per field for accurate enum detection. If a field has more than 100 unique values, it's treated as a string type instead of enum.
+</Tip>
+
 ## Key Features
 
 **Automatic Dataset Export:**
@@ -48,12 +65,7 @@ The automation script demonstrates the complete Visual Layer custom metadata API
 - Useful when you want selective upload or need to force specific types
 
 **Intelligent Type Detection:**
-- `float` - Decimal numbers
-- `datetime` - Date/time values
-- `enum` - Categorical data (up to 100 unique values)
-- `multi-enum` - Array fields with multiple values
-- `link` - URLs with protocols (http://, https://, ftp://)
-- `string` - Default fallback
+- Auto-detects 6 field types (float, datetime, enum, multi-enum, link, string)
 
 **Robust Error Handling:**
 - Falls back to string type if conversion fails
@@ -190,15 +202,7 @@ python upload_metadata_from_folder.py \
 | `--folder` | ✅ | Path to folder containing images and .metadata.json files | - |
 | `--dataset-id` | ✅ | Visual Layer dataset identifier | - |
 | `--base-url` | ⭕ | Visual Layer installation URL | `http://localhost:2080` |
-| `--field` | ⭕ | Specify field name and type (repeatable). If omitted, auto-discovers all fields | - |
-
-**Supported Field Types:**
-- `string` - Text values
-- `float` - Decimal numbers
-- `datetime` - Date/time values
-- `enum` - Single categorical value
-- `multi-enum` - Multiple categorical values (array)
-- `link` - URLs
+| `--field` | ⭕ | Specify field name and type (repeatable). If omitted, auto-discovers all fields. Types: `string | float | datetime | enum | multi-enum | link` | - |
 
 ### Example Commands
 
@@ -298,23 +302,6 @@ The script provides detailed progress information:
 🎯 Processing 2 custom fields...
 ...
 ```
-
-## Field Type Detection Logic
-
-The script uses intelligent heuristics to detect field types in auto-discovery mode:
-
-| Field Type | Detection Criteria | Examples |
-|------------|-------------------|----------|
-| **float** | Contains decimal point or scientific notation | `23.5`, `1.2e-3`, `0.95` |
-| **datetime** | Parseable by pandas as date/time | `2024-01-15`, `2024-01-15T10:30:00Z` |
-| **link** | Starts with http://, https://, or ftp:// | `https://example.com`, `ftp://server.com` |
-| **multi-enum** | Array with ≤20 unique values across all files | `["tag1", "tag2"]` |
-| **enum** | ≤100 unique string values across all files | `"approved"`, `"pending"`, `"rejected"` |
-| **string** | Default for everything else | Any text, nested objects (JSON-serialized) |
-
-<Tip>
-The script samples up to 100 values per field for accurate enum detection. If a field has more than 100 unique values, it's treated as a string type instead of enum.
-</Tip>
 
 ## Customizing the Script
 
