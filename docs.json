@@ -91,6 +91,8 @@
                         "pages": [
                             "docs/Creating-Datasets/createdelete-datasets",
                             "docs/Creating-Datasets/custom-metadata",
+                            "docs/Creating-Datasets/custom-metadata-automation-script",
+                            "docs/Creating-Datasets/dicom-converter",
                             {
                                 "group": "Importing annotations",
                                 "pages": [
@@ -175,6 +177,19 @@
                             "api-reference/caption-search",
                             "api-reference/exporting-a-dataset-via-curl-from-visual-layer",
                             "api-reference/running-visual-layer-within-an-iframe"
+                        ]
+                    }
+                ]
+            },
+            {
+                "tab": "Code Blocks",
+                "groups": [
+                    {
+                        "group": "Scripts",
+                        "pages": [
+                            "docs/code-blocks/dicom-converter-script",
+                            "docs/code-blocks/dicom-upload-script",
+                            "docs/code-blocks/custom-metadata-upload-script"
                         ]
                     }
                 ]
