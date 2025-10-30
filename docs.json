@@ -92,6 +92,7 @@
                             "docs/Creating-Datasets/createdelete-datasets",
                             "docs/Creating-Datasets/custom-metadata",
                             "docs/Creating-Datasets/custom-metadata-automation-script",
+                            "docs/Creating-Datasets/csv-metadata-upload-script",
                             "docs/Creating-Datasets/dicom-converter",
                             {
                                 "group": "Importing annotations",
@@ -189,7 +190,8 @@
                         "pages": [
                             "docs/code-blocks/dicom-converter-script",
                             "docs/code-blocks/dicom-upload-script",
-                            "docs/code-blocks/custom-metadata-upload-script"
+                            "docs/code-blocks/custom-metadata-upload-script",
+                            "docs/code-blocks/csv-metadata-upload-script"
                         ]
                     }
                 ]

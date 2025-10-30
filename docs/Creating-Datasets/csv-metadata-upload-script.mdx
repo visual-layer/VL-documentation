@@ -1,0 +1,211 @@
+---
+title: "CSV Metadata Upload Script"
+description: "Simple Python script for uploading custom metadata from CSV files to Visual Layer with JWT authentication support."
+sidebarTitle: "CSV metadata upload"
+---
+
+<Card title="Simple CSV-Based Metadata Upload" icon="file-csv">
+This script provides a streamlined approach for uploading custom metadata from CSV files to Visual Layer. Perfect for single-field uploads, cloud installations with authentication, and CSV-based data workflows.
+</Card>
+
+The CSV metadata upload script reads a CSV file containing filenames and metadata values, automatically maps them to Visual Layer media IDs, and uploads a single custom field at a time. This simpler workflow is ideal when your metadata is already in CSV format.
+
+<Note>
+This script focuses on **single-field uploads from CSV files** and includes **JWT authentication** for cloud deployments. For bulk multi-field uploads from folder structures, see the [folder-based automation script](/docs/Creating-Datasets/custom-metadata-automation-script).
+</Note>
+
+<Card title="View Complete Script Code" icon="code" href="/docs/code-blocks/csv-metadata-upload-script">
+Access the full CSV metadata upload Python script with complete implementation, ready to copy and use.
+</Card>
+
+## When to Use This Script
+
+This CSV-based approach is ideal when:
+
+- You have metadata already organized in CSV format
+- You need to upload one field at a time (can run multiple times for multiple fields)
+- You're working with Visual Layer cloud (requires JWT authentication)
+- You want a simpler workflow than scanning folders for JSON files
+- You need to update existing fields with new values
+
+## How the Script Works
+
+The CSV upload script follows a streamlined 4-step process:
+
+<Steps>
+  <Step title="Export dataset for media_id mapping">
+    Automatically calls Visual Layer API to retrieve the mapping between filenames and internal media_id values.
+  </Step>
+
+  <Step title="Read CSV file">
+    Loads your CSV file containing filename and metadata value columns.
+  </Step>
+
+  <Step title="Create custom field">
+    Creates a single custom metadata field in Visual Layer (defaults to 'link' type).
+  </Step>
+
+  <Step title="Upload mapped values">
+    Matches CSV filenames to media IDs and uploads the metadata values for the field.
+  </Step>
+</Steps>
+
+## Comparison with Folder-Based Script
+
+Choose the right script for your workflow:
+
+| Feature | CSV Script | Folder Script |
+|---------|------------|---------------|
+| **Data source** | Single CSV file | Folder with .metadata.json files |
+| **Fields per run** | One field at a time | All fields automatically discovered |
+| **Authentication** | JWT token (cloud-ready) | No authentication (on-premises) |
+| **Type detection** | Manual (specify field type) | Automatic (intelligent detection) |
+| **Best for** | Simple single-field updates, CSV workflows | Bulk multi-field uploads, JSON metadata |
+| **Complexity** | Lower - straightforward CSV processing | Higher - field discovery and type detection |
+
+## Prerequisites
+
+Before using the script, ensure you have:
+
+1. **Python environment** with `requests` package installed
+2. **Visual Layer dataset** in READY state with images already uploaded
+3. **JWT authentication token** for cloud installations (or API access for on-premises)
+4. **CSV file** with filename and metadata value columns
+
+## Installation
+
+```bash
+pip install requests
+```
+
+## CSV File Format
+
+Your CSV file should have at least two columns:
+
+1. **Filename column** - Contains image filenames (e.g., `image001.jpg`)
+2. **Value column** - Contains metadata values for that image
+
+**Example CSV:**
+
+```csv
+filename,url
+image001.jpg,https://example.com/product/123
+image002.jpg,https://example.com/product/456
+image003.jpg,https://example.com/product/789
+```
+
+<Tip>
+The script extracts just the filename (not full paths), so CSV entries like `/path/to/image001.jpg` will be matched to `image001.jpg` in Visual Layer.
+</Tip>
+
+## Usage Examples
+
+### Cloud Installation with JWT Authentication
+
+```bash
+python csv_metadata_upload.py \
+  --csv metadata.csv \
+  --dataset-id your-dataset-id \
+  --base-url https://app.visual-layer.com \
+  --token your-jwt-token \
+  --filename-col filename \
+  --value-col url \
+  --field-name product_url
+```
+
+### On-Premises Installation
+
+```bash
+python csv_metadata_upload.py \
+  --csv metadata.csv \
+  --dataset-id your-dataset-id \
+  --base-url http://localhost:2080 \
+  --token your-api-token \
+  --filename-col filename \
+  --value-col label \
+  --field-name quality_label
+```
+
+### Command Line Parameters
+
+| Parameter | Required | Description | Default |
+|-----------|----------|-------------|---------|
+| `--csv` | ✅ | Path to CSV file with metadata | - |
+| `--dataset-id` | ✅ | Visual Layer dataset identifier | - |
+| `--token` | ✅ | JWT authentication token | - |
+| `--base-url` | ⭕ | Visual Layer installation URL | `https://app.visual-layer.com` |
+| `--filename-col` | ⭕ | CSV column containing filenames | `filename` |
+| `--value-col` | ⭕ | CSV column containing metadata values | `label` |
+| `--field-name` | ⭕ | Name of custom field to create | `url` |
+
+## Script Features
+
+The CSV upload script includes:
+
+- **Automatic dataset export** - No manual export step required, script fetches media_id mapping via API
+- **Basename matching** - Automatically handles full paths in CSV by extracting just the filename
+- **Field creation** - Creates custom metadata field if it doesn't exist (skips if already exists)
+- **Progress reporting** - Shows matched records count and upload status with emoji indicators
+- **Temp file management** - Handles temporary JSON file creation and cleanup automatically
+- **Robust error handling** - Clear error messages for failed exports, missing files, or upload issues
+
+## Workflow Example
+
+Complete workflow for adding product URLs to images:
+
+1. **Prepare CSV file** with filename and URL columns:
+   ```csv
+   filename,product_url
+   shoe_001.jpg,https://shop.example.com/shoes/001
+   shoe_002.jpg,https://shop.example.com/shoes/002
+   ```
+
+2. **Upload images to Visual Layer** and get dataset ID
+
+3. **Run script** to create and populate the custom field:
+   ```bash
+   python csv_metadata_upload.py \
+     --csv products.csv \
+     --dataset-id abc123 \
+     --token your-jwt-token \
+     --filename-col filename \
+     --value-col product_url \
+     --field-name product_link
+   ```
+
+4. **Search and filter** by the new custom field in Visual Layer
+
+## Troubleshooting
+
+**No media IDs matched:**
+- Verify CSV filename column matches actual filenames in Visual Layer dataset
+- Check that images were successfully uploaded to Visual Layer before running script
+
+**Authentication failed:**
+- Confirm JWT token is valid and not expired
+- For cloud installations, ensure you're using the correct base URL (`https://app.visual-layer.com`)
+
+**Field already exists error:**
+- Script will skip field creation if field already exists, but continue with upload
+- To update existing field values, simply run the script again with same field name
+
+**Export dataset failed:**
+- Confirm dataset ID is correct and dataset is in READY state
+- Verify the `/api/v1/dataset/{dataset_id}/export_media_id` endpoint is accessible
+
+## Use Cases
+
+The CSV metadata upload script is perfect for:
+
+- **E-commerce:** Link product images to URLs, SKUs, or inventory pages
+- **Quality control:** Add inspection status or quality scores from CSV reports
+- **Batch updates:** Update metadata for specific images from spreadsheet exports
+- **External system integration:** Import metadata from external databases exported as CSV
+- **Simple workflows:** Quick single-field additions without complex folder structures
+
+## Related Resources
+
+- [Custom Metadata API Guide](/docs/Creating-Datasets/custom-metadata) - Manual API workflow
+- [Custom Metadata Automation Script](/docs/Creating-Datasets/custom-metadata-automation-script) - Folder-based multi-field upload
+- [DICOM Converter](/docs/Creating-Datasets/dicom-converter) - Specialized workflow for medical imaging metadata
+- [Creating Datasets](/docs/Creating-Datasets/createdelete-datasets) - Dataset creation guide
