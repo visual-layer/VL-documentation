@@ -62,11 +62,15 @@ description: "Brief description"    # SEO and page description
 
 **Page Structure Patterns**:
 
-1. **Overview Pages** (Getting Started style):
+Following are the different kinds of content maintained in this repo:
+
+1. **Overview Pages** (introduces a set of related pages; intro to "what's coming" in the rest of the relevant section/set of pages):
    - Brief introductory paragraph explaining the concept
    - Card components for organizing related content by theme
    - Clear navigation pathways to detailed sections
-   - "Learn More" section with related links
+   - Card group layouts for navigation
+   - Each card with descriptive title and brief description
+   - Clear visual organization for better user experience
 
 2. **Concept Pages** (Definitions and Entities style):
    - Note callouts for important introductory information
@@ -74,16 +78,20 @@ description: "Brief description"    # SEO and page description
    - Two-column layout for terminology explanations
    - Comprehensive concept explanations with examples
 
-3. **Tutorial Pages** (Quick Start style):
+3. **Process Documentation Pages** :
+Process Documentation Pages represent the bulk of the documentation, and guide users through a specific feature and the actions that can be taken. For long processes and/or features with many actions, this might be broken down into a group of process documentation pages. These, like other pages should open with an Overview Page (as described above). 
    - Prerequisites section listing required setup
-   - Step-by-step numbered instructions with clear actions
+   - Step-by-step numbered instructions with clear actions and outcomes. 
+   - Use the simple ordered lists for these procedures. Make sure outcomes are on new lines but part of the step that led to the outcome. 
    - Code examples in fenced code blocks
-   - Progressive complexity building through sections
 
-4. **Tutorial Hub Pages**:
-   - Card group layouts for navigation
-   - Each card with descriptive title and brief description
-   - Clear visual organization for better user experience
+4. **Tutorial Pages**:
+Tutorials guide users through a specific use case example in order to show them interactively how to use the platform/feature. Tutorials, like other pages should open with an Overview Page (as described above). Each page should represent and entire end-to-end use case or a standalone process/procedure.
+   - Prerequisites section listing required setup
+   - Step-by-step numbered instructions with clear actions and outcomes. 
+   - Use the <Step> object for these procedures. Make sure outcomes are on new lines but part of the step that led to the outcome 
+   - Code examples in fenced code blocks
+
 
 ### Mintlify Configuration
 
@@ -105,7 +113,6 @@ The repository includes extensive custom styling in `styles.css` with:
 - **Typography**: Custom Roboto font family with specific weights and letter spacing  
 - **Components**: Hero sections, search bars, API grids, and custom table styles
 - **Responsive Design**: Mobile-first approach with defined breakpoints
-- **Dark Mode**: Comprehensive dark mode support with CSS variables
 
 ## Development Guidelines
 
@@ -119,17 +126,22 @@ The repository includes extensive custom styling in `styles.css` with:
 **Content Style Guidelines**:
 - Use MDX components (Card, Steps, Tip, Note) for enhanced user experience
 - Follow established front matter structure for metadata consistency
-- Include clear step-by-step instructions for tutorials
 - Provide comprehensive concept explanations with examples
-- Use custom CSS classes for consistent styling
-- Embed videos and interactive content where helpful for complex procedures
+- Create mermaid designs when appropriate to assist in conceptual content
+- Use videos and interactive content where helpful for complex procedures 
+- always make sure capitalization is absolutely consistent across content types. so for example, prepositions in titles should ALWAYS be lower case.
+- always double-check your work before finishing an implementation to ensure spacing is correct wherever you made changes. sometimes spacing can be tricky when using ** ** mid-sentnece.
+- always use active voice unless **absolutely** unavoidable. that includes preferring opening sentences with active simple present tense instead of gerunds.
+- never use "please" and never use i.e. nor e.g. Only "For example" or "Example:". And always use correct punctuation including periods - even when in ordered lists.Finally, every article must ALWAYS open with an introduction - even if minimal.
+- never use divider lines in the middle of articles unless you consult with me before starting.
+- exception to title case for titles and headings: ensure that sidebarTitle always use sentence case and is always limited to 20 chars at most. This means that sometimes longer title needs to be shortened only for the sidebarTitle
 
 ## Visual Layer Documentation Standards
 
 ### Writing Guidelines
 - **Voice**: Second person ("you"), active voice, present tense
 - **Platform Naming**: "Visual Layer" (consistent capitalization)
-- **Content Strategy**: Document just enough for user success - prioritize accuracy and usability
+- **Content Strategy**: Always prioritize accuracy and usability
 - **Structure**: Include prerequisites, clear step-by-step instructions, and related resources
 - **Format**: Use relative paths for internal links, language tags on code blocks, alt text on images
 
@@ -149,11 +161,12 @@ The repository includes extensive custom styling in `styles.css` with:
 - Make content evergreen when possible
 
 ### Specific Documentation Rules
-- **No "Overview" headings**: Content should flow directly without separate overview sections
+- **No "Overview" headings**: Content should flow directly from the metadata to an intro without a new heading 
+- **Section intros**: All headings must be followed by a minimal intro before starting subsections and/or lists
 - **Basic numbering for procedures**: Use simple numbered steps (1, 2, 3) rather than Steps components
 - **Intro text for sections**: Every section with subsections must include introductory text
 - **Lead-in sentences**: Every list must have an opening sentence introducing the content
-- **Related Articles**: Include as the last section when relevant
+- **Related Articles**: Always include as the last section unless completely irrelevant
 
 ## Platform-Specific Notes
 - Visual Layer supports both cloud and on-premises deployments
@@ -166,14 +179,7 @@ The repository includes extensive custom styling in `styles.css` with:
 - <Frame>
   <img src="/images/highlight-filters-and-insights.png" />
 </Frame>  this is the way to wrap images always
-- How It Works and other similar high level explanations that include steps or process descriptiosn (empahsize high level/theory) must use the <Step> object for the steps and their descriptins. For How to Apply the Filter as an example, this section must use a regular ordered list, as it does now, but the final paragraph in this case explains benefits and should be the intro para to the process instead of a conclusions.
-- always make sure capitalization is absolutely consistent across content types. so for example, prepositions in titles should ALWAYS be lower case.
-- always double-check your work before finishing an implementation to ensure spacing is correct wherever you made changes. soemtimes spacing can be tricky when using ** ** mid-sentnece.
-- always use active voice unless absolutely unavoidable. that includes preferring opening sentences with active simple present tense instead of gerunds.
-- never use "please" and never use i.e. nor e.g. Only "For example" or "Example:". And always use correct punctuation including periods - even when in ordered lists.Finally, every article must ALWAYS open with an introduction - even if minimal.
-- never use divider lines in the middle of articles unless you consult with me before starting.
-- exception to title case for titles and headings: ensure that sidebarTitle always use sentence case and is always limited to 20 chars at most. This means that sometimes longer title needs to be shortened only for the sidebarTitle
-- steps and processes must always use the formatting we noted in memory already - either ordered lists or <Step> depending on the kind of information and NEVER any other kind of formatting. For complex flows with sublevels (1. a. i. , 2. b. ii. etc.), this is still true, but you can use ** ** to emphasize stages for example.
+
 # Mintlify documentation
 
 ## Working relationship
@@ -187,9 +193,8 @@ The repository includes extensive custom styling in `styles.css` with:
 - Components: Mintlify components
 
 ## Content strategy
-- Document just enough for user success - not too much, not too little
 - Prioritize accuracy and usability of information
-- Make content evergreen when possible
+- All content should be treated as evergreen, avoiding time-based statements and/or discussion of past, current, recent or future versions, releases, etc. unless writing release notes and/or unless requested to add a non-standard Note
 - Search for existing information before adding new content. Avoid duplication unless it is done for a strategic reason
 - Check existing patterns for consistency
 - Start by making the smallest reasonable changes
@@ -208,6 +213,7 @@ The repository includes extensive custom styling in `styles.css` with:
 - Test all code examples before publishing
 - Match style and formatting of existing pages
 - Include both basic and advanced use cases
+- Use ordered lists and/or steps only when the order has impact/significance
 - Language tags on all code blocks
 - Alt text on all images
 - Relative paths for internal links
