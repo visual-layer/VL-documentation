@@ -1,22 +1,16 @@
 ---
 title: "Setting thresholds for duplicates and outliers"
-excerpt: "Several threshold values control the operation of various parts of the fastdup run, and could be used for steering results towards a desired output. The most useful ones are listed below."
-hidden: false
-metadata: 
-  image: []
-  robots: "index"
-createdAt: "Thu Feb 16 2023 10:11:25 GMT+0000 (Coordinated Universal Time)"
-updatedAt: "Thu Oct 26 2023 05:37:19 GMT+0000 (Coordinated Universal Time)"
+description: "Several threshold values control the operation of various parts of the fastdup run, and could be used for steering results towards a desired output."
 ---
 Most fastdup threshold are added as arguments to the `.run()` method. Thresholds may require adjustment for specific use cases, or when using your own model. They may change from one dataset to another, based on the specific needs. 
 
-For a complete list, see the [V1 API - run()](https://visual-layer.readme.io/docs/v1-api-engine-temp#run) reference.
+For a complete list, see the [V1 API - run()](/fastdup_docs_old/v1-api-engine-temp#run) reference.
 
 # Threshold for Similarity clusters
 
 ### Default: `cc_threshold=0.96`
 
-The `ccthreshold` parameter controls the distance used for determining whether two image belong to the same similarity cluster, calculated using <<glossary:Connected components>> algorithm. 
+The `ccthreshold` parameter controls the distance used for determining whether two image belong to the same similarity cluster, calculated using Connected Components algorithm. 
 
 ### The best threshold depends on both data and use case:
 
@@ -25,9 +19,9 @@ The `ccthreshold` parameter controls the distance used for determining whether t
 
 > 📘 Example - lowering the threshold to get more samples in each image similarity cluster
 > 
-> See in [Cleaning and preparing a dataset](https://visual-layer.readme.io/docs/abc#set-a-lower-similarity-threshold-and-re-run)
+> See in [Cleaning and preparing a dataset](/fastdup_docs_old/abc#set-a-lower-similarity-threshold-and-re-run)
 
-# <<glossary:Similarity>> threshold
+# Similarity Threshold
 
 ### Default:`threshold=0.9`
 
@@ -35,13 +29,13 @@ The similarity threshold sets the minimal similarity value that is useful for a 
 
 A lower threshold will include more image pairs in the analyzed data, which could be used for similarity galleries. 
 
-# <<glossary:k Nearest-Neighbors>> parameters
+# k Nearest-Neighbors Parameters
 
 ### Default: `nearest_neighbors_k=2`
 
 The `nearest_neighbors_k` parameter controls the amount of neighbors included for each image or object. Use a higher value for getting more results when using the similarity galleries. In some cases a higher value may also increase the nearest-neighbor recall and give better results for image cluster analysis. We have found the default value to be sufficient in the vast majority of cases, with higher values giving little to no added value.
 
-# <<glossary:Outliers>> threshold
+# Outliers Threshold
 
 ### Default:`outlier_percentile=0.05`
 

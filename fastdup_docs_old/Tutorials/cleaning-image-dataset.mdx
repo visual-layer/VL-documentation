@@ -1,9 +1,6 @@
 ---
 title: "Cleaning Image Dataset"
-excerpt: "This tutorial shows how to clean an image collection or dataset from the issues found with fastdup.\n\nBy the end of the tutorial you'll learn how to:\n+ Find various dataset issues with fastdup.\n+ Collect problematic images for further action."
-hidden: false
-createdAt: "Wed Feb 22 2023 16:11:24 GMT+0000 (Coordinated Universal Time)"
-updatedAt: "Fri Nov 29 2024 13:43:22 GMT+0000 (Coordinated Universal Time)"
+description: "This tutorial shows how to clean an image collection or dataset from the issues found with fastdup."
 ---
 
 # Setting Up
@@ -29,7 +26,7 @@ fastdup.__version__
 
 This tutorial runs on version `0.906`.
 
-For a detailed list of installation options and supported platforms, see our [installation guide](https://visual-layer.readme.io/docs/installation).
+For a detailed list of installation options and supported platforms, see our [installation guide](/fastdup_docs_old/installation).
 
 ---
 
@@ -134,14 +131,7 @@ which outputs:
 > 
 > The output shows no broken images. So we are good to go here.
 
-However, if there are broken images present (like in the [previous tutorial](doc:getting-started)), you'd see something like the following:
-
-[block:html]
-{
-  "html": "<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>img_filename</th>\n      <th>fastdup_id</th>\n      <th>error_code</th>\n      <th>is_valid</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>Abyssinian_34.jpg</td>\n      <td>135</td>\n      <td>ERROR_ZERO_SIZE_FILE</td>\n      <td>False</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>Egyptian_Mau_139.jpg</td>\n      <td>2240</td>\n      <td>ERROR_ZERO_SIZE_FILE</td>\n      <td>False</td>\n    </tr>\n    <tr>\n      <th>5</th>\n      <td>Egyptian_Mau_191.jpg</td>\n      <td>2293</td>\n      <td>ERROR_ZERO_SIZE_FILE</td>\n      <td>False</td>\n    </tr>\n  </tbody>\n</table>"
-}
-[/block]
-
+However, if there are broken images present (like in the [previous tutorial](#getting-started)), you'd see something like the following:
 
 # List of Broken Images
 
@@ -1024,7 +1014,7 @@ outputs:
  'foie_gras/79314.jpg']
 ```
 
-Additional reading: <https://visual-layer.readme.io/docs/v02xx-api#remove_duplicates>
+Additional reading: [remove_duplicates](/fastdup_docs_old/API%20Reference/v02xx-api#remove_duplicates)
 
 # Outliers
 
@@ -1264,7 +1254,7 @@ Outputs:
 
 # Dark, Bright, Blurry Images
 
-Similar to the [previous tutorial](https://visual-layer.readme.io/docs/getting-started#dark-bright-and-blurry-images), we can visualize the dark, bright, and blurry images with:
+Similar to the [previous tutorial](/fastdup_docs_old/getting-started#dark-bright-and-blurry-images), we can visualize the dark, bright, and blurry images with:
 
 ```python
 fd.vis.stats_gallery(metric='dark')

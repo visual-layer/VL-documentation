@@ -1,9 +1,6 @@
 ---
 title: "V0.2xx API"
-excerpt: "This page holds the API reference for fastdup V0.2xx API, which is completely supported in the current releases, and includes a few features not yet covered in the V1.0 API."
-hidden: false
-createdAt: "Thu Feb 16 2023 10:18:13 GMT+0000 (Coordinated Universal Time)"
-updatedAt: "Sun Jul 07 2024 08:07:12 GMT+0000 (Coordinated Universal Time)"
+description: "This page holds the API reference for fastdup V0."
 ---
 <a id="fastdup"></a>
 
@@ -81,7 +78,7 @@ The only mandatory argument is image_dir.
 
 - `Note` - fastdup plus beta version now supports bounding boxes on the c++ side. To use it prepare an input file with the following csv header: filename,col_x,row_y,width,height where each row as an image file  
   and bounding box information in the above format. Fastdup will run on the bounding box level and the reports will be generated on the bounding box level. For using bounding boxes please sign up  
-  for our free beta program at <https://visual-layer.com> or send an email to [info@databasevisual.com](mailto:info@databasevisual.com).
+  for our free beta program at [https://visual-layer.com](https://visual-layer.com) or send an email to [info@databasevisual.com](mailto:info@databasevisual.com).
 
 - `work_dir` _str_ - Path for storing intermediate files and results.
 
@@ -165,7 +162,7 @@ The only mandatory argument is image_dir.
   `num_clusters`, number of KMeans clusters to use. Default is 100.
 
 - `bounding_box` _str_ - Optional bounding box to crop images, given as bounding_box='row_y=xx,col_x=xx,height=xx,width=xx'. This defines a global bounding box to be used for all images.  
-  Beta release features (need to sign up at <https://visual-layer.com>): Tt is possible to set bounding_box='face' to crop the face from the image (in case a face is present).  
+  Beta release features (need to sign up at [https://visual-layer.com](https://visual-layer.com)): Tt is possible to set bounding_box='face' to crop the face from the image (in case a face is present).  
   In addition, you can set bounding_box='yolov5s' and we will run yolov5s to create and crop bounding boxes on your data. (We do not host this model, it is downloaded from the relevant github proejct).  
   For the face/yolov5 crop the margin around the face is defined by turi_param='augmentation_horiz=0.2,augmentation_vert=0.2' where 0.2 mean 20% additional margin around the face relative to the width and height respectively.  
   It is possible to change the margin, the lowest value is 0 (no margin) and upper allowed value is 1. Default is 0.2.
@@ -987,7 +984,7 @@ def create_stats_gallery(stats_file,
 
 Function to create and display a gallery of images computed by the statistics metrics.  
 Supported metrics are: mean (color), max (color), min (color), stdv (color), unique (number of unique colors), bluriness (computed by the variance of the laplpacian method  
-see <https://theailearner.com/2021/10/30/blur-detection-using-the-variance-of-the-laplacian-method/>.  
+see [https://theailearner.com/2021/10/30/blur-detection-using-the-variance-of-the-laplacian-method/](https://theailearner.com/2021/10/30/blur-detection-using-the-variance-of-the-laplacian-method/).  
 The metrics are created by fastdup.run() and stored into the `work_dir` into a file named `atrain_stats.csv`. Note that the metrics are computed  
 on the fly fastdup loads and resizes every image only once.
 

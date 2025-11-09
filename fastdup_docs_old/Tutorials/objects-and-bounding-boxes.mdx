@@ -1,14 +1,8 @@
 ---
 title: "Analyzing Object Detection Dataset"
-excerpt: "In this tutorial, we will analyze an object detection dataset with bounding boxes and identify potential issues. We will cover the process of loading the annotations, visualizing bounding boxes, and finding objects  that are possibly mislabeled or not useful for training (tiny, blurry, etc.)."
-hidden: false
-metadata: 
-  image: []
-  robots: "index"
-createdAt: "Thu Feb 16 2023 11:54:14 GMT+0000 (Coordinated Universal Time)"
-updatedAt: "Thu Oct 26 2023 05:37:19 GMT+0000 (Coordinated Universal Time)"
+description: "In this tutorial, we will analyze an object detection dataset with bounding boxes and identify potential issues."
 ---
-When analyzing an object bounding box dataset, it is often useful to start with an image level analysis, to uncover low hanging fruits such as broken images and and duplicates. More on that in our [Analyzing Image Classification](https://visual-layer.readme.io/docs/analyzing-labeled-images) tutorial.
+When analyzing an object bounding box dataset, it is often useful to start with an image level analysis, to uncover low hanging fruits such as broken images and and duplicates. More on that in our [Analyzing Image Classification](/fastdup_docs_old/analyzing-labeled-images) tutorial.
 
 In this tutorial we will analyze the image at the bounding box level. 
 
@@ -69,22 +63,6 @@ coco_annotations.head(3)
 ```
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-```
-.dataframe tbody tr th {
-    vertical-align: top;
-}
-
-.dataframe thead th {
-    text-align: right;
-}
-```
-
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -310,22 +288,6 @@ smallest_objects.head(3)
 ```
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-```
-.dataframe tbody tr th {
-    vertical-align: top;
-}
-
-.dataframe thead th {
-    text-align: right;
-}
-```
-
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -419,22 +381,6 @@ aspect_ratio_objects.head(3)
 ```
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-```
-.dataframe tbody tr th {
-    vertical-align: top;
-}
-
-.dataframe thead th {
-    text-align: right;
-}
-```
-
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -528,22 +474,6 @@ aspect_ratio_objects.tail(3)
 ```
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-```
-.dataframe tbody tr th {
-    vertical-align: top;
-}
-
-.dataframe thead th {
-    text-align: right;
-}
-```
-
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -643,22 +573,6 @@ fd.invalid_instances().head(3)
 ```
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-```
-.dataframe tbody tr th {
-    vertical-align: top;
-}
-
-.dataframe thead th {
-    text-align: right;
-}
-```
-
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -770,8 +684,3 @@ A next step could be a deeper dive into all images labeled as either chair or co
 > 
 > **Looking for finding mislabels at scale?** [Sign up for fastdup enterprise.](https://visual-layer.com)
 
-[block:html]
-{
-  "html": "<center> \n    <a href=\"https://www.visual-layer.com\" target=\"_blank\" rel=\"noopener noreferrer\">\n    <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo_dark_mode.png\" width=200>\n    <source media=\"(prefers-color-scheme: light)\" srcset=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    <img alt=\"vl logo.\" src=\"https://raw.githubusercontent.com/visual-layer/visuallayer/main/imgs/vl_horizontal_logo.png\" width=200>\n    </picture>\n    </a><br><br>\n    <a href=\"https://github.com/visual-layer/fastdup\" target=\"_blank\" style=\"text-decoration: none;\"> GitHub </a> •\n    <a href=\"https://visual-layer.slack.com/\" target=\"_blank\" style=\"text-decoration: none;\"> Join Slack Community </a> •\n    <a href=\"https://visual-layer.readme.io/discuss\" target=\"_blank\" style=\"text-decoration: none;\"> Discussion Forum </a>\n</center>\n\n<center> \n    <a href=\"https://medium.com/visual-layer\" target=\"_blank\" style=\"text-decoration: none;\"> Blog </a> •\n    <a href=\"https://visual-layer.readme.io/\" target=\"_blank\" style=\"text-decoration: none;\"> Documentation </a> •\n    <a href=\"https://visual-layer.com/about\" target=\"_blank\" style=\"text-decoration: none;\"> About Us </a> \n</center>\n\n<center> \n    <a href=\"https://www.linkedin.com/company/visual-layer/\" target=\"_blank\" style=\"text-decoration: none;\"> LinkedIn </a> •\n    <a href=\"https://twitter.com/visual_layer\" target=\"_blank\" style=\"text-decoration: none;\"> Twitter </a>\n</center>"
-}
-[/block]
