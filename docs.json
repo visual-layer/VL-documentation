@@ -183,7 +183,7 @@
                 ]
             },
                         {
-                "tab": "On-Prem Installations",
+                "tab": "Self-Hosting",
                 "groups": [
                     {
                         "group": "Installation and Configuration",
