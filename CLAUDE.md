@@ -88,8 +88,8 @@ Process Documentation Pages represent the bulk of the documentation, and guide u
 4. **Tutorial Pages**:
 Tutorials guide users through a specific use case example in order to show them interactively how to use the platform/feature. Tutorials, like other pages should open with an Overview Page (as described above). Each page should represent and entire end-to-end use case or a standalone process/procedure.
    - Prerequisites section listing required setup
-   - Step-by-step numbered instructions with clear actions and outcomes. 
-   - Use the <Step> object for these procedures. Make sure outcomes are on new lines but part of the step that led to the outcome 
+   - Step-by-step numbered instructions with clear actions and outcomes.
+   - Use the `<Step>` object for these procedures. Make sure outcomes are on new lines but part of the step that led to the outcome
    - Code examples in fenced code blocks
 
 

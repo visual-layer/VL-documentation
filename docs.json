@@ -49,13 +49,13 @@
                 "tab": "Guides",
                 "groups": [
                     {
-                        "group": "Getting started",
+                        "group": "Getting Started",
                         "pages": [
                             "docs/getting-started/introduction",
                             "docs/getting-started/quick-start",
                             "docs/getting-started/deployment-options",
                             {
-                                "group": "Definitions & entities",
+                                "group": "Definitions & Entities",
                                 "pages": [
                                     "docs/getting-started/definitions-entities",
                                     "docs/getting-started/understanding-clusters"
@@ -64,37 +64,21 @@
                         ]
                     },
                     {
-                        "group": "On-premises",
-                        "pages": [
-                            "docs/on-prem/System_requirements",
-                            "docs/on-prem/setting_up",
-                            "docs/on-prem/air-gapped-installation",
-                            "docs/on-prem/operation",
-                            "docs/on-prem/profiler",
-                            "docs/on-prem/user-management",
-                            "docs/on-prem/Configuration",
-                            "docs/on-prem/s3-configuration",
-                            "docs/on-prem/Troubleshooting"
-                        ]
-                    },
-                    {
                         "group": "Integrations",
                         "pages": [
                             "docs/Integrations/Amazon-s3",
-                            "docs/Integrations/google-cloud-storage",
-                            "docs/Integrations/cvat-coming-soon",
-                            "docs/Integrations/labelbox-coming-soon"
+                            "docs/Integrations/google-cloud-storage"
                         ]
                     },
                     {
-                        "group": "Creating datasets",
+                        "group": "Creating & Updating Datasets",
                         "pages": [
                             "docs/Creating-Datasets/createdelete-datasets",
                             "docs/Creating-Datasets/custom-metadata",
                             "docs/Creating-Datasets/custom-metadata-automation-script",
                             "docs/Creating-Datasets/dicom-converter",
                             {
-                                "group": "Importing annotations",
+                                "group": "Importing Annotations",
                                 "pages": [
                                     "docs/Creating-Datasets/importing-annotations/annotations-overview-new",
                                     "docs/Creating-Datasets/importing-annotations/preparing-annotation-data-file",
@@ -107,17 +91,14 @@
                         ]
                     },
                   {
-                    "group": "Curating datasets",
+                    "group": "Curating Datasets",
                     "pages": [
                             "docs/Curate/tag-iteams",
-                            "docs/Curate/working-with-metadata",
-                            "docs/Curate/label-propagation-coming-soon",
-                            "docs/Curate/update-metadata-coming-soon",
-                            "docs/Curate/update-data-coming-soon"
+                            "docs/Curate/working-with-metadata"
                     ]
                   },
                     {
-                        "group": "Managing datasets",
+                        "group": "Managing Datasets",
                         "pages": [
                             "docs/Managing-Datasets/save-views",
                             "docs/Managing-Datasets/share-dataset",
@@ -125,7 +106,7 @@
                         ]
                     },
                     {
-                        "group": "Exploring datasets",
+                        "group": "Exploring Datasets",
                         "pages": [
                             "docs/Exploring-datasets/overview",
                             "docs/Exploring-datasets/semantic-search",
@@ -138,7 +119,7 @@
                             "docs/Exploring-datasets/class-outlier",
                             "docs/Exploring-datasets/select-unique-items",
                             {
-                                "group": "Quality issues",
+                                "group": "Quality Issues",
                                 "pages": [
                                     "docs/Exploring-datasets/dataset-quality",
                                     "docs/Exploring-datasets/dark-imagesobjects",
@@ -150,22 +131,23 @@
                         ]
                     },
                     {
-                        "group": "Dataset enrichment",
+                        "group": "Dataset Enrichment",
                         "pages": [
                             "docs/Dataset-Enrichment/enrich_overview",
                             "docs/Dataset-Enrichment/model-catalog",
-                            "docs/Dataset-Enrichment/analyze-enriched-dataset",
-                            "docs/Dataset-Enrichment/use-custom-models-coming-soon"
+                            "docs/Dataset-Enrichment/analyze-enriched-dataset"
                         ]
                     }
                 ]
             },
+
             {
                 "tab": "API Reference",
                 "groups": [
                     {
                         "group": "API Documentation",
                         "pages": [
+                            "api-reference/api-intro",
                             "api-reference/authentication",
                             "api-reference/create-a-dataset-from-a-public-s3-bucket",
                             "api-reference/create-a-dataset-from-a-local-folder-for-on-prem-installation",
@@ -194,6 +176,42 @@
                     }
                 ]
             },
+                                    {
+                "tab": "Cloud Changelog",
+                "pages": [
+                    "changelog/rn"
+                ]
+            },
+                        {
+                "tab": "On-Prem Installations",
+                "groups": [
+                    {
+                        "group": "Installation and Configuration",
+                        "pages": [
+                            "docs/on-prem/System_requirements",
+                            "docs/on-prem/setting_up",
+                            "docs/on-prem/air-gapped-installation",
+                            "docs/on-prem/Configuration",
+                            "docs/on-prem/s3-configuration"
+                        ]
+                    },
+                    {
+                        "group": "Usage",
+                        "pages": [
+                            "docs/on-prem/operation",
+                            "docs/on-prem/profiler"
+                        ]
+                    },
+                    {
+                        "group": "Administration",
+                        "pages": [
+                            "docs/on-prem/user-management",
+                            "docs/on-prem/Troubleshooting"
+                        ]
+                    }
+                ]
+            },
+
             {
                 "tab": "fastdup",
                 "groups": [
@@ -269,13 +287,8 @@
                         ]
                     }
                 ]
-            },
-            {
-                "tab": "Releases",
-                "pages": [
-                    "changelog/rn"
-                ]
             }
+
         ]
     },
     "logo": {
@@ -286,7 +299,7 @@
         "links": [
             {
                 "type": "button",
-                "label": "VL-Blog",
+                "label": "VL Engineer Blog",
                 "href": "https://www.visual-layer.com/blog"
             },
             {
