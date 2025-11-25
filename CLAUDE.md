@@ -6,6 +6,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is the **Visual Layer Documentation Website** - a comprehensive documentation platform built with Mintlify for Visual Layer's computer vision and dataset management platform. The repository contains technical documentation, API references, deployment guides, and user manuals for Visual Layer's visual dataset analysis platform.
 
+## The most important rules
+- Always ask if you're not sure and NEVER assume 
+- Always align with the conventions, guidelines, standards, style tone & voice we've established in this guide
+- Always consult with mintlify docs if you you're not sure on structure, syntax, etc.
+
 ## Common Development Commands
 
 ### Local Development
@@ -37,17 +42,6 @@ Since this is a documentation site, there are no test commands or build processe
 
 ### Content Organization
 
-**Main Documentation Sections**:
-- `/docs/getting-started/` - Introduction, quick start guides, and platform orientation
-- `/docs/Creating-Datasets/` - Dataset creation, annotation import, and custom metadata
-- `/docs/Managing-Datasets/` - Dataset operations (save, share, export, metadata management)
-- `/docs/Exploring-datasets/` - Search, filtering, quality analysis, and data exploration
-- `/docs/Dataset-Enrichment/` - AI model-based data enhancement and analysis
-- `/docs/on-prem/` - On-premises installation and configuration guides
-- `/docs/Integrations/` - External service integrations (S3, GCS, etc.)
-- `/api-reference/` - REST API documentation with authentication and endpoints
-- `/changelog/` - Release notes and version history
-
 **Documentation Structure**: Content is organized hierarchically with clear navigation paths and consistent file naming conventions.
 
 ### Content Standards & Patterns
@@ -55,8 +49,9 @@ Since this is a documentation site, there are no test commands or build processe
 **Front Matter Structure** (based on established documentation standards):
 ```yaml
 ---
-title: "Page Title"                 # Full descriptive title
+title: "Page Title"                 # Full clear, descriptive title
 description: "Brief description"    # SEO and page description
+sidebar: "Page Title Shortened if Necessary" # Page title shortened to 20 characters maximum (not shortened if not necessary)
 ---
 ```
 
@@ -134,7 +129,6 @@ The repository includes extensive custom styling in `styles.css` with:
 - always use active voice unless **absolutely** unavoidable. that includes preferring opening sentences with active simple present tense instead of gerunds.
 - never use "please" and never use i.e. nor e.g. Only "For example" or "Example:". And always use correct punctuation including periods - even when in ordered lists.Finally, every article must ALWAYS open with an introduction - even if minimal.
 - never use divider lines in the middle of articles unless you consult with me before starting.
-- exception to title case for titles and headings: ensure that sidebarTitle always use sentence case and is always limited to 20 chars at most. This means that sometimes longer title needs to be shortened only for the sidebarTitle
 
 ## Visual Layer Documentation Standards
 
@@ -176,9 +170,9 @@ The repository includes extensive custom styling in `styles.css` with:
 - Legacy fastdup documentation maintained in separate configuration
 - for sections with subsections, there should never be any concluding or summary paragraphs at the end of the last subsection that are related to summaries of the entire main section. instead, all summaries, conclusions, etc. should be part of the intro to the main section.
 - lists with more than 2 items should always use unordered lists even if they also make sense as part of prose paragraphs.
-- <Frame>
+- `<Frame>`
   <img src="/images/highlight-filters-and-insights.png" />
-</Frame>  this is the way to wrap images always
+`</Frame>`  this is the way to wrap images always
 
 # Mintlify documentation
 
@@ -203,9 +197,16 @@ The repository includes extensive custom styling in `styles.css` with:
 
 - Refer to the [docs.json schema](https://mintlify.com/docs.json) when building the docs.json file and site navigation
 
-## Frontmatter requirements for pages
-- title: Clear, descriptive page title
-- description: Concise summary for SEO/navigation
+## API documentation 
+Always consult with the following support articles from Mintlify if necessary to ensure structure, and integrity of content. Following are the primary but NOT the ONLY pages that you should consult with: 
+https://www.mintlify.com/docs/guides/migrating-from-mdx.md
+https://www.mintlify.com/docs/api-playground/overview
+https://www.mintlify.com/docs/api-playground/openapi-setup
+https://www.mintlify.com/docs/api-playground/managing-page-visibility
+https://www.mintlify.com/docs/api-playground/multiple-responses
+https://www.mintlify.com/docs/api-playground/mdx-setup 
+
+
 
 ## Writing standards
 - Second-person voice ("you")
@@ -226,7 +227,7 @@ The repository includes extensive custom styling in `styles.css` with:
 - NEVER skip or disable pre-commit hooks
 
 ## Do not
-- Skip frontmatter on any MDX file
-- Use absolute URLs for internal links
-- Include untested code examples
-- Make assumptions - always ask for clarification
+- NEVER skip frontmatter on any MDX file
+- NEVER use absolute URLs for internal links
+- NEVER include untested code examples
+- Make assumptions - always ask for clarification!!!!
