@@ -145,19 +145,19 @@
                 "tab": "API Reference",
                 "groups": [
                     {
-                        "group": "API Documentation",
+                        "group": "Getting Started",
                         "pages": [
                             "api-reference/api-intro",
-                            "api-reference/authentication",
-                            "api-reference/create-a-dataset-from-a-public-s3-bucket",
-                            "api-reference/create-a-dataset-from-a-local-folder-for-on-prem-installation",
-                            "api-reference/retrieve-dataset-status",
-                            "api-reference/share-a-dataset-with-another-user",
-                            "api-reference/duplicate-retrieval-experimental-feature",
-                            "api-reference/visual-search",
-                            "api-reference/semantic-search",
-                            "api-reference/caption-search",
-                            "api-reference/exporting-a-dataset-via-curl-from-visual-layer",
+                            "api-reference/authentication"
+                        ]
+                    },
+                    {
+                        "group": "API Endpoints",
+                        "openapi": "openapi.json"
+                    },
+                    {
+                        "group": "Integration Guides",
+                        "pages": [
                             "api-reference/running-visual-layer-within-an-iframe"
                         ]
                     }
