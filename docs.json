@@ -9,7 +9,22 @@
     },
     "favicon": "/favicon.svg",
     "styling": {
-        "eyebrows": "breadcrumbs"
+        "eyebrows": "breadcrumbs",
+        "codeblocks": {
+            "theme": "monokai"
+        }
+    },
+    "thumbnails": {
+        "appearance": "dark",  
+        "background": "/images/brand-background-a4.png"
+        },
+    "fonts": {
+        "family": "Inter",
+        "heading": { "family": "Inter", "weight": 700 },
+        "body": { "family": "Inter", "weight": 400 }
+    },
+    "icons": {
+        "library": "lucide"
     },
     "seo": {
         "indexing": "all",
@@ -48,7 +63,7 @@
       "anchors": [
         {
           "anchor": "Support",
-          "icon": "headset",
+          "icon": "life-buoy",
           "href": "mailto:support@visual-layer.com"
         },
         {
@@ -314,8 +329,8 @@
 
         "primary": {
             "type": "button",
-            "label": "Try Now",
-            "href": "https://www.visual-layer.com/"
+            "label": "Try It Now!",
+            "href": "https://app.visual-layer.com/free-trial"
         }
     },
     "contextual": {

@@ -1,25 +1,22 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
-@font-face {
-  font-family: "Inter", Helvetica,sans-serif !important;
-  src: url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap') format('opentype');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
 
 [data-component-part="step-line"] {
   background-color: rgb(167,56,149);
+  width:3px;
 }
 
-.nav-anchors a {
+.nav-anchors a, #page-title {
   color: #4E2F6C;
-  font-weight: 800;
+  font-weight: 700;
 }
 
-[data-component-part="card-content-container"]{
-  color: #4E2F6C;
+
+.dark .nav-anchors a, .dark #page-title {
+  color: #0197D8;
+  font-weight: 700;
 }
+
 
 
 /* Footer email under socials */
@@ -40,14 +37,6 @@ th {
 .integration-table table {
   margin: -30px !important;
 }
-
-
-
- .nav-tabs-item, .sidebar-group-header, .sidebar-group-icon {
-  color: #1D102D !important;
-  font-weight: 500 !important;
-}
-
 
 
 
@@ -84,7 +73,7 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: 'Inter' !important;
+  font-family: 'Inter', Helvetica Neue, Arial, sans-serif !important;
   letter-spacing: normal !important;
 }
 
@@ -109,7 +98,7 @@ h4 {
 
 
 .hero-text h1{
-  font-family: "Inter";
+  font-family: 'Inter', Helvetica Neue, Arial, sans-serif !important;
   font-size: 60px;
   font-style: normal;
   font-weight: 800;
@@ -118,7 +107,7 @@ h4 {
 }
 
 .hero-text h3{
-  font-family: "Inter";
+  font-family: 'Inter', Helvetica Neue, Arial, sans-serif !important;
   text-align: center;
   font-size: 24px;
   font-style: normal;
@@ -159,7 +148,7 @@ h4 {
   margin-inline-start: 0px;
   margin-inline-end: 0px;
   unicode-bidi: isolate;
-  font-family: Inter;
+  font-family: 'Inter', Helvetica Neue, Arial, sans-serif !important;
   font-size: 28px;
   font-style: normal;
   font-weight: 400;
@@ -316,7 +305,7 @@ h4 {
 .vendor-link{ 
 color: #000000;
 text-overflow: ellipsis;
-font-family: Inter;
+font-family: 'Inter', Helvetica Neue, Arial, sans-serif !important;
 font-size: 20px;
 font-style: normal;
 font-weight: 500;
@@ -347,7 +336,7 @@ letter-spacing: 1.12px;
 .dark .vendor-link {
 color: #ffffff;
 text-overflow: ellipsis;
-font-family: Inter;
+font-family: 'Inter', Helvetica Neue, Arial, sans-serif !important;
 font-size: 20px;
 font-style: normal;
 font-weight: 500;
@@ -359,6 +348,10 @@ table {
   display: table;
   max-width: 90%;
   margin: 20px auto;
+}
+
+#content-area {
+  max-width: 800px; /* adjust as needed */
 }
 
 .integrations-table table {
@@ -439,12 +432,29 @@ table {
   table-layout: fixed;
 }
 
+
+#footer > * {
+  padding: 7px;
+
+}
+
+
+[data-component-part="card-content"]>*, [data-component-part="callout-content"]{
+  font-size:90% !important;
+}
+
+
+#footer {
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
+
 .footer-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-  margin-top: 100px;
   align-items: center;
 }
 
@@ -454,7 +464,7 @@ table {
 }
 
 .footer-title {
-  font-family: Inter;
+  font-family: 'Inter', Helvetica Neue, Arial, sans-serif !important;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
