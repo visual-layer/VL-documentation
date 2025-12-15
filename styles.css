@@ -1,25 +1,26 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&family=Roboto:ital,wght@0,300;0,400;0,500;0,900;1,300;1,400;1,500;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
 @font-face {
-  font-family: 'Roboto';
-  src: url('https://cdn.prod.website-files.com/62000f475eba4d3330543f5b/652d7a00b58f4090a56b69d4_Nacelle-SemiBold.otf') format('opentype');
-  font-weight: 600;
+  font-family: "Inter", Helvetica,sans-serif !important;
+  src: url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap') format('opentype');
+  font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
-.my-gradient {
-  background: rgb(167,56,149);
-  background: linear-gradient(90deg, rgba(167,56,149,1) 0%, rgba(0,152,217,1) 50%, rgba(41,183,135,1) 100%);
+[data-component-part="step-line"] {
+  background-color: rgb(167,56,149);
 }
 
-h-4 w-4 fill-gray-800 dark:fill-gray-100 text-gray-800 dark:text-gray-100 {
-  color:#0097D9;
+.nav-anchors a {
+  color: #4E2F6C;
+  font-weight: 800;
 }
 
-.bg-gray-800 {
-  background-color:#0097D9;
+[data-component-part="card-content-container"]{
+  color: #4E2F6C;
 }
+
 
 /* Footer email under socials */
 footer .footer-socials::after {
@@ -39,6 +40,15 @@ th {
 .integration-table table {
   margin: -30px !important;
 }
+
+
+
+ .nav-tabs-item, .sidebar-group-header, .sidebar-group-icon {
+  color: #1D102D !important;
+  font-weight: 500 !important;
+}
+
+
 
 
 .integration-table, .integration-table th,
@@ -65,17 +75,16 @@ th {
   --dark-mode-aware-dark-wrapper-background-color: #364150;
   --dark-mode-aware-dark-link-color: #ffffff;
   --dark-mode-aware-keybpoard-shortcut: "rgba(18, 18, 18, 0.85)";
-  --hero-background-image-light: url("https://mintlify.s3.us-west-1.amazonaws.com/blinkops-2/img/HeroLightV.svg");
-  --hero-background-image-dark: url("https://mintlify.s3.us-west-1.amazonaws.com/blinkops-2/img/HeroDark.svg");
-  --landing-page-image-light: url("https://mintlify.s3.us-west-1.amazonaws.com/blinkops-2/img/Hero.svg");
-  --landing-page-image-dark: url("https://mintlify.s3.us-west-1.amazonaws.com/blinkops-2/img/HeroDark.svg");
+
 }
 
+body,
+p,
 h1,
 h2,
 h3,
 h4 {
-  font-family: 'Roboto';
+  font-family: 'Inter' !important;
   letter-spacing: normal !important;
 }
 
@@ -100,7 +109,7 @@ h4 {
 
 
 .hero-text h1{
-  font-family: "Roboto";
+  font-family: "Inter";
   font-size: 60px;
   font-style: normal;
   font-weight: 800;
@@ -109,7 +118,7 @@ h4 {
 }
 
 .hero-text h3{
-  font-family: "Roboto";
+  font-family: "Inter";
   text-align: center;
   font-size: 24px;
   font-style: normal;
@@ -150,7 +159,7 @@ h4 {
   margin-inline-start: 0px;
   margin-inline-end: 0px;
   unicode-bidi: isolate;
-  font-family: Roboto;
+  font-family: Inter;
   font-size: 28px;
   font-style: normal;
   font-weight: 400;
@@ -307,7 +316,7 @@ h4 {
 .vendor-link{ 
 color: #000000;
 text-overflow: ellipsis;
-font-family: Roboto;
+font-family: Inter;
 font-size: 20px;
 font-style: normal;
 font-weight: 500;
@@ -338,7 +347,7 @@ letter-spacing: 1.12px;
 .dark .vendor-link {
 color: #ffffff;
 text-overflow: ellipsis;
-font-family: Roboto;
+font-family: Inter;
 font-size: 20px;
 font-style: normal;
 font-weight: 500;
@@ -445,7 +454,7 @@ table {
 }
 
 .footer-title {
-  font-family: Roboto;
+  font-family: Inter;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
