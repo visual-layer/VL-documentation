@@ -1,0 +1,187 @@
+---
+title: Dataset Inventory Interface
+description: Navigate the Dataset Inventory home page and manage your datasets efficiently.
+sidebarTitle: Dataset Inventory UX
+---
+
+The **Dataset Inventory** is your home page in Visual Layer, displaying all your datasets in a centralized view. This interface provides quick access to dataset creation, search, filtering, and navigation tools.
+
+<Frame>
+  <img src="/images/vl-landing-overview.png" alt="Dataset Inventory Overview" />
+</Frame>
+
+## Interface Layout
+
+The Dataset Inventory consists of four primary areas that work together to help you manage and access your datasets.
+
+<div className="integrations-table">
+
+| Area | Component | Description |
+|------|-----------|-------------|
+| ![](images/1light.png) | **Navigation Panel** | Access Dataset Inventory (Home), Task Manager, Model Catalog, and account settings |
+| ![](images/2light.png) | **Main Panel** | Search for datasets by name and apply filters |
+| ![](images/3light.png) | **Dataset Cards Grid** | Visual display of all your datasets with key information and quick actions |
+| ![](images/4light.png) | **Create Dataset Button** | Start creating a new dataset |
+
+</div>
+
+## Navigation Panel
+
+The left **Navigation Panel** provides access to all major areas of Visual Layer and remains visible throughout your session.
+
+### Navigation Options
+
+<div className="integrations-table">
+
+| Icon/Option | Name | Description |
+|-------------|------|-------------|
+| ![](/images/vl-dataset-inventory-icon.png) | **My Datasets** | Return to the Dataset Inventory home page (current view) |
+| ![](/images/vl-task-manager-icon.png) | **Task Manager** | Monitor and manage all active tasks, jobs, and processing workflows |
+| ![](/images/vl-modelcatalog-icon.png) | **Model Catalog** | Browse, deploy, and manage AI models for enrichment and analysis |
+| **Explore Public VL Dataset** | **Public Datasets** | Browse and explore publicly available demonstration datasets |
+| **Documentation** | **Help Resources** | Access user guides, API references, and tutorials |
+| **Bug Report** | **Feedback** | Report issues or provide feedback to the Visual Layer team |
+| **Version Info** | **System Information** | View the current version of the Visual Layer platform |
+| ![](/images/vl-avatar-icon.png) | **Personal Info** | Manage account settings, view usage limits, subscription status, and log out |
+
+</div>
+
+### Personal Info Panel
+
+Click your avatar to access account details:
+
+- **Image usage limits**: Current and maximum images based on your plan
+- **Subscription status**: Active plan tier and features
+- **Light/Dark mode toggle**: Switch between interface themes
+- **Logout**: Sign out of your account
+
+<Note>
+The default image limit for trial accounts is 10,000 images. Enterprise plans offer custom limits.
+</Note>
+
+## Main Panel: Search and Filter
+
+The **Main Panel** at the top of the page provides tools to quickly locate and organize your datasets.
+
+### Search Bar
+
+Use the search bar to find datasets by name. Search is case-insensitive and matches partial names.
+
+**Example:** Searching for "product" will match "Product Images 2024" and "production-test-batch"
+
+### Filter Controls
+
+Apply filters to narrow down the dataset list based on metadata or attributes:
+
+<div className="integrations-table">
+
+| Control | Purpose | Usage |
+|---------|---------|-------|
+| **Filter by Metadata** | Filter datasets by custom metadata fields | Select metadata values from dropdown menus |
+| **Sort By** | Arrange datasets by creation date, status, or name | Choose sorting criteria and order (ascending/descending) |
+| **Clear Selection** | Reset all applied filters and return to full dataset view | Click to remove all active filters |
+
+</div>
+
+<Tip>
+Combine search and filters for precise dataset discovery. For example, search for "batch" and filter by status "Ready" to find all completed batch datasets.
+</Tip>
+
+## Dataset Cards Grid
+
+Datasets are displayed as cards in a grid layout, providing at-a-glance information and quick access to actions.
+
+<Frame>
+  <img src="/images/vl-dataset-inventory-cards.png" alt="Dataset Cards Grid" />
+</Frame>
+
+### Dataset Card Components
+
+Each dataset card displays essential information:
+
+<Frame>
+  <img src="/images/vl-dataset-inventory-card.png" alt="Dataset Card Detail" />
+</Frame>
+
+<div className="integrations-table">
+
+| Field | Description |
+|-------|-------------|
+| **Dataset Name** | The title assigned during dataset creation for easy identification |
+| **Creation Date** | When the dataset was created and added to your inventory |
+| **Dataset Status** | Current state: **Ready**, **Processing**, **Uploading**, **Indexing**, **Failed**, **Resume**, or **Enriching** |
+| **Image Count** | Total number of images in the dataset |
+| **Object Count** | Number of annotated objects (if metadata or enrichment includes object detection) |
+| **Video Count** | Number of videos in the dataset (if applicable) |
+| **Video Frame Count** | Number of frames extracted from videos (if applicable) |
+| **Info Icon** ![](/images/vl-info-i-icon.png) | Hover to view additional metadata such as associated folder paths, upload source, or custom fields |
+| **Three-Dot Menu** | Access dataset actions including **Delete** |
+
+</div>
+
+### Dataset Status Indicators
+
+Understanding status helps you know when datasets are ready for exploration:
+
+<div className="integrations-table">
+
+| Status | Meaning | Available Actions |
+|--------|---------|-------------------|
+| **Ready** | Dataset is fully indexed and available for all operations | Full access to exploration, filtering, search, enrichment, and export |
+| **Uploading** | Data is being transferred to Visual Layer | Wait for completion; no actions available |
+| **Indexing** | Visual Layer is analyzing images, creating embeddings, and detecting quality issues | Wait for completion; indexing may take several minutes to hours depending on dataset size |
+| **Processing** | A task is running (enrichment, label propagation, or re-indexing) | Limited actions available; some features disabled until processing completes |
+| **Resume** | Dataset creation started but not finalized | Click dataset card to resume creation and click **Create Dataset** to complete |
+| **Failed** | Dataset creation or processing encountered an error | Click dataset card to view error details; may need to recreate dataset |
+| **Enriching** | AI models are adding metadata (captions, labels, classifications) | Wait for completion; dataset remains accessible for viewing |
+
+</div>
+
+<Note>
+Datasets can show **Ready** status even when background tasks like training or enrichment are running, since these operations don't block dataset access.
+</Note>
+
+### Card Actions
+
+**Click a dataset card** to open the Dataset Exploration View and begin working with your data.
+
+**Three-dot menu** provides additional actions:
+- **Delete**: Permanently remove the dataset (requires confirmation)
+
+<Warning>
+Deleting a dataset is irreversible. All images, metadata, annotations, and analysis results will be permanently removed.
+</Warning>
+
+## Creating a New Dataset
+
+Click the **Create Dataset** button (+ icon or "New Dataset" button) to start the dataset creation workflow.
+
+The creation workflow guides you through:
+
+1. **Naming your dataset**: Choose a unique, descriptive name
+2. **Selecting data source**: Upload ZIP files, folders, or connect to Amazon S3
+3. **Previewing your data**: Verify file upload before processing
+4. **Adding annotations** (optional): Upload annotation files for labels and bounding boxes
+5. **Starting indexing**: Begin the analysis and embedding generation process
+
+You'll receive an email notification when your dataset is ready to explore.
+
+For detailed instructions, see [Upload Data](/docs/quick-start/createdelete-datasets).
+
+## Tips for Efficient Dataset Management
+
+**Use descriptive names**: Include dates, sources, or project names to make datasets easy to identify (e.g., "ProductX-Inspection-2024-Q1")
+
+**Monitor status regularly**: Check the Task Manager for long-running operations or errors
+
+**Organize with metadata**: Add custom metadata fields during upload to enable powerful filtering later
+
+**Archive completed projects**: Delete datasets you no longer need to keep your inventory clean and stay within plan limits
+
+**Save important queries as Views**: Once inside a dataset, save filter combinations as Views for quick access to specific subsets
+
+## Related Resources
+
+- [Upload Data](/docs/quick-start/createdelete-datasets) - Step-by-step dataset creation guide
+- [Dataset Exploration Interface](/docs/quick-start/dataset-exploration-ux) - Navigate and analyze datasets
+- [Key Concepts](/docs/introduction/key-concepts) - Understand core Visual Layer terminology

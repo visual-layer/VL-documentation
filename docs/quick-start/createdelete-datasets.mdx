@@ -1,0 +1,139 @@
+---
+title: "Dataset Quick Start"
+description: "A guided walkthrough for creating and indexing your first dataset in Visual Layer."
+---
+
+In this tutorial, you’ll work with a small example dataset of cartoon images and videos. The dataset is intentionally simple and familiar, making it easy to focus on learning how Visual Layer handles dataset creation, upload, and indexing.
+
+<Note>
+While this walkthrough uses a prepared dataset, the same steps apply to any ZIP file or folder containing images or videos.
+</Note>
+
+## Prerequisites
+
+Before you begin this tutorial, make sure you have the following:
+
+- **Browser**  
+  Visual Layer currently supports **Google Chrome only**.
+
+- **Dataset ready**  
+  Download the example dataset or prepare your own ZIP file of images or videos.
+
+<Accordion title="Tutorial Objectives" icon="goal" >
+
+
+- Understand how datasets are created in Visual Layer
+- Practice uploading and indexing visual data
+- Learn how Visual Layer validates and prepares data for investigation
+- Confirm when a dataset is ready for exploration
+</Accordion>
+
+
+###### To create your dataset
+
+<Steps>
+
+<Step title="Open Visual Layer">
+Log into Visual Layer. The homepage is the **Dataset Inventory**, where all datasets are managed.
+</Step>
+
+<Step title="Create a New Dataset">
+Click **New Dataset** (or the **+** icon) to start creating your first dataset.
+</Step>
+
+<Step title="Select the ZIP File">
+Choose **ZIP file** as the data source and upload the downloaded tutorial dataset ZIP file.
+
+<img
+  src="/images/images/vl-createdataset-uploadzip.png"
+  alt="Upload ZIP File"
+  style={{ width: '70%' }}
+  className="rounded"
+/>
+</Step>
+
+<Step title="Skip Annotations">
+After uploading the ZIP file, click **Add Annotations**.  
+In the pop-up, click **Skip** to proceed without adding annotations, as this tutorial focuses on learning the basic dataset workflow.
+
+<img
+  src="/images/images/vl-createdataset-skipannotations.png"
+  alt="Skip Annotations"
+  style={{ width: '70%' }}
+  className="rounded"
+/>
+</Step>
+
+<Step title="Preview the Data">
+Visual Layer automatically generates a preview of the dataset. Review a few sample images and videos to confirm that the data has uploaded correctly.
+
+<img
+  src="/images/images/vl-createdataset-datasetpreview.png"
+  alt="Dataset Preview"
+  style={{ width: '70%' }}
+  className="rounded"
+/>
+</Step>
+
+<Step title="Upload and Index">
+Click **Next** to upload and index the dataset.
+
+<img
+  src="/images/images/vl-createdataset-uploaddata.png"
+  alt="Upload and Index"
+  style={{ width: '70%' }}
+  className="rounded"
+/>
+
+- Indexing starts automatically after upload.
+  <img
+  src="/images/images/vl-createdataset-indexing.png"
+  alt="Indexing Started"
+  style={{ width: '70%' }}
+  className="rounded"
+  />
+
+- While indexing, the dataset appears in your inventory with an "Indexing" status and shows as empty.
+  <img
+  src="/images/images/vl-createdataset-emptydataset.png"
+  alt="Empty Dataset During Indexing"
+  style={{ width: '70%' }}
+  className="rounded"
+  />
+
+- You will receive an email when indexing completes.
+
+<Note>
+Keep this browser tab open until indexing starts to ensure the dataset begins processing correctly.
+</Note>
+</Step>
+
+<Step title="Dataset Indexed and Ready">
+Once indexing completes, the dataset status changes to **Ready** in the **Dataset Inventory**.
+The dataset is now fully accessible and ready to explore.
+
+<img
+  src="/images/images/vl-createdataset-readydataset.png"
+  alt="Ready Dataset in Inventory"
+  style={{ width: '70%' }}
+  className="rounded"
+/>
+</Step>
+
+<Step title="Name the Dataset">
+Enter a dataset name or use the auto-suggested name.
+
+<Info>
+Dataset names must be unique.
+</Info>
+</Step>
+
+</Steps>
+
+## Next Steps
+
+Now that your dataset is uploaded and indexed, you can continue learning how to use Visual Layer:
+
+- Explore your dataset using [visual search](/docs/explore-search/visual-search) and [semantic search](/docs/explore-search/semantic-search)
+- Investigate [objects](/docs/explore-search/object-level) and [entities](/docs/explore-search/entities)
+- Define custom [scenarios](/docs/scenarios/intelligence-scenarios) and [intelligence logic](/docs/scenarios/intelligence-logic)

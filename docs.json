@@ -75,119 +75,57 @@
     },
         "tabs": [
             {
-                "tab": "Guides",
+                "tab": "Docs",
                 "groups": [
-                    {
-                        "group": "Getting Started",
-                        "pages": [
-                            "docs/getting-started/introduction",
-                            "docs/getting-started/quick-start",
-                            "docs/getting-started/deployment-options",
-                            {
-                                "group": "Definitions & Entities",
-                                "pages": [
-                                    "docs/getting-started/definitions-entities",
-                                    "docs/getting-started/understanding-clusters"
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "group": "Integrations",
-                        "pages": [
-                            "docs/Integrations/Amazon-s3",
-                            "docs/Integrations/google-cloud-storage"
-                        ]
-                    },
-                    {
-                        "group": "Creating & Updating Datasets",
-                        "pages": [
-                            "docs/Creating-Datasets/createdelete-datasets",                        
-                            {
-                                "group": "Custom Metadata",
-                                "pages": [
-                            "docs/Creating-Datasets/custom-metadata",
-                            "docs/Creating-Datasets/custom-metadata-automation-script",
-                            "docs/code-blocks/custom-metadata-upload-script"   
-                                ]
-                            },
-                            {
-                                "group": "DICOM Images",
-                                "pages": [
-                                    "docs/Creating-Datasets/dicom-converter",
-                                    "docs/code-blocks/dicom-converter-script",
-                                    "docs/code-blocks/dicom-upload-script"
-                                ]
-                            },
-                            {
-                                "group": "Importing Annotations",
-                                "pages": [
-                                    "docs/Creating-Datasets/importing-annotations/annotations-overview-new",
-                                    "docs/Creating-Datasets/importing-annotations/preparing-annotation-data-file",
-                                    "docs/Creating-Datasets/importing-annotations/bounding-box",
-                                    "docs/Creating-Datasets/importing-annotations/converting-yolo",
-                                    "docs/Creating-Datasets/importing-annotations/converting-segmentation-masks",
-                                    "docs/Creating-Datasets/importing-annotations/creating-annotation-file-with-class-labels",
-                                    "docs/Creating-Datasets/importing-annotations/reusing-caption-data",
-                                    "docs/code-blocks/caption-extraction-script"
-                                ]
-                            }
-                        ]
-                    },
                   {
-                    "group": "Curating Datasets",
+                    "group": "Introduction",
                     "pages": [
-                            "docs/Curate/tag-iteams",
-                            "docs/Curate/working-with-metadata"
+                        "docs/introduction/introduction",
+                        "docs/introduction/prerequisites",
+                        "docs/introduction/key-concepts",
+                        "docs/release-notes/release-notes"
                     ]
                   },
-                    {
-                        "group": "Managing Datasets",
-                        "pages": [
-                            "docs/Managing-Datasets/save-views",
-                            "docs/Managing-Datasets/share-dataset",
-                            "docs/Managing-Datasets/export-dataset"
-                        ]
-                    },
-                    {
-                        "group": "Exploring Datasets",
-                        "pages": [
-                            "docs/Exploring-datasets/overview",
-                            "docs/Exploring-datasets/semantic-search",
-                            "docs/Exploring-datasets/caption-search",
-                            "docs/Exploring-datasets/visual-search",
-                            "docs/Exploring-datasets/filter-dataset",
-                            "docs/Exploring-datasets/unlabeled-data-detection",
-                            "docs/Exploring-datasets/duplicate-imagesobjects",
-                            "docs/Exploring-datasets/outlier-imagesobjects",
-                            "docs/Exploring-datasets/class-outlier",
-                            "docs/Exploring-datasets/select-unique-items",
-                            {
-                                "group": "Quality Issues",
-                                "pages": [
-                                    "docs/Exploring-datasets/dataset-quality",
-                                    "docs/Exploring-datasets/dark-imagesobjects",
-                                    "docs/Exploring-datasets/blurry-imagesobjects",
-                                    "docs/Exploring-datasets/mislabeled-imagesobjects",
-                                    "docs/Exploring-datasets/bright-imagesobjects"
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "group": "Dataset Enrichment",
-                        "pages": [
-                            "docs/Dataset-Enrichment/enrich_overview",
-                            "docs/Dataset-Enrichment/model-catalog",
-                            "docs/Dataset-Enrichment/analyze-enriched-dataset"
-                        ]
-                    },
-                    {
-                        "group": "Changelog",
-                        "pages": [
-                            "changelog/rn"
-                        ]
-            }
+                  {
+                    "group": "Quick Start",
+                    "pages": [
+                      "docs/quick-start/deployment-options",
+                      "docs/quick-start/createdelete-datasets",
+                      "docs/quick-start/understanding-clusters",
+                      "docs/quick-start/dataset-inventory-ux",
+                      "docs/quick-start/dataset-exploration-ux"
+                    ]
+                  },
+                  {
+                    "group": "Explore & Search",
+                    "pages": [
+                      "docs/explore-and-search/semantic-search",
+                      "docs/explore-and-search/visual-search",
+                      "docs/explore-and-search/filtering-overview",
+                      "docs/explore-and-search/using-filters"
+                    ]
+                  },
+                  {
+                    "group": "Advanced Dataset Management",
+                    "pages": [
+                      "docs/advanced-dataset-management/enrich-overview",
+                      "docs/advanced-dataset-management/export-dataset"
+                    ]
+                  },
+                  {
+                    "group": "Models & Enrichment",
+                    "pages": [
+                      "docs/models-and-enrichment/model-catalog",
+                      "docs/models-and-enrichment/analyze-enriched-dataset"
+                    ]
+                  },
+                  {
+                    "group": "Collab & Downstream",
+                    "pages": [
+                      "docs/collab-and-downstream/share-dataset",
+                      "docs/collab-and-downstream/working-with-metadata"
+                    ]
+                  }
                 ]
             },
             {
@@ -219,25 +157,25 @@
                     {
                         "group": "Installation and Configuration",
                         "pages": [
-                            "docs/on-prem/System_requirements",
-                            "docs/on-prem/setting_up",
-                            "docs/on-prem/air-gapped-installation",
-                            "docs/on-prem/Configuration",
-                            "docs/on-prem/s3-configuration"
+                            "docs/self-hosting/System_requirements",
+                            "docs/self-hosting/setting_up",
+                            "docs/self-hosting/air-gapped-installation",
+                            "docs/self-hosting/Configuration",
+                            "docs/self-hosting/s3-configuration"
                         ]
                     },
                     {
                         "group": "Usage",
                         "pages": [
-                            "docs/on-prem/operation",
-                            "docs/on-prem/profiler"
+                            "docs/self-hosting/operation",
+                            "docs/self-hosting/profiler"
                         ]
                     },
                     {
                         "group": "Administration",
                         "pages": [
-                            "docs/on-prem/user-management",
-                            "docs/on-prem/Troubleshooting"
+                            "docs/self-hosting/user-management",
+                            "docs/self-hosting/Troubleshooting"
                         ]
                     }
                 ]

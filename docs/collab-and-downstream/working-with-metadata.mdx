@@ -1,0 +1,964 @@
+---
+title: "Using Exported VL Metadata"
+description: "Extract, parse, and analyze metadata.json files exported from Visual Layer using the API and Python workflows."
+---
+
+---
+## Step 1: Extracting Data Using Visual Layer's API
+
+First, let's set up a Python class to handle the API calls for exporting datasets.
+
+### Simplified Python API
+
+We'll use the following class to encapsulate the API calls:
+
+```python
+import time
+from typing import Any, Dict
+
+import requests
+
+
+class DatasetExporter:
+    def __init__(self, base_url: str):
+        self.base_url = base_url.rstrip("/")
+        self.headers = {"Accept": "application/json, text/plain, */*"}
+
+    def initiate_export(
+        self,
+        dataset_id: str,
+        file_name: str,
+        export_format: str = "json",
+        include_images: bool = False,
+    ) -> Dict[str, Any]:
+        """
+        Initiate an export of a dataset.
+
+        Args:
+            dataset_id: The ID of the dataset to export
+            file_name: Name of the export file
+            export_format: Format of the export (default: 'json')
+            include_images: Whether to include images in export (default: False)
+
+        Returns:
+            Dict containing the export task information
+        """
+        url = f"{self.base_url}/api/v1/dataset/{dataset_id}/export_context_async"
+        params = {
+            "file_name": file_name,
+            "export_format": export_format,
+            "include_images": str(include_images).lower(),
+        }
+
+        response = requests.get(url, headers=self.headers, params=params)
+        response.raise_for_status()
+        return response.json()
+
+    def check_export_status(
+        self, dataset_id: str, export_task_id: str
+    ) -> Dict[str, Any]:
+        """
+        Check the status of an export task.
+
+        Args:
+            dataset_id: The ID of the dataset
+            export_task_id: The ID of the export task to check
+
+        Returns:
+            Dict containing the status information
+        """
+        url = f"{self.base_url}/api/v1/dataset/{dataset_id}/export_status"
+        params = {"export_task_id": export_task_id}
+
+        response = requests.get(url, headers=self.headers, params=params)
+        response.raise_for_status()
+        return response.json()
+
+    def wait_for_export(
+        self,
+        dataset_id: str,
+        export_task_id: str,
+        check_interval: int = 5,
+        timeout: int = 300,
+    ) -> Dict[str, Any]:
+        """
+        Wait for an export task to complete.
+
+        Args:
+            dataset_id: The ID of the dataset
+            export_task_id: The ID of the export task to check
+            check_interval: Time in seconds between status checks (default: 5)
+            timeout: Maximum time to wait in seconds (default: 300)
+
+        Returns:
+            Dict containing the final status information
+
+        Raises:
+            TimeoutError: If the export doesn't complete within the timeout period
+        """
+        start_time = time.time()
+        while True:
+            status = self.check_export_status(dataset_id, export_task_id)
+
+            if status["status"] == "COMPLETED":
+                return status
+
+            if status["status"] == "FAILED":
+                raise Exception(f"Export failed: {status.get('result_message')}")
+
+            if time.time() - start_time > timeout:
+                raise TimeoutError("Export timed out")
+
+            time.sleep(check_interval)
+
+    def download_export(self, download_uri: str, output_path: str) -> None:
+        """
+        Download the exported file from the given URI.
+
+        Args:
+            download_uri: The URI path from the export status
+            output_path: Local path where the file should be saved
+
+        Returns:
+            None
+        """
+        url = f"{self.base_url}{download_uri}"
+        response = requests.get(url, headers=self.headers, stream=True)
+        response.raise_for_status()
+
+        with open(output_path, "wb") as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
+```
+
+### Usage Example
+
+You'll need to replace the `url`, `dataset_id`, and `file_name` with your own values:
+
+```python
+import zipfile
+import os
+
+def main():
+    # Replace with your own
+    url = "http://3.129.25.115:2080"
+    dataset_id = "4cd4d9a2-e793-11ef-80a1-0242ac13000a"
+    file_name = "export.zip"
+
+    exporter = DatasetExporter(url)
+
+    try:
+        print("Initiating export...")
+        export_task = exporter.initiate_export(dataset_id, file_name)
+        print(f"Export task created: {export_task}")
+
+        print("Waiting for export to complete...")
+        final_status = exporter.wait_for_export(dataset_id, export_task["id"])
+
+        print("\nExport completed!")
+        print(f"Download URI: {url}{final_status['download_uri']}")
+
+        print("Downloading file...")
+        exporter.download_export(final_status["download_uri"], file_name)
+        print(f"File downloaded successfully to: {file_name}")
+
+        print("Unzipping file...")
+        output_dir = file_name.replace('.zip', '')
+        os.makedirs(output_dir, exist_ok=True)
+        with zipfile.ZipFile(file_name, "r") as zip_ref:
+            zip_ref.extractall(output_dir)
+        print(f"File unzipped successfully to: {output_dir}")
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+### Expected Output
+
+```
+Initiating export...  
+Export task created: {'id': 'cf8b3e78-cb20-4954-a782-436a03006dab', 'dataset_id': '4cd4d9a2-e793-11ef-80a1-0242ac13000a', 'created_at': '2025-02-10T14:41:14.390429', 'download_uri': None, 'progress': 0.0, 'status': 'INIT', 'entities_count': 4203, 'result_message': None}  
+Waiting for export to complete...
+
+Export completed!  
+Download URI: http://3.129.25.115:2080/cdn/4cd4d9a2-e793-11ef-80a1-0242ac13000a/images/cf8b3e78-cb20-4954-a782-436a03006dab/cf8b3e78-cb20-4954-a782-436a03006dab.zip  
+Downloading file...  
+File downloaded successfully to: export.zip  
+Unzipping file...  
+File unzipped successfully to: export
+```
+---
+
+## Step 2: Parsing Exported Metadata
+
+After extracting your data, you'll have a `metadata.json` file. Let's learn how to parse and analyze it.
+
+### Loading the Exported Metadata
+
+First, let's load the exported metadata into a pandas dataframe:
+
+```python
+import pandas as pd
+import json
+
+with open("food101/metadata.json") as f:
+    data = json.load(f)
+
+# This is the dataset level information
+info_df = pd.DataFrame([data["info"]])
+
+# This is the image level information
+media_items_df = pd.json_normalize(data["media_items"])
+```
+
+### View the Dataset Level Information
+
+```python
+info_df
+```
+
+| schema_version | dataset | description                           | dataset_url                                               | export_time                | dataset_creation_time      | exported_by  | total_media_items |
+| -------------- | ------- | ------------------------------------- | --------------------------------------------------------- | -------------------------- | -------------------------- | ------------ | ----------------- |
+| 1.1            | food101 | Exported from food101 at Visual Layer | [Link](http://app.visual-layer.com/dataset/aa3d2a32-e...) | 2025-02-10T14:29:53.740569 | 2024-12-05T05:55:27.725598 | Dickson Neoh | 118               |
+
+### Get Image Level Details
+
+Each row in the dataframe corresponds to an image:
+
+```python
+media_items_df
+```
+
+| media_id                             | media_type | file_name  | file_path  | file_size | uniqueness_score | height | width | url                                                       | cluster_id                           | metadata_items                                     |
+| ------------------------------------ | ---------- | ---------- | ---------- | --------- | ---------------- | ------ | ----- | --------------------------------------------------------- | ------------------------------------ | -------------------------------------------------- |
+| d5227901-22c9-4744-a264-407d9671aa4a | image      | 548938.jpg | 548938.jpg | 32.00KB   | 0.004178         | 512    | 512   | [Link](http://app.visual-layer.com/dataset/aa3d2a32-e...) | fbcad8ef-d863-46c9-83b7-1a3bd85e2e2b | \[{'{'}type': 'issue', 'properties': {'{'}issue_type'... |
+| 2546c70a-e0a4-4bfb-ac59-e2895bb96456 | image      | 548231.jpg | 548231.jpg | 32.00KB   | 0.006069         | 512    | 512   | [Link](http://app.visual-layer.com/dataset/aa3d2a32-e...) | fbcad8ef-d863-46c9-83b7-1a3bd85e2e2b | \[{'{'}type': 'issue', 'properties': {'{'}issue_type'... |
+| 45c226e0-daba-4ca8-8eac-fec9d490ea36 | image      | 835953.jpg | 835953.jpg | 28.18KB   | 0.003515         | 512    | 384   | [Link](http://app.visual-layer.com/dataset/aa3d2a32-e...) | 5bc63415-76d8-49ec-975a-9a021bf98770 | \[{'{'}type': 'issue', 'properties': {'{'}issue_type'... |
+
+
+---
+## Step 3: Analyzing Your Data
+
+### Filter By Uniqueness Score
+
+By filtering by uniqueness score, you can get a representative sample of the images in the dataset:
+
+```python
+UNIQUENESS_SCORE_THRESHOLD = 0.85
+
+coreset_df = media_items_df[
+    media_items_df["uniqueness_score"] > UNIQUENESS_SCORE_THRESHOLD
+]
+coreset_df
+```
+
+This will show media items with a uniqueness score greater than **0.85**.
+
+### Get Duplicate Images
+
+The `metadata_items` column contains a list of issues for each image. We can filter for images with duplicate issues above a certain confidence threshold:
+
+```python
+def has_duplicate_issue(metadata_items, confidence_threshold=0.8):
+    if not isinstance(metadata_items, list):
+        return False
+
+    for item in metadata_items:
+        if (
+            item.get("type") == "issue"
+            and item.get("properties", {}).get("issue_type") == "duplicates"
+            and item.get("properties", {}).get("confidence", 0) > confidence_threshold
+        ):
+            return True
+    return False
+
+# Replace with your confidence threshold
+CONFIDENCE_THRESHOLD = 0.8
+
+duplicate_df = media_items_df[
+    media_items_df["metadata_items"].apply(
+        lambda x: has_duplicate_issue(x, confidence_threshold=CONFIDENCE_THRESHOLD)
+    )
+]
+
+duplicate_df
+```
+
+This table includes images with duplicate issues above a confidence threshold of 0.8.
+
+### Get Mislabels
+
+We can filter for images with mislabel issues above a certain confidence threshold:
+
+```python
+def has_mislabel_issue(metadata_items, confidence_threshold=0.8):
+    if not isinstance(metadata_items, list):
+        return False
+
+    for item in metadata_items:
+        if (
+            item.get("type") == "issue"
+            and item.get("properties", {}).get("issue_type") == "mislabels"
+            and item.get("properties", {}).get("confidence", 0) > confidence_threshold
+        ):
+            return True
+    return False
+
+# Replace with your confidence threshold
+CONFIDENCE_THRESHOLD = 0.8
+
+mislabel_df = media_items_df[
+    media_items_df["metadata_items"].apply(
+        lambda x: has_mislabel_issue(x, confidence_threshold=CONFIDENCE_THRESHOLD)
+    )
+]
+
+mislabel_df
+```
+---
+
+## Step 4: Converting Video Frame Data to CSV
+
+If your exported JSON contains video frame data, here's how to parse it into CSV format:
+
+### Example Video Frame JSON Structure
+
+```json
+{
+  "info": {
+    "schema_version": "1.1",
+    "dataset": "Extreme",
+    "description": "Exported from Extreme at Visual Layer",
+    "dataset_url": "http://app.visual-layer.com/dataset/42e3b7ae-dd5e-11ef-9fca-1a226f3de670/data",
+    "export_time": "2025-02-15T18:23:34.164184",
+    "dataset_creation_time": "2025-01-24T18:35:57.719308",
+    "exported_by": "Danny Bickson",
+    "total_media_items": 56
+  },
+  "media_items": [
+    {
+      "media_id": "8621054d-1d23-4ca7-a7ca-65feb2c83eb1",
+      "media_type": "video_frame",
+      "file_name": "output_000001.jpg",
+      "file_path": "7370082532203988000_7450129782785756438_2024-12-19_14:28:36.mp4/output_000001.jpg",
+      "file_size": "48.27KB",
+      "uniqueness_score": 0.4989460029187489,
+      "height": 720,
+      "width": 576,
+      "url": "http://app.visual-layer.com/dataset/42e3b7ae-dd5e-11ef-9fca-1a226f3de670/data/image/8621054d-1d23-4ca7-a7ca-65feb2c83eb1",
+      "cluster_id": "49997382-b7c3-4c83-83a3-fa4e0a586f2b",
+      "metadata_items": [
+        {
+          "type": "video_info",
+          "properties": {
+            "video_name": "7370082532203988000_7450129782785756438_2024-12-19_14:28:36.mp4",
+            "frame_timestamp": 0.0
+          }
+        },
+        {
+          "type": "issue",
+          "properties": {
+            "issue_type": "duplicates",
+            "confidence": 0.977624,
+            "duplicate_group_id": "35395121-5cb1-4a92-906f-dd4cb9ff62d3",
+            "duplicate_threshold": 0.96
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Converting Video Frame Data to CSV
+
+```python
+import json  
+import pandas as pd  
+import re
+
+# Load JSON file
+with open("metadata 8.json", "r") as f:  
+    data = json.load(f)
+
+# Prepare list for DataFrame
+records = []
+
+# Iterate over media items
+for item in data.get("media_items", []):  
+    video_name = None  
+    frame_timestamp = None  
+    categories = []  
+    file_name = item.get("file_name", "")
+
+    for metadata in item.get("metadata_items", []):
+        if metadata["type"] == "video_info":
+            video_name = metadata["properties"].get("video_name")
+            frame_timestamp = metadata["properties"].get("frame_timestamp")
+        elif metadata["type"] == "image_label":
+            categories.append(metadata["properties"].get("category_name"))
+
+    # Extract frame number from file name
+    match = re.search(r'output_(\d+).jpg', file_name)
+    frame_number = int(match.group(1)) if match else None
+
+    # Append record with categories as a list
+    records.append({
+        "video_name": video_name,
+        "file_name": file_name,
+        "frame_number": frame_number,
+        "time_in_video": frame_timestamp,
+        "categories": categories
+    })
+
+# Convert to DataFrame
+df = pd.DataFrame(records)  
+print(df.tail())
+```
+---
+## Step 5: Converting Object Detection Data to CSV
+
+For datasets with bounding box annotations and user tags, here's how to convert them to CSV format:
+
+### Example Object Detection JSON Structure
+
+```json
+{
+  "info": {
+    "schema_version": "1.1",
+    "dataset": "General pics",
+    "description": "Exported from General pics at Visual Layer",
+    "total_media_items": 2
+  },
+  "media_items": [
+    {
+      "media_id": "01305347-b812-4717-99a3-aab54a206d4c",
+      "file_name": "000000046252.jpg",
+      "width": 640,
+      "height": 480,
+      "metadata_items": [
+        {
+          "type": "object_label",
+          "properties": {
+            "category_name": "person",
+            "bbox": [148, 177, 127, 188],
+            "metadata_items": [
+              {
+                "type": "user_tag",
+                "properties": {"tag_name": "test-tags"}
+              }
+            ]
+          }
+        },
+        {
+          "type": "object_label",
+          "properties": {
+            "category_name": "shirt",
+            "bbox": [192, 194, 75, 65]
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Converting Object Detection Data to CSV
+
+```python
+import json
+import csv
+
+# Load JSON file
+input_file = "metadata_5.json"  # Change this to your actual file path
+output_file = "output.csv"  # Output CSV file name
+
+with open(input_file, "r") as f:
+    data = json.load(f)
+
+# Prepare CSV file
+header = ["filename", "x", "y", "w", "h", "label", "user tag"]
+rows = []
+
+# Extract data
+for media in data.get("media_items", []):
+    filename = media.get("file_name", "")
+    for item in media.get("metadata_items", []):
+        if item.get("type") == "object_label":
+            properties = item.get("properties", {})
+            bbox = properties.get("bbox", [0, 0, 0, 0])
+            label = properties.get("category_name", "")
+            user_tag = ""
+
+            # Extract user tag if available
+            for meta in properties.get("metadata_items", []):
+                if meta.get("type") == "user_tag":
+                    user_tag = meta.get("properties", {}).get("tag_name", "")
+                    break
+
+            # Append row
+            rows.append([filename, bbox[0], bbox[1], bbox[2], bbox[3], label, user_tag])
+
+# Write to CSV
+with open(output_file, "w", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(header)
+    writer.writerows(rows)
+
+print(f"CSV file saved to {output_file}")
+```
+
+### Expected CSV Output
+
+| Filename         | X   | Y   | W   | H   | Label  | User Tag  |
+| ---------------- | --- | --- | --- | --- | ------ | --------- |
+| 000000046252.jpg | 148 | 177 | 127 | 188 | Person | test-tags |
+| 000000046252.jpg | 192 | 194 | 75  | 65  | Shirt  | test-tags |
+| 000000012639.jpg | 28  | 368 | 80  | 118 | Vest   | test-tags |
+
+## Step 6: Analyzing Video Frame Similarity
+
+For datasets with video frames, you can analyze similarity between frames to understand which videos are most similar. This is useful for identifying duplicate content, finding related videos, or grouping similar content.
+
+### Creating a Video Frame Data Table
+
+First, let's extract video frame information along with their similarity data:
+
+```python
+import json
+import pandas as pd
+from collections import defaultdict
+
+# Load the exported metadata
+with open("metadata.json", "r") as f:
+    data = json.load(f)
+
+# Extract video frame data with similarity information
+frame_records = []
+
+for item in data.get("media_items", []):
+    if item.get("media_type") == "video_frame":
+        # Extract basic frame info
+        media_id = item.get("media_id")
+        file_name = item.get("file_name")
+        
+        # Extract video info
+        video_name = None
+        frame_timestamp = None
+        similar_frames = []
+        
+        for metadata in item.get("metadata_items", []):
+            if metadata.get("type") == "video_info":
+                video_name = metadata.get("properties", {}).get("video_name")
+                frame_timestamp = metadata.get("properties", {}).get("frame_timestamp")
+            elif metadata.get("type") == "issue" and metadata.get("properties", {}).get("issue_type") == "duplicates":
+                # Extract similarity information
+                confidence = metadata.get("properties", {}).get("confidence")
+                duplicate_group_id = metadata.get("properties", {}).get("duplicate_group_id")
+                duplicate_threshold = metadata.get("properties", {}).get("duplicate_threshold")
+                
+                similar_frames.append({
+                    "confidence": confidence,
+                    "group_id": duplicate_group_id,
+                    "threshold": duplicate_threshold
+                })
+        
+        frame_records.append({
+            "media_id": media_id,
+            "file_name": file_name,
+            "video_name": video_name,
+            "frame_timestamp": frame_timestamp,
+            "similar_frames": similar_frames,
+            "cluster_id": item.get("cluster_id")
+        })
+
+# Create DataFrame
+frames_df = pd.DataFrame(frame_records)
+print(f"Total video frames: {len(frames_df)}")
+print(frames_df.head())
+```
+
+### Creating a Video Similarity Aggregation Table
+
+Now let's create a table that shows video-to-video similarity. This analysis only compares frames between different videos, excluding similarities within the same video:
+
+```python
+# Create a mapping of frames to their duplicate groups
+frame_to_groups = defaultdict(set)
+group_to_frames = defaultdict(set)
+
+for idx, row in frames_df.iterrows():
+    media_id = row['media_id']
+    video_name = row['video_name']
+    
+    for similar_frame in row['similar_frames']:
+        group_id = similar_frame['group_id']
+        confidence = similar_frame['confidence']
+        
+        # Only consider high-confidence similarities (>= 0.95)
+        if confidence >= 0.95:
+            frame_to_groups[media_id].add(group_id)
+            group_to_frames[group_id].add((media_id, video_name, confidence))
+
+# Create video-to-video similarity matrix
+video_similarity_records = []
+
+# Get all unique videos
+all_videos = frames_df['video_name'].unique()
+
+for video_a in all_videos:
+    for video_b in all_videos:
+        if video_a != video_b:
+            # Get frames from both videos
+            frames_a = frames_df[frames_df['video_name'] == video_a]['media_id'].tolist()
+            frames_b = frames_df[frames_df['video_name'] == video_b]['media_id'].tolist()
+            
+            # Find similarities between frames from different videos
+            inter_video_similarities = []
+            shared_groups = set()
+            
+            for frame_a in frames_a:
+                for frame_b in frames_b:
+                    groups_a = frame_to_groups.get(frame_a, set())
+                    groups_b = frame_to_groups.get(frame_b, set())
+                    
+                    # Find groups that contain both frames (cross-video similarity)
+                    common_groups = groups_a.intersection(groups_b)
+                    if common_groups:
+                        shared_groups.update(common_groups)
+                        
+                        # For each shared group, get the similarity confidence
+                        # We know these frames are from different videos by construction
+                        for group_id in common_groups:
+                            frames_in_group = group_to_frames[group_id]
+                            # Get confidence scores for frames from both videos in this group
+                            confidences_in_group = [conf for _, _, conf in frames_in_group]
+                            if confidences_in_group:
+                                # Use the average confidence for this similarity group
+                                inter_video_similarities.append(sum(confidences_in_group) / len(confidences_in_group))
+            
+            if inter_video_similarities:
+                avg_similarity = sum(inter_video_similarities) / len(inter_video_similarities)
+                num_similar_frames = len(shared_groups)
+                
+                video_similarity_records.append({
+                    "video_a": video_a,
+                    "video_b": video_b,
+                    "average_similarity": round(avg_similarity, 4),
+                    "number_of_similar_frames": num_similar_frames
+                })
+
+# Create the final similarity DataFrame
+similarity_df = pd.DataFrame(video_similarity_records)
+
+# Remove duplicates (keep only one direction of each pair)
+similarity_df = similarity_df[similarity_df['video_a'] < similarity_df['video_b']]
+
+# Sort by average similarity (descending)
+similarity_df = similarity_df.sort_values('average_similarity', ascending=False)
+
+print(f"Video pairs with similarities: {len(similarity_df)}")
+print("\nTop 10 most similar video pairs:")
+print(similarity_df.head(10))
+```
+
+### Alternative Approach Using Clustering
+
+You can also use the `cluster_id` field to find similar frames:
+
+```python
+# Create similarity table using cluster IDs
+cluster_similarity_records = []
+
+# Group frames by cluster
+cluster_groups = frames_df.groupby('cluster_id')
+
+for cluster_id, cluster_frames in cluster_groups:
+    if len(cluster_frames) > 1:  # Only clusters with multiple frames
+        videos_in_cluster = cluster_frames['video_name'].unique()
+        
+        # Create pairs of videos in the same cluster
+        for i, video_a in enumerate(videos_in_cluster):
+            for video_b in videos_in_cluster[i+1:]:
+                frames_a_in_cluster = len(cluster_frames[cluster_frames['video_name'] == video_a])
+                frames_b_in_cluster = len(cluster_frames[cluster_frames['video_name'] == video_b])
+                
+                cluster_similarity_records.append({
+                    "video_a": video_a,
+                    "video_b": video_b,
+                    "cluster_id": cluster_id,
+                    "frames_from_video_a": frames_a_in_cluster,
+                    "frames_from_video_b": frames_b_in_cluster,
+                    "total_frames_in_cluster": len(cluster_frames)
+                })
+
+# Create DataFrame
+cluster_similarity_df = pd.DataFrame(cluster_similarity_records)
+
+# Aggregate by video pair
+video_cluster_summary = cluster_similarity_df.groupby(['video_a', 'video_b']).agg({
+    'cluster_id': 'count',  # Number of shared clusters
+    'frames_from_video_a': 'sum',
+    'frames_from_video_b': 'sum'
+}).rename(columns={'cluster_id': 'shared_clusters'}).reset_index()
+
+print("\nVideo similarity based on shared clusters:")
+print(video_cluster_summary.sort_values('shared_clusters', ascending=False).head())
+```
+
+### Export Results to CSV
+
+Finally, export your analysis results:
+
+```python
+# Export the main similarity table
+similarity_df.to_csv("video_similarity_analysis.csv", index=False)
+
+# Export the frame-level data
+frames_df.to_csv("video_frames_with_similarity.csv", index=False)
+
+# Export the cluster-based analysis
+video_cluster_summary.to_csv("video_cluster_similarity.csv", index=False)
+
+print("Analysis complete! Files exported:")
+print("- video_similarity_analysis.csv")
+print("- video_frames_with_similarity.csv") 
+print("- video_cluster_similarity.csv")
+```
+
+### Expected Output
+
+The analysis will produce tables like:
+
+**Video Similarity Table:**
+| video_a | video_b | average_similarity | number_of_similar_frames |
+|---------|---------|-------------------|-------------------------|
+| video1.mp4 | video2.mp4 | 0.9850 | 15 |
+| video3.mp4 | video4.mp4 | 0.9720 | 8 |
+
+**Video Cluster Summary:**
+| video_a | video_b | shared_clusters | frames_from_video_a | frames_from_video_b |
+|---------|---------|----------------|-------------------|-------------------|
+| video1.mp4 | video2.mp4 | 5 | 12 | 18 |
+
+This analysis helps you identify:
+- Which videos have the most similar content
+- How many frames are similar between video pairs
+- The confidence level of similarities
+- Clusters of related video content
+
+## Step 7: Analyzing Mislabel Issues
+
+For datasets with mislabel detection, you can analyze which labels are potentially incorrect and what the suggested corrections are. This is valuable for improving dataset quality and understanding systematic labeling issues.
+
+### Understanding Mislabel Structure
+
+Mislabel issues are stored within object labels and have this structure:
+
+```json
+{
+  "type": "issue",
+  "properties": {
+    "issue_type": "mislabels",
+    "issues_description": "3D-CONTAMINATION",
+    "confidence": 0.8059
+  }
+}
+```
+
+Where:
+- `issues_description`: The suggested correct label
+- `confidence`: How confident the system is about the mislabel (0-1)
+
+### Comprehensive Mislabel Analysis
+
+Here's how to extract and analyze all mislabel information:
+
+```python
+import json
+import pandas as pd
+from collections import defaultdict, Counter
+
+# Load the exported metadata
+with open("metadata.json", "r") as f:
+    data = json.load(f)
+
+print(f"Dataset: {data['info']['dataset']}")
+print(f"Total media items: {data['info']['total_media_items']}")
+
+# Extract mislabel information
+mislabel_records = []
+total_objects = 0
+objects_with_mislabels = 0
+
+for item in data.get("media_items", []):
+    media_id = item.get("media_id")
+    file_name = item.get("file_name")
+    
+    # Look for object labels with mislabel issues
+    for metadata in item.get("metadata_items", []):
+        if metadata.get("type") == "object_label":
+            total_objects += 1
+            object_props = metadata.get("properties", {})
+            original_category = object_props.get("category_name")
+            bbox = object_props.get("bbox", [])
+            
+            # Check for mislabel issues in this object
+            object_mislabels = []
+            for obj_metadata in object_props.get("metadata_items", []):
+                if (obj_metadata.get("type") == "issue" and 
+                    obj_metadata.get("properties", {}).get("issue_type") == "mislabels"):
+                    
+                    mislabel_props = obj_metadata.get("properties", {})
+                    suggested_label = mislabel_props.get("issues_description")
+                    confidence = mislabel_props.get("confidence")
+                    
+                    object_mislabels.append({
+                        "suggested_label": suggested_label,
+                        "confidence": confidence
+                    })
+            
+            if object_mislabels:
+                objects_with_mislabels += 1
+                for mislabel in object_mislabels:
+                    mislabel_records.append({
+                        "media_id": media_id,
+                        "file_name": file_name,
+                        "original_label": original_category,
+                        "suggested_label": mislabel["suggested_label"],
+                        "confidence": mislabel["confidence"],
+                        "bbox": bbox
+                    })
+
+print(f"Total objects analyzed: {total_objects}")
+print(f"Objects with mislabel issues: {objects_with_mislabels}")
+print(f"Total mislabel records: {len(mislabel_records)}")
+
+# Create DataFrame for analysis
+mislabels_df = pd.DataFrame(mislabel_records)
+```
+
+### Mislabel Statistics and Analysis
+
+```python
+# 1. How many mislabels total?
+print(f"TOTAL MISLABELS: {len(mislabels_df)}")
+
+# 2. Confidence distribution
+print(f"\nCONFIDENCE DISTRIBUTION:")
+print(f"Average confidence: {mislabels_df['confidence'].mean():.4f}")
+print(f"Min confidence: {mislabels_df['confidence'].min():.4f}")
+print(f"Max confidence: {mislabels_df['confidence'].max():.4f}")
+print(f"High confidence (>0.8): {len(mislabels_df[mislabels_df['confidence'] > 0.8])}")
+print(f"Medium confidence (0.7-0.8): {len(mislabels_df[(mislabels_df['confidence'] >= 0.7) & (mislabels_df['confidence'] <= 0.8)])}")
+print(f"Lower confidence (<0.7): {len(mislabels_df[mislabels_df['confidence'] < 0.7])}")
+
+# 3. From which classes are the mislabels?
+print(f"\nMISLABELED CLASSES (Original Labels):")
+original_label_counts = mislabels_df['original_label'].value_counts()
+print(original_label_counts.head(10))
+
+# 4. What are the suggested corrections?
+print(f"\nSUGGESTED CORRECTIONS (Most Common):")
+suggested_label_counts = mislabels_df['suggested_label'].value_counts()
+print(suggested_label_counts.head(10))
+
+# 5. Most common mislabel corrections (original -> suggested)
+print(f"\nMOST COMMON MISLABEL CORRECTIONS:")
+correction_pairs = mislabels_df.groupby(['original_label', 'suggested_label']).size().reset_index(name='count')
+correction_pairs = correction_pairs.sort_values('count', ascending=False)
+print("Original Label -> Suggested Label (Count)")
+for _, row in correction_pairs.head(15).iterrows():
+    print(f"{row['original_label']} -> {row['suggested_label']} ({row['count']})")
+```
+
+### High-Confidence Corrections Analysis
+
+```python
+# Analyze high-confidence corrections for the most reliable suggestions
+high_conf_corrections = correction_pairs[
+    correction_pairs.apply(lambda x: mislabels_df[
+        (mislabels_df['original_label'] == x['original_label']) & 
+        (mislabels_df['suggested_label'] == x['suggested_label'])
+    ]['confidence'].mean() > 0.8, axis=1)
+]
+
+print(f"High confidence corrections (>0.8): {len(high_conf_corrections)}")
+print("\nTop high-confidence corrections:")
+for _, row in high_conf_corrections.head(10).iterrows():
+    avg_conf = mislabels_df[
+        (mislabels_df['original_label'] == row['original_label']) & 
+        (mislabels_df['suggested_label'] == row['suggested_label'])
+    ]['confidence'].mean()
+    print(f"{row['original_label']} -> {row['suggested_label']} ({row['count']} times, avg conf: {avg_conf:.3f})")
+```
+
+### Summary Statistics and Export
+
+```python
+# Summary statistics
+print(f"\nSUMMARY STATISTICS:")
+print(f"Unique original labels with issues: {len(mislabels_df['original_label'].unique())}")
+print(f"Unique suggested labels: {len(mislabels_df['suggested_label'].unique())}")
+print(f"Unique correction pairs: {len(correction_pairs)}")
+print(f"Images with mislabels: {len(mislabels_df['file_name'].unique())}")
+
+# Export results
+mislabels_df.to_csv("mislabel_analysis.csv", index=False)
+correction_pairs.to_csv("mislabel_corrections.csv", index=False)
+
+print("\nFiles exported:")
+print("- mislabel_analysis.csv: Detailed mislabel data")
+print("- mislabel_corrections.csv: Correction patterns summary")
+```
+
+### Expected Output
+
+The analysis will produce results like:
+
+```
+TOTAL MISLABELS: 422
+
+CONFIDENCE DISTRIBUTION:
+Average confidence: 0.8059
+High confidence (>0.8): 120
+Medium confidence (0.7-0.8): 300
+
+MISLABELED CLASSES (Original Labels):
+3D-SHINYMARK         52
+3D-SCRATCH           40
+3D-CONTAMINATION     38
+3D-SHINYLINE         28
+3D-DENT              28
+
+MOST COMMON MISLABEL CORRECTIONS:
+Bandslot_discolor -> BS-DISCOLOR-B (20)
+3D-SHINYMARK -> 3D-CONTAMINATION (18)
+3D-SHINYLINE -> 3D-CONTAMINATION (12)
+3D-SCRATCH -> 3D-CONTAMINATION (10)
+3D-CHIP -> 3D2-CHIP (10)
+```
+
+This analysis helps you:
+- **Identify systematic labeling issues**: Classes that are frequently mislabeled
+- **Prioritize corrections**: Focus on high-confidence suggestions first
+- **Understand label confusion**: See which classes are commonly confused with each other
+- **Improve dataset quality**: Apply suggested corrections to improve training data
+- **Analyze labeling patterns**: Understand if certain types of objects are consistently mislabeled
+
+## Next Steps
+
+Now that you know how to work with exported metadata files, you can:
+
+1. **Analyze data quality** by filtering for different issue types and confidence thresholds
+2. **Create data subsets** using uniqueness scores and clustering information
+3. **Export to different formats** for use in other tools and platforms
+4. **Build automated workflows** to process exported datasets at scale
+5. **Analyze video similarity** to find duplicate content, group related videos, or identify the most unique content
+6. **Analyze mislabel issues** to identify systematic labeling problems and prioritize corrections
+
+For more information on exporting datasets, see our [Export Dataset guide](/docs/advanced-dataset-management/export-dataset).

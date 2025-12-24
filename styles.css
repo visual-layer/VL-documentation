@@ -1,9 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
 
+
 [data-component-part="step-line"] {
   background-color: rgb(167,56,149);
   width:3px;
+}
+
+
+[data-component-part="step-title"] {
+  margin: 2px !important;
 }
 
 .nav-anchors a, #page-title {
@@ -625,6 +631,33 @@ table {
 /* Hover to show the dropdown */
 .navbar .dropdown-container:hover {
   visibility: visible;
+}
+
+/* Accordion styling */
+[data-component-part="accordion-caret-right"] svg {
+  width: 14pt !important;
+  height: 14pt !important;
+}
+
+[data-component-part="accordion-icon"] svg {
+  background-color: #a73895 !important;
+}
+
+/* Process headings (h6) styling */
+h6 {
+  font-size: 1.05rem !important;
+  text-transform: uppercase;
+  color: #4E2F6C !important;
+  font-weight: 600 !important;
+  text-emphasis: dot;
+  text-emphasis-position: under;
+  margin-top: 45px !important;
+  margin-bottom: -25px !important;
+  text-underline-position: under;
+}
+
+.dark h6 {
+  color: #0197D8 !important;
 }
 
 /* End of CSS */

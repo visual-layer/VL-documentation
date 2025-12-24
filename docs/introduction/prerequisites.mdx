@@ -1,0 +1,117 @@
+---
+title: Prerequisites
+description: Requirements for using Visual Layer cloud platform.
+sidebarTitle: Prerequisites
+---
+
+Before you begin using Visual Layer, ensure you meet the following requirements for optimal performance and access to all platform features.
+
+## Account Access
+
+To use Visual Layer, you need a valid account. Visual Layer supports the following authentication methods:
+
+- **Google Account**: Sign in using your existing Google credentials
+- **GitHub Account**: Sign in using your existing GitHub credentials
+
+If you don't have an account yet, visit the [Login page](https://app.visual-layer.com/login) to get started. You can sign up using either Google or GitHub single sign-on (SSO).
+
+## Browser Requirements
+
+**Chrome browser is strongly recommended** for the best Visual Layer experience. Chrome provides full compatibility with all platform features, including:
+
+- Advanced filtering and search interfaces
+- Real-time dataset visualization
+- Interactive exploration tools
+- Video playback and analysis
+
+**Other browsers** (Firefox, Safari, Edge) may work for basic functionality but are not fully supported and may experience:
+- Compatibility issues with advanced features
+- Reduced performance
+- Inconsistent user interface behavior
+
+For the most reliable experience, always use the latest version of Chrome.
+
+## Supported Data Formats
+
+Visual Layer supports the following data types and upload methods for creating datasets:
+
+### Data Sources
+
+You can upload data to Visual Layer using any of these source types:
+
+- **ZIP Files**: Compressed archives containing images, videos, or both
+- **Files or Folders**: Direct upload from your local filesystem
+- **Public Amazon S3**: Link to publicly accessible S3 buckets
+- **Private Amazon S3**: Connect to private S3 buckets with proper authentication
+
+<Tip>
+Need support for additional data sources (Google Cloud Storage, Azure Blob Storage, etc.)? Contact [support@visual-layer.com](mailto:support@visual-layer.com) or use the **Contact Us** form.
+</Tip>
+
+### Supported File Types
+
+Visual Layer processes the following file formats:
+
+**Images:**
+- JPEG (.jpg, .jpeg)
+- PNG (.png)
+- TIFF (.tiff, .tif)
+- HEIC (.heic)
+- Other standard image formats
+
+**Videos:**
+- MP4 (.mp4)
+- AVI (.avi)
+- MOV (.mov)
+- Other standard video formats
+
+**Annotations (Optional):**
+- JSON annotation files for bounding boxes, labels, and metadata
+- COCO format
+- YOLO format
+- Custom annotation schemas
+
+For detailed information on annotation formats, see [Annotations Overview](/docs/Creating-Datasets/importing-annotations/annotations-overview-new).
+
+## Upload Limits
+
+Dataset upload limits depend on your current subscription plan:
+
+- **Free Trial**: Limited upload capacity for evaluation purposes
+- **Team Plans**: Increased upload capacity and dataset limits
+- **Enterprise Plans**: Custom limits based on organizational needs
+
+You'll receive an email notification when your dataset upload and indexing process is complete. For information about your current plan limits, check **Personal Info** in the top-right account menu.
+
+## Network Requirements
+
+Visual Layer is a cloud-hosted platform running on **AWS Cloud Services**. To access the platform, you need:
+
+- **Stable internet connection**: Required for uploading data, streaming visualizations, and accessing dataset features
+- **HTTPS access**: All communication with Visual Layer uses secure HTTPS protocols
+- **Firewall/proxy configuration**: Ensure your network allows access to `app.visual-layer.com` and related AWS services
+
+<Note>
+If you're behind a corporate firewall or proxy and experience connection issues, contact your IT department to whitelist Visual Layer's domain.
+</Note>
+
+## Optional: Annotation Files
+
+While not required, you can enhance your datasets by uploading annotation files during or after dataset creation. Annotations can include:
+
+- **Bounding box coordinates** for object detection
+- **Class labels** for image classification
+- **Segmentation masks** for pixel-level classification
+- **Custom metadata** for enriched analysis
+
+Learn more about preparing annotation files in our [Annotations Guide](/docs/Creating-Datasets/importing-annotations/annotations-overview-new).
+
+## Next Steps
+
+Once you've confirmed you meet these prerequisites:
+
+1. **Sign in** to Visual Layer using your Google or GitHub account
+2. **Create your first dataset** by uploading data from any supported source
+3. **Explore the platform** using Visual Layer's filtering, search, and analysis tools
+
+Ready to get started? Check out the [Quick Start guide](/docs/getting-started/quick-start) or [Deployment Options](/docs/quick-start/deployment-options) to learn more about Visual Layer's cloud and on-premises offerings.
