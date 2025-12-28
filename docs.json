@@ -9,19 +9,28 @@
     },
     "favicon": "/favicon.svg",
     "styling": {
-        "eyebrows": "breadcrumbs",
-        "codeblocks": {
-            "theme": "monokai"
-        }
+      "eyebrows": "breadcrumbs",
+      "codeblocks": {
+        "theme": "monokai"
+      },
+      "latex": false
     },
     "thumbnails": {
         "appearance": "dark",  
         "background": "/images/brand-background-a4.png"
         },
     "fonts": {
+      "family": "Inter",
+      "heading": {
         "family": "Inter",
-        "heading": { "family": "Inter", "weight": 700 },
-        "body": { "family": "Inter", "weight": 400 }
+        "weight": 700,
+        "format": "woff"
+      },
+      "body": {
+        "family": "Inter",
+        "weight": 400,
+        "format": "woff"
+      }
     },
     "icons": {
         "library": "lucide"
@@ -328,12 +337,12 @@
         "dark": "/Visual Layer new colorful backgrounds for logo_horizontal VL logo copy 5.svg"
     },
     "navbar": {
-
-        "primary": {
-            "type": "button",
-            "label": "Try It Now!",
-            "href": "https://app.visual-layer.com/free-trial"
-        }
+      "primary": {
+        "type": "button",
+        "label": "Try It Now!",
+        "href": "https://app.visual-layer.com/free-trial"
+      },
+      "links": []
     },
     "contextual": {
         "options": [
@@ -363,60 +372,66 @@
         }
     },
     "footer": {
-        "socials": {
-            "x": "https://x.visual_layer",
-            "github": "https://github.com/visual-layer/fastdup",
-            "linkedin": "https://www.linkedin.com/company/visual-layer/",
-            "youtube": "https://www.youtube.com/@visual-layer"
-        },
-        "links": [
+      "socials": {
+        "x": "https://x.visual_layer",
+        "github": "https://github.com/visual-layer/fastdup",
+        "linkedin": "https://www.linkedin.com/company/visual-layer/",
+        "youtube": "https://www.youtube.com/@visual-layer",
+        "website": "https://www.visual-layer.com"
+      },
+      "links": [
+        {
+          "header": "Navigation",
+          "items": [
             {
-                "header": "Navigation",
-                "items": [
-                    {
-                        "label": "Home",
-                        "href": "https://www.visual-layer.com"
-                    },
-                    {
-                        "label": "Platform",
-                        "href": "https://www.visual-layer.com/#platform"
-                    },
-                    {
-                        "label": "Privacy Policy",
-                        "href": "https://www.visual-layer.com/#platform"
-                    },
-                    {
-                        "label": "Terms of Service",
-                        "href": "https://www.visual-layer.com/#platform"
-                    }
-                ]
+              "label": "Home",
+              "href": "https://www.visual-layer.com"
             },
             {
-                "header": "Resources",
-                "items": [
-                    {
-                        "label": "Blog",
-                        "href": "https://www.visual-layer.com/blog"
-                    },
-                    {
-                        "label": "Videos",
-                        "href": "https://www.youtube.com/@visual-layer"
-                    }
-                ]
+              "label": "Platform",
+              "href": "https://www.visual-layer.com/#platform"
             },
             {
-                "header": "Legal Notices",
-                "items": [
-                    {
-                        "label": "Privacy Policy",
-                        "href": "https://docs.visual-layer.com/docs/privacy-policy"
-                    },
-                    {
-                        "label": "Terms of Service",
-                        "href": "https://docs.visual-layer.com/docs/terms-of-service"
-                    }
-                ]
+              "label": "Privacy Policy",
+              "href": "https://www.visual-layer.com/#platform"
+            },
+            {
+              "label": "Terms of Service",
+              "href": "https://www.visual-layer.com/#platform"
             }
-        ]
+          ]
+        },
+        {
+          "header": "Resources",
+          "items": [
+            {
+              "label": "Blog",
+              "href": "https://www.visual-layer.com/blog"
+            },
+            {
+              "label": "Videos",
+              "href": "https://www.youtube.com/@visual-layer"
+            }
+          ]
+        },
+        {
+          "header": "Legal Notices",
+          "items": [
+            {
+              "label": "Privacy Policy",
+              "href": "https://docs.visual-layer.com/docs/privacy-policy"
+            },
+            {
+              "label": "Terms of Service",
+              "href": "https://docs.visual-layer.com/docs/terms-of-service"
+            }
+          ]
+        }
+      ]
+    },
+    "api": {
+      "playground": {
+        "display": "interactive"
+      }
     }
 }
