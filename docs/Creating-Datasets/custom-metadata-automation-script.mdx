@@ -48,7 +48,9 @@ The script follows the complete Visual Layer custom metadata API workflow:
 
 Before using the script, ensure you have:
 
-1. **Visual Layer installation** (cloud or on-premises) with valid API access
+1. **Visual Layer installation** (cloud or on-premises)
+   - **Cloud**: Requires API key and secret (see [Authentication Guide](/api-reference/authentication))
+   - **On-Premises**: No authentication needed
 2. **Dataset in READY state** in Visual Layer with images already uploaded
 3. **Python environment** with required packages
 4. **CSV file** formatted according to requirements below
@@ -56,8 +58,12 @@ Before using the script, ensure you have:
 ### Install Dependencies
 
 ```bash
-pip install requests pandas
+pip install requests pandas pyjwt
 ```
+
+<Note>
+**PyJWT** is required for cloud installations that use JWT authentication. On-premises installations without authentication can omit this package.
+</Note>
 
 ## CSV Requirements
 
@@ -185,6 +191,21 @@ Save the script as `custom_metadata_upload_script.py` and run with field type sp
 ### Basic Example
 
 ```bash
+# Cloud installation (requires authentication)
+python custom_metadata_upload_script.py \
+  --csv metadata.csv \
+  --dataset-id YOUR-DATASET-ID \
+  --base-url https://app.visual-layer.com \
+  --api-key YOUR-API-KEY \
+  --api-secret YOUR-API-SECRET \
+  --string-fields patient_id notes \
+  --float-fields score confidence \
+  --datetime-fields created_at updated_at \
+  --enum-fields status category \
+  --multi-enum-fields tags labels \
+  --link-fields pdf_url
+
+# On-premises installation (no authentication needed)
 python custom_metadata_upload_script.py \
   --csv metadata.csv \
   --dataset-id YOUR-DATASET-ID \
@@ -203,7 +224,9 @@ python custom_metadata_upload_script.py \
 |-----------|----------|-------------|---------|
 | `--csv` | ✅ | Path to CSV file with metadata | - |
 | `--dataset-id` | ✅ | Visual Layer dataset identifier | - |
-| `--base-url` | ⭕ | Visual Layer installation URL | `http://localhost:8080` |
+| `--base-url` | ⭕ | Visual Layer installation URL (use `https://app.visual-layer.com` for cloud) | `http://localhost:8080` |
+| `--api-key` | ⭕ | API key for Visual Layer Cloud authentication | - |
+| `--api-secret` | ⭕ | API secret for Visual Layer Cloud authentication | - |
 | `--string-fields` | ⭕ | Space-separated list of string field names | - |
 | `--float-fields` | ⭕ | Space-separated list of float field names | - |
 | `--datetime-fields` | ⭕ | Space-separated list of datetime field names | - |
@@ -211,6 +234,12 @@ python custom_metadata_upload_script.py \
 | `--multi-enum-fields` | ⭕ | Space-separated list of multi-enum field names | - |
 | `--link-fields` | ⭕ | Space-separated list of link field names | - |
 | `--batch-size` | ⭕ | Records per upload batch | `50000` |
+
+<Note>
+**Cloud vs On-Premises:**
+- **Cloud** (`https://app.visual-layer.com`): Requires `--api-key` and `--api-secret` for JWT authentication
+- **On-Premises**: No authentication needed, omit `--api-key` and `--api-secret` parameters
+</Note>
 
 <Tip>
 At least one field type must be specified. The script will return an error if no field types are provided.
@@ -223,10 +252,13 @@ The following examples demonstrate common metadata upload scenarios.
 #### Medical Imaging
 
 ```bash
+# Cloud example
 python custom_metadata_upload_script.py \
   --csv medical_metadata.csv \
   --dataset-id abc-123 \
-  --base-url http://localhost:8080 \
+  --base-url https://app.visual-layer.com \
+  --api-key YOUR-API-KEY \
+  --api-secret YOUR-API-SECRET \
   --string-fields patient_id doctor_notes diagnosis \
   --float-fields confidence_score tumor_size_mm \
   --datetime-fields scan_date report_date \
@@ -234,6 +266,10 @@ python custom_metadata_upload_script.py \
   --multi-enum-fields findings abnormalities \
   --link-fields dicom_url report_pdf
 ```
+
+<Note>
+For on-premises installations, omit `--api-key` and `--api-secret` and change `--base-url` to your local URL (e.g., `http://localhost:8080`).
+</Note>
 
 **CSV format:**
 ```csv
@@ -244,10 +280,13 @@ scans/chest/scan001.dcm,P12345,2024-01-15,CT,0.95,"nodule, calcification",https:
 #### E-commerce Products
 
 ```bash
+# Cloud example
 python custom_metadata_upload_script.py \
   --csv product_metadata.csv \
   --dataset-id xyz-789 \
-  --base-url http://localhost:8080 \
+  --base-url https://app.visual-layer.com \
+  --api-key YOUR-API-KEY \
+  --api-secret YOUR-API-SECRET \
   --string-fields product_id product_name sku \
   --float-fields price rating \
   --datetime-fields created_at last_updated \
@@ -259,16 +298,56 @@ python custom_metadata_upload_script.py \
 #### Document Management
 
 ```bash
+# Cloud example
 python custom_metadata_upload_script.py \
   --csv document_metadata.csv \
   --dataset-id doc-456 \
-  --base-url http://localhost:8080 \
+  --base-url https://app.visual-layer.com \
+  --api-key YOUR-API-KEY \
+  --api-secret YOUR-API-SECRET \
   --string-fields document_id title author \
   --datetime-fields created_at modified_at \
   --enum-fields document_type status department \
   --multi-enum-fields keywords topics \
   --link-fields pdf_url source_url
 ```
+
+## Authentication (Cloud Only)
+
+Visual Layer Cloud requires JWT authentication for all API requests. On-premises installations can skip this section.
+
+<Card title="On-Premises Installations" icon="server">
+If you're using an on-premises deployment, you can skip authentication parameters. The script works without `--api-key` and `--api-secret` arguments.
+</Card>
+
+### Get Your API Credentials
+
+To use the script with Visual Layer Cloud:
+
+1. **Obtain API Key and Secret** - Follow the instructions in the [Authentication Guide](/api-reference/authentication) to retrieve your API credentials from Visual Layer Cloud
+2. **Pass credentials to script** - Use the `--api-key` and `--api-secret` parameters when running the script
+
+The script automatically generates JWT tokens and includes them in API requests when credentials are provided.
+
+<Tip>
+JWT tokens are short-lived (10 minutes). The script generates a fresh token at the start of execution, which is sufficient for most uploads. For very large datasets that take longer than 10 minutes, the upload may fail with authentication errors. Contact Visual Layer support for guidance on long-running uploads.
+</Tip>
+
+### Authentication Example
+
+```bash
+# Cloud installation with authentication
+python custom_metadata_upload_script.py \
+  --csv metadata.csv \
+  --dataset-id YOUR-DATASET-ID \
+  --base-url https://app.visual-layer.com \
+  --api-key YOUR-API-KEY \
+  --api-secret YOUR-API-SECRET \
+  --string-fields patient_id notes \
+  --float-fields score confidence
+```
+
+For complete details on obtaining and testing JWT tokens, see the [Authentication Guide](/api-reference/authentication).
 
 ## Validation and Error Handling
 

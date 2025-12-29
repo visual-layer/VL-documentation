@@ -28,6 +28,10 @@ Return to the main custom metadata upload guide for setup instructions, usage ex
 Before using this script, install the required Python packages:
 
 ```bash
+# For cloud installations (requires PyJWT for authentication)
+pip install requests pandas pyjwt
+
+# For on-premises installations (PyJWT optional)
 pip install requests pandas
 ```
 
@@ -36,7 +40,21 @@ pip install requests pandas
 Save this script as `custom_metadata_upload_script.py` and run:
 
 ```bash
-# Basic usage with field type specifications
+# For cloud installations (with authentication)
+python custom_metadata_upload_script.py \
+  --csv metadata.csv \
+  --dataset-id your-dataset-id \
+  --base-url https://app.visual-layer.com \
+  --api-key YOUR-API-KEY \
+  --api-secret YOUR-API-SECRET \
+  --string-fields patient_id notes \
+  --float-fields score confidence \
+  --datetime-fields created_at updated_at \
+  --enum-fields status category \
+  --multi-enum-fields tags labels \
+  --link-fields pdf_url
+
+# For on-premises installations (no authentication)
 python custom_metadata_upload_script.py \
   --csv metadata.csv \
   --dataset-id your-dataset-id \
@@ -99,8 +117,9 @@ import tempfile
 import os
 import csv
 import pandas as pd
+import jwt
 from typing import Dict, List, Any, Optional, Set
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from urllib.parse import urlparse
 
 
@@ -122,7 +141,9 @@ class CSVMetadataUploader:
                  enum_fields: List[str] = None,
                  multi_enum_fields: List[str] = None,
                  link_fields: List[str] = None,
-                 batch_size: int = 50000):
+                 batch_size: int = 50000,
+                 api_key: str = None,
+                 api_secret: str = None):
         """
         Initialize uploader with field type specifications.
 
@@ -136,6 +157,8 @@ class CSVMetadataUploader:
             multi_enum_fields: List of field names to treat as multi-enums
             link_fields: List of field names to treat as links (URLs)
             batch_size: Number of records per batch (default: 50000)
+            api_key: API key for Visual Layer Cloud authentication (optional)
+            api_secret: API secret for Visual Layer Cloud authentication (optional)
         """
         self.dataset_id = dataset_id
         self.raw_base_url = base_url.rstrip('/')
@@ -164,6 +187,34 @@ class CSVMetadataUploader:
 
         self.session = requests.Session()
         self._temp_files = []
+
+        # Add authentication headers if provided
+        if api_key and api_secret:
+            jwt_token = self._generate_jwt(api_key, api_secret)
+            self.session.headers.update({
+                'Authorization': f'Bearer {jwt_token}'
+            })
+
+    def _generate_jwt(self, api_key: str, api_secret: str) -> str:
+        """Generate JWT token for Visual Layer API authentication."""
+        jwt_algorithm = "HS256"
+        jwt_header = {
+            'alg': jwt_algorithm,
+            'typ': 'JWT',
+            'kid': api_key,
+        }
+
+        now = datetime.now(tz=timezone.utc)
+        expiration = now + timedelta(minutes=10)
+
+        payload = {
+            'sub': api_key,
+            'iat': int(now.timestamp()),
+            'exp': int(expiration.timestamp()),
+            'iss': 'sdk'
+        }
+
+        return jwt.encode(payload=payload, key=api_secret, algorithm=jwt_algorithm, headers=jwt_header)
 
     def export_dataset(self) -> Dict[str, str]:
         """Export dataset and return mapping of filename -> media_id."""
@@ -775,6 +826,10 @@ Field Type Documentation:
                        help='Base URL (default: http://localhost:8080)')
     parser.add_argument('--batch-size', type=int, default=50000,
                        help='Records per upload batch (default: 50000)')
+    parser.add_argument('--api-key', default=None,
+                       help='API key for Visual Layer Cloud authentication')
+    parser.add_argument('--api-secret', default=None,
+                       help='API secret for Visual Layer Cloud authentication')
 
     # Field type specifications
     parser.add_argument('--string-fields', nargs='*', default=[],
@@ -810,7 +865,9 @@ Field Type Documentation:
         enum_fields=args.enum_fields,
         multi_enum_fields=args.multi_enum_fields,
         link_fields=args.link_fields,
-        batch_size=args.batch_size
+        batch_size=args.batch_size,
+        api_key=args.api_key,
+        api_secret=args.api_secret
     )
 
     uploader.process_workflow(args.csv)
