@@ -1,84 +1,84 @@
 ---
 title: "Custom Metadata Upload Script Code"
-description: "Complete Python script for uploading custom metadata from folder with individual metadata JSON files to Visual Layer with automatic field discovery and type detection."
-sidebarTitle: "Custom Metadata"
+description: "Complete Python script for uploading custom metadata from CSV files to Visual Layer with comprehensive field type validation and error handling."
+sidebarTitle: "Script Code"
 ---
 
-<Card title="Custom Metadata Upload to Visual Layer" icon="file-code">
-This page contains the complete, ready-to-use Python script for uploading custom metadata from a folder containing images and their corresponding metadata JSON files to Visual Layer datasets with automatic field discovery and type detection.
+<Card title="Custom Metadata Upload Script" icon="file-code">
+This page contains the complete, ready-to-use Python script for uploading custom metadata from CSV files to Visual Layer datasets with comprehensive validation and error handling.
 </Card>
 
-This script demonstrates how to upload custom metadata to Visual Layer by scanning a folder for images and their corresponding `.metadata.json` files. The script automatically exports the dataset, discovers all metadata fields, and intelligently detects data types without manual configuration.
+This script demonstrates how to upload custom metadata to Visual Layer from CSV files. The script handles the complete workflow: exports dataset mappings, validates CSV data, creates metadata fields, uploads values, and monitors progress.
 
-<Card title="Back to Custom Metadata Automation Documentation" icon="arrow-left" href="/docs/Creating-Datasets/custom-metadata-automation-script">
-Return to the main custom metadata automation guide for setup instructions, usage examples, and workflow details.
+<Card title="Back to Custom Metadata Upload Documentation" icon="arrow-left" href="/docs/Creating-Datasets/custom-metadata-automation-script">
+Return to the main custom metadata upload guide for setup instructions, usage examples, and workflow details.
 </Card>
 
 ## Key Features
 
-- **Automatic Dataset Export** - No manual export step required
-- **Auto-Discovery Mode** - Automatically finds and processes all metadata fields
-- **Manual Override** - Specify specific fields with `--field` flag when needed
-- **Intelligent Type Detection** - Detects float, datetime, enum, multi-enum, link, and string types
-- **Robust Error Handling** - Falls back to string type if conversion fails
-- **String Truncation** - Automatically handles Visual Layer's 255-character limit
+- **CSV-Based Workflow** - Reads metadata from CSV files with `file_fullpath` column
+- **Field Type Specification** - Supports all six Visual Layer field types via command-line arguments
+- **Comprehensive Validation** - Validates all data before upload with detailed error messages
+- **Enum Limit Checking** - Pre-upload validation for 600 unique values constraint
+- **Flexible Datetime** - Accepts multiple datetime formats and converts to ISO 8601 UTC
+- **Progress Tracking** - Detailed status reporting throughout the workflow
 
 ## Installation Requirements
 
 Before using this script, install the required Python packages:
 
 ```bash
-pip install pandas requests
+# For cloud installations (requires PyJWT for authentication)
+pip install requests pandas pyjwt
+
+# For on-premises installations (PyJWT optional)
+pip install requests pandas
 ```
 
 ## Usage
 
-Save this script as `upload_metadata_from_folder.py` and run:
+Save this script as `custom_metadata_upload_script.py` and run:
 
 ```bash
-# Auto-detect all fields (recommended)
-python upload_metadata_from_folder.py \
-  --folder /path/to/folder \
+# For cloud installations (with authentication)
+python custom_metadata_upload_script.py \
+  --csv metadata.csv \
   --dataset-id your-dataset-id \
-  --base-url http://localhost:8080
+  --base-url https://app.visual-layer.com \
+  --api-key YOUR-API-KEY \
+  --api-secret YOUR-API-SECRET \
+  --string-fields patient_id notes \
+  --float-fields score confidence \
+  --datetime-fields created_at updated_at \
+  --enum-fields status category \
+  --multi-enum-fields tags labels \
+  --link-fields pdf_url
 
-# Manually specify specific fields
-python upload_metadata_from_folder.py \
-  --folder /path/to/folder \
+# For on-premises installations (no authentication)
+python custom_metadata_upload_script.py \
+  --csv metadata.csv \
   --dataset-id your-dataset-id \
   --base-url http://localhost:8080 \
-  --field annotated_at datetime \
-  --field confidence float \
-  --field category enum
+  --string-fields patient_id notes \
+  --float-fields score confidence \
+  --datetime-fields created_at updated_at \
+  --enum-fields status category \
+  --multi-enum-fields tags labels \
+  --link-fields pdf_url
 ```
 
-## Expected Folder Structure
+## CSV Format
 
-The script expects images and their corresponding metadata files:
+The CSV file must include a `file_fullpath` column matching Visual Layer export format:
 
-```
-your-folder/
-├── image1.jpg
-├── image1.jpg.metadata.json
-├── image2.png
-├── image2.png.metadata.json
-└── image3.jpg
-    └── image3.jpg.metadata.json
-```
-
-Each `.metadata.json` file should contain field-value pairs:
-
-```json
-{
-  "annotated_at": "2024-01-15T10:30:00Z",
-  "confidence": 0.95,
-  "category": "approved",
-  "tags": ["quality", "verified"]
-}
+```csv
+file_fullpath,patient_id,score,created_at,status,tags,pdf_url
+images/img1.jpg,P001,95.5,2024-01-15,active,"tag1, tag2",https://example.com/doc.pdf
+images/img2.jpg,P002,87.2,2024-01-16,pending,"tag3, tag4",https://example.com/doc2.pdf
 ```
 
 <Note>
-This is an example script designed for on-premises Visual Layer installations. You can modify the field detection logic and processing to suit your specific needs.
+This script is designed for Visual Layer installations (cloud or on-premises). You can modify the validation logic and field detection to suit your specific needs.
 </Note>
 
 ## Complete Script Code
@@ -86,442 +86,499 @@ This is an example script designed for on-premises Visual Layer installations. Y
 ```python
 #!/usr/bin/env python3
 """
-Folder-based Metadata Upload for Visual Layer
-Scans a folder for images and their corresponding .metadata.json files.
-Automatically discovers and uploads all metadata fields with intelligent type detection.
+Generic CSV-to-Visual-Layer Metadata Upload Script
+Reads a CSV file and uploads metadata to Visual Layer with configurable field types.
 
-Features:
-- Auto-detection: Discovers all fields and detects types (float, datetime, enum, string, etc.)
-- Manual override: Specify fields manually with --field flag
-- Robust: Falls back to string type if conversion fails
+Requirements:
+    pip install requests pandas
 
 Usage:
-    # Auto-detect all fields (recommended):
-    python upload_metadata_from_folder.py \\
-        --folder "path/to/folder" \\
-        --dataset-id <dataset-id> \\
-        --base-url http://localhost:8080
+    python custom_metadata_upload_script.py \
+        --csv metadata.csv \
+        --dataset-id <dataset-id> \
+        --base-url http://localhost:8080 \
+        --string-fields patient_id notes \
+        --float-fields score confidence \
+        --datetime-fields created_at updated_at \
+        --enum-fields status category \
+        --multi-enum-fields tags labels \
+        --link-fields pdf_url image_url
 
-    # Manual field specification:
-    python upload_metadata_from_folder.py \\
-        --folder "path/to/folder" \\
-        --dataset-id <dataset-id> \\
-        --base-url http://localhost:8080 \\
-        --field annotated_at datetime \\
-        --field conf_classification float
+Documentation:
+    https://docs.visual-layer.com/docs/Creating-Datasets/custom-metadata
 """
 
 import json
 import requests
 import argparse
-import os
 import sys
-import pandas as pd
 import time
-from typing import Dict, List, Any, Optional, Tuple
-from pathlib import Path
+import tempfile
+import os
+import csv
+import pandas as pd
+import jwt
+from typing import Dict, List, Any, Optional, Set
+from datetime import datetime, timezone, timedelta
+from urllib.parse import urlparse
 
-class FolderMetadataProcessor:
-    def __init__(self, dataset_id: str, base_url: str):
+
+class ValidationError(Exception):
+    """Custom exception for validation errors."""
+    pass
+
+
+class CSVMetadataUploader:
+    """Upload custom metadata from CSV to Visual Layer with field type validation."""
+
+    # Maximum unique values for enum fields per Visual Layer documentation
+    MAX_ENUM_VALUES = 600
+
+    def __init__(self, dataset_id: str, base_url: str,
+                 string_fields: List[str] = None,
+                 float_fields: List[str] = None,
+                 datetime_fields: List[str] = None,
+                 enum_fields: List[str] = None,
+                 multi_enum_fields: List[str] = None,
+                 link_fields: List[str] = None,
+                 batch_size: int = 50000,
+                 api_key: str = None,
+                 api_secret: str = None):
+        """
+        Initialize uploader with field type specifications.
+
+        Args:
+            dataset_id: Visual Layer dataset ID
+            base_url: Base URL for Visual Layer API
+            string_fields: List of field names to treat as strings
+            float_fields: List of field names to treat as floats
+            datetime_fields: List of field names to treat as datetimes (ISO 8601 UTC)
+            enum_fields: List of field names to treat as enums (single-select)
+            multi_enum_fields: List of field names to treat as multi-enums
+            link_fields: List of field names to treat as links (URLs)
+            batch_size: Number of records per batch (default: 50000)
+            api_key: API key for Visual Layer Cloud authentication (optional)
+            api_secret: API secret for Visual Layer Cloud authentication (optional)
+        """
         self.dataset_id = dataset_id
         self.raw_base_url = base_url.rstrip('/')
+        self.batch_size = batch_size
 
-        # Automatically add /api/v1/datasets if not present
+        # Build field type mappings
+        self.field_types = {}
+        for field in (string_fields or []):
+            self.field_types[field] = 'string'
+        for field in (float_fields or []):
+            self.field_types[field] = 'float'
+        for field in (datetime_fields or []):
+            self.field_types[field] = 'datetime'
+        for field in (enum_fields or []):
+            self.field_types[field] = 'enum'
+        for field in (multi_enum_fields or []):
+            self.field_types[field] = 'multi-enum'
+        for field in (link_fields or []):
+            self.field_types[field] = 'link'
+
+        # Add /api/v1/datasets to base URL if not present
         if not base_url.endswith('/api/v1/datasets'):
-            if base_url.endswith('/'):
-                base_url = base_url.rstrip('/')
-            self.base_url = f"{base_url}/api/v1/datasets"
+            self.base_url = f"{base_url.rstrip('/')}/api/v1/datasets"
         else:
             self.base_url = base_url
 
         self.session = requests.Session()
         self._temp_files = []
 
+        # Add authentication headers if provided
+        if api_key and api_secret:
+            jwt_token = self._generate_jwt(api_key, api_secret)
+            self.session.headers.update({
+                'Authorization': f'Bearer {jwt_token}'
+            })
+
+    def _generate_jwt(self, api_key: str, api_secret: str) -> str:
+        """Generate JWT token for Visual Layer API authentication."""
+        jwt_algorithm = "HS256"
+        jwt_header = {
+            'alg': jwt_algorithm,
+            'typ': 'JWT',
+            'kid': api_key,
+        }
+
+        now = datetime.now(tz=timezone.utc)
+        expiration = now + timedelta(minutes=10)
+
+        payload = {
+            'sub': api_key,
+            'iat': int(now.timestamp()),
+            'exp': int(expiration.timestamp()),
+            'iss': 'sdk'
+        }
+
+        return jwt.encode(payload=payload, key=api_secret, algorithm=jwt_algorithm, headers=jwt_header)
+
     def export_dataset(self) -> Dict[str, str]:
         """Export dataset and return mapping of filename -> media_id."""
         print("📤 Exporting dataset to get media_id mappings...")
 
-        # Use the export_media_id endpoint to get CSV with filename -> media_id mapping
-        # Note: This endpoint uses singular 'dataset' not 'datasets'
         url = f"{self.raw_base_url}/api/v1/dataset/{self.dataset_id}/export_media_id"
 
         try:
             response = self.session.get(url)
             if response.status_code == 200:
-                # Parse CSV response
-                import csv
-                import io
-
                 csv_content = response.text
-                csv_reader = csv.DictReader(io.StringIO(csv_content))
+                csv_reader = csv.DictReader(csv_content.splitlines())
 
-                # Build mapping from filename to media_id
                 mapping = {}
                 for row in csv_reader:
                     filename = row.get('filename', '')
                     media_id = row.get('media_id', '')
-
                     if media_id and filename:
-                        # Extract just the filename without path
-                        basename = os.path.basename(filename)
-                        mapping[basename] = media_id
+                        mapping[filename] = media_id
 
                 print(f"   ✅ Exported {len(mapping)} media items")
                 return mapping
             else:
                 print(f"   ❌ Failed to export dataset: {response.status_code} - {response.text}")
                 return {}
-        except requests.RequestException as e:
-            print(f"   ❌ Export request failed: {str(e)}")
-            return {}
         except Exception as e:
-            print(f"   ❌ Failed to parse export CSV: {str(e)}")
+            print(f"   ❌ Export failed: {str(e)}")
             return {}
 
-    def scan_folder(self, folder_path: str) -> List[Tuple[str, str]]:
-        """Scan folder and return list of (image_path, metadata_path) tuples."""
-        print(f"🔍 Scanning folder: {folder_path}")
-
-        folder = Path(folder_path)
-        if not folder.exists():
-            raise FileNotFoundError(f"Folder not found: {folder_path}")
-
-        pairs = []
-
-        # Find all .metadata.json files
-        for metadata_file in folder.glob("*.metadata.json"):
-            # Extract original image filename
-            # e.g., "image.jpg.metadata.json" -> "image.jpg"
-            image_name = metadata_file.name.replace(".metadata.json", "")
-            image_path = folder / image_name
-
-            # Check if corresponding image exists
-            if image_path.exists():
-                pairs.append((str(image_path), str(metadata_file)))
-            else:
-                print(f"   ⚠️  Found metadata without image: {metadata_file.name}")
-
-        print(f"   ✅ Found {len(pairs)} image + metadata pairs")
-        return pairs
-
-    def load_metadata_files(self, pairs: List[Tuple[str, str]]) -> Dict[str, Dict[str, Any]]:
-        """Load all metadata.json files and return dict of filename -> metadata."""
-        print("📖 Loading metadata files...")
-
-        metadata_by_file = {}
-
-        for image_path, metadata_path in pairs:
-            image_filename = os.path.basename(image_path)
-
-            try:
-                with open(metadata_path, 'r', encoding='utf-8') as f:
-                    metadata = json.load(f)
-                    metadata_by_file[image_filename] = metadata
-            except Exception as e:
-                print(f"   ⚠️  Failed to load {metadata_path}: {str(e)}")
-                continue
-
-        print(f"   ✅ Loaded {len(metadata_by_file)} metadata files")
-        return metadata_by_file
-
-    def discover_and_analyze_fields(self, metadata_by_file: Dict[str, Dict[str, Any]]) -> Dict[str, str]:
-        """Discover all fields and auto-detect their types."""
-        print("🔍 Discovering and analyzing all fields...")
-
-        # Collect all unique field names
-        all_fields = set()
-        for filename, metadata in metadata_by_file.items():
-            all_fields.update(metadata.keys())
-
-        print(f"   📋 Found {len(all_fields)} unique fields")
-
-        field_types = {}
-
-        # Analyze each field
-        for field_name in sorted(all_fields):
-            # Collect sample values (more samples for better enum detection)
-            sample_values = []
-            for filename, metadata in metadata_by_file.items():
-                if field_name in metadata:
-                    sample_values.append(metadata[field_name])
-                    if len(sample_values) >= 100:  # Sample up to 100 values for enum detection
-                        break
-
-            # Detect type
-            field_type = self._auto_detect_field_type(field_name, sample_values)
-            field_types[field_name] = field_type
-            print(f"      {field_name}: {field_type}")
-
-        print(f"   ✅ Analyzed {len(field_types)} fields")
-        return field_types
-
-    def _auto_detect_field_type(self, field_name: str, sample_values: List[Any]) -> str:
-        """Auto-detect field type based on sample values."""
-        if not sample_values:
-            return 'string'
-
-        # Get first non-null value
-        first_value = None
-        for val in sample_values:
-            if val is not None and val != '':
-                first_value = val
-                break
-
-        if first_value is None:
-            return 'string'
-
-        # Check type based on value patterns
-        if self._is_float(first_value):
-            return 'float'
-        elif self._is_date(first_value):
-            return 'datetime'
-        elif self._is_url(first_value):
-            # Check if most values are URLs
-            url_count = sum(1 for v in sample_values if self._is_url(v))
-            if url_count / len(sample_values) >= 0.7:
-                return 'link'
-            else:
-                return 'string'
-        elif self._is_list(first_value):
-            # Check if it's multi-enum or string
-            unique_values = set()
-            for val in sample_values:
-                if self._is_list(val):
-                    list_items = self._parse_list_value(val)
-                    unique_values.update(list_items)
-
-            if len(unique_values) <= 20:
-                return 'multi-enum'
-            else:
-                return 'string'
-        else:
-            # Check if it's an enum (limited unique string values)
-            unique_values = set()
-            for val in sample_values:
-                if val is not None and val != '':
-                    # Only consider string-like values for enum (skip dicts/lists)
-                    if not isinstance(val, (dict, list)):
-                        unique_values.add(str(val).strip())
-
-            # If ≤100 unique values and has at least some values, treat as enum
-            if len(unique_values) > 0 and len(unique_values) <= 100:
-                return 'enum'
-            else:
-                # Default to string
-                return 'string'
-
-    def _is_float(self, value: Any) -> bool:
-        """Check if value can be converted to float."""
-        if not isinstance(value, (str, int, float)):
-            return False
+    def validate_float(self, value: str, field_name: str, row_num: int) -> float:
+        """Validate and convert float value."""
         try:
-            float_val = float(value)
-            # Check if it has decimal point (to distinguish from int)
-            return '.' in str(value) or 'e' in str(value).lower()
+            return float(value)
         except (ValueError, TypeError):
-            return False
+            raise ValidationError(
+                f"Row {row_num}, field '{field_name}': Invalid float value '{value}'. "
+                f"Must be a valid number."
+            )
 
-    def _is_date(self, value: Any) -> bool:
-        """Check if value looks like a date using pandas parsing."""
-        if not isinstance(value, str) or not value.strip():
-            return False
+    def validate_datetime(self, value: str, field_name: str, row_num: int) -> str:
+        """
+        Validate datetime format (ISO 8601 UTC).
 
-        try:
-            pd.to_datetime(value.strip())
-            return True
-        except (ValueError, TypeError, pd.errors.ParserError):
-            return False
-
-    def _is_url(self, value: Any) -> bool:
-        """Check if value is a valid absolute URL with protocol."""
-        if not isinstance(value, str):
-            return False
-
-        value_lower = value.strip().lower()
-
-        # ONLY accept actual URLs starting with protocol
-        return value_lower.startswith(('http://', 'https://', 'ftp://'))
-
-    def _is_list(self, value: Any) -> bool:
-        """Check if value looks like a list."""
-        # If it's already a list, return True
-        if isinstance(value, list):
-            return True
-
-        if not isinstance(value, str):
-            return False
+        Accepts formats:
+        - YYYY-MM-DDTHH:MM:SSZ (e.g., 2024-01-15T10:30:00Z)
+        - YYYY-MM-DD (will be converted to YYYY-MM-DDT00:00:00Z)
+        """
+        if not value or not value.strip():
+            raise ValidationError(
+                f"Row {row_num}, field '{field_name}': Empty datetime value"
+            )
 
         value = value.strip()
 
-        # Check for standard list formats
+        # Try to parse common datetime formats
+        formats_to_try = [
+            '%Y-%m-%dT%H:%M:%SZ',       # 2024-01-15T10:30:00Z
+            '%Y-%m-%dT%H:%M:%S',        # 2024-01-15T10:30:00
+            '%Y-%m-%d %H:%M:%S',        # 2024-01-15 10:30:00
+            '%Y-%m-%d',                 # 2024-01-15
+        ]
+
+        for fmt in formats_to_try:
+            try:
+                dt = datetime.strptime(value, fmt)
+                # Always return ISO 8601 UTC format
+                return dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+            except ValueError:
+                continue
+
+        raise ValidationError(
+            f"Row {row_num}, field '{field_name}': Invalid datetime format '{value}'. "
+            f"Expected ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ or YYYY-MM-DD"
+        )
+
+    def validate_enum(self, value: str, field_name: str, row_num: int) -> str:
+        """Validate enum value."""
+        if not value or not value.strip():
+            raise ValidationError(
+                f"Row {row_num}, field '{field_name}': Empty enum value"
+            )
+
+        value = value.strip()
+        return value
+
+    def validate_multi_enum(self, value: str, field_name: str, row_num: int) -> List[str]:
+        """
+        Validate multi-enum value (list of strings).
+
+        Accepts formats:
+        - Comma-separated: "tag1, tag2, tag3"
+        - JSON array: ["tag1", "tag2", "tag3"]
+        """
+        if not value or not value.strip():
+            raise ValidationError(
+                f"Row {row_num}, field '{field_name}': Empty multi-enum value"
+            )
+
+        value = value.strip()
+
+        # Try to parse as JSON array first
         if value.startswith('[') and value.endswith(']'):
             try:
-                import ast
-                ast.literal_eval(value)
-                return True
-            except (ValueError, SyntaxError):
-                return False
-        return False
+                parsed = json.loads(value)
+                if not isinstance(parsed, list):
+                    raise ValidationError(
+                        f"Row {row_num}, field '{field_name}': Multi-enum must be a list"
+                    )
+                values = [str(v).strip() for v in parsed]
+            except json.JSONDecodeError:
+                raise ValidationError(
+                    f"Row {row_num}, field '{field_name}': Invalid JSON array format"
+                )
+        else:
+            # Parse as comma-separated values
+            values = [v.strip() for v in value.split(',')]
 
-    def _parse_list_value(self, value: Any) -> List[str]:
-        """Parse list value."""
-        if isinstance(value, list):
-            return [str(v) for v in value]
+        # Validate each value
+        for v in values:
+            if not v:
+                raise ValidationError(
+                    f"Row {row_num}, field '{field_name}': Empty value in multi-enum list"
+                )
 
-        if not isinstance(value, str):
-            return [str(value)]
+        return values
+
+    def validate_link(self, value: str, field_name: str, row_num: int) -> str:
+        """Validate URL format for link field."""
+        if not value or not value.strip():
+            raise ValidationError(
+                f"Row {row_num}, field '{field_name}': Empty link value"
+            )
 
         value = value.strip()
 
+        # Parse URL
         try:
-            import ast
-            parsed = ast.literal_eval(value)
-            if isinstance(parsed, list):
-                return [str(v) for v in parsed]
-        except (ValueError, SyntaxError):
-            pass
+            parsed = urlparse(value)
+            # Check if it has a scheme (http, https, etc.)
+            if not parsed.scheme:
+                raise ValidationError(
+                    f"Row {row_num}, field '{field_name}': Invalid URL '{value}'. "
+                    f"Must include protocol (e.g., http:// or https://)"
+                )
+            return value
+        except Exception:
+            raise ValidationError(
+                f"Row {row_num}, field '{field_name}': Invalid URL format '{value}'"
+            )
 
-        return [value]
+    def validate_and_convert_value(self, value: str, field_name: str,
+                                   field_type: str, row_num: int) -> Any:
+        """Validate and convert value based on field type."""
+        # Skip empty values
+        if not value or (isinstance(value, str) and not value.strip()):
+            return None
 
-    def validate_user_fields(self, user_fields: Dict[str, str],
-                            metadata_by_file: Dict[str, Dict[str, Any]]) -> Dict[str, str]:
-        """Validate user-specified fields exist and types are correct."""
-        print("🔍 Validating user-specified fields...")
+        try:
+            if field_type == 'float':
+                return self.validate_float(value, field_name, row_num)
+            elif field_type == 'datetime':
+                return self.validate_datetime(value, field_name, row_num)
+            elif field_type == 'enum':
+                return self.validate_enum(value, field_name, row_num)
+            elif field_type == 'multi-enum':
+                return self.validate_multi_enum(value, field_name, row_num)
+            elif field_type == 'link':
+                return self.validate_link(value, field_name, row_num)
+            elif field_type == 'string':
+                return str(value).strip()
+            else:
+                return str(value).strip()
+        except ValidationError:
+            raise
+        except Exception as e:
+            raise ValidationError(
+                f"Row {row_num}, field '{field_name}': Unexpected validation error: {str(e)}"
+            )
 
-        validated_fields = {}
+    def read_csv(self, csv_path: str, filename_to_media_id: Dict[str, str]) -> Dict[str, Dict[str, Any]]:
+        """
+        Read CSV file and return validated metadata dictionary.
 
-        for field_name, field_type in user_fields.items():
-            print(f"   Checking field: {field_name} ({field_type})")
+        Returns:
+            Dict mapping file_fullpath -> metadata
+        """
+        print(f"📖 Reading and validating CSV file: {csv_path}")
 
-            # Check if field exists in at least one metadata file
-            field_exists = False
-            sample_values = []
+        if not self.field_types:
+            raise ValueError(
+                "No field types specified. Please provide at least one field type using "
+                "--string-fields, --float-fields, --datetime-fields, --enum-fields, "
+                "--multi-enum-fields, or --link-fields"
+            )
 
-            for filename, metadata in metadata_by_file.items():
-                if field_name in metadata:
-                    field_exists = True
-                    sample_values.append(metadata[field_name])
-                    if len(sample_values) >= 10:  # Sample up to 10 values
-                        break
+        try:
+            # Load CSV with pandas for analysis
+            df = pd.read_csv(csv_path)
 
-            if not field_exists:
-                print(f"      ❌ Field '{field_name}' not found in any metadata file")
+            print(f"   ✅ Loaded {len(df)} rows")
+
+            # Check enum/multi-enum fields for unique value count
+            print(f"   🔍 Checking enum field constraints...")
+            enum_errors = []
+
+            for field_name, field_type in self.field_types.items():
+                if field_type in ['enum', 'multi-enum']:
+                    if field_name not in df.columns:
+                        enum_errors.append(f"Field '{field_name}' not found in CSV columns")
+                        continue
+
+                    if field_type == 'enum':
+                        # For enum, count unique values directly
+                        unique_count = df[field_name].nunique()
+                        if unique_count > self.MAX_ENUM_VALUES:
+                            enum_errors.append(
+                                f"Field '{field_name}' (enum): Has {unique_count} unique values, "
+                                f"exceeds limit of {self.MAX_ENUM_VALUES}"
+                            )
+                        else:
+                            print(f"      ✅ {field_name} (enum): {unique_count} unique values")
+
+                    elif field_type == 'multi-enum':
+                        # For multi-enum, collect all unique values across all lists
+                        unique_values = set()
+                        for value in df[field_name].dropna():
+                            if isinstance(value, str):
+                                # Parse the value
+                                if value.strip().startswith('['):
+                                    # JSON array format
+                                    try:
+                                        parsed = json.loads(value.strip())
+                                        if isinstance(parsed, list):
+                                            unique_values.update(str(v).strip() for v in parsed)
+                                    except json.JSONDecodeError:
+                                        pass
+                                else:
+                                    # Comma-separated format
+                                    unique_values.update(v.strip() for v in value.split(',') if v.strip())
+
+                        unique_count = len(unique_values)
+                        if unique_count > self.MAX_ENUM_VALUES:
+                            enum_errors.append(
+                                f"Field '{field_name}' (multi-enum): Has {unique_count} unique values "
+                                f"across all lists, exceeds limit of {self.MAX_ENUM_VALUES}"
+                            )
+                        else:
+                            print(f"      ✅ {field_name} (multi-enum): {unique_count} unique values")
+
+            if enum_errors:
+                print(f"\n   ❌ Enum Constraint Errors ({len(enum_errors)} total):")
+                for error in enum_errors:
+                    print(f"      • {error}")
+                print()
+                raise ValidationError(
+                    f"Enum fields exceed the {self.MAX_ENUM_VALUES} unique values limit. "
+                    f"Please reduce unique values or use 'string' field type instead."
+                )
+
+            print(f"   🔍 Validating {len(self.field_types)} metadata fields...")
+
+            # Print field type configuration
+            print(f"\n   📋 Field Configuration:")
+            for field_name, field_type in sorted(self.field_types.items()):
+                print(f"      • {field_name}: {field_type}")
+            print()
+
+            # Convert back to list of dicts for row-by-row processing
+            rows = df.to_dict('records')
+
+        except ValidationError:
+            raise
+        except Exception as e:
+            print(f"   ❌ Failed to read CSV: {str(e)}")
+            return {}
+
+        metadata_by_path = {}
+        skipped_count = 0
+        validation_errors = []
+
+        for row_num, row in enumerate(rows, start=2):  # Start at 2 (header is row 1)
+            # Get file_fullpath for mapping
+            file_fullpath = row.get('file_fullpath', '')
+            if not file_fullpath:
+                skipped_count += 1
+                validation_errors.append(f"Row {row_num}: Missing 'file_fullpath' column")
                 continue
 
-            # Validate type with sample values
-            type_valid = self._validate_field_type(field_name, field_type, sample_values)
+            # Skip if not in Visual Layer dataset
+            if file_fullpath not in filename_to_media_id:
+                skipped_count += 1
+                continue
 
-            if type_valid:
-                validated_fields[field_name] = field_type
-                print(f"      ✅ Valid")
-            else:
-                print(f"      ❌ Type validation failed for '{field_name}'")
+            # Validate and build metadata dictionary
+            flattened = {}
+            for field_name, field_type in self.field_types.items():
+                value = row.get(field_name, '')
 
-        print(f"   ✅ Validated {len(validated_fields)}/{len(user_fields)} fields")
-        return validated_fields
-
-    def _validate_field_type(self, field_name: str, field_type: str,
-                            sample_values: List[Any]) -> bool:
-        """Validate that sample values match expected field type."""
-        if not sample_values:
-            return True  # Empty is ok
-
-        if field_type == 'string':
-            return True  # String always works
-
-        if field_type == 'datetime':
-            # Try parsing with pandas
-            for value in sample_values:
-                if value is None or value == '':
-                    continue
                 try:
-                    pd.to_datetime(str(value))
-                except Exception:
-                    return False
-            return True
+                    validated_value = self.validate_and_convert_value(
+                        value, field_name, field_type, row_num
+                    )
 
-        if field_type == 'float':
-            # Try converting to float
-            for value in sample_values:
-                if value is None or value == '':
-                    continue
-                try:
-                    float(value)
-                except Exception:
-                    return False
-            return True
+                    # Only add non-None values
+                    if validated_value is not None:
+                        flattened[field_name] = validated_value
 
-        if field_type in ['enum', 'multi-enum']:
-            # Collect unique values
-            unique_values = set()
-            for value in sample_values:
-                if value is None or value == '':
-                    continue
-                if field_type == 'multi-enum':
-                    if isinstance(value, list):
-                        unique_values.update([str(v) for v in value])
-                    else:
-                        return False  # multi-enum must be array
-                else:
-                    unique_values.add(str(value))
+                except ValidationError as e:
+                    validation_errors.append(str(e))
+                    # Stop at first validation error for this row
+                    break
 
-            # Check if within API limit
-            if len(unique_values) > 20:
-                print(f"      ⚠️  Warning: {len(unique_values)} unique values (max 20 for enum)")
-                return False
+            # Only add if we have at least one metadata field
+            if flattened:
+                metadata_by_path[file_fullpath] = flattened
 
-            return True
+        # Report validation errors
+        if validation_errors:
+            print(f"\n   ❌ Validation Errors ({len(validation_errors)} total):")
+            # Show first 10 errors
+            for error in validation_errors[:10]:
+                print(f"      • {error}")
+            if len(validation_errors) > 10:
+                print(f"      • ... and {len(validation_errors) - 10} more errors")
+            print()
+            raise ValidationError(f"CSV validation failed with {len(validation_errors)} errors")
 
-        if field_type == 'link':
-            # Basic URL validation
-            for value in sample_values:
-                if value is None or value == '':
-                    continue
-                value_str = str(value)
-                if not (value_str.startswith('http://') or
-                       value_str.startswith('https://') or
-                       value_str.startswith('ftp://')):
-                    # Could be file path, allow it
-                    pass
-            return True
+        if skipped_count > 0:
+            print(f"   ⚠️  Skipped {skipped_count} rows not in Visual Layer dataset")
 
-        return True
+        print(f"   ✅ Validated {len(metadata_by_path)} rows successfully\n")
+        return metadata_by_path
 
     def create_custom_field(self, field_name: str, field_type: str,
-                           metadata_by_file: Dict[str, Dict[str, Any]]) -> Optional[str]:
-        """Create a custom field and return field_id."""
-        print(f"🔧 Creating custom field: {field_name} ({field_type})")
+                           metadata_by_path: Dict[str, Dict[str, Any]]) -> Optional[str]:
+        """Create a custom field and return field_id (task_id)."""
+        print(f"   🔧 Creating field: {field_name} ({field_type})")
 
-        # Prepare field data
         field_data = {
             "field_name": field_name,
             "field_type": field_type
         }
 
-        # Add enum values for enum types
+        # For enum/multi-enum fields, collect unique values from the data
         if field_type in ['enum', 'multi-enum']:
             unique_values = set()
-
-            for filename, metadata in metadata_by_file.items():
+            for metadata in metadata_by_path.values():
                 if field_name in metadata:
                     value = metadata[field_name]
-                    if value is not None and value != '':
-                        if field_type == 'multi-enum':
-                            if isinstance(value, list):
-                                unique_values.update([str(v) for v in value])
-                        else:
-                            unique_values.add(str(value))
+                    if field_type == 'multi-enum' and isinstance(value, list):
+                        unique_values.update(value)
+                    elif value and isinstance(value, str):
+                        unique_values.add(value)
 
-            enum_values = list(unique_values)[:20]  # Limit to API max
-            field_data["enum_options"] = enum_values
+            enum_options = sorted(list(unique_values))
+            field_data["enum_options"] = enum_options
 
             if field_type == 'multi-enum':
-                field_data["field_type"] = 'enum'  # API only accepts 'enum'
+                field_data["field_type"] = 'enum'  # API expects 'enum' for both
                 field_data["is_multi"] = True
             else:
                 field_data["is_multi"] = False
 
-            print(f"   📝 Adding {len(enum_values)} enum values")
+            print(f"      📋 Enum options ({len(enum_options)}): {enum_options[:10]}{' ...' if len(enum_options) > 10 else ''}")
 
         url = f"{self.base_url}/{self.dataset_id}/custom_metadata/tasks"
 
@@ -530,65 +587,47 @@ class FolderMetadataProcessor:
             if response.status_code == 200:
                 result = response.json()
                 task_id = result.get('task_id')
-                print(f"   ✅ Created field with task ID: {task_id}")
+                print(f"      ✅ Created (task_id: {task_id})")
                 return task_id
             elif "already exists" in response.text:
-                print(f"   🔄 Field already exists, skipping creation")
+                print(f"      🔄 Field already exists, skipping")
                 return None
             else:
-                print(f"   ❌ Failed to create field: {response.status_code} - {response.text}")
+                print(f"      ❌ Failed: {response.status_code} - {response.text}")
                 return None
-        except requests.RequestException as e:
-            print(f"   ❌ Request failed: {str(e)}")
+        except Exception as e:
+            print(f"      ❌ Request failed: {str(e)}")
             return None
 
     def upload_field_data(self, field_id: str, field_name: str, field_type: str,
-                         metadata_by_file: Dict[str, Dict[str, Any]],
+                         metadata_by_path: Dict[str, Dict[str, Any]],
                          filename_to_media_id: Dict[str, str]) -> Optional[str]:
-        """Upload data for a custom field."""
-        print(f"   📤 Uploading data for field: {field_name}")
-
+        """Upload data for a custom field in a single request."""
         upload_data = []
-        matched_count = 0
-        skipped_count = 0
 
-        for filename, metadata in metadata_by_file.items():
-            # Get media_id for this file
-            media_id = filename_to_media_id.get(filename)
-            if not media_id:
-                skipped_count += 1
-                continue
-
-            # Get field value
-            if field_name not in metadata:
+        for file_fullpath, metadata in metadata_by_path.items():
+            media_id = filename_to_media_id.get(file_fullpath)
+            if not media_id or field_name not in metadata:
                 continue
 
             value = metadata[field_name]
             if value is None or value == '':
                 continue
 
-            # Convert value based on field type
-            try:
-                converted_value = self._convert_value(value, field_name, field_type)
-                if converted_value is not None:
-                    upload_data.append({
-                        "media_id": media_id,
-                        "value": converted_value
-                    })
-                    matched_count += 1
-            except Exception as e:
-                print(f"      ⚠️  Failed to convert value for {filename}: {str(e)}")
-                skipped_count += 1
-                continue
-
-        print(f"   📊 Processed {matched_count} files, skipped {skipped_count}")
+            upload_data.append({
+                "media_id": media_id,
+                "value": value
+            })
 
         if not upload_data:
-            print(f"   ⚠️  No data to upload for field {field_name}")
+            print(f"      ⚠️  No data to upload")
             return None
 
-        # Save to temp file
-        import tempfile
+        print(f"      📤 Uploading {len(upload_data)} values")
+
+        url = f"{self.base_url}/{self.dataset_id}/custom_metadata/tasks/{field_id}"
+
+        # Save data to temp file
         with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
             json.dump(upload_data, f, indent=2)
             temp_file = f.name
@@ -596,133 +635,57 @@ class FolderMetadataProcessor:
         self._temp_files.append(temp_file)
 
         # Upload
-        url = f"{self.base_url}/{self.dataset_id}/custom_metadata/tasks/{field_id}"
-
         try:
             with open(temp_file, 'rb') as f:
-                files = {'file': (f'metadata_{field_name}.json', f, 'application/json')}
+                files = {'file': ('metadata.json', f, 'application/json')}
                 response = self.session.post(url, files=files)
 
-            if response.status_code in [200, 202]:
-                print(f"   ✅ Upload completed successfully")
-                return field_id
-            else:
-                print(f"   ❌ Failed to upload data: {response.status_code} - {response.text}")
+            if response.status_code not in [200, 202]:
+                print(f"      ❌ Upload failed: {response.status_code} - {response.text}")
                 return None
-        except requests.RequestException as e:
-            print(f"   ❌ Request failed: {str(e)}")
-            return None
 
-    def _convert_value(self, value: Any, field_name: str, field_type: str) -> Any:
-        """Convert value to appropriate type for upload. Falls back to string if conversion fails.
-        Truncates string values to 255 characters (VL limit)."""
-        try:
-            if field_type == 'datetime':
-                # Parse and format as ISO 8601
-                dt = pd.to_datetime(str(value))
-                if dt.tz is None:
-                    return dt.strftime('%Y-%m-%dT%H:%M:%SZ')
-                else:
-                    return dt.tz_convert('UTC').strftime('%Y-%m-%dT%H:%M:%SZ')
-
-            elif field_type == 'float':
-                return float(value)
-
-            elif field_type == 'multi-enum':
-                if isinstance(value, list):
-                    return [str(v).strip() for v in value]
-                else:
-                    return [str(value).strip()]
-
-            elif field_type == 'enum':
-                return str(value).strip()
-
-            elif field_type == 'string':
-                # Handle nested objects/arrays - serialize to JSON
-                if isinstance(value, (dict, list)):
-                    json_str = json.dumps(value)
-                    if len(json_str) > 255:
-                        return json_str[:255]
-                    return json_str
-
-                str_value = str(value).strip()
-                if len(str_value) > 255:
-                    return str_value[:255]
-                return str_value
-
-            elif field_type == 'link':
-                return str(value).strip()
-
-            return str(value)
+            print(f"      ✅ Upload completed")
+            return field_id
 
         except Exception as e:
-            # Fallback to string if conversion fails (with 255 char limit)
-            if isinstance(value, (dict, list)):
-                json_str = json.dumps(value)
-                return json_str[:255] if len(json_str) > 255 else json_str
+            print(f"      ❌ Upload failed: {str(e)}")
+            return None
 
-            str_value = str(value)
-            return str_value[:255] if len(str_value) > 255 else str_value
-
-    def check_task_status(self, task_id: str) -> str:
-        """Check the status of an upload task."""
+    def wait_for_task_completion(self, task_id: str, field_name: str,
+                                 polling_interval: int = 5) -> str:
+        """Wait for task completion by polling status endpoint."""
         url = f"{self.base_url}/{self.dataset_id}/custom_metadata/tasks/{task_id}/status"
 
-        try:
-            response = self.session.get(url)
-            if response.status_code == 200:
-                result = response.json()
-                status = result.get('status', 'unknown')
-
-                if status == 'COMPLETED_WITH_ERRORS':
-                    error_count = result.get('error_count', 0)
-                    inserted_rows = result.get('inserted_rows', 0)
-                    print(f"   ⚠️  Task completed with {error_count} errors, {inserted_rows} rows inserted")
-
-                    sample_errors = result.get('sample_errors', [])
-                    if sample_errors:
-                        print(f"   📋 Sample errors:")
-                        for error in sample_errors[:3]:
-                            print(f"      - Row {error.get('row_index', '?')}: {error.get('reason', 'Unknown error')}")
-                        if len(sample_errors) > 3:
-                            print(f"      - ... and {len(sample_errors) - 3} more errors")
-
-                elif status == 'COMPLETED':
-                    inserted_rows = result.get('inserted_rows', 0)
-                    print(f"   ✅ Task completed successfully, {inserted_rows} rows inserted")
-
-                return status
-            else:
-                return 'error'
-        except requests.RequestException:
-            return 'error'
-
-    def wait_for_task_completion(self, task_id: str, field_name: str, polling_interval: int = 5) -> str:
-        """Wait for task completion by polling status endpoint."""
-        print(f"   ⏳ Waiting for task completion... (Press Ctrl+C to stop)")
-        start_time = time.time()
-
         while True:
-            status = self.check_task_status(task_id)
+            try:
+                response = self.session.get(url)
+                if response.status_code == 200:
+                    result = response.json()
+                    status = result.get('status', 'unknown')
 
-            if status in ['COMPLETED', 'COMPLETED_WITH_ERRORS']:
-                elapsed = int(time.time() - start_time)
-                print(f"   ✅ Task completed after {elapsed}s")
-                return status
-            elif status == 'error':
-                print(f"   ❌ Error checking task status")
+                    if status == 'COMPLETED':
+                        inserted_rows = result.get('inserted_rows', 0)
+                        print(f"      ✅ Completed ({inserted_rows} rows)")
+                        return 'COMPLETED'
+                    elif status == 'COMPLETED_WITH_ERRORS':
+                        error_count = result.get('error_count', 0)
+                        inserted_rows = result.get('inserted_rows', 0)
+                        print(f"      ⚠️  Completed with {error_count} errors ({inserted_rows} rows)")
+                        return 'COMPLETED_WITH_ERRORS'
+                    elif status == 'IN_PROGRESS':
+                        time.sleep(polling_interval)
+                        continue
+                    else:
+                        time.sleep(polling_interval)
+                        continue
+                else:
+                    print(f"      ❌ Status check failed")
+                    return 'error'
+            except Exception:
                 return 'error'
-            elif status == 'IN_PROGRESS':
-                elapsed = int(time.time() - start_time)
-                print(f"   ⏳ Task in progress... (elapsed: {elapsed}s)")
-            else:
-                elapsed = int(time.time() - start_time)
-                print(f"   📋 Task status: {status} (elapsed: {elapsed}s)")
-
-            time.sleep(polling_interval)
 
     def cleanup_temp_files(self):
-        """Remove temporary files created during processing."""
+        """Remove temporary files."""
         for temp_file in self._temp_files:
             try:
                 if os.path.exists(temp_file):
@@ -730,184 +693,186 @@ class FolderMetadataProcessor:
             except OSError:
                 pass
 
-    def process_workflow(self, folder_path: str, user_fields: Optional[Dict[str, str]] = None):
-        """Main workflow processing function."""
+    def process_workflow(self, csv_path: str):
+        """Main workflow: export → read CSV → validate → create fields → upload data."""
         try:
-            print("🚀 Starting Folder Metadata Upload Workflow")
-            print(f"📁 Folder: {folder_path}")
+            print("=" * 70)
+            print("🚀 Generic CSV Metadata Upload to Visual Layer")
+            print("=" * 70)
+            print(f"📁 CSV File: {csv_path}")
+            print(f"🎯 Dataset ID: {self.dataset_id}")
+            print(f"🌐 Base URL: {self.raw_base_url}")
+            print("=" * 70)
+            print()
 
             # Step 1: Export dataset to get media_id mappings
             filename_to_media_id = self.export_dataset()
             if not filename_to_media_id:
                 raise Exception("Failed to export dataset")
+            print()
 
-            # Step 2: Scan folder for images + metadata
-            pairs = self.scan_folder(folder_path)
-            if not pairs:
-                raise Exception("No image + metadata pairs found in folder")
+            # Step 2: Read CSV, validate, and build metadata
+            metadata_by_path = self.read_csv(csv_path, filename_to_media_id)
+            if not metadata_by_path:
+                raise Exception("No valid rows found in CSV after validation")
 
-            # Step 3: Load all metadata files
-            metadata_by_file = self.load_metadata_files(pairs)
-            if not metadata_by_file:
-                raise Exception("Failed to load metadata files")
+            # Step 3: Process each field
+            print(f"🔧 Creating and uploading {len(self.field_types)} custom fields...")
+            print()
 
-            # Step 4: Determine fields to process
-            if user_fields:
-                # User-specified fields - validate them
-                print(f"🎯 User-specified fields: {len(user_fields)}")
-                validated_fields = self.validate_user_fields(user_fields, metadata_by_file)
-                if not validated_fields:
-                    raise Exception("No valid fields to upload")
-            else:
-                # Auto-detect all fields
-                print("🤖 Auto-detection mode")
-                validated_fields = self.discover_and_analyze_fields(metadata_by_file)
-                if not validated_fields:
-                    raise Exception("No fields discovered")
+            completed_count = 0
+            failed_fields = []
 
-            print(f"\n🎯 Processing {len(validated_fields)} custom fields...")
-
-            # Step 5: Process each field
-            completed_fields = []
-
-            for field_name, field_type in validated_fields.items():
-                print(f"\n🔄 Processing field: {field_name} ({field_type})")
+            for field_name, field_type in self.field_types.items():
+                print(f"📝 Processing: {field_name} ({field_type})")
 
                 try:
-                    # Create custom field
-                    field_id = self.create_custom_field(field_name, field_type, metadata_by_file)
+                    # Create field
+                    field_id = self.create_custom_field(field_name, field_type, metadata_by_path)
                     if not field_id:
-                        print(f"   ⏭️  Skipping field {field_name}")
+                        print(f"   ⏭️  Skipping (field exists or creation failed)\n")
                         continue
 
                     # Upload data
                     task_id = self.upload_field_data(field_id, field_name, field_type,
-                                                    metadata_by_file, filename_to_media_id)
+                                                    metadata_by_path, filename_to_media_id)
                     if not task_id:
-                        print(f"   ❌ Failed to upload data for {field_name}")
+                        failed_fields.append(field_name)
+                        print(f"   ❌ Upload failed\n")
                         continue
 
                     # Wait for completion
-                    final_status = self.wait_for_task_completion(task_id, field_name)
-
-                    if final_status in ['COMPLETED', 'COMPLETED_WITH_ERRORS']:
-                        completed_fields.append(field_name)
-                        status_icon = "✅" if final_status == 'COMPLETED' else "⚠️"
-                        print(f"   {status_icon} Field {field_name} {final_status.lower()}")
+                    status = self.wait_for_task_completion(task_id, field_name)
+                    if status in ['COMPLETED', 'COMPLETED_WITH_ERRORS']:
+                        completed_count += 1
                     else:
-                        print(f"   ❌ Field {field_name} failed")
+                        failed_fields.append(field_name)
+
+                    print()  # Blank line between fields
 
                 except Exception as e:
-                    print(f"   ❌ Error processing field {field_name}: {str(e)}")
+                    print(f"   ❌ Error: {str(e)}\n")
+                    failed_fields.append(field_name)
                     continue
 
-            print("\n🎉 Workflow completed!")
-            print(f"✅ Successfully processed {len(completed_fields)}/{len(validated_fields)} fields")
+            # Final summary
+            print("=" * 70)
+            print("🎉 Workflow Completed!")
+            print("=" * 70)
+            print(f"✅ Successfully uploaded: {completed_count}/{len(self.field_types)} fields")
+            print(f"📊 Total rows processed: {len(metadata_by_path)}")
 
+            if failed_fields:
+                print(f"❌ Failed fields ({len(failed_fields)}): {', '.join(failed_fields)}")
+
+            print("=" * 70)
+
+        except ValidationError as e:
+            print(f"\n❌ Validation failed: {str(e)}")
+            sys.exit(1)
+        except Exception as e:
+            print(f"\n❌ Workflow failed: {str(e)}")
+            sys.exit(1)
         finally:
             self.cleanup_temp_files()
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Upload metadata from folder to Visual Layer',
+        description='Generic CSV metadata upload to Visual Layer with field type validation',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Example usage:
 
-  # Auto-detect all fields (recommended):
-  python upload_metadata_from_folder.py \\
-    --folder "example shopic/" \\
-    --dataset-id abc-123 \\
-    --base-url http://localhost:8080
-
-  # Manual field specification:
-  python upload_metadata_from_folder.py \\
-    --folder "example shopic/" \\
+  # Basic upload with different field types
+  python custom_metadata_upload_script.py \\
+    --csv metadata.csv \\
     --dataset-id abc-123 \\
     --base-url http://localhost:8080 \\
-    --field annotated_at datetime \\
-    --field conf_classification float \\
-    --field barcode string \\
-    --field quality enum
+    --string-fields patient_id notes description \\
+    --float-fields score confidence temperature \\
+    --datetime-fields created_at updated_at \\
+    --enum-fields status category priority \\
+    --multi-enum-fields tags labels keywords \\
+    --link-fields pdf_url documentation_link
+
+  # Simple upload with just strings and enums
+  python custom_metadata_upload_script.py \\
+    --csv data.csv \\
+    --dataset-id abc-123 \\
+    --base-url http://localhost:8080 \\
+    --string-fields name description \\
+    --enum-fields category status
+
+CSV Format Requirements:
+  - Must have a 'file_fullpath' column matching Visual Layer export format
+  - File paths should match those returned by the dataset export API
+  - Datetime values: YYYY-MM-DDTHH:MM:SSZ or YYYY-MM-DD
+  - Float values: Valid decimal numbers
+  - Enum values: Max 20 characters each
+  - Multi-enum values: Comma-separated or JSON array ["val1", "val2"]
+  - Link values: Must include protocol (http:// or https://)
+
+Field Type Documentation:
+  https://docs.visual-layer.com/docs/Creating-Datasets/custom-metadata
         """
     )
 
-    parser.add_argument('--folder', required=True,
-                       help='Path to folder containing images and .metadata.json files')
+    parser.add_argument('--csv', required=True,
+                       help='Path to CSV file with metadata')
     parser.add_argument('--dataset-id', required=True,
                        help='Visual Layer dataset ID')
     parser.add_argument('--base-url', default='http://localhost:8080',
                        help='Base URL (default: http://localhost:8080)')
-    parser.add_argument('--field', action='append', nargs=2, metavar=('NAME', 'TYPE'),
-                       help='Field to upload (optional, repeatable). If not specified, auto-detects all fields. TYPE: string|float|datetime|enum|multi-enum|link')
+    parser.add_argument('--batch-size', type=int, default=50000,
+                       help='Records per upload batch (default: 50000)')
+    parser.add_argument('--api-key', default=None,
+                       help='API key for Visual Layer Cloud authentication')
+    parser.add_argument('--api-secret', default=None,
+                       help='API secret for Visual Layer Cloud authentication')
+
+    # Field type specifications
+    parser.add_argument('--string-fields', nargs='*', default=[],
+                       help='List of fields to treat as strings')
+    parser.add_argument('--float-fields', nargs='*', default=[],
+                       help='List of fields to treat as floats (decimal numbers)')
+    parser.add_argument('--datetime-fields', nargs='*', default=[],
+                       help='List of fields to treat as datetimes (ISO 8601 UTC format)')
+    parser.add_argument('--enum-fields', nargs='*', default=[],
+                       help='List of fields to treat as enums (single-select, max 20 chars)')
+    parser.add_argument('--multi-enum-fields', nargs='*', default=[],
+                       help='List of fields to treat as multi-enums (multi-select, max 20 chars each)')
+    parser.add_argument('--link-fields', nargs='*', default=[],
+                       help='List of fields to treat as links (URLs)')
 
     args = parser.parse_args()
 
-    # Parse fields if provided
-    user_fields = None
-    if args.field:
-        user_fields = {}
-        valid_types = {'string', 'float', 'datetime', 'enum', 'multi-enum', 'link'}
+    # Validate that at least one field type is specified
+    if not any([args.string_fields, args.float_fields, args.datetime_fields,
+                args.enum_fields, args.multi_enum_fields, args.link_fields]):
+        parser.error(
+            "At least one field type must be specified. Use --string-fields, --float-fields, "
+            "--datetime-fields, --enum-fields, --multi-enum-fields, or --link-fields"
+        )
 
-        for field_name, field_type in args.field:
-            if field_type not in valid_types:
-                print(f"❌ Error: Invalid field type '{field_type}' for field '{field_name}'")
-                print(f"   Valid types: {', '.join(sorted(valid_types))}")
-                sys.exit(1)
-            user_fields[field_name] = field_type
+    # Create uploader and run workflow
+    uploader = CSVMetadataUploader(
+        dataset_id=args.dataset_id,
+        base_url=args.base_url,
+        string_fields=args.string_fields,
+        float_fields=args.float_fields,
+        datetime_fields=args.datetime_fields,
+        enum_fields=args.enum_fields,
+        multi_enum_fields=args.multi_enum_fields,
+        link_fields=args.link_fields,
+        batch_size=args.batch_size,
+        api_key=args.api_key,
+        api_secret=args.api_secret
+    )
 
-    # Create processor and run workflow
-    processor = FolderMetadataProcessor(args.dataset_id, args.base_url)
-    processor.process_workflow(args.folder, user_fields)
+    uploader.process_workflow(args.csv)
 
 
 if __name__ == "__main__":
     main()
-```
-
-## Single JSON File Modification
-
-If your metadata is in one JSON file for all images, add this method to the `FolderMetadataProcessor` class:
-
-```python
-def load_single_json_metadata(self, json_file: str, folder_path: str) -> Dict[str, Dict[str, Any]]:
-    """Load metadata from a single JSON file containing all image metadata."""
-    print(f"📖 Loading metadata from single JSON file: {json_file}")
-
-    with open(json_file, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-
-    # Handle dictionary format: {filename: {metadata}}
-    if isinstance(data, dict):
-        metadata_by_file = data
-    # Handle array format: [{filename: ..., field: value, ...}]
-    elif isinstance(data, list):
-        metadata_by_file = {}
-        for item in data:
-            filename = item.get('filename') or item.get('file_name')
-            if filename:
-                item_copy = {k: v for k, v in item.items() if k not in ['filename', 'file_name']}
-                metadata_by_file[filename] = item_copy
-
-    # Verify images exist
-    folder = Path(folder_path)
-    valid_metadata = {}
-    for filename, metadata in metadata_by_file.items():
-        if (folder / filename).exists():
-            valid_metadata[filename] = metadata
-
-    print(f"   ✅ Loaded metadata for {len(valid_metadata)} images")
-    return valid_metadata
-```
-
-**Usage:** In `process_workflow()`, replace the scan/load section with:
-
-```python
-# Replace this:
-pairs = self.scan_folder(folder_path)
-metadata_by_file = self.load_metadata_files(pairs)
-
-# With this:
-metadata_by_file = self.load_single_json_metadata('/path/to/metadata.json', folder_path)
 ```
