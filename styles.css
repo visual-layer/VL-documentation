@@ -643,6 +643,10 @@ table {
   background-color: #a73895 !important;
 }
 
+[data-component-part="card-icon"] svg {
+  background-color: #a73895 !important;
+}
+
 /* Process headings (h6) styling */
 h6 {
   font-size: 1.05rem !important;

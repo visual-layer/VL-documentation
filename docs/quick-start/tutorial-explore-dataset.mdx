@@ -1,0 +1,91 @@
+---
+title: "Tutorial: Explore a Dataset"
+sidebarTitle: "Explore a Dataset"
+description: "Learn Visual Layer's exploration tools by finding, narrowing, and refining results to curate distinctive content from a disorganized media library."
+---
+
+<Card title="Tutorial Scenario" icon="target" iconType="regular">
+You are the Lead Digital Archivist at a global animation studio preparing a "Classic Animations" interactive exhibit. Your media library contains thousands of disorganized frames from The Simpsons and Tom & Jerry, and you need to curate a collection of distinctive cat backside frames.
+
+This tutorial walks you through the complete curation workflow: find relevant frames, narrow to precise matches, identify distinctive content, remove duplicates, and save your collection for team access.
+
+The same workflow applies to any visual dataset regardless of content or domain.
+</Card>
+
+## Prerequisites
+
+Before you begin this tutorial, make sure you have the following:
+
+- **Dataset created**
+  Complete the [Tutorial: Create a Dataset](/docs/quick-start/tutorial-create-dataset) to upload and index your dataset in Visual Layer.
+
+###### To curate the cat backside collection
+
+<Steps>
+
+<Step title="Find Cat Backside Frames with Semantic Search">
+Navigate to your animation library dataset and open the **Search** panel.
+
+Type "the backside of a cat" into the search bar and press Enter.
+
+Visual Layer returns numerous frames showing cats from behind in various poses, scenes, and contexts. Results include both highly accurate matches and some false positives that will be refined in the next step.
+</Step>
+
+<Step title="Narrow Results with Visual Similarity Search">
+Select one of the most accurate frames from your semantic search results—choose a clear example showing a cat's backside.
+
+Crop the image to isolate just the cat's backside, removing surrounding scene elements.
+
+Click the **Visual Search** icon to search for visually similar frames.
+
+Visual Layer returns frames that closely match your cropped reference, filtering out false positives and focusing on similar compositions.
+</Step>
+
+<Step title="Refine Results with Uniques Filter">
+Navigate to **Filter Panel** and select **Uniques**.
+
+Adjust the **Uniqueness slider** to a medium-high or high setting.
+
+Review the refined results. Visual Layer now shows only visually distinct frames with unique camera angles, character poses, or compositions—filtering out common or repetitive shots.
+</Step>
+
+<Step title="Remove Duplicate Frames">
+Navigate to **Filter Panel** and select **Duplicates**.
+
+Review the duplicate clusters. Even after applying the Uniques filter, some nearly identical frames from the same scene or sequence may remain.
+
+For each duplicate cluster, examine the frames and select the most representative "hero" frame—the one with the best composition or expression. Remove the redundant frames.
+
+Your collection now contains only distinctive, non-redundant frames.
+</Step>
+
+<Step title="Save Your Curated Collection">
+Click **Save View** in the action bar.
+
+Name your View "Distinctive Cat Backside Frames" and add a description: "Curated collection of unique and distinctive cat backside shots from the animation library."
+
+Click **Save**.
+
+Your curated collection is now permanently saved. Team members can access it instantly from the **Views** tab without repeating the search and refinement process.
+</Step>
+
+</Steps>
+
+## Next Steps
+
+Now that you've completed the basic exploration workflow, learn more about Visual Layer's search and filter tools:
+
+<CardGroup cols={2}>
+  <Card title="Exploring Datasets" icon="search" href="/docs/explore-and-search/exploring-datasets">
+    Understand the exploration workflow and available tools
+  </Card>
+  <Card title="Semantic Search" icon="scan-text" href="/docs/explore-and-search/semantic-search">
+    Find content using natural language queries
+  </Card>
+  <Card title="Visual Search" icon="scan-search" href="/docs/explore-and-search/visual-search">
+    Locate visually similar images and objects
+  </Card>
+  <Card title="Filtering Overview" icon="sliders-horizontal" href="/docs/explore-and-search/filtering-overview">
+    Learn about quality and data integrity filters
+  </Card>
+</CardGroup>

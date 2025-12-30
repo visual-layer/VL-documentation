@@ -23,8 +23,14 @@ Annotations play a critical role in machine learning and AI model training by:
 
 ## Supported Formats
 
-1. **Parquet / CSV**
-2. **JSON (COCO format)**
+Visual Layer supports the following annotation file formats:
+
+**File Formats:**
+- **Parquet / CSV**: Structured data files for image and object annotations
+- **JSON**: Annotation files for bounding boxes, labels, and metadata
+- **COCO format**: Common Objects in Context annotation standard
+- **YOLO format**: You Only Look Once annotation format
+- **Custom annotation schemas**: Tailored formats for specific use cases
 
 Your annotation **file must be named exactly** as one of the following:
   - `annotations.json`
@@ -32,6 +38,9 @@ Your annotation **file must be named exactly** as one of the following:
   - `object_annotations.csv`
   - `image_annotations.parquet`
   - `object_annotations.parquet`
+
+**Annotation Content:**
+Annotation files can include bounding box coordinates, class labels, segmentation masks, and custom metadata for enriched analysis.
 
 <Note>
 **Important**: Annotations must be added when creating a dataset. 

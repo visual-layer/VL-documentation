@@ -1,0 +1,65 @@
+<!-- CRITICAL RULE: Every heading MUST have at least one sentence before any subsections. Never place an h3 directly after an h2, or an h4 directly after an h3 without intervening text. -->
+
+**[HEADLINE]**
+**[Product Name]**
+
+**[SUBHEAD - Single sentence value proposition]**
+> Brief statement of what this enables users to do or what problem it solves
+
+**[OPENING PARAGRAPH]**  
+When you [use this product], [specific capabilities] help [primary user persona] [achieve outcome] and [secondary user persona] [achieve outcome]. Your [user's input/content/data] provides the foundation for [product name] to [deliver value].
+
+## What makes [this product] [defining characteristic]
+
+[1-2 sentences introducing the three capabilities below. This introductory text is REQUIRED before subsections.]
+
+### [User Action/Outcome 1]
+
+[2-3 sentences describing the capability in terms of what users can DO, not what the product HAS. Include specific feature name with link on first mention.] [Follow with 1-2 sentences about extended functionality or integration points, each linking to relevant resources.]
+
+### [User Action/Outcome 2]
+
+[Same structure: capability description → specific features → integration/extension options. Maintain parallel structure with previous section.]
+
+### [User Action/Outcome 3]
+
+[Same structure again. This section often addresses discoverability, automation, or optimization—the "it just works" benefits that don't require active user engagement.]
+
+## Enable [product category] features
+
+Select any of the following cards for more information.
+
+[Component grid with 2-4 options, each containing:]
+- **Title**: Specific feature name
+- **Icon**: Visual identifier
+- **Description**: Single sentence explaining configuration or key capability
+
+---
+
+**Key structural principles to maintain:**
+
+1. **CRITICAL - Heading structure**: Every heading MUST have at least one sentence before any subsections. Never place an h3 directly after an h2 without intervening text. Never place an h4 directly after an h3 without intervening text. This is non-negotiable.
+
+2. **Three-part framework**: Organize by user actions or outcomes, not product features. The Mintlify example uses Reading/Writing/Discovering. Your equivalent might be Planning/Executing/Analyzing or Building/Deploying/Monitoring—whatever maps to your user's workflow.
+
+3. **Progressive disclosure**: Start with the high-level capability, then layer in specific features and integration points. Each section should answer "What can I do?" before "How does it work?"
+
+4. **Consistent paragraph rhythm**: Opening concept sentence (15-20 words) → feature detail with link (20-25 words) → extension/integration option (15-20 words). This creates a scannable pattern.
+
+5. **Front-load value**: The opening paragraph should contain every key benefit. Someone reading only that paragraph should understand why this matters.
+
+6. **Link density without clutter**: Mintlify links 8 times in about 250 words, but never more than once per sentence. Links are embedded naturally in capability descriptions, not called out separately.
+
+7. **Action-oriented section headers**: Use gerunds (Reading, Writing, Discovering) or outcomes (Finding Answers, Maintaining Content, Getting Discovered) rather than feature names.
+
+8. **Closing component**: End with an interactive element that lets users self-select their next step rather than prescribing a single path forward.
+
+**What to avoid:**
+
+- Marketing language (revolutionary, game-changing, innovative)
+- Feature lists disguised as paragraphs
+- Comparison to competitors
+- Technical jargon unless it's standard terminology in your space
+- More than three main sections (keeps cognitive load manageable)
+
+The beauty of this template is its restraint. It trusts that clear explanation of capability is more persuasive than enthusiastic promotion of features.

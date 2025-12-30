@@ -89,16 +89,23 @@
                   {
                     "group": "Quick Start",
                     "pages": [
-                      "docs/quick-start/deployment-options",
-                      "docs/quick-start/createdelete-datasets",
+                      "docs/quick-start/tutorial-create-dataset",
+                      "docs/quick-start/tutorial-explore-dataset",
                       "docs/quick-start/understanding-clusters",
-                      "docs/quick-start/dataset-inventory-ux",
-                      "docs/quick-start/dataset-exploration-ux"
+                      {
+                        "group": "Navigating Visual Layer",
+                        "pages": [
+                          "docs/quick-start/navigating-visual-layer",
+                          "docs/quick-start/dataset-inventory-ux",
+                          "docs/quick-start/dataset-exploration-ux"
+                        ]
+                      }
                     ]
                   },
                   {
                     "group": "Explore & Search",
                     "pages": [
+                      "docs/explore-and-search/exploring-datasets",
                       "docs/explore-and-search/semantic-search",
                       "docs/explore-and-search/visual-search",
                       "docs/explore-and-search/filtering-overview",

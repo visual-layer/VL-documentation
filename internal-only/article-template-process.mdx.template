@@ -2,6 +2,8 @@
 title: [Processes template: ENTER A TITLE HERE]
 description: [For example: Learn how to configure triggers to control when and how automated dataset workflows are initiated in Visual Layer.]
 ---
+
+<!-- CRITICAL RULE: Every heading MUST have at least one sentence before any subsections. Never place an h3 directly after an h2, or an h4 directly after an h3 without intervening text. -->
 <Card title="How this Helps" icon="lightbulb">
     This feature enables teams to streamline repetitive or manual tasks, reducing time spent on video review and dataset cleanup. It’s particularly valuable for computer vision teams managing large-scale video datasets across multiple environments.
 </Card>

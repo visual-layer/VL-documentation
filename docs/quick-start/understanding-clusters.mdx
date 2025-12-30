@@ -3,7 +3,9 @@ title: "Understanding Clusters"
 description: "How Visual Layer automatically groups visually similar content to simplify exploration and analysis."
 ---
 
-Managing large collections of images and videos can be time-consuming. To simplify exploration, Visual Layer automatically groups similar **images** and **Core Frames** (extracted from videos) into **Clusters**. Clusters are structured based on the selected view—either as full images in **Image View**, or as annotated regions in **Object View**.
+Managing large collections of images and videos can be time-consuming. To simplify exploration, Visual Layer automatically organizes your images into **Clusters** during dataset creation. When you open a dataset from the Dataset Inventory, clusters appear in the dataset exploration view as the primary way to browse and interact with your content.
+
+Clusters group similar **images** and **Core Frames** (extracted from videos) based on visual similarity. Clusters are structured based on the selected view—either as full images in **Image View**, or as annotated regions in **Object View**.
 
 Clusters help you:
 
@@ -15,13 +17,18 @@ Clusters help you:
 
 ## Cluster Previews
 
-Clusters are displayed as preview cards to help you quickly understand the structure of your data. Each cluster preview includes:
-
-- **Number of items** – The total number of items that match your current filters  
-- **Prominent labels** – The most frequent labels within the cluster  
-- **Representing images** – A few key examples (images or Core Frames) that visually summarize the cluster
+Clusters are displayed as preview cards to help you quickly understand the structure of your data.
 
 <img src="https://files.readme.io/5e0d818-Screenshot_2024-05-21_at_10.47.33.png" alt="Cluster preview" style={{ display: 'block', margin: 'auto' }} />
+
+Each cluster preview includes:
+
+| Element | Description |
+|---------|-------------|
+| **Number of items** | The total number of items that match your current filters |
+| **Prominent labels** | The most frequent labels within the cluster |
+| **Representing images** | Thumbnails of key example images or Core Frames that visually summarize the cluster |
+| **Visual Similarity Icon** | Hover over a cluster to access visual similarity search for finding similar content |
 
 ---
 
@@ -45,13 +52,3 @@ The **Granularity knob**, located in the bottom-right corner of the screen, lets
 
 - Move the knob to the **left** for looser clusters — broader grouping with lower similarity thresholds _(default setting)_
 - Move the knob to the **right** for stricter clusters — tighter grouping with higher similarity thresholds
-
----
-## Finding Similar Items
-
-When hovering over a cluster preview, you can search for visually similar images or objects depending on the current view.  
-For more details, check out the [Visual Search](/docs/explore-and-search/visual-search) page.
-
-<img src="https://files.readme.io/dc4dd7ba2b5a177b242a5d10947d72d52a94e272736c4976bbbaa736ae0e1497-Scene-1_copy_3.gif" alt="Find similar GIF" style={{ display: 'block', margin: 'auto' }} />
-
----
