@@ -1,154 +1,79 @@
 ---
-title: Exploring Datasets
-description: Understand Visual Layer's exploration workflow for finding, narrowing, refining, and organizing visual data.
-sidebarTitle: Exploring Datasets
+title: About Dataset Exploration
+description: A workflow guide for combining search, filtering, and refining tools to curate high-quality visual collections.
+sidebarTitle: About Exploration
 ---
 
-Visual Layer provides powerful exploration tools that help you discover relevant content, narrow results, refine selections, and organize curated collections from large, unstructured datasets. This exploration workflow transforms overwhelming volumes of visual data into focused, production-ready collections.
+Visual Layer transforms large, unstructured datasets into focused collections through a systematic exploration workflow.
+
+Rather than relying on a single query, effective curation typically involves a multi-step process: **Find**, **Narrow**, **Refine**, and **Clean**. This guide explains how to combine individual tools to move from broad discovery to precise selection.
 
 ## The Exploration Workflow
 
-Visual Layer's exploration approach follows a systematic workflow that moves from broad discovery to precise curation:
+
 
 <Steps>
 
 <Step title="Find: Discover Relevant Content">
-Start by locating content that matches your conceptual or visual criteria. Visual Layer offers multiple discovery methods:
+Start by casting a wide net to locate potential candidates.
 
-**Semantic Search** uses natural language queries to find images based on meaning and context, not just exact keywords. Type descriptive phrases like "sunset over mountains" or "people wearing masks" to surface conceptually relevant content.
+* **Use Semantic Search** for conceptual queries (e.g., "damaged packaging" or "outdoor crowd").
+* **Use Cluster Navigation** to browse high-level patterns without a specific query.
+* **Use Visual Search** with an external image upload to find matches for a reference asset.
 
-**Visual Search** finds images that look similar to a reference image. Upload an external image or select an existing one from your dataset, optionally crop it to focus on specific visual elements, and Visual Layer returns visually similar results.
-
-**Cluster Navigation** leverages Visual Layer's automatic clustering to browse groups of visually similar images, helping you understand dataset composition and discover patterns without manual queries.
-
-This initial discovery phase typically returns broad results that include both highly relevant content and false positives requiring refinement.
+*Goal: Surface a broad set of results that includes your target data, accepting some initial false positives.*
 </Step>
 
 <Step title="Narrow: Refine Your Results">
-After discovering initial results, narrow them down to focus on the most relevant content. Visual Layer provides tools to progressively refine search results:
+Filter out irrelevant matches to focus on your specific criteria.
 
-**Visual Similarity Search** works on existing search results. Select a precise example from your initial results, crop it to isolate specific visual features, and run a new visual search. This filters out less relevant matches and focuses on content that closely matches your specific visual criteria.
+* **Apply Visual Similarity** on a specific search result. Crop a "hero" image to a specific region (e.g., just the defect, not the background) to narrow the search visually.
+* **Add Metadata Filters** (Folders, Labels, Dates) to restrict the search scope to relevant batches or sources.
 
-**Filters** combine with search results to narrow based on metadata, quality, or other attributes. Apply folder filters, label filters, or quality filters to progressively reduce noise and focus on high-quality, relevant content.
-
-This narrowing phase eliminates false positives and edges you closer to your final curated selection.
+*Goal: Reduce noise and focus on content that matches your specific visual or metadata requirements.*
 </Step>
 
 <Step title="Refine: Identify Distinctive Content">
-Once you've narrowed to relevant results, refine further to identify only the most distinctive and valuable content:
+Ensure your selection represents the diversity of your data, not just the most common examples.
 
-**Uniques Filter** surfaces visually distinct items by analyzing uniqueness scores. Adjust the uniqueness slider to control how different items must be from each other. Higher thresholds show only the most distinctive content, filtering out common or repetitive variations.
+* **Apply the Uniques Filter** to hide repetitive content. Increasing the threshold surfaces only visually distinct items, ensuring your collection covers edge cases and varied angles rather than just the "average" look.
+* **Check Outliers** to find rare examples or anomalies that might be missing from the main clusters.
 
-**Outliers Filter** identifies content that differs significantly from typical dataset patterns. Use this to find rare examples, edge cases, or unusual visual patterns that might represent valuable long-tail content or quality issues.
-
-This refinement phase ensures your collection contains only distinctive, high-value content rather than redundant or common examples.
+*Goal: Create a diverse selection that includes valuable edge cases.*
 </Step>
 
-<Step title="Clean: Remove Redundancy">
-Before finalizing your collection, clean up remaining redundancy:
+<Step title="Clean: Remove Redundancy & Issues">
+Polish the collection before finalizing.
 
-**Duplicate Detection** identifies near-identical images from the same scene, sequence, or camera angle. Visual Layer groups duplicates into clusters, allowing you to select "hero" frames—the most representative or highest quality examples—while removing redundant variations.
+* **Review Duplicates** to select single "hero" frames from burst sequences or near-identical backups.
+* **Filter Quality Issues** (Blurry, Dark, Bright) to automatically exclude unusable or low-quality assets.
 
-This cleaning phase reduces storage waste, prevents training bias, and ensures your final collection remains lean and representative.
+*Goal: Ensure the final dataset is lean, high-quality, and free of technical flaws.*
 </Step>
 
 <Step title="Organize: Save and Share">
-Finally, preserve your curated collection for team access and collaboration:
+Preserve your work for the team.
 
-**Saved Views** capture your entire query, filter combination, and selection as a permanent, reusable collection. Name and describe your View, and team members can access it instantly without repeating the search and refinement process.
+* **Save as View** to capture the entire combination of search queries, filters, and unique thresholds. This allows team members to access the dynamic collection without rebuilding the logic.
+* **Export** the specific selection to JSON/CSV for downstream training or annotation workflows.
 
-**Export** options allow you to download selected content, metadata, and annotations in various formats for downstream use in training pipelines, annotation tools, or external systems.
-
-This organization phase makes curated collections accessible, shareable, and ready for production workflows.
 </Step>
 
 </Steps>
 
-## Search Tools
-
-Visual Layer provides two primary search methods that work together to discover and refine content:
-
-### Semantic Search
-
-**Semantic Search** retrieves content based on conceptual meaning and context rather than exact keyword matches. It interprets natural language queries and matches them against Visual Layer's semantic embeddings, enabling intuitive, concept-driven exploration.
-
-**When to use Semantic Search:**
-- Finding content based on descriptions or concepts (e.g., "outdoor festival crowd," "damaged products," "urban solitude")
-- Working with datasets that have minimal or no labels
-- Exploring abstract visual themes or patterns
-- Starting broad discovery before narrowing with other tools
-
-**How it works:** Visual Layer's enrichment models (`VL-Image Semantic Search` or `VL-Object Semantic Search`) analyze visual content and generate semantic embeddings. Your text queries are matched against these embeddings to surface relevant results based on meaning, not just keywords.
-
-For detailed usage instructions, see [Semantic Search](/docs/explore-and-search/semantic-search).
-
-### Visual Search
-
-**Visual Search** finds images that look visually similar to a reference image. You can upload external images, use images from your dataset, or crop specific regions to focus the search on particular visual features.
-
-**When to use Visual Search:**
-- Narrowing semantic search results to specific visual patterns
-- Finding variations of a known image or object
-- Locating content with similar composition, color, or visual structure
-- Refining broad results to match precise visual criteria
-
-**How it works:** Visual Layer compares deep learning embeddings between your reference image and dataset images. The cropping feature allows you to isolate specific visual elements (like a specific object, texture, or composition element) and search for similar patterns across your dataset.
-
-For detailed usage instructions, see [Visual Search](/docs/explore-and-search/visual-search).
-
-## Filter Tools
-
-Filters allow you to narrow datasets based on metadata, quality, uniqueness, and data integrity:
-
-### Quality and Integrity Filters
-
-**Duplicates** identifies near-identical images that waste storage and create training bias. Visual Layer groups duplicates visually, allowing you to select representative "hero" frames while removing redundancy.
-
-**Outliers** surfaces images that differ significantly from dataset norms. Use this to find rare examples, edge cases, unusual patterns, or potential quality issues.
-
-**Mislabels** detects potentially incorrect labels by analyzing visual-label alignment. This helps identify annotation errors at both image and object levels.
-
-**Quality Issues** (Blurry, Dark, Bright) detects technical quality problems that affect model performance or human interpretation.
-
-### Uniqueness and Selection Filters
-
-**Select Uniques** reduces dataset redundancy by highlighting visually distinct samples. Visual Layer assigns uniqueness scores (0 = highly redundant, 1 = highly unique) and filters based on your threshold setting.
-
-**Labels, Folders, Files, Captions, User Tags** provide metadata-based filtering to organize and retrieve specific data subsets.
-
-For comprehensive filter documentation, see [Filtering Overview](/docs/explore-and-search/filtering-overview) and [Using Filters](/docs/explore-and-search/using-filters).
-
-## Combining Tools for Powerful Workflows
-
-Visual Layer's exploration tools are designed to work together in sequence:
-
-**Example workflow: Curating distinctive product defects**
-1. **Semantic Search** for "surface damage" (finds broad defect candidates)
-2. **Visual Search** with cropped defect example (narrows to similar defect types)
-3. **Uniques Filter** at high threshold (shows only distinctive defect patterns)
-4. **Duplicates** removal (keeps one representative per defect type)
-5. **Save as View** named "Distinctive Surface Defects" (preserves for team review)
-
-**Example workflow: Building diverse training sets**
-1. **Navigate Clusters** to understand dataset composition
-2. **Select Uniques** with medium threshold (reduces redundancy)
-3. **Quality Issues** with IS NOT logic (excludes blurry, dark, bright images)
-4. **Mislabels** with IS NOT logic (excludes annotation errors)
-5. **Export** selected content (download clean, diverse training data)
-
 ## Related Resources
 
 <CardGroup cols={2}>
-  <Card title="Semantic Search" icon="scan-text" href="/docs/explore-and-search/semantic-search">
-    Find content using natural language queries
+  <Card title="Curation Recipes" icon="book-open" href="/docs/explore-and-search/curation-recipes">
+    Step-by-step guides for common workflows like defect detection and training set cleanup
   </Card>
-  <Card title="Visual Search" icon="scan-search" href="/docs/explore-and-search/visual-search">
-    Locate visually similar images and objects
+  <Card title="Search & Filter Reference" icon="list" href="/docs/explore-and-search/search-and-filter-reference">
+    Complete list of all available operators and options
   </Card>
-  <Card title="Filtering Overview" icon="sliders-horizontal" href="/docs/explore-and-search/filtering-overview">
-    Learn about all available filter types
+  <Card title="How Search Works" icon="microchip" href="/docs/concepts/how-it-works">
+    Learn about the embeddings behind the search
   </Card>
-  <Card title="Using Filters" icon="sliders-horizontal" href="/docs/explore-and-search/using-filters">
-    Apply filters and combine criteria
+  <Card title="Tutorial: Explore a Dataset" icon="graduation-cap" href="/docs/quick-start/tutorial-explore-dataset">
+    Step-by-step interactive tutorial
   </Card>
 </CardGroup>

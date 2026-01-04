@@ -1,0 +1,63 @@
+---
+title: "Search & Filter Like a Champ"
+description: "Explore the computer vision concepts and embedding technologies that power Semantic Search, Visual Similarity, and automated quality curation."
+---
+
+Visual Layer moves beyond traditional file-system management by treating visual data not just as files with names, but as complex data points containing semantic and visual information. At the core of the platform is the transformation of unstructured pixels into structured, queryable mathematical representations.
+
+This article explores the theoretical foundations powering the search and filtering capabilities, explaining how the system "understands" content, similarity, and quality.
+
+## The Core Technology: Deep Visual Embeddings
+
+The foundation of Visual Layer’s discovery and curation tools is **embedding technology**.
+
+When data is ingested, the system uses deep learning models—specifically `VL-Image Semantic Search` and `VL-Object Semantic Search`—to analyze the pixel data of every image and detected object. Instead of relying on manual tags or filenames, the system converts these visuals into **embeddings**—high-dimensional vectors that represent the abstract features of the image.
+
+In this high-dimensional "latent space":
+* **Proximity equals similarity:** Images that look alike or contain similar concepts are located close to each other mathematically.
+* **Direction represents attributes:** Specific directions in the space correspond to conceptual features, enabling the system to interpret visual content beyond simple keywords.
+
+## Search Theory
+
+Visual Layer employs two distinct theoretical approaches for retrieving data, bridging the gap between human language and machine vision.
+
+### Semantic Search: Multi-Modal Understanding
+
+Semantic Search relies on **multi-modal learning**, mapping text and images into a shared vector space.
+
+Unlike traditional keyword search, which looks for exact string matches in metadata, Semantic Search understands the *meaning* of a query. When you type a phrase like "sunset over mountains," the system matches your query against the generated semantic metadata. It retrieves results based on concepts and context—such as "urban solitude" or "festival crowd"—allowing for discovery even in datasets with minimal labeling.
+
+### Visual Similarity: Nearest Neighbor Search
+
+Visual Search operates purely in the image embedding space. When you initiate a "Find Similar" query (whether from a cluster, an object, or an upload), the system identifies the vector of your reference image and performs a similarity search.
+
+It retrieves other data points in the dataset that are closest to the anchor image's embedding. This approach is ideal for identifying anomalies, clustering related visuals, and finding repeated patterns that share visual structures.
+
+## Data Integrity and Curation Logic
+
+Beyond simple search, Visual Layer uses the geometric properties of the embedding space to automate data hygiene and curation.
+
+### Redundancy Detection (Duplicates & Uniques)
+
+In a high-dimensional space, identical images map to the exact same point. Near-duplicates—images with slight compression, crops, or lighting shifts—map to points that are extremely close together.
+
+* **Duplicate Detection:** The system uses **visual similarity detection** rather than just metadata or file hashes. This allows it to identify duplicates even when file formats or resolutions differ.
+* **Uniqueness Scoring:** To "Select Uniques," the system evaluates the distinctiveness of samples. Images are assigned a **uniqueness score** between `0` (highly redundant) and `1` (highly unique). Filtering by this score creates compact datasets that preserve diversity while removing repetitive content.
+
+### Alignment Theory: Mislabels and Class Outliers
+
+One of the most powerful applications of embedding theory is **Visual-Label Alignment**.
+
+In a perfectly labeled dataset, all images labeled "dog" should cluster together in one region of the vector space. Visual Layer detects errors by analyzing the consistency of these clusters:
+
+* **Mislabels:** The system identifies potential errors by analyzing **visual-label alignment**. If an image is labeled "cat" but its visual embedding aligns with "dog" clusters, it is flagged as a mislabel.
+* **Class Outliers:** These are images that technically carry a valid label but do not visually align with the standard appearance of that class. For example, a drawing of a dog in a dataset of real photos is statistically anomalous (an outlier) relative to the class distribution.
+
+### Signal Quality Analysis
+
+While embeddings handle semantic content, separate analyzers assess the **signal quality** of the pixels themselves.
+
+* **Blur, Dark, and Bright Filters:** These filters detect technical flaws such as focus issues, underexposure, or overexposure.
+* **Confidence Thresholds:** These classifiers use a **confidence threshold** (defaulting to 0.5) to determine sensitivity. A lower threshold (0.3–0.4) captures more potential issues (higher recall), while a higher threshold (0.6–0.8) isolates only the most severe examples (higher precision).
+
+```

@@ -82,6 +82,7 @@
                     "pages": [
                         "docs/introduction/introduction",
                         "docs/introduction/prerequisites",
+                        "docs/introduction/how-it-works",
                         "docs/introduction/key-concepts",
                         "docs/release-notes/release-notes"
                     ]
@@ -91,13 +92,13 @@
                     "pages": [
                       "docs/quick-start/tutorial-create-dataset",
                       "docs/quick-start/tutorial-explore-dataset",
-                      "docs/quick-start/understanding-clusters",
                       {
                         "group": "Navigating Visual Layer",
                         "pages": [
                           "docs/quick-start/navigating-visual-layer",
                           "docs/quick-start/dataset-inventory-ux",
-                          "docs/quick-start/dataset-exploration-ux"
+                          "docs/quick-start/dataset-exploration-ux",
+                          "docs/quick-start/understanding-clusters"
                         ]
                       }
                     ]
@@ -106,53 +107,95 @@
                     "group": "Explore & Search",
                     "pages": [
                       "docs/explore-and-search/exploring-datasets",
-                      "docs/explore-and-search/semantic-search",
-                      "docs/explore-and-search/visual-search",
-                      "docs/explore-and-search/filtering-overview",
-                      "docs/explore-and-search/using-filters"
+                      "docs/explore-and-search/explore-theory",
+                      "docs/explore-and-search/recipes",
+                      "docs/explore-and-search/using-search-filter"
                     ]
                   },
-                  {
-                    "group": "Advanced Dataset Management",
+                                    {
+                    "group": "Collab & Downstream",
                     "pages": [
-                      "docs/advanced-dataset-management/enrich-overview",
-                      "docs/advanced-dataset-management/export-dataset"
+                      "docs/collab-and-downstream/views",     
+                      "docs/collab-and-downstream/share-dataset"
                     ]
                   },
                   {
                     "group": "Models & Enrichment",
                     "pages": [
-                      "docs/models-and-enrichment/model-catalog",
-                      "docs/models-and-enrichment/analyze-enriched-dataset"
+                      "docs/advanced-dataset-management/enrich-overview",
+                    "docs/models-and-enrichment/model-catalog"                      
+                    ]
+                  },
+
+                  {
+                    "group": "Advanced Dataset Management",
+                    "pages": [
+                      "docs/advanced-dataset-management/importing-annotations",
+                      "docs/advanced-features/custom-metadata",
+                      "docs/advanced-features/dicom-converter",
+                      "docs/advanced-features/tag-iteams",  
+                      "docs/advanced-features/task-manager",
+                      "docs/advanced-features/model-catalog",
+                      "docs/advanced-dataset-management/export-dataset"
                     ]
                   },
                   {
-                    "group": "Collab & Downstream",
+                  "group": "Administration",
+                        "pages": [
+                            "docs/self-hosting/useful-scripts",         
+                      {
+                        "group": "Integrations",
+                        "pages": [
+                          "docs/Integrations/Amazon-s3",
+                          "docs/Integrations/google-cloud-storage"
+                        ]
+                      }
+                        ]
+                    },
+                  {
+                    "group": "Troubleshooting",
                     "pages": [
-                      "docs/collab-and-downstream/share-dataset",
-                      "docs/collab-and-downstream/working-with-metadata"
+                      "docs/troubleshooting/troubleshooting-docs"
                     ]
-                  }
+                 }
                 ]
             },
             {
                 "tab": "API Reference",
                 "groups": [
                     {
-                        "group": "API Documentation",
+                        "group": "API Getting Started",
                         "pages": [
                             "api-reference/api-intro",
-                            "api-reference/authentication",
+                            "api-reference/authentication"
+                        ]
+                    },
+                    {
+                        "group": "API Reference",
+                        "pages": [
+                            "api-reference/apis-about",
                             "api-reference/create-a-dataset-from-a-public-s3-bucket",
                             "api-reference/create-a-dataset-from-a-local-folder-for-on-prem-installation",
                             "api-reference/retrieve-dataset-status",
                             "api-reference/share-a-dataset-with-another-user",
-                            "api-reference/duplicate-retrieval-experimental-feature",
                             "api-reference/visual-search",
                             "api-reference/semantic-search",
-                            "api-reference/caption-search",
+                            "api-reference/caption-search"
+
+                        ]
+                    },
+                    {
+                        "group": "Recipes and Flows",
+                        "pages": [
                             "api-reference/exporting-a-dataset-via-curl-from-visual-layer",
+                            "api-reference/duplicate-retrieval-experimental-feature",
                             "api-reference/running-visual-layer-within-an-iframe"
+                        ]
+                    },                    
+                    {
+                        "group": "Troubleshooting",
+                        "pages": [
+                            "api-reference/troubleshooting-api"
                         ]
                     }
                 ]
@@ -182,7 +225,14 @@
                         "group": "Administration",
                         "pages": [
                             "docs/self-hosting/user-management",
-                            "docs/self-hosting/Troubleshooting"
+                            "docs/self-hosting/expiration",
+                            "docs/self-hosting/useful-scripts"
+                        ]
+                    },
+                    {
+                        "group": "Troubleshooting",
+                        "pages": [
+                            "docs/self-hosting/troubleshooting-self-hosting"
                         ]
                     }
                 ]
@@ -325,14 +375,6 @@
                     {
                         "label": "Platform",
                         "href": "https://www.visual-layer.com/#platform"
-                    },
-                    {
-                        "label": "Privacy Policy",
-                        "href": "https://www.visual-layer.com/#platform"
-                    },
-                    {
-                        "label": "Terms of Service",
-                        "href": "https://www.visual-layer.com/#platform"
                     }
                 ]
             },
@@ -346,6 +388,10 @@
                     {
                         "label": "Videos",
                         "href": "https://www.youtube.com/@visual-layer"
+                    },
+                    {
+                        "label": "FAQs",
+                        "href": "https://docs.visual-layer.com/docs/Help-Support/faqs"
                     }
                 ]
             },

@@ -1,0 +1,148 @@
+---
+title: Curation Recipes
+description: Step-by-step guides for common dataset curation workflows, from defect detection to training set cleanup.
+sidebarTitle: Curation Recipes
+---
+
+Effective dataset curation often requires combining multiple search and filter tools in a specific sequence. These "recipes" provide step-by-step workflows for common use cases, helping you achieve high-quality results efficiently.
+
+## Recipe 1: Curating Distinctive Product Defects
+
+**Objective:** Isolate a diverse set of "surface damage" examples for model training, ensuring you capture rare defect types without filling the dataset with repetitive images.
+
+**Ideal for:** Manufacturing, QA, and insurance datasets.
+
+
+
+<Steps>
+
+<Step title="Broad Search">
+Start with **Semantic Search**.
+* **Query:** "surface damage" or "scratches on metal"
+* **Result:** This returns a broad set of candidates, likely including some irrelevant images (false positives).
+</Step>
+
+<Step title="Visual Refinement">
+Switch to **Visual Search**.
+* Find a clear, high-quality example of the specific defect you want in the search results.
+* **Crop** the image to isolate just the defect pattern (excluding background or product edges).
+* Run the visual search to find visually similar defects.
+</Step>
+
+<Step title="Ensure Diversity">
+Apply the **Uniques Filter**.
+* Set the **Uniqueness Threshold** to **High**.
+* **Why:** This hides repetitive examples of the same common scratch patterns, surfacing visually distinct variations and edge cases.
+</Step>
+
+<Step title="Final Polish">
+Clean up the selection.
+* Use **Duplicate Detection** to remove near-identical frames.
+* **Save as View** named "Distinctive Surface Defects" for your labeling team.
+</Step>
+
+</Steps>
+
+## Recipe 2: Cleaning a Raw Data Ingest
+
+**Objective:** Rapidly prepare a messy, raw dataset for labeling by removing "garbage" data that would waste annotator time and budget.
+
+**Ideal for:** New data dumps, scraped web data, or raw video frame extractions.
+
+<Steps>
+
+<Step title="Remove Technical Failures">
+Filter by **Quality Issues**.
+* Set **Blurry** to `IS NOT`.
+* Set **Dark** to `IS NOT`.
+* **Result:** Removes unreadable or low-information images immediately.
+</Step>
+
+<Step title="Remove Annotation Errors">
+Filter by **Mislabels**.
+* Set **Mislabels** to `IS NOT`.
+* **Result:** Excludes images where the existing metadata likely conflicts with the visual content, preventing bad ground truth from entering the pipeline.
+</Step>
+
+<Step title="Reduce Redundancy">
+Apply **Select Uniques**.
+* Set threshold to **Medium**.
+* **Result:** If the ingest contains burst-mode photos or video sequences, this keeps only representative frames, significantly reducing the total count sending to labeling.
+</Step>
+
+<Step title="Export for Labeling">
+* Select all remaining items.
+* **Export** the cleaned list to JSON/CSV to hand off to your annotation workforce.
+</Step>
+
+</Steps>
+
+## Recipe 3: Autonomous Vehicle Dataset Curation
+
+**Objective:** Curate a driving dataset that balances common scenarios with rare edge cases while managing massive storage volumes.
+
+**Ideal for:** Robotics, automotive, and logistics datasets.
+
+<Steps>
+
+<Step title="Slash Storage Costs">
+Apply **Duplicate Detection**.
+* **Action:** Review duplicate clusters from video sequences (e.g., waiting at a red light).
+* **Select:** Keep one "hero" frame per stop.
+* **Result:** Often reduces dataset size by 30-40% without losing scenario coverage.
+</Step>
+
+<Step title="Find the Unknowns">
+Apply the **Outliers Filter**.
+* **Action:** Sort by high confidence outliers.
+* **Result:** Surfaces rare road signs, unexpected obstacles, or unusual weather conditions that are critical for model robustness but easy to miss in manual review.
+</Step>
+
+<Step title="Lighting Check">
+Filter by **Quality Issues**.
+* **Filter:** `Dark` and `Bright`.
+* **Action:** Instead of deleting these, tag them as "Challenging Lighting."
+* **Result:** Creates a specific subset for testing model performance in adverse conditions.
+</Step>
+
+</Steps>
+
+## Recipe 4: Retail Catalog Management
+
+**Objective:** Clean up a multi-vendor product catalog to ensure search relevance and visual consistency.
+
+**Ideal for:** E-commerce platforms and digital asset management.
+
+<Steps>
+
+<Step title="Consolidate Listings">
+Apply **Duplicate Detection**.
+* **Scenario:** Multiple sellers upload the exact same stock photo for a product.
+* **Action:** Identify these groups and link them to a single master product image (SKU) to prevent search results from being flooded with identical photos.
+</Step>
+
+<Step title="Enforce Quality Standards">
+Filter by **Quality Issues**.
+* **Filter:** `Blurry` OR `Dark` OR `Bright`.
+* **Action:** Flag these images for review or auto-rejection.
+* **Result:** Ensures only professional-looking images appear on the storefront, improving conversion rates.
+</Step>
+
+<Step title="Categorize New Arrivals">
+Filter by **Labels**.
+* **Filter:** `Labels` IS `Unlabeled`.
+* **Action:** Isolate these products and use **Semantic Search** (e.g., "red sneakers") to bulk-select and tag them quickly.
+</Step>
+
+</Steps>
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Exploring Datasets" icon="compass" href="/docs/explore-and-search/exploring-datasets">
+    The core philosophy of the Find-Narrow-Refine workflow
+  </Card>
+  <Card title="Search & Filter Reference" icon="list" href="/docs/explore-and-search/search-and-filter-reference">
+    Detailed guide to every filter operator and option
+  </Card>
+</CardGroup>

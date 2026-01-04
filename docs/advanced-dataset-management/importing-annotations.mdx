@@ -1,0 +1,653 @@
+---
+title: "Import Annotations"
+description: "Import pre-existing annotation files into Visual Layer using supported formats including CSV, Parquet, JSON, COCO, and YOLO."
+---
+
+Annotations are metadata labels that describe and categorize images or objects within images. They help structure visual datasets, making them searchable, analyzable, and useful for AI training.
+
+<Note>
+Annotations must be uploaded when creating a dataset and cannot be added later.
+</Note>
+
+## Why Use Annotations
+
+Annotations improve data organization and model accuracy by providing structured labels for images and objects. They enable:
+
+- Efficient data retrieval through filtering and search
+- Enhanced search-ability within large datasets
+- Object detection and classification tasks
+- Improved model accuracy with high-quality labeled data
+
+## Common Annotation Types
+
+Visual Layer supports two primary annotation types:
+
+- **Image Annotations**: Assign class labels to entire images, helping categorize datasets
+- **Object Annotations**: Label individual objects within images using bounding boxes, improving model accuracy
+
+## Supported Formats
+
+Visual Layer accepts annotation files in the following formats:
+
+**File Formats:**
+- Parquet and CSV for structured image and object annotations
+- JSON for COCO-format annotations
+- YOLO format with conversion
+- Segmentation masks with conversion
+- Custom folder-based structures with conversion
+
+**File Naming Requirements:**
+
+Your annotation file must be named exactly as one of the following:
+
+- `annotations.json`
+- `image_annotations.csv`
+- `object_annotations.csv`
+- `image_annotations.parquet`
+- `object_annotations.parquet`
+
+<Warning>
+Files that do not match these exact names will not be processed correctly by Visual Layer.
+</Warning>
+
+## Preparing Annotation Files
+
+This section explains how to structure your annotation files for Visual Layer import.
+
+### Image Annotations
+
+For full-image class labels, create a file named `image_annotations.csv` or `image_annotations.parquet`. Each row represents an image and its corresponding label.
+
+**Format:**
+
+| filename | label |
+| --- | --- |
+| IDX_DF_SIG21341_PlasmasNeg.png | IDX_DF |
+| IDX_DF_ALM00324_PlasmasPos.png | IDX_DF |
+| folder/IDX_RC_ALM04559_PlasmasNeg.png | IDX_RC |
+
+**Requirements:**
+
+- The `filename` column must contain relative paths
+- The `label` column assigns a class to the entire image
+- Multiple labels can be stored as a list: `['t-shirt', 'SKU12345']`
+- You may include a `caption` column for textual metadata
+
+**Example with Multiple Labels:**
+
+| filename | label |
+| --- | --- |
+| cool-tshirt.png | ["t-shirt", "SKU12345"] |
+| cool-pants.jpg | ["pants", "SKU231312"] |
+
+### Object Annotations
+
+For object-level annotations, create a file named `object_annotations.csv` or `object_annotations.parquet`. Each row represents a detected object with bounding box coordinates and class label.
+
+**Format:**
+
+| filename | col_x | row_y | width | height | label |
+| --- | --- | --- | --- | --- | --- |
+| Kitti/raw/training/image_2/006149.png | 0 | 240 | 135 | 133 | Car |
+| Kitti/raw/training/image_2/006149.png | 608 | 169 | 59 | 43 | Car |
+
+**Requirements:**
+
+- `col_x` and `row_y` define the top-left corner of the bounding box
+- `width` and `height` must be greater than zero
+- Each row corresponds to a single object within an image
+
+### JSON Annotations
+
+Visual Layer supports COCO-format JSON annotations. Ensure the file is named `annotations.json`.
+
+**Example Format:**
+
+```json
+{
+    "images": [
+        { "id": 1, "width": 640, "height": 480, "file_name": "image1.jpg" },
+        { "id": 2, "width": 800, "height": 600, "file_name": "image2.jpg" }
+    ],
+    "categories": [
+        { "id": 1, "name": "cat" },
+        { "id": 2, "name": "dog" },
+        { "id": 3, "name": "t-rex" }
+    ],
+    "annotations": [
+        { "id": 1, "image_id": 1, "category_id": 1, "bbox": [100, 100, 200, 200] },
+        { "id": 2, "image_id": 2, "category_id": 2, "bbox": [50, 50, 150, 150] },
+        { "id": 3, "image_id": 1, "category_id": 3 },
+        { "id": 4, "image_id": 2, "category_id": 3 }
+    ]
+}
+```
+
+**Requirements:**
+
+- Bounding boxes follow the format `[col_x, row_y, width, height]`
+- `col_x` and `row_y` define the top-left corner
+- `width` and `height` must be greater than zero
+- Remove all comments before uploading
+
+## Understanding Bounding Box Formats
+
+Different annotation tools and datasets use different bounding box coordinate systems. This section compares common formats to help you convert to Visual Layer's format.
+
+### Visual Layer Format
+
+Visual Layer uses CSV format with the following structure:
+
+| Column Name | Description |
+| --- | --- |
+| `filename` | The name of the image file containing the object |
+| `col_x` | The x-coordinate (horizontal position) of the top-left corner |
+| `row_y` | The y-coordinate (vertical position) of the top-left corner |
+| `width` | The width of the bounding box, extending from `col_x` |
+| `height` | The height of the bounding box, extending from `row_y` |
+| `label` | The class or category of the detected object |
+
+**Example:**
+
+```csv
+filename,col_x,row_y,width,height,label
+image1.jpg,50,30,200,150,car
+image2.jpg,120,60,80,100,person
+image3.jpg,15,10,50,70,dog
+```
+
+### Common Format Comparison
+
+| Format | Representation | Normalized? | File Type |
+| --- | --- | --- | --- |
+| **Visual Layer** | `[col_x, row_y, width, height]` | No | `.csv` |
+| **COCO** | `[x_min, y_min, width, height]` | No | `.json` |
+| **VOC** | `(x_min, y_min, x_max, y_max)` | No | `.xml` |
+| **YOLO** | `[x_center, y_center, width, height]` | Yes | `.txt` |
+| **TFRecord** | `(y_min, x_min, y_max, x_max)` | Yes | `.tfrecord` |
+| **LabelMe** | `[[x_min, y_min], [x_max, y_max]]` | No | `.json` |
+
+Each format is optimized for different use cases. COCO and VOC are widely used in academic datasets, YOLO for real-time detection, TFRecord for TensorFlow-based training, and LabelMe for manual annotations.
+
+## Converting from Other Formats
+
+If your annotations use a different format, you can convert them to Visual Layer's format using the scripts and guides below.
+
+### Converting YOLO Annotations
+
+YOLO format stores annotations as normalized center coordinates. Each text file corresponds to an image and contains lines in the format:
+
+```
+<class_id> <norm_cx> <norm_cy> <norm_w> <norm_h>
+```
+
+**Example:**
+
+```
+0 0.5869140625 0.2412109375 0.021484375 0.044921875
+0 0.8974609375 0.185546875 0.044921875 0.1015625
+```
+
+**Conversion Process:**
+
+The script converts normalized coordinates to absolute pixel values and calculates top-left coordinates:
+
+```
+top_left_x = (center_x - width/2) * image_width
+top_left_y = (center_y - height/2) * image_height
+```
+
+**Python Conversion Script:**
+
+```python
+import os
+import csv
+import cv2
+
+# Paths to your folders
+labels_folder = "output/labels"
+images_folder = "output/images"
+output_csv = "annotations.csv"
+
+# Open CSV for writing
+with open(output_csv, "w", newline="") as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerow(["filename", "col_x", "row_y", "width", "height", "label"])
+
+    # Process each label file
+    for label_file in os.listdir(labels_folder):
+        if label_file.endswith(".txt"):
+            image_base = os.path.splitext(label_file)[0]
+            image_filename = image_base + ".png"
+            image_path = os.path.join(images_folder, image_filename)
+            label_file_path = os.path.join(labels_folder, label_file)
+
+            if not os.path.exists(image_path):
+                print(f"Image not found for {label_file}")
+                continue
+
+            # Read image to get dimensions
+            image = cv2.imread(image_path)
+            if image is None:
+                print(f"Failed to load image {image_path}")
+                continue
+
+            h_img, w_img = image.shape[:2]
+
+            # Open and read the label file
+            with open(label_file_path, "r") as f:
+                lines = f.readlines()
+                for line in lines:
+                    parts = line.strip().split()
+                    if len(parts) != 5:
+                        continue
+
+                    class_id, norm_cx, norm_cy, norm_w, norm_h = map(float, parts)
+
+                    # Convert normalized values to absolute pixel values
+                    abs_cx = norm_cx * w_img
+                    abs_cy = norm_cy * h_img
+                    abs_w = norm_w * w_img
+                    abs_h = norm_h * h_img
+
+                    # Calculate the top-left corner coordinates
+                    top_left_x = abs_cx - abs_w / 2
+                    top_left_y = abs_cy - abs_h / 2
+
+                    label_str = "ship" if class_id == 0 else str(int(class_id))
+
+                    writer.writerow([
+                        image_filename,
+                        int(top_left_x),
+                        int(top_left_y),
+                        int(abs_w),
+                        int(abs_h),
+                        label_str
+                    ])
+```
+
+### Converting Segmentation Masks
+
+Segmentation masks use polygon coordinates to define object boundaries. You can convert these to bounding boxes by finding the minimum and maximum x,y values.
+
+**Example Segmentation Mask Format:**
+
+```json
+{
+  "version": "4.5.6",
+  "shapes": [
+    {
+      "label": "QSBD",
+      "points": [
+        [64, 10],
+        [64, 15],
+        [67, 15],
+        [68, 14],
+        [68, 10]
+      ],
+      "shape_type": "polygon"
+    }
+  ],
+  "imagePath": "example_image.png"
+}
+```
+
+**Conversion Logic:**
+
+```
+min_x = minimum x-coordinate from all points
+max_x = maximum x-coordinate from all points
+min_y = minimum y-coordinate from all points
+max_y = maximum y-coordinate from all points
+
+col_x = min_x (left edge)
+row_y = min_y (top edge)
+width = max_x - min_x
+height = max_y - min_y
+```
+
+**Python Conversion Script:**
+
+```python
+import json
+import csv
+import os
+from pathlib import Path
+from typing import List, Tuple, Dict, Any
+
+def extract_polygon_points(shape: Dict[str, Any]) -> List[Tuple[int, int]]:
+    """Extract polygon points from a shape annotation."""
+    if 'points' not in shape:
+        return []
+
+    points = []
+    for point in shape['points']:
+        if len(point) >= 2:
+            x, y = int(point[0]), int(point[1])
+            points.append((x, y))
+
+    return points
+
+def polygon_to_bbox(points: List[Tuple[int, int]]) -> Tuple[int, int, int, int]:
+    """Convert polygon points to bounding box coordinates."""
+    if not points:
+        return (0, 0, 0, 0)
+
+    x_coords = [point[0] for point in points]
+    y_coords = [point[1] for point in points]
+
+    min_x = min(x_coords)
+    max_x = max(x_coords)
+    min_y = min(y_coords)
+    max_y = max(y_coords)
+
+    col_x = min_x
+    row_y = min_y
+    width = max_x - min_x
+    height = max_y - min_y
+
+    return (col_x, row_y, width, height)
+
+def process_json_file(json_path: Path) -> List[Dict[str, Any]]:
+    """Process a JSON annotation file and extract bounding boxes."""
+    try:
+        with open(json_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, FileNotFoundError) as e:
+        print(f"Error reading {json_path}: {e}")
+        return []
+
+    if 'shapes' not in data:
+        print(f"No 'shapes' key found in {json_path}")
+        return []
+
+    image_filename = data.get('imagePath', json_path.stem + '.png')
+
+    bboxes = []
+    for shape in data['shapes']:
+        if shape.get('shape_type') != 'polygon':
+            continue
+
+        label = shape.get('label', 'unknown')
+        points = extract_polygon_points(shape)
+
+        if not points:
+            continue
+
+        col_x, row_y, width, height = polygon_to_bbox(points)
+
+        if width <= 0 or height <= 0:
+            continue
+
+        bbox_info = {
+            'filename': image_filename,
+            'col_x': col_x,
+            'row_y': row_y,
+            'width': width,
+            'height': height,
+            'label': label
+        }
+        bboxes.append(bbox_info)
+
+    return bboxes
+
+# Paths to your folders
+annotations_folder = "annotations"
+output_csv = "segmentation_annotations.csv"
+
+# Process all JSON files and convert to CSV
+all_bboxes = []
+json_files = list(Path(annotations_folder).glob('*.json'))
+
+for json_file in json_files:
+    print(f"Processing: {json_file.name}")
+    bboxes = process_json_file(json_file)
+    all_bboxes.extend(bboxes)
+    print(f"  Found {len(bboxes)} bounding boxes")
+
+# Write to CSV
+fieldnames = ['filename', 'col_x', 'row_y', 'width', 'height', 'label']
+
+with open(output_csv, 'w', newline='', encoding='utf-8') as csvfile:
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
+    writer.writerows(all_bboxes)
+
+print(f"Conversion complete! Output saved to: {output_csv}")
+print(f"Total bounding boxes: {len(all_bboxes)}")
+```
+
+### Creating Annotations from Folder Structure
+
+If your images are organized in folders where each subfolder name represents the class label, you can generate annotation files automatically.
+
+**Folder Structure:**
+
+```
+dataset/
+  ├── Ulcer/
+  │   ├── image1.bmp
+  │   └── image2.bmp
+  ├── Normal/
+  │   ├── image3.bmp
+  │   └── image4.bmp
+  └── AVM/
+      ├── image5.bmp
+      └── image6.bmp
+```
+
+**Python Script:**
+
+```python
+import os
+import csv
+
+def create_annotation_csv(root_dir, output_csv):
+    rows = []
+
+    for subdir in os.listdir(root_dir):
+        subdir_path = os.path.join(root_dir, subdir)
+        if os.path.isdir(subdir_path):
+            label = subdir
+            for filename in os.listdir(subdir_path):
+                file_path = os.path.join(subdir_path, filename)
+                if os.path.isfile(file_path):
+                    relative_path = os.path.join(subdir, filename)
+                    rows.append([relative_path, label])
+
+    with open(output_csv, mode='w', newline='') as csv_file:
+        writer = csv.writer(csv_file)
+        writer.writerow(['filename', 'label'])
+        writer.writerows(rows)
+    print(f"CSV file '{output_csv}' created successfully.")
+
+if __name__ == "__main__":
+    root_directory = "."
+    output_csv_file = "image_annotations.csv"
+    create_annotation_csv(root_directory, output_csv_file)
+```
+
+**Example Output:**
+
+```csv
+filename,label
+Ulcer/Ulcer_2024-08-07-08-28-10_81061.bmp,Ulcer
+Ulcer/Ulcer_2024-08-07-08-29-37_82025.bmp,Ulcer
+Normal/Normal_2024-08-07-08-30-15_12345.bmp,Normal
+AVM/AVM_2024-08-07-08-31-22_54321.bmp,AVM
+```
+
+## Importing Annotations into Visual Layer
+
+Once your annotation file is properly formatted, you can import it during dataset creation.
+
+**Steps:**
+
+1. Upload your annotation file during dataset creation.
+2. Files can be uploaded from your local machine or S3 bucket.
+3. Ensure your file follows the required format and has the correct name.
+
+The annotation file must be uploaded at the same time as your images. Visual Layer will process the annotations and make them available for filtering, search, and analysis.
+
+## Reusing Caption Data
+
+Caption generation is one of the most time-consuming operations in Visual Layer's dataset pipeline. When creating multiple datasets with the same images, you can extract and reuse caption data from previous pipeline runs.
+
+### Benefits
+
+Reusing caption data allows you to:
+
+- Skip caption generation on subsequent dataset creations
+- Maintain consistent captions across multiple datasets
+- Reduce processing time significantly
+
+<Note>
+This approach is ideal when you need to create multiple datasets or dataset versions using the same images but with different configurations.
+</Note>
+
+### How Caption Data Is Stored
+
+After running a dataset pipeline, Visual Layer stores processed data in:
+
+```
+/.vl/tmp/[dataset-id]/input/metadata/image_annotations.parquet
+```
+
+This parquet file contains all the caption data you need to reuse.
+
+### Extraction Process
+
+The extraction script processes Visual Layer's internal parquet files to create a clean annotation file:
+
+1. Extracts relevant columns: `filename` and `caption`
+2. Removes system paths like `/hostfs`, `/mnt`, etc.
+3. Creates relative paths by converting absolute paths to relative filenames
+4. Outputs clean parquet file named `image_annotations.parquet`
+
+**Script Location:**
+
+<Card title="View Complete Script Code" icon="file-code-2" href="/docs/code-blocks/caption-extraction-script">
+The complete Python script is available on a separate page. Click here to view and copy the code.
+</Card>
+
+### Workflow
+
+**Step 1: Create Initial Dataset**
+
+Create your first dataset with captioning enabled. After the pipeline completes, locate the parquet file:
+
+```bash
+# List recent datasets
+ls -lt /.vl/tmp/
+
+# Navigate to your dataset's metadata
+cd /.vl/tmp/[your-dataset-id]/input/metadata/
+
+# Verify the file exists
+ls image_annotations.parquet
+```
+
+**Step 2: Run the Extraction Script**
+
+Process the parquet file to extract captions:
+
+```bash
+# Basic usage
+python3 process_annotations.py /.vl/tmp/[dataset-id]/input/metadata/image_annotations.parquet
+
+# Specify custom output location
+python3 process_annotations.py /.vl/tmp/[dataset-id]/input/metadata/image_annotations.parquet \
+  -o /path/to/new-dataset/image_annotations.parquet
+
+# Custom prefix removal
+python3 process_annotations.py input.parquet --prefix /custom/prefix/to/remove
+```
+
+**Step 3: Copy to New Dataset Directory**
+
+Place the extracted parquet file in your new dataset directory alongside the images:
+
+```bash
+# Copy to new dataset location
+cp image_annotations_processed.parquet /path/to/new-dataset/image_annotations.parquet
+```
+
+<Warning>
+The parquet file must be named exactly `image_annotations.parquet` for Visual Layer to recognize it.
+</Warning>
+
+**Step 4: Create New Dataset**
+
+Create your new dataset. Visual Layer will detect the existing `image_annotations.parquet` file and use the provided captions, completing much faster.
+
+### Understanding Relative Paths
+
+Filenames in the parquet file must be relative to the dataset directory location. Visual Layer looks for images relative to where the `image_annotations.parquet` file is located.
+
+**Correct - Relative Paths:**
+
+```
+Dataset directory: /any/path/dataset/
+  ├── image_annotations.parquet
+  ├── dog_1.jpg
+  ├── dog_2.jpg
+  └── dog_3.jpg
+
+Filenames in parquet:
+  - dog_1.jpg
+  - dog_2.jpg
+  - dog_3.jpg
+```
+
+**With Subdirectory:**
+
+```
+Dataset directory: /any/path/dataset/
+  ├── image_annotations.parquet
+  └── images/
+      ├── dog_1.jpg
+      ├── dog_2.jpg
+      └── dog_3.jpg
+
+Filenames in parquet:
+  - images/dog_1.jpg
+  - images/dog_2.jpg
+  - images/dog_3.jpg
+```
+
+### Troubleshooting
+
+**Images Not Found:**
+
+If Visual Layer cannot find your images, verify:
+
+1. Parquet file is in the same directory as images
+2. Filenames match exactly (case-sensitive)
+3. Paths in parquet are relative, not absolute
+
+**Captions Not Being Used:**
+
+If Visual Layer is still generating captions:
+
+1. Verify filename is exactly `image_annotations.parquet`
+2. Ensure file is in the correct location relative to images
+3. Check that parquet file has both `filename` and `caption` columns
+
+## Next Steps
+
+Now that you understand how to import annotations, you can create and explore datasets with rich metadata.
+
+<CardGroup cols={2}>
+  <Card title="Create a Dataset" icon="database" href="/docs/quick-start/tutorial-create-dataset">
+    Create your first dataset with annotations
+  </Card>
+  <Card title="Explore Datasets" icon="search" href="/docs/explore-and-search/exploring-datasets">
+    Use annotations to filter and analyze your data
+  </Card>
+  <Card title="Model Catalog" icon="boxes" href="/docs/models-and-enrichment/model-catalog">
+    Enrich your datasets with AI models
+  </Card>
+  <Card title="Export Datasets" icon="download" href="/docs/advanced-dataset-management/export-dataset">
+    Export annotated datasets for downstream use
+  </Card>
+</CardGroup>

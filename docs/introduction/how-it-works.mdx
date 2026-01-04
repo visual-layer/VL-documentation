@@ -1,0 +1,78 @@
+---
+title: "How Visual Layer Works"
+description: "Explore the architecture and computer vision concepts that transform raw images and videos into a structured, queryable visual database."
+sidebarTitle: "How Visual Layer Works"
+---
+
+Visual Layer fundamentally changes how organizations manage visual data by moving beyond traditional file systems. Instead of treating images and videos as static files with filenames, the platform analyzes them as complex data points containing semantic meaning and visual patterns.
+
+This article explores the theoretical and architectural foundations of the platform, explaining how it turns unstructured pixels into a structured, intelligent database.
+
+## From Pixels to Embeddings
+
+The core engine of Visual Layer is built on **Deep Visual Embeddings**.
+
+When you ingest data—whether through cloud upload, S3 buckets, or local folders—the system performs an indexing process that goes far beyond simple storage. It uses proprietary deep learning models (`VL-Image` and `VL-Object`) to analyze the pixel data of every image and video frame.
+
+This process converts visual content into **embeddings**: high-dimensional mathematical vectors.
+
+* **The Transformation:** Just as a map coordinate represents a physical location, an embedding represents the abstract features of an image (shapes, textures, concepts, colors).
+* **The Latent Space:** These vectors exist in a multi-dimensional geometric space where distance equals similarity. Images that look alike or share concepts are located mathematically close to each other.
+
+
+
+## Structuring the Unstructured
+
+One of the biggest challenges with raw visual data is its lack of structure. Visual Layer solves this through **Automatic Clustering**.
+
+### The Logic of Clusters
+
+Rather than forcing you to browse file directories, Visual Layer utilizes the geometry of the embedding space to organize data automatically. By analyzing the density and proximity of vectors, the system groups visually similar items into **Clusters**.
+
+* **Dynamic Granularity:** Clustering is not rigid. The "Granularity" control adjusts the mathematical threshold for grouping. A "looser" setting expands the radius to include broader similarities, while a "stricter" setting contracts it to group only near-identical items.
+* **Video Analysis:** For video data, the system treats videos as sequences of frames. It extracts these frames and maps them into the same embedding space, allowing you to analyze video content with the same granularity as still images.
+
+## Search Theory
+
+Visual Layer employs two distinct theoretical approaches for retrieval, allowing users to cross the barrier between human language and machine vision.
+
+### Semantic Search (Multi-Modal)
+
+Semantic Search bridges the gap between text and visuals using **multi-modal learning**. It maps natural language queries into the same vector space as the images.
+
+When you search for "sunset over mountains," the system doesn't look for matching filenames. It converts your text into a vector and finds image embeddings that align with that concept in the vector space. This allows for the discovery of abstract concepts (e.g., "joy," "urban solitude") without manual tagging.
+
+### Visual Similarity (Nearest Neighbor)
+
+Visual Search operates purely within the visual domain. When you select a reference image (a **Similarity Vertex**), the system executes a nearest-neighbor search.
+
+It calculates the distance between your reference embedding and every other embedding in the dataset, instantly retrieving the closest matches. This is effective for finding specific patterns, identifying anomalies, or locating the same object across different camera angles.
+
+## Automated Curation and Quality
+
+Visual Layer leverages the geometric properties of the embedding space to automate data hygiene, replacing manual QA with mathematical analysis.
+
+### Redundancy Detection
+
+In a vector space, identical images occupy the same coordinates.
+
+* **Duplicates:** The system detects vectors with zero or near-zero distance from each other, identifying them as duplicates even if file formats or resolutions differ.
+* **Uniqueness:** By calculating the density of vectors in a region, the platform assigns **Uniqueness Scores**. Data points in sparse regions are "unique," while those in dense clusters are "redundant." This allows for the automated curation of diverse datasets.
+
+### Alignment and Outliers
+
+The system uses **Visual-Label Alignment** to validate dataset integrity.
+
+* **Mislabels:** If an image labeled "cat" has an embedding that sits deep within a cluster of "dog" vectors, the system flags the mathematical inconsistency as a potential mislabel.
+* **Outliers:** Vectors that sit on the fringes of a distribution—far from the cluster centroid—are identified as outliers. These often represent edge cases, rare events, or data collection errors.
+
+### Signal Quality Analysis
+
+Separate from semantic embeddings, the platform runs heuristic analyzers to assess the technical quality of the signal. It evaluates frequency distributions and pixel intensity to generate confidence scores for issues like **blur**, **darkness**, and **brightness**. Users can adjust these confidence thresholds to tune the sensitivity of the detection.
+
+## Infrastructure and Scale
+
+The architecture is designed to handle this computation at scale, available in two deployment models:
+
+* **SaaS (Cloud):** A fully managed multi-tenant infrastructure on AWS that scales resources automatically.
+* **Self-Hosted (On-Premises):** A containerized deployment that runs on your private infrastructure. While it can run on CPUs, the vector generation and indexing processes are significantly accelerated by **GPUs**, which are recommended for handling large-scale embedding tasks.
