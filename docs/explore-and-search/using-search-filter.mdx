@@ -1,7 +1,7 @@
 ---
 title: Using Search and Filter Tools
 description: A complete guide to the Visual Layer interface, workflows, and available options for searching and filtering data.
-sidebarTitle: Search & Filter Referemce
+sidebarTitle: Using Tools
 ---
 
 Visual Layer provides a unified interface for discovering and narrowing down data through semantic search, visual similarity, and metadata filtering. This guide covers the interface components, specific execution steps, and a complete reference of available filter options.
@@ -110,9 +110,17 @@ When using **Quality Issue** filters (Blurry, Dark, Bright), you must set a conf
     * **Lower values:** Catches looser matches, such as images with compression artifacts or slight crops.
 
 #### Class Outliers
+This filter identifies images that have a valid label but do not visually match the standard appearance of their class. Unlike a mislabel (which is wrong), a class outlier might be technically correct but visually anomalous.
+
+**Common Scenarios:**
+* **Unusual Visuals:** A drawing of a dog in a dataset of real dog photos.
+* **No Matching Class:** A sheep labeled as "dog" because the dataset lacks a "sheep" class.
+
+**Steps:**
 1.  Navigate to **Add Filter** → **Class Outlier**.
 2.  Set the **confidence threshold** (default is 1).
-3.  Apply to see images that have valid labels but do not visually match the standard appearance of their class.
+3.  Apply the filter.
+4.  (Optional) To save these images for debugging, select **Export** → **Matching the applied filter**.
 
 ### Filter Options Reference
 
