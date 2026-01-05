@@ -3,7 +3,7 @@ title: "Import Annotations"
 description: "Import pre-existing annotation files into Visual Layer using supported formats including CSV, Parquet, JSON, COCO, and YOLO."
 ---
 
-Annotations are metadata labels that describe and categorize images or objects within images. They help structure visual datasets, making them searchable, analyzable, and useful for AI training.
+Annotations are metadata labels that describe and categorize images or objects within images. They structure visual datasets and enable search, analysis, and AI training workflows.
 
 <Note>
 Annotations must be uploaded when creating a dataset and cannot be added later.
@@ -13,17 +13,17 @@ Annotations must be uploaded when creating a dataset and cannot be added later.
 
 Annotations improve data organization and model accuracy by providing structured labels for images and objects. They enable:
 
-- Efficient data retrieval through filtering and search
-- Enhanced search-ability within large datasets
-- Object detection and classification tasks
-- Improved model accuracy with high-quality labeled data
+- Efficient data retrieval through filtering and search.
+- Enhanced search capabilities within large datasets.
+- Object detection and classification tasks.
+- Improved model accuracy with high-quality labeled data.
 
 ## Common Annotation Types
 
 Visual Layer supports two primary annotation types:
 
-- **Image Annotations**: Assign class labels to entire images, helping categorize datasets
-- **Object Annotations**: Label individual objects within images using bounding boxes, improving model accuracy
+- **Image Annotations**: Assign class labels to entire images and categorize datasets by content.
+- **Object Annotations**: Label individual objects within images using bounding boxes and improve model accuracy.
 
 ## Supported Formats
 
@@ -47,7 +47,7 @@ Your annotation file must be named exactly as one of the following:
 - `object_annotations.parquet`
 
 <Warning>
-Files that do not match these exact names will not be processed correctly by Visual Layer.
+Visual Layer cannot process files that do not match these exact names.
 </Warning>
 
 ## Preparing Annotation Files
@@ -132,7 +132,7 @@ Visual Layer supports COCO-format JSON annotations. Ensure the file is named `an
 
 ## Understanding Bounding Box Formats
 
-Different annotation tools and datasets use different bounding box coordinate systems. This section compares common formats to help you convert to Visual Layer's format.
+Different annotation tools and datasets use different bounding box coordinate systems. This section compares common formats and shows you how to convert them to Visual Layer's format.
 
 ### Visual Layer Format
 
@@ -497,9 +497,9 @@ Caption generation is one of the most time-consuming operations in Visual Layer'
 
 Reusing caption data allows you to:
 
-- Skip caption generation on subsequent dataset creations
-- Maintain consistent captions across multiple datasets
-- Reduce processing time significantly
+- Skip caption generation on subsequent dataset creations.
+- Maintain consistent captions across multiple datasets.
+- Reduce processing time significantly.
 
 <Note>
 This approach is ideal when you need to create multiple datasets or dataset versions using the same images but with different configurations.
@@ -526,8 +526,8 @@ The extraction script processes Visual Layer's internal parquet files to create 
 
 **Script Location:**
 
-<Card title="View Complete Script Code" icon="file-code-2" href="/docs/code-blocks/caption-extraction-script">
-The complete Python script is available on a separate page. Click here to view and copy the code.
+<Card title="View Complete Script Code" icon="file-code-2" href="/docs/self-hosting/useful-scripts">
+The complete Python script is available in the Useful Scripts guide. Click here to view and copy the code.
 </Card>
 
 ### Workflow

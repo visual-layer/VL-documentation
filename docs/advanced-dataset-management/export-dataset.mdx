@@ -227,7 +227,7 @@ Use the export options to download either the full dataset or a filtered subset.
 All exported data is formatted in clean, structured JSON.
 
 ---
-## Step 1: Extracting Data Using Visual Layer's API
+## Extracting Data Using Visual Layer's API
 
 First, let's set up a Python class to handle the API calls for exporting datasets.
 
@@ -416,7 +416,7 @@ File unzipped successfully to: export
 ```
 ---
 
-## Step 2: Parsing Exported Metadata
+## Parsing Exported Metadata
 
 After extracting your data, you'll have a `metadata.json` file. Let's learn how to parse and analyze it.
 
@@ -464,7 +464,7 @@ media_items_df
 
 
 ---
-## Step 3: Analyzing Your Data
+## Analyzing Your Data
 
 ### Filter By Uniqueness Score
 
@@ -544,7 +544,7 @@ mislabel_df
 ```
 ---
 
-## Step 4: Converting Video Frame Data to CSV
+## Converting Video Frame Data to CSV
 
 If your exported JSON contains video frame data, here's how to parse it into CSV format:
 
@@ -643,7 +643,7 @@ df = pd.DataFrame(records)
 print(df.tail())
 ```
 ---
-## Step 5: Converting Object Detection Data to CSV
+## Converting Object Detection Data to CSV
 
 For datasets with bounding box annotations and user tags, here's how to convert them to CSV format:
 
@@ -743,7 +743,7 @@ print(f"CSV file saved to {output_file}")
 | 000000046252.jpg | 192 | 194 | 75  | 65  | Shirt  | test-tags |
 | 000000012639.jpg | 28  | 368 | 80  | 118 | Vest   | test-tags |
 
-## Step 6: Analyzing Video Frame Similarity
+## Analyzing Video Frame Similarity
 
 For datasets with video frames, you can analyze similarity between frames to understand which videos are most similar. This is useful for identifying duplicate content, finding related videos, or grouping similar content.
 
@@ -974,7 +974,7 @@ This analysis helps you identify:
 - The confidence level of similarities
 - Clusters of related video content
 
-## Step 7: Analyzing Mislabel Issues
+## Analyzing Mislabel Issues
 
 For datasets with mislabel detection, you can analyze which labels are potentially incorrect and what the suggested corrections are. This is valuable for improving dataset quality and understanding systematic labeling issues.
 
@@ -1167,21 +1167,21 @@ Bandslot_discolor -> BS-DISCOLOR-B (20)
 ```
 
 This analysis helps you:
-- **Identify systematic labeling issues**: Classes that are frequently mislabeled
-- **Prioritize corrections**: Focus on high-confidence suggestions first
-- **Understand label confusion**: See which classes are commonly confused with each other
-- **Improve dataset quality**: Apply suggested corrections to improve training data
-- **Analyze labeling patterns**: Understand if certain types of objects are consistently mislabeled
+- **Identify systematic labeling issues**: Classes that are frequently mislabeled.
+- **Prioritize corrections**: Focus on high-confidence suggestions first.
+- **Understand label confusion**: See which classes are commonly confused with each other.
+- **Improve dataset quality**: Apply suggested corrections to improve training data.
+- **Analyze labeling patterns**: Understand if certain types of objects are consistently mislabeled.
 
 ## Next Steps
 
 Now that you know how to work with exported metadata files, you can:
 
-1. **Analyze data quality** by filtering for different issue types and confidence thresholds
-2. **Create data subsets** using uniqueness scores and clustering information
-3. **Export to different formats** for use in other tools and platforms
-4. **Build automated workflows** to process exported datasets at scale
-5. **Analyze video similarity** to find duplicate content, group related videos, or identify the most unique content
-6. **Analyze mislabel issues** to identify systematic labeling problems and prioritize corrections
+1. **Analyze data quality** by filtering for different issue types and confidence thresholds.
+2. **Create data subsets** using uniqueness scores and clustering information.
+3. **Export to different formats** for use in other tools and platforms.
+4. **Build automated workflows** to process exported datasets at scale.
+5. **Analyze video similarity** to find duplicate content, group related videos, or identify the most unique content.
+6. **Analyze mislabel issues** to identify systematic labeling problems and prioritize corrections.
 
 For more information on exporting datasets, see our [Export Dataset guide](/docs/advanced-dataset-management/export-dataset).

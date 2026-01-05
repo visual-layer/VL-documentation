@@ -4,7 +4,7 @@ description: "Developer guide for importing custom metadata using user-defined f
 ---
 
 <Card title="How this Helps" icon="lightbulb">
-Add custom metadata like temperature, timestamps, and tools to images via the API. This will help you improve dataset filtering and searchability.
+Add custom metadata like temperature, timestamps, and tools to images via the API. This helps you improve dataset filtering and searchability.
 </Card>
 
 
@@ -13,6 +13,7 @@ This guide explains how to import custom metadata to your datasets via the API. 
 Custom metadata is associated at the image level and is immutable once uploaded.
 
 To import custom metadata in Visual Layer, you must:
+
 - Declare a metadata field (name + type).
 - Upload a JSON file containing values for that field.
 <Tip>
@@ -33,17 +34,30 @@ If you want to add multiple fields, you’ll need to create a separate task for 
 </Note>
 ---
 
-# Steps
+## Workflow Overview
 
-### Pre-processing
-1. Ensure your dataset is in a `READY` state.
-2. Prepare a JSON file as described below.
+The custom metadata import process follows these stages:
 
-### Uploading the Metadata
-1. Declare a new metadata attribute and receive a `task_id`.
-2. Upload metadata values in a JSON file.
-3. Track the ingestion progress via the status endpoint.
-4. Metadata becomes available for filtering and retrieval.
+<Steps>
+  <Step title="Ensure dataset is ready">
+    Verify your dataset is in a `READY` state before beginning the upload process.
+  </Step>
+  <Step title="Prepare your JSON file">
+    Create a JSON file mapping media IDs to metadata values as described below.
+  </Step>
+  <Step title="Declare the metadata field">
+    Use the API to declare a new metadata attribute and receive a `task_id`.
+  </Step>
+  <Step title="Upload metadata values">
+    Submit your JSON file containing the metadata values for the declared field.
+  </Step>
+  <Step title="Monitor upload progress">
+    Track ingestion progress via the status endpoint and review any errors.
+  </Step>
+  <Step title="Access metadata in Visual Layer">
+    Once uploaded, metadata becomes available for filtering and retrieval in the platform.
+  </Step>
+</Steps>
 
 ## Preparing the JSON File
 
@@ -78,7 +92,7 @@ Skip the manual JSON creation process with our Python script that automatically 
 
 --- 
 
-# Step 1: Declare a New Metadata Field
+## Declare a New Metadata Field
 Each declaration creates a new upload task for a **single field**. You can repeat the process to add more fields—just ensure each `field_name` is unique within the dataset.
 
 
@@ -122,7 +136,7 @@ POST /api/v1/datasets/{dataset_id}/custom_metadata/tasks
 }
 ```
 
-The is_multi flag determines whether each image can have one or multiple values from the enum options.
+The `is_multi` flag determines whether each image can have one or multiple values from the enum options.
 
 - `is_multi: false` (Each image can have only one value.)
 - `is_multi: true` (Each image can have multiple values.)
@@ -141,7 +155,7 @@ Make sure to save the `task_id`- you’ll need it for the next steps in the flow
 
 ---
 
-# Step 2: Upload Metadata File
+## Upload Metadata File
 Use the received `task_id` to upload your metadata file. Each entry must include a valid `media_id` and a `value` matching the declared field type.
 
 ```http
@@ -185,7 +199,7 @@ POST /api/v1/datasets/{dataset_id}/custom_metadata/tasks/{task_id}
 ```
 ---
 
-# Step 3: Check Upload Status
+## Check Upload Status
 
 Track progress and get visibility into errors (e.g., type mismatches).
 
@@ -228,7 +242,7 @@ You can always declare a new `field_name` and reupload the data.
 
 ---
 
-# Step 4: Retrieve Metadata
+## Retrieve Metadata
 
 ### List Declared Metadata Fields
 
@@ -261,9 +275,9 @@ Response:
 ```
 
 ---
-# Step 5: Search and Filter Using Custom Metadata
+## Search and Filter Using Custom Metadata
 
-Once your custom metadata is uploaded successfully, the declared `field_name` will automatically appear in the **Filters** section of the UI.
+Once you upload custom metadata successfully, the declared `field_name` automatically appears in the **Filters** section of the UI.
 
 You can then filter dataset images using these fields — just like any other built-in filter.
 

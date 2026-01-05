@@ -90,8 +90,13 @@
                   {
                     "group": "Quick Start",
                     "pages": [
-                      "docs/quick-start/tutorial-create-dataset",
-                      "docs/quick-start/tutorial-explore-dataset",
+                      {
+                        "group": "Tutorials",
+                        "pages": [
+                          "docs/quick-start/tutorial-create-dataset",
+                          "docs/quick-start/tutorial-explore-dataset"
+                        ]
+                      },
                       {
                         "group": "Navigating Visual Layer",
                         "pages": [

@@ -5,18 +5,14 @@ description: "Manage trained models, view results, and deploy models to producti
 
 The **Model Catalog** is the central hub for managing your machine learning models and training results. Once a model training job successfully completes, the trained model data becomes accessible from the **Model Catalog**. From here, you can:
 
-- View detailed training results and performance metrics
-- Export model results and artifacts as ZIP files
-- Mark models as production-ready
-- Delete models from the catalog
+- View detailed training results and performance metrics.
+- Export model results and artifacts as ZIP files.
+- Mark models as production-ready.
+- Delete models from the catalog.
 
 ## Accessing the Model Catalog
 
-To access the **Model Catalog**:
-
-1. From the left **Navigation Panel**, click the Model Catalog icon ![](/images/vl-modelcatalog-icon.png).
-
-The **Model Catalog** loads, displaying all your trained models.
+To access the **Model Catalog**, click the Model Catalog icon ![](/images/vl-modelcatalog-icon.png) from the left **Navigation Panel**. The **Model Catalog** loads, displaying all your trained models.
 
 <Frame>
   <img src="/images/vl-training-model-catalog.png" alt="Model Catalog Interface" />
@@ -46,25 +42,17 @@ The **Model Catalog** displays a table view of all trained models. All columns s
 
 Use the **Production** checkbox to indicate which models are approved for deployment in production environments.
 
-**To mark a model as production-ready:**
-
-1. Check the **Production** checkbox for the relevant model.
-
-The model is marked as production, making it easy to filter and identify deployment-ready models.
+**To mark a model as production-ready**, check the **Production** checkbox for the relevant model. The model is marked as production, making it easy to filter and identify deployment-ready models.
 
 **To remove a model from production:**
 
-1. Uncheck the **Production** checkbox for the relevant model.
-
-A confirmation modal appears:
+1. Uncheck the **Production** checkbox for the relevant model. A confirmation modal appears:
 
 <Frame>
   <img src="/images/vl-modelcatalog-production-remove-confirmation.png" alt="Remove from Production Confirmation" />
 </Frame>
 
-2. Click **Yes** to confirm the removal (or **Cancel** to keep the production status).
-
-The model is unmarked as production.
+2. Click **Yes** to confirm the removal (or **Cancel** to keep the production status). The model is unmarked as production.
 
 <Note>
 Changing production status does not affect the model files or results. It only updates the catalog metadata for organizational purposes.
@@ -74,16 +62,12 @@ Changing production status does not affect the model files or results. It only u
 
 Training results provide comprehensive insights into model performance, including validation metrics, confusion matrices, and per-sample predictions.
 
-**To view training results:**
+**To view training results**, click the results icon ![](/images/vl-modelcatalog-view-results.png) in the **Results** column. The training results report opens embedded within Visual Layer, displaying:
 
-1. Click the results icon ![](/images/vl-modelcatalog-view-results.png) in the **Results** column.
-
-The training results report opens embedded within Visual Layer, displaying:
-
-- Model performance summary
-- Validation metrics and accuracy scores
-- Confusion matrix showing classification performance
-- Detailed per-image predictions and confidence scores
+- Model performance summary.
+- Validation metrics and accuracy scores.
+- Confusion matrix showing classification performance.
+- Detailed per-image predictions and confidence scores.
 
 <Tip>
 Keep the results report open in a separate browser tab to compare multiple models side-by-side.
@@ -96,16 +80,14 @@ Export the complete model results package as a ZIP file for offline analysis, ar
 **To export model results:**
 
 1. Click the three-dot menu for the relevant model.
-2. Select **Export**.
-
-The entire results folder downloads as a ZIP file to your Downloads folder.
+2. Select **Export**. The entire results folder downloads as a ZIP file to your Downloads folder.
 
 **Exported contents include:**
 
-- Training and validation reports (HTML format)
-- Performance metrics and confusion matrices (CSV format)
-- Model predictions and confidence scores
-- Supporting data files and visualizations
+- Training and validation reports (HTML format).
+- Performance metrics and confusion matrices (CSV format).
+- Model predictions and confidence scores.
+- Supporting data files and visualizations.
 
 <Note>
 Exported reports remain fully functional offline. You can open the HTML files in any web browser without an internet connection.
@@ -118,17 +100,13 @@ Remove models from the catalog when they are no longer needed. This action requi
 **To delete a model:**
 
 1. Click the three-dot menu for the relevant model.
-2. Select **Delete**.
-
-A confirmation modal appears:
+2. Select **Delete**. A confirmation modal appears:
 
 <Frame>
   <img src="/images/vl-modelcatalog-deletemodel-confirmation.png" alt="Delete Model Confirmation" />
 </Frame>
 
-3. Click **Yes, delete** to confirm (or **Cancel** to stop).
-
-The model entry is immediately removed from the catalog interface.
+3. Click **Yes, delete** to confirm (or **Cancel** to stop). The model entry is immediately removed from the catalog interface.
 
 <Warning>
 Deleting a model from the catalog removes the entry from Visual Layer but does not delete the underlying model files from storage. Model files remain in their original location.
@@ -144,17 +122,17 @@ Click the filter icon in any column header to filter by specific values:
 
 **Common filter combinations:**
 
-- **Type = Classification** to view only classification models
-- **Production = Checked** to see production-ready models
-- **Dataset Name = [specific dataset]** to find models trained on a particular dataset
+- **Type = Classification** to view only classification models.
+- **Production = Checked** to see production-ready models.
+- **Dataset Name = [specific dataset]** to find models trained on a particular dataset.
 
 ### Sorting Models
 
 Click any column header to sort models:
 
-- **Last Updated**: View most recently trained models first
-- **Model Name**: Alphabetically organize your models
-- **Dataset Name**: Group models by training dataset
+- **Last Updated**: View most recently trained models first.
+- **Model Name**: Alphabetically organize your models.
+- **Dataset Name**: Group models by training dataset.
 
 ## Understanding Model Results
 
@@ -164,18 +142,18 @@ Training results packages typically include multiple components that help you ev
 
 The validation summary provides an overview of model performance on the validation dataset, including:
 
-- Overall accuracy and error rates
-- Per-class precision, recall, and F1 scores
-- Confusion matrix showing actual vs. predicted classifications
-- Misclassification patterns and common errors
+- Overall accuracy and error rates.
+- Per-class precision, recall, and F1 scores.
+- Confusion matrix showing actual vs. predicted classifications.
+- Misclassification patterns and common errors.
 
 ### Confusion Matrix
 
 The confusion matrix displays actual ground truth classes versus predicted classes, with color coding to highlight performance:
 
-- **Diagonal cells** (where actual equals predicted) represent correct classifications
-- **Off-diagonal cells** show misclassifications
-- **Row metrics** include False Positive Rate, Precision, Recall, Accuracy, and F1-Score
+- **Diagonal cells** (where actual equals predicted) represent correct classifications.
+- **Off-diagonal cells** show misclassifications.
+- **Row metrics** include False Positive Rate, Precision, Recall, Accuracy, and F1-Score.
 
 ### Performance Metrics
 
@@ -194,15 +172,11 @@ Detailed metrics help you assess model quality:
 
 ## Model Catalog Best Practices
 
-**Organize with naming conventions**: Use consistent, descriptive model names that include dataset version, training date, or configuration details (e.g., "ProductX-v2-2024-12-15").
-
-**Mark production models clearly**: Always use the Production checkbox to distinguish deployment-ready models from experimental or development models.
-
-**Export important results**: Download and archive results for models deployed to production for compliance and documentation purposes.
-
-**Clean up regularly**: Delete obsolete models to keep the catalog focused on current and relevant models.
-
-**Compare models systematically**: Use the validation reports to compare performance across different training runs and select the best-performing model.
+- **Organize with naming conventions**: Use consistent, descriptive model names that include dataset version, training date, or configuration details (e.g., "ProductX-v2-2024-12-15").
+- **Mark production models clearly**: Always use the Production checkbox to distinguish deployment-ready models from experimental or development models.
+- **Export important results**: Download and archive results for models deployed to production for compliance and documentation purposes.
+- **Clean up regularly**: Delete obsolete models to keep the catalog focused on current and relevant models.
+- **Compare models systematically**: Use the validation reports to compare performance across different training runs and select the best-performing model.
 
 ## Related Resources
 
