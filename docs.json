@@ -10,9 +10,7 @@
     "favicon": "/favicon.svg",
     "styling": {
       "eyebrows": "breadcrumbs",
-      "codeblocks": {
-        "theme": "monokai"
-      },
+      "codeblocks": "dark",
       "latex": false
     },
     "thumbnails": {
@@ -105,6 +103,7 @@
                         "group": "Integrations",
                         "pages": [
                             "docs/Integrations/Amazon-s3",
+                            "docs/Integrations/public-s3-bucket-setup",
                             "docs/Integrations/google-cloud-storage"
                         ]
                     },
@@ -349,11 +348,7 @@
             "copy",
             "view",
             "chatgpt",
-            "claude",
-            "vscode",
-            "mcp",
-            "perplexity",
-            "cursor"
+            "claude"
         ]
     },
     "integrations": {
