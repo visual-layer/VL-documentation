@@ -105,6 +105,7 @@
                         "group": "Integrations",
                         "pages": [
                             "docs/Integrations/Amazon-s3",
+                            "docs/Integrations/public-s3-bucket-setup",
                             "docs/Integrations/google-cloud-storage"
                         ]
                     },

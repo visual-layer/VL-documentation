@@ -1,0 +1,93 @@
+---
+title: "Public S3 Bucket Setup"
+description: "Configure an S3 bucket with public access to create datasets in Visual Layer cloud."
+sidebarTitle: "Public S3 Bucket"
+---
+
+This guide explains how to configure an Amazon S3 bucket for public access so you can create datasets in Visual Layer cloud. Making a bucket public allows anyone with the bucket URL to access its contents.
+
+<Note>
+  Making a bucket public means anyone with the URL can access the data. Only use this approach for non-sensitive data that you intend to share publicly.
+</Note>
+
+## Prerequisites
+
+Before configuring your bucket, ensure you have the following:
+
+- An AWS account with permissions to modify S3 bucket settings
+- An existing S3 bucket containing the data you want to use
+- Visual Layer cloud account
+
+## Step 1: Disable block public access settings
+
+AWS blocks public access to S3 buckets by default. You need to disable this protection before applying a public bucket policy.
+
+1. Log into the AWS Management Console.
+
+2. Navigate to the S3 service.
+
+3. Select the bucket you want to make public.
+
+4. Select the **Permissions** tab.
+
+5. In the **Block public access (bucket settings)** section, select **Edit**.
+
+6. Uncheck **Block all public access**.
+
+7. Select **Save changes**.
+
+8. Confirm by typing `confirm` in the confirmation dialog.
+
+## Step 2: Add the public bucket policy
+
+After disabling the block public access settings, you need to add a bucket policy that grants public read access.
+
+1. In the **Permissions** tab of your bucket, scroll down to **Bucket policy**.
+
+2. Select **Edit**.
+
+3. Add the following policy, replacing `<bucket_name>` with your actual bucket name:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::<bucket_name>/*"
+        },
+        {
+            "Sid": "PublicListBucket",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::<bucket_name>"
+        }
+    ]
+}
+```
+
+4. Select **Save changes**.
+
+   Your bucket is now configured for public access.
+
+## Step 3: Create a dataset in Visual Layer
+
+Once your bucket is publicly accessible, you can create a dataset in Visual Layer using the bucket URL.
+
+1. [Create a new dataset](/docs/Creating-Datasets/createdelete-datasets) in Visual Layer.
+
+2. Select **Public S3 Bucket** as the data source.
+
+3. Enter your S3 bucket URL in the format: `s3://your-bucket-name` or `https://your-bucket-name.s3.amazonaws.com`.
+
+   Visual Layer will import the data from your public bucket.
+
+## Related articles
+
+- [Amazon S3 (Private Buckets)](/docs/Integrations/Amazon-s3)
+- [Create a Dataset from a Public S3 Bucket (API)](/api-reference/create-a-dataset-from-a-public-s3-bucket)
+- [Create/Delete Datasets](/docs/Creating-Datasets/createdelete-datasets)
