@@ -10,7 +10,9 @@
     "favicon": "/favicon.svg",
     "styling": {
       "eyebrows": "breadcrumbs",
-      "codeblocks": "dark",
+      "codeblocks": {
+        "theme": "monokai"
+      },
       "latex": false
     },
     "thumbnails": {
@@ -348,7 +350,11 @@
             "copy",
             "view",
             "chatgpt",
-            "claude"
+            "claude",
+            "vscode",
+            "mcp",
+            "perplexity",
+            "cursor"
         ]
     },
     "integrations": {
