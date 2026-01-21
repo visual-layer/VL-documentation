@@ -7,7 +7,7 @@ sidebarTitle: About the Dataset Inventory
 The **Dataset Inventory** is your home page in Visual Layer, displaying all your datasets in a centralized view. This interface provides quick access to dataset creation, search, filtering, and navigation tools.
 
 <Frame>
-  <img src="/images/vl-landing-overview.png" alt="Dataset Inventory Overview" />
+  <img src="/images/landing-overview.png" alt="Dataset Inventory Overview" />
 </Frame>
 
 ## Interface Layout
@@ -35,14 +35,14 @@ The left **Navigation Panel** provides access to all major areas of Visual Layer
 
 | Icon/Option | Name | Description |
 |-------------|------|-------------|
-| ![](/images/vl-dataset-inventory-icon.png) | **My Datasets** | Return to the Dataset Inventory home page (current view) |
-| ![](/images/vl-task-manager-icon.png) | **Task Manager** | Monitor and manage all active tasks, jobs, and processing workflows |
-| ![](/images/vl-modelcatalog-icon.png) | **Model Catalog** | Browse, deploy, and manage AI models for enrichment and analysis |
+| ![](/images/dataset-inventory-icon.png) | **My Datasets** | Return to the Dataset Inventory home page (current view) |
+| ![](/images/task-manager-icon.png) | **Task Manager** | Monitor and manage all active tasks, jobs, and processing workflows |
+| ![](/images/modelcatalog-icon.png) | **Model Catalog** | Browse, deploy, and manage AI models for enrichment and analysis |
 | **Explore Public VL Dataset** | **Public Datasets** | Browse and explore publicly available demonstration datasets |
 | **Documentation** | **Help Resources** | Access user guides, API references, and tutorials |
 | **Bug Report** | **Feedback** | Report issues or provide feedback to the Visual Layer team |
 | **Version Info** | **System Information** | View the current version of the Visual Layer platform |
-| ![](/images/vl-avatar-icon.png) | **Personal Info** | Manage account settings, view usage limits, subscription status, and log out |
+| ![](/images/avatar-icon.png) | **Personal Info** | Manage account settings, view usage limits, subscription status, and log out |
 
 </div>
 
@@ -92,7 +92,7 @@ Combine search and filters for precise dataset discovery. For example, search fo
 Datasets are displayed as cards in a grid layout, providing at-a-glance information and quick access to actions.
 
 <Frame>
-  <img src="/images/vl-dataset-inventory-cards.png" alt="Dataset Cards Grid" />
+  <img src="/images/dataset-inventory-cards.png" alt="Dataset Cards Grid" />
 </Frame>
 
 ### Dataset Card Components
@@ -100,7 +100,7 @@ Datasets are displayed as cards in a grid layout, providing at-a-glance informat
 Each dataset card displays essential information:
 
 <Frame>
-  <img src="/images/vl-dataset-inventory-card.png" alt="Dataset Card Detail" />
+  <img src="/images/dataset-inventory-card.png" alt="Dataset Card Detail" />
 </Frame>
 
 <div className="integrations-table">
@@ -114,7 +114,7 @@ Each dataset card displays essential information:
 | **Object Count** | Number of annotated objects (if metadata or enrichment includes object detection) |
 | **Video Count** | Number of videos in the dataset (if applicable) |
 | **Video Frame Count** | Number of frames extracted from videos (if applicable) |
-| **Info Icon** ![](/images/vl-info-i-icon.png) | Hover to view additional metadata such as associated folder paths, upload source, or custom fields |
+| **Info Icon** ![](/images/info-i-icon.png) | Hover to view additional metadata such as associated folder paths, upload source, or custom fields |
 | **Three-Dot Menu** | Access dataset actions including **Delete** |
 
 </div>
@@ -128,12 +128,14 @@ Understanding status helps you know when datasets are ready for exploration:
 | Status | Meaning | Available Actions |
 |--------|---------|-------------------|
 | **Ready** | Dataset is fully indexed and available for all operations | Full access to exploration, filtering, search, enrichment, and export |
+| **Draft** | Data upload started but dataset creation was not completed | Click dataset card to resume, then click **Create Dataset** to finalize |
 | **Uploading** | Data is being transferred to Visual Layer | Wait for completion; no actions available |
 | **Indexing** | Visual Layer is analyzing images, creating embeddings, and detecting quality issues | Wait for completion; indexing may take several minutes to hours depending on dataset size |
 | **Processing** | A task is running (enrichment, label propagation, or re-indexing) | Limited actions available; some features disabled until processing completes |
-| **Resume** | Dataset creation started but not finalized | Click dataset card to resume creation and click **Create Dataset** to complete |
-| **Failed** | Dataset creation or processing encountered an error | Click dataset card to view error details; may need to recreate dataset |
 | **Enriching** | AI models are adding metadata (captions, labels, classifications) | Wait for completion; dataset remains accessible for viewing |
+| **Pending** | New media was added and requires re-indexing | Initiate re-indexing to make new media searchable and available for analysis |
+| **Resume** | Dataset creation started but not finalized; user action required | Click dataset card to resume creation and click **Create Dataset** to complete |
+| **Failed** | Dataset creation or processing encountered an error | Click dataset card to view error details; may need to recreate dataset |
 
 </div>
 

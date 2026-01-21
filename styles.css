@@ -451,8 +451,52 @@ table {
 
 
 #footer {
-  padding-top: 20px;
-  margin-top: 20px;
+  background-color: #1D102D !important;
+  color: white !important;
+  padding: 1.5rem 0 0.5rem 0 !important;
+  margin-top: 0 !important;
+}
+
+#footer hr,
+#footer [class*="divider"],
+#footer [class*="border"] {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#footer > * {
+  padding: 0.25rem !important;
+  margin: 0 !important;
+}
+
+#footer a,
+#footer span,
+#footer p,
+#footer h3,
+#footer h4 {
+  color: white !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#footer h3,
+#footer h4 {
+  margin-bottom: 0.5rem !important;
+}
+
+#footer ul {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#footer li {
+  margin: 0.15rem 0 !important;
+  padding: 0 !important;
+}
+
+#footer svg {
+  color: white !important;
+  fill: white !important;
 }
 
 
@@ -662,6 +706,22 @@ h6 {
 
 .dark h6 {
   color: #0197D8 !important;
+}
+
+/* Sidebar dropdown gradient border */
+#navigation-items button[id^="radix-"] {
+  position: relative;
+  border: 2px solid transparent !important;
+  border-radius: 8px !important;
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    linear-gradient(135deg, #A73895, #0097D9) border-box !important;
+}
+
+.dark #navigation-items button[id^="radix-"] {
+  background:
+    linear-gradient(#121212, #121212) padding-box,
+    linear-gradient(135deg, #A73895, #0097D9) border-box !important;
 }
 
 /* End of CSS */
