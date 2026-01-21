@@ -57,117 +57,116 @@
     },
 
     "navigation": {
-
-      "global":  {
-
-      "anchors": [
-        {
-          "anchor": "Support",
-          "icon": "life-buoy",
-          "href": "mailto:support@visual-layer.com"
+        "global": {
+            "anchors": [
+                {
+                    "anchor": "Support",
+                    "icon": "life-buoy",
+                    "href": "mailto:support@visual-layer.com"
+                },
+                {
+                    "anchor": "Blog",
+                    "icon": "pencil",
+                    "href": "https://www.visual-layer.com/blog"
+                }
+            ]
         },
-        {
-          "anchor": "Blog",
-          "icon": "pencil",
-          "href": "https://www.visual-layer.com/blog"
-        }
-      ]
-    },
-        "tabs": [
+        "dropdowns": [
             {
-                "tab": "Docs",
+                "dropdown": "Docs",
+                "icon": "book-open",
                 "groups": [
-                  {
-                    "group": "Introduction",
-                    "pages": [
-                        "docs/introduction/introduction",
-                        "docs/introduction/prerequisites",
-                        "docs/introduction/how-it-works",
-                        "docs/introduction/key-concepts",
-                        "docs/release-notes/release-notes"
-                    ]
-                  },
-                  {
-                    "group": "Quick Start",
-                    "pages": [
-                      {
-                        "group": "Tutorials",
+                    {
+                        "group": "Introduction",
                         "pages": [
-                          "docs/quick-start/tutorial-create-dataset",
-                          "docs/quick-start/tutorial-explore-dataset"
-                        ]
-                      },
-                      {
-                        "group": "Navigating Visual Layer",
-                        "pages": [
-                          "docs/quick-start/navigating-visual-layer",
-                          "docs/quick-start/dataset-inventory-ux",
-                          "docs/quick-start/dataset-exploration-ux",
-                          "docs/quick-start/understanding-clusters"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Explore & Search",
-                    "pages": [
-                      "docs/explore-and-search/exploring-datasets",
-                      "docs/explore-and-search/vl-chat",
-                      "docs/explore-and-search/explore-theory",
-                      "docs/explore-and-search/recipes",
-                      "docs/explore-and-search/using-search-filter"
-                    ]
-                  },
-                                    {
-                    "group": "Collab & Downstream",
-                    "pages": [
-                      "docs/collab-and-downstream/views",     
-                      "docs/collab-and-downstream/share-dataset"
-                    ]
-                  },
-                  {
-                    "group": "Models & Enrichment",
-                    "pages": [
-                      "docs/advanced-dataset-management/enrich-overview",
-                    "docs/models-and-enrichment/model-catalog"                      
-                    ]
-                  },
-
-                  {
-                    "group": "Advanced Dataset Management",
-                    "pages": [
-                      "docs/advanced-dataset-management/importing-annotations",
-                      "docs/advanced-features/custom-metadata",
-                      "docs/advanced-features/dicom-converter",
-                      "docs/advanced-features/tag-iteams",  
-                      "docs/advanced-features/task-manager",
-                      "docs/advanced-features/model-catalog",
-                      "docs/advanced-dataset-management/export-dataset"
-                    ]
-                  },
-                  {
-                  "group": "Administration",
-                        "pages": [
-                            "docs/self-hosting/useful-scripts",         
-                      {
-                        "group": "Integrations",
-                        "pages": [
-                          "docs/Integrations/Amazon-s3",
-                          "docs/Integrations/google-cloud-storage"
-                        ]
-                      }
+                            "docs/introduction/introduction",
+                            "docs/introduction/prerequisites",
+                            "docs/introduction/how-it-works",
+                            "docs/introduction/key-concepts",
+                            "docs/release-notes/release-notes"
                         ]
                     },
-                  {
-                    "group": "Troubleshooting",
-                    "pages": [
-                      "docs/troubleshooting/troubleshooting-docs"
-                    ]
-                 }
+                    {
+                        "group": "Quick Start",
+                        "pages": [
+                            {
+                                "group": "Tutorials",
+                                "pages": [
+                                    "docs/quick-start/tutorial-create-dataset",
+                                    "docs/quick-start/tutorial-explore-dataset"
+                                ]
+                            },
+                            {
+                                "group": "Navigating Visual Layer",
+                                "pages": [
+                                    "docs/quick-start/navigating-visual-layer",
+                                    "docs/quick-start/dataset-inventory-ux",
+                                    "docs/quick-start/dataset-exploration-ux",
+                                    "docs/quick-start/understanding-clusters"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "group": "Explore & Search",
+                        "pages": [
+                            "docs/explore-and-search/exploring-datasets",
+                            "docs/explore-and-search/vl-chat",
+                            "docs/explore-and-search/explore-theory",
+                            "docs/explore-and-search/recipes",
+                            "docs/explore-and-search/using-search-filter"
+                        ]
+                    },
+                    {
+                        "group": "Collab & Downstream",
+                        "pages": [
+                            "docs/collab-and-downstream/views",
+                            "docs/collab-and-downstream/share-dataset"
+                        ]
+                    },
+                    {
+                        "group": "Models & Enrichment",
+                        "pages": [
+                            "docs/advanced-dataset-management/enrich-overview",
+                            "docs/models-and-enrichment/model-catalog"
+                        ]
+                    },
+                    {
+                        "group": "Advanced Dataset Management",
+                        "pages": [
+                            "docs/advanced-dataset-management/importing-annotations",
+                            "docs/advanced-features/custom-metadata",
+                            "docs/advanced-features/dicom-converter",
+                            "docs/advanced-features/tag-iteams",
+                            "docs/advanced-features/task-manager",
+                            "docs/advanced-features/model-catalog",
+                            "docs/advanced-dataset-management/export-dataset"
+                        ]
+                    },
+                    {
+                        "group": "Administration",
+                        "pages": [
+                            "docs/self-hosting/useful-scripts",
+                            {
+                                "group": "Integrations",
+                                "pages": [
+                                    "docs/Integrations/Amazon-s3",
+                                    "docs/Integrations/google-cloud-storage"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "group": "Troubleshooting",
+                        "pages": [
+                            "docs/troubleshooting/troubleshooting-docs"
+                        ]
+                    }
                 ]
             },
             {
-                "tab": "API Reference",
+                "dropdown": "API Reference",
+                "icon": "file-code-2",
                 "groups": [
                     {
                         "group": "API Getting Started",
@@ -187,7 +186,6 @@
                             "api-reference/visual-search",
                             "api-reference/semantic-search",
                             "api-reference/caption-search"
-
                         ]
                     },
                     {
@@ -197,7 +195,7 @@
                             "api-reference/duplicate-retrieval-experimental-feature",
                             "api-reference/running-visual-layer-within-an-iframe"
                         ]
-                    },                    
+                    },
                     {
                         "group": "Troubleshooting",
                         "pages": [
@@ -206,9 +204,9 @@
                     }
                 ]
             },
-
-                        {
-                "tab": "Self-Hosting",
+            {
+                "dropdown": "Self-Hosting",
+                "icon": "server",
                 "groups": [
                     {
                         "group": "Installation and Configuration",
@@ -242,86 +240,7 @@
                         ]
                     }
                 ]
-            },
-
-            {
-                "tab": "fastdup",
-                "hidden": true,
-                "groups": [
-                    {
-                        "group": "First Steps",
-                        "pages": [
-                            "fastdup_docs_old/First Steps/getting-started",
-                            "fastdup_docs_old/First Steps/installation"
-                        ]
-                    },
-                    {
-                        "group": "Tutorials",
-                        "pages": [
-                            "fastdup_docs_old/Tutorials/cleaning-image-dataset",
-                            "fastdup_docs_old/Tutorials/analyzing-labeled-images",
-                            "fastdup_docs_old/Tutorials/objects-and-bounding-boxes"
-                        ]
-                    },
-                    {
-                        "group": "Loading from Data Sources",
-                        "pages": [
-                            "fastdup_docs_old/loading from data sources/roboflow-universe",
-                            "fastdup_docs_old/loading from data sources/kaggle",
-                            "fastdup_docs_old/loading from data sources/hugging-face-datasets"
-                        ]
-                    },
-                    {
-                        "group": "Data Enrichment",
-                        "pages": [
-                            "fastdup_docs_old/data enrichment/enrichment-zero-shot-classification",
-                            "fastdup_docs_old/data enrichment/enrichment-zero-shot-detection",
-                            "fastdup_docs_old/data enrichment/enrichment-zero-shot-segmentation"
-                        ]
-                    },
-                    {
-                        "group": "Embeddings",
-                        "pages": [
-                            "fastdup_docs_old/embeddings/embeddings-timm",
-                            "fastdup_docs_old/embeddings/run-on-precomputed-feature-vectors"
-                        ]
-                    },
-                    {
-                        "group": "Advanced Features",
-                        "pages": [
-                            "fastdup_docs_old/Advanced FEATURES/video-face-detection",
-                            "fastdup_docs_old/Advanced FEATURES/video-yolov5-detection"
-                        ]
-                    },
-                    {
-                        "group": "Common Uses",
-                        "pages": [
-                            "fastdup_docs_old/Common Uses/visualizing-data",
-                            "fastdup_docs_old/Common Uses/outlier-detection-and-analysis",
-                            "fastdup_docs_old/Common Uses/file-list-s3-inputs",
-                            "fastdup_docs_old/Common Uses/running-in-aws-gcp",
-                            "fastdup_docs_old/Common Uses/tuning-run-parameters",
-                            "fastdup_docs_old/Common Uses/using-labels-and-bounding-boxes",
-                            "fastdup_docs_old/Common Uses/using-your-own-model"
-                        ]
-                    },
-                    {
-                        "group": "API Reference",
-                        "pages": [
-                            "fastdup_docs_old/API Reference/v1-api",
-                            "fastdup_docs_old/API Reference/v02xx-api",
-                            "fastdup_docs_old/API Reference/api-comparison"
-                        ]
-                    },
-                    {
-                        "group": "About Us",
-                        "pages": [
-                            "fastdup_docs_old/About Us/license"
-                        ]
-                    }
-                ]
             }
-
         ]
     },
     "logo": {

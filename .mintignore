@@ -1,0 +1,2 @@
+# Exclude internal documentation from Mintlify parsing
+internal-only/
