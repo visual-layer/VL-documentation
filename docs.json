@@ -201,6 +201,13 @@
                         "pages": [
                             "api-reference/troubleshooting-api"
                         ]
+                    },
+                    {
+                        "group": "Auto-Generated (POC)",
+                        "pages": [
+                            "api-reference/poc-auth",
+                            "api-reference/poc-datasets"
+                        ]
                     }
                 ]
             },
