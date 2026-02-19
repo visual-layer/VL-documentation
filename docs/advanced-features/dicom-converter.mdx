@@ -1,0 +1,193 @@
+---
+title: "DICOM Converter Script"
+description: "Python script for converting DICOM medical imaging files to JPG format while extracting comprehensive metadata for Visual Layer datasets."
+sidebarTitle: "DICOM Converter"
+---
+
+<Card title="Custom Metadata Integration Example" icon="stethoscope">
+This DICOM workflow demonstrates how to extract domain-specific metadata and upload it as Visual Layer custom fields, enabling powerful search and filtering capabilities. This pattern can be adapted for any specialized data type.
+</Card>
+
+The DICOM converter script extracts medical imaging metadata (patient info, study details, equipment parameters) from DICOM files and converts them to searchable custom metadata fields in Visual Layer. Once uploaded, you can search and filter your dataset by any DICOM field.
+
+<Note>
+This example shows how custom metadata transforms basic image browsing into domain-specific dataset analysis. The same pattern applies to e-commerce, manufacturing, research, or any field with structured metadata.
+</Note>
+
+<Card title="Complete Script Code" icon="file-code-2" href="/docs/self-hosting/useful-scripts">
+All scripts referenced in this guide (DICOM Converter, DICOM Metadata Upload, and Caption Extraction) are available with complete code and usage instructions in Useful Scripts.
+</Card>
+
+## Complete DICOM-to-Visual Layer Workflow
+
+This section shows the complete end-to-end process for converting DICOM files and creating a fully searchable Visual Layer dataset with comprehensive medical imaging metadata.
+
+<Steps>
+  <Step title="Extract images and metadata from DICOM files">
+    Use the DICOM converter script to convert DICOM files to JPG images and extract comprehensive metadata to CSV format.
+  </Step>
+
+  <Step title="Create Visual Layer dataset">
+    Upload the converted JPG images to Visual Layer to create a new dataset for analysis and exploration.
+  </Step>
+
+  <Step title="Export dataset for media_id mapping">
+    Export your Visual Layer dataset to obtain the critical mapping between filenames and Visual Layer's internal media_id values.
+  </Step>
+
+  <Step title="Upload DICOM metadata as custom fields">
+    Use the DICOM metadata upload script to automatically process and upload the extracted metadata as searchable custom fields.
+  </Step>
+
+  <Step title="Search and filter by DICOM metadata">
+    Use Visual Layer to search and filter your medical imaging dataset by patient demographics, equipment parameters, study details, and technical settings.
+  </Step>
+</Steps>
+
+### Step 1: Convert DICOM Files
+
+Run the DICOM converter script to extract images and metadata. See [Basic Usage](#basic-usage) section below for command examples and output details.
+
+### Step 2: Create Visual Layer Dataset
+
+Upload the converted JPG images from `converted_images/` to Visual Layer using the web interface or API.
+
+### Step 3: Export Dataset Metadata
+
+Export your dataset to get `metadata.json` containing the filename-to-media_id mapping required for the next step.
+
+### Step 4: Upload DICOM Metadata
+
+Use the DICOM upload script to process and upload your extracted metadata:
+
+**For Cloud:**
+```bash
+python upload_csv_with_json_mapping.py dicom_metadata.csv metadata.json \
+  --dataset-id=your-dataset-id \
+  --base-url=https://app.visual-layer.com \
+  --api-key=your-api-key \
+  --api-secret=your-api-secret
+```
+
+**For On-premises:**
+```bash
+python upload_csv_with_json_mapping.py dicom_metadata.csv metadata.json \
+  --dataset-id=your-dataset-id \
+  --base-url=http://localhost:2080 \
+  --api-key=your-api-key
+```
+
+### Step 5: Search and Filter by DICOM Metadata
+
+<Frame>
+  <img src="/images/dicom-custom-metadata-example.png" alt="DICOM custom metadata displayed in Visual Layer showing patient age, manufacturer, modality, and other medical imaging fields" />
+</Frame>
+
+## Why Custom Metadata Matters
+
+This DICOM example shows how custom metadata transforms your Visual Layer dataset:
+
+**Before custom metadata:**
+- Browse images visually.
+- Basic filename-based search.
+
+**After custom metadata:**
+- Filter by patient demographics (age, sex).
+- Search by equipment manufacturer and modality.
+- Query by technical parameters (slice thickness, kVp).
+- Group by study dates or series descriptions.
+
+**Apply this pattern to your domain:**
+- **E-commerce:** Product SKU, price, category metadata for inventory analysis.
+- **Manufacturing:** Quality metrics, batch numbers, inspection data for QA workflows.
+- **Research:** Experiment conditions, sample IDs, measurements for dataset curation.
+
+## DICOM Converter Script
+
+### Prerequisites
+
+1. **Python environment** with required packages.
+2. **DICOM files** organized in series directories or as individual files.
+3. **Sufficient disk space** for converted images.
+
+### Installation
+
+```bash
+pip install pandas pydicom dicom2jpg opencv-python numpy
+```
+
+### Script Code
+
+<Card title="View Complete Script Code" icon="file-code-2" href="/docs/self-hosting/useful-scripts">
+Access the full DICOM converter Python script with complete implementation in the Useful Scripts guide.
+</Card>
+
+### Basic Usage
+
+```bash
+# Convert DICOM files
+python dicom_converter.py /path/to/dicom/files
+
+# Custom output directory
+python dicom_converter.py /path/to/dicom/files --output /custom/output
+```
+
+The script creates `converted_images/` and `metadata/dicom_metadata.csv` with comprehensive DICOM metadata including file info, patient data, study details, equipment parameters, and acquisition settings.
+
+## DICOM Metadata Upload Script
+
+Visual Layer provides a customizable script for uploading DICOM metadata extracted by the converter. This script handles DICOM-specific field types and can be modified for your specific use case.
+
+<Note>
+Similar to the general custom metadata upload script in the Useful Scripts guide but includes DICOM-specific field handling (date/time formats, multi-value fields).
+</Note>
+
+### Script Features
+
+- Auto-detects DICOM date/time formats (YYYYMMDD, HHMMSS).
+- Handles multi-value fields and complex data types.
+- Supports cloud and on-premises installations.
+- Customizable for vendor-specific DICOM tags.
+
+### Script Code
+
+<Card title="View Complete Script Code" icon="file-code-2" href="/docs/self-hosting/useful-scripts">
+Access the full DICOM metadata upload Python script with complete implementation in the Useful Scripts guide.
+</Card>
+
+The script automatically analyzes DICOM fields and assigns appropriate types (string, datetime, float, enum, multi-enum) based on DICOM standards.
+
+## Troubleshooting
+
+**No DICOM files found:**
+- Verify input directory contains `.dcm` files and check file permissions.
+
+**Conversion failures:**
+- Check verbose output for specific errors.
+- Verify DICOM files can be opened with standard viewers.
+
+**Upload issues:**
+- Ensure dataset ID is correct and dataset is in READY state.
+- Use `--resume` flag to continue interrupted uploads.
+
+## Adapting This Pattern
+
+The DICOM scripts can be customized for your specific use case:
+
+- **Modify field extraction** to capture vendor-specific tags.
+- **Add preprocessing** for specialized protocols.
+- **Extend to other formats** by adapting the extraction logic.
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Custom Metadata API Guide" icon="file-braces-corner" href="/docs/advanced-features/custom-metadata">
+    Manual API workflow for custom metadata
+  </Card>
+  <Card title="Useful Scripts" icon="file-code-2" href="/docs/self-hosting/useful-scripts">
+    Complete script implementations and examples
+  </Card>
+  <Card title="Creating Datasets" icon="database" href="/docs/quick-start/tutorial-create-dataset">
+    Dataset creation guide
+  </Card>
+</CardGroup>

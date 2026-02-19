@@ -1,0 +1,98 @@
+---
+title: Deploying Visual Layer
+description: Choose your deployment option and review requirements for using Visual Layer.
+sidebarTitle: Deploying VL
+---
+
+Visual Layer offers two <Tooltip tip="Visual Layer can be deployed in the cloud or self-hosted on your own infrastructure." href="/docs/introduction/key-concepts#system--infrastructure">deployment</Tooltip> options and several prerequisites for getting started. Choose the deployment that fits your organization's infrastructure and security needs.
+
+## Deployment
+
+Visual Layer Cloud is a fully managed platform hosted on AWS Cloud Services. Cloud deployment offers:
+
+- Secure multi-tenant infrastructure
+- Fast onboarding with trial-to-production scaling
+- Automatic updates with latest features and enhancements
+- Cost-efficient pricing
+
+This option is ideal for teams looking to get started quickly and for organizations with strict governance requirements, such as data residency and advanced security policies.
+
+<Note>
+Visual Layer also offers a <Tooltip tip="Visual Layer's self-managed deployment option that runs fully within your private environment." href="/docs/introduction/key-concepts#system--infrastructure">self-hosted</Tooltip> deployment option that runs entirely on your own infrastructure. For complete self-hosting setup instructions, hardware specifications, and system requirements, see [Self-Hosting System Requirements](/docs/self-hosting/System_requirements).
+</Note>
+
+## Cloud Prerequisites
+
+The following requirements apply to Visual Layer Cloud deployments.
+
+### Account Access
+
+To use Visual Layer, you need a valid account. Visual Layer supports the following authentication methods:
+
+- **Google Account**: Sign in using your existing Google credentials
+- **GitHub Account**: Sign in using your existing GitHub credentials
+
+If you don't have an account yet, visit the [Login page](https://app.visual-layer.com/login) to get started. You can sign up using either Google or GitHub single sign-on (SSO).
+
+### Browser Requirements
+
+Visual Layer requires **Chrome browser** for all platform features. Use the latest version of Chrome for the best experience.
+
+### Supported Data Formats
+
+Visual Layer supports the following data types and upload methods for creating <Tooltip tip="A collection of images and associated metadata organized for analysis and labeling." href="/docs/introduction/key-concepts#core-platform-concepts">datasets</Tooltip>.
+
+#### Data Sources
+
+You can upload data to Visual Layer using any of these source types:
+
+- **ZIP Files**: Compressed archives containing images, videos, or both
+- **Files or Folders**: Direct upload from your local filesystem
+- **Public Amazon S3**: Link to publicly accessible S3 buckets
+- **Private Amazon S3**: Connect to private S3 buckets with proper authentication
+
+<Tip>
+Need support for additional data sources (Google Cloud Storage, Azure Blob Storage, etc.)? Contact [support@visual-layer.com](mailto:support@visual-layer.com).
+</Tip>
+
+#### Supported File Types
+
+Visual Layer processes the following file formats:
+
+**Images:**
+- JPEG (.jpg, .jpeg)
+- PNG (.png)
+- TIFF (.tiff, .tif)
+- HEIC (.heic)
+- Other standard image formats
+
+**Videos:**
+- MP4 (.mp4)
+- AVI (.avi)
+- MOV (.mov)
+- Other standard video formats
+
+### Upload Limits
+
+Dataset upload limits depend on your current subscription plan:
+
+- **Free Trial**: Limited upload capacity for evaluation purposes
+- **Team Plans**: Increased upload capacity and dataset limits
+- **Enterprise Plans**: Custom limits based on organizational needs
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Create a Dataset" icon="graduation-cap" href="/docs/quick-start/tutorial-create-dataset">
+    Upload and index your first visual dataset
+  </Card>
+  <Card title="Explore a Dataset" icon="graduation-cap" href="/docs/quick-start/tutorial-explore-dataset">
+    Find, refine, and curate content from your data
+  </Card>
+  <Card title="Key Concepts" icon="book-a" href="/docs/introduction/key-concepts">
+    Learn core terminology and platform concepts
+  </Card>
+  <Card title="Self-Hosting Setup" icon="blocks" href="/docs/self-hosting/System_requirements">
+    Hardware specifications for self-hosted deployment
+  </Card>
+</CardGroup>

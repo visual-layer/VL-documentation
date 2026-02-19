@@ -1,0 +1,160 @@
+---
+title: "Task Manager"
+description: "Monitor and manage all dataset operations including creation, enrichment, and processing tasks."
+---
+
+The **Task Manager** provides a unified view of all dataset-related operations across your Visual Layer workspace. It tracks processes such as dataset creation, enrichment, and re-indexing, displaying their current status, progress, and any errors that occurred.
+
+Use the **Task Manager** to:
+
+- Monitor active operations in real-time
+- Track operation history from the past 14 days
+- Identify and troubleshoot failed processes
+
+<Note>
+The **Task Manager** maintains a visible history of all operations performed in the past 14 days.
+</Note>
+
+## Accessing the Task Manager
+
+To access the **Task Manager**:
+
+1. Go to the **Navigation Panel** on the left side of the screen.
+2. Click the Task Manager icon ![](/images/task-manager-icon.png).
+
+The **Task Manager** opens, displaying all operations from the past 14 days.
+
+<Frame>
+  <img src="/images/task-manager.png" alt="Task Manager Interface" />
+</Frame>
+
+<Note>
+If no operations have been performed in the past 14 days, the table appears empty with a notification indicating no recent activity.
+</Note>
+
+## Understanding the Task Table
+
+The **Task Manager** displays all operations in a comprehensive table. Each row represents a single task and contains the following information:
+
+<div className="integrations-table">
+
+| Column | Description |
+|--------|-------------|
+| **Dataset Name** | The name of the dataset where the operation is running or was performed. Click the dataset name to navigate directly to its exploration page. |
+| **Dataset ID** | The unique identifier for the dataset. Use filters to search by specific dataset IDs. |
+| **Task** | The type of operation being performed: **Dataset Creation**, **Enrichment**, **Training Model**, or **Re-indexing**. Use the filter to view specific task types. |
+| **Start Time** | The timestamp when the operation was initiated. Use the filter to view tasks from the last 24 hours, last 7 days, or last 14 days. |
+| **Duration** | The elapsed time since the operation started (for running tasks) or the total time the operation took (for completed tasks). Sort by this column to identify long-running operations. |
+| **Status** | The current state of the operation with progress percentage. See Status Types below for detailed descriptions. |
+| **Actions** | Access task details or retrieve Task ID for support purposes. |
+
+</div>
+
+<Note>
+The **Task Manager** tracks operation-level status independently from overall dataset status. A dataset can show **Ready** status in the **Dataset Inventory** even when the **Task Manager** displays completed tasks like **Enrichment** or **Training**, since these operations do not block dataset access.
+</Note>
+
+## Status Types
+
+All tasks display one of several statuses to indicate their current state. Each status includes a percentage to show progress through the operation.
+
+<div className="integrations-table">
+
+| Status | Description |
+|--------|-------------|
+| **Queued** | Task is waiting to begin processing |
+| **Running** | Task is actively executing with progress percentage |
+| **Completed** | Task finished successfully |
+| **Failed** | Task encountered an error and stopped. Click the task row for error details. |
+| **Cancelled** | Task was manually stopped before completion |
+
+</div>
+
+## Working with the Task Manager Table
+
+The table displays tasks ordered by **Start Time** by default, with the most recent operations appearing first.
+
+### Filtering Tasks
+
+Each column in the **Task Manager** supports filtering to help you quickly locate specific operations:
+
+1. Click the filter icon in any column header.
+2. Select the desired values from the dropdown.
+3. Click **Apply** to update the table.
+
+**Common filter combinations:**
+
+- **Status = Failed** to identify problematic operations
+- **Task = Enrichment** to view all enrichment jobs
+- **Start Time = Last 24 hours** to see recent activity
+
+### Sorting Tasks
+
+Click any column header to sort tasks in ascending or descending order:
+
+- **Duration**: Identify long-running or slow operations
+- **Start Time**: View operations chronologically
+- **Dataset Name**: Group tasks by dataset
+
+### Retrieving Task IDs
+
+Task IDs are useful when contacting Visual Layer support about specific operations:
+
+1. Click the **Actions** menu (three dots) for the relevant task row.
+2. Select **Copy Task ID**.
+3. The ID is copied to your clipboard for sharing with support.
+
+## Monitoring Active Operations
+
+The **Task Manager** updates automatically as tasks progress. Active operations display real-time updates:
+
+- **Progress percentage** increases as the task advances
+- **Duration** counts up continuously for running tasks
+- **Status** changes reflect task state transitions
+
+<Tip>
+Keep the **Task Manager** open in a separate browser tab to monitor long-running operations without interrupting your work in datasets.
+</Tip>
+
+## Troubleshooting Failed Tasks
+
+When a task shows **Failed** status:
+
+1. Click the task row to expand error details.
+2. Review the error message for specific failure reasons.
+3. Common issues include:
+   - Insufficient storage space
+   - Invalid metadata formats
+   - Network connectivity problems
+   - Incompatible file types
+
+4. After resolving the issue, retry the operation from the relevant dataset or workflow.
+
+<Note>
+Failed dataset creation tasks require starting the creation process again. Failed enrichment tasks can be retried from the dataset's enrichment panel.
+</Note>
+
+## Task Manager Limitations
+
+**14-Day History Window**: The **Task Manager** only displays operations from the past 14 days. Older tasks are automatically archived.
+
+**Read-Only Interface**: You cannot cancel or modify running tasks directly from the **Task Manager**. To stop an operation, navigate to the dataset and use the relevant controls.
+
+**No Bulk Actions**: Each task must be reviewed or managed individually.
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Upload Data" icon="database" href="/docs/quick-start/tutorial-create-dataset">
+    Create datasets and monitor creation tasks
+  </Card>
+  <Card title="Model Catalog" icon="boxes" href="/docs/advanced-features/model-catalog">
+    Manage trained models and view training results
+  </Card>
+  <Card title="Dataset Enrichment" icon="sparkles" href="/docs/advanced-dataset-management/enrich-overview">
+    Enrich datasets and track enrichment tasks
+  </Card>
+  <Card title="Troubleshooting" icon="bug" href="/docs/self-hosting/Troubleshooting">
+    Common issues and solutions
+  </Card>
+</CardGroup>

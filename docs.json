@@ -9,28 +9,25 @@
     },
     "favicon": "/favicon.svg",
     "styling": {
-      "eyebrows": "breadcrumbs",
-      "codeblocks": {
-        "theme": "monokai"
-      },
-      "latex": false
+        "eyebrows": "breadcrumbs",
+        "codeblocks": {
+            "theme": "monokai"
+        }
     },
     "thumbnails": {
-        "appearance": "dark",  
+        "appearance": "dark",
         "background": "/images/brand-background-a4.png"
-        },
+    },
     "fonts": {
-      "family": "Inter",
-      "heading": {
         "family": "Inter",
-        "weight": 700,
-        "format": "woff"
-      },
-      "body": {
-        "family": "Inter",
-        "weight": 400,
-        "format": "woff"
-      }
+        "heading": {
+            "family": "Inter",
+            "weight": 700
+        },
+        "body": {
+            "family": "Inter",
+            "weight": 400
+        }
     },
     "icons": {
         "library": "lucide"
@@ -64,273 +61,191 @@
             "og:video": "https://www.youtube.com/watch?v=jucr1Dar_Qw"
         }
     },
-
     "navigation": {
-
-      "global":  {
-
-      "anchors": [
-        {
-          "anchor": "Support",
-          "icon": "life-buoy",
-          "href": "mailto:support@visual-layer.com"
+        "global": {
+            "anchors": [
+                {
+                    "anchor": "Support",
+                    "icon": "life-buoy",
+                    "href": "mailto:support@visual-layer.com"
+                },
+                {
+                    "anchor": "Blog",
+                    "icon": "pencil",
+                    "href": "https://www.visual-layer.com/blog"
+                }
+            ]
         },
-        {
-          "anchor": "Blog",
-          "icon": "pencil",
-          "href": "https://www.visual-layer.com/blog"
-        }
-      ]
-    },
-        "tabs": [
+        "dropdowns": [
             {
-                "tab": "Guides",
+                "dropdown": "Docs",
+                "icon": "book-open",
                 "groups": [
                     {
-                        "group": "Getting Started",
+                        "group": "Introduction",
                         "pages": [
-                            "docs/getting-started/introduction",
-                            "docs/getting-started/quick-start",
-                            "docs/getting-started/deployment-options",
-                            {
-                                "group": "Definitions & Entities",
-                                "pages": [
-                                    "docs/getting-started/definitions-entities",
-                                    "docs/getting-started/understanding-clusters"
-                                ]
-                            }
+                            "docs/introduction/introduction",
+                            "docs/introduction/prerequisites",
+                            "docs/introduction/how-it-works",
+                            "docs/introduction/key-concepts",
+                            "docs/release-notes/release-notes"
                         ]
                     },
                     {
-                        "group": "Integrations",
+                        "group": "Quick Start",
                         "pages": [
-                            "docs/Integrations/Amazon-s3",
-                            "docs/Integrations/public-s3-bucket-setup",
-                            "docs/Integrations/google-cloud-storage"
-                        ]
-                    },
-                    {
-                        "group": "Creating & Updating Datasets",
-                        "pages": [
-                            "docs/Creating-Datasets/createdelete-datasets",                        
                             {
-                                "group": "Custom Metadata",
+                                "group": "Tutorials",
                                 "pages": [
-                            "docs/Creating-Datasets/custom-metadata",
-                            "docs/Creating-Datasets/custom-metadata-automation-script",
-                            "docs/code-blocks/custom-metadata-upload-script"   
+                                    "docs/quick-start/tutorial-create-dataset",
+                                    "docs/quick-start/tutorial-explore-dataset"
                                 ]
                             },
                             {
-                                "group": "DICOM Images",
+                                "group": "Navigating Visual Layer",
                                 "pages": [
-                                    "docs/Creating-Datasets/dicom-converter",
-                                    "docs/code-blocks/dicom-converter-script",
-                                    "docs/code-blocks/dicom-upload-script"
-                                ]
-                            },
-                            {
-                                "group": "Importing Annotations",
-                                "pages": [
-                                    "docs/Creating-Datasets/importing-annotations/annotations-overview-new",
-                                    "docs/Creating-Datasets/importing-annotations/preparing-annotation-data-file",
-                                    "docs/Creating-Datasets/importing-annotations/bounding-box",
-                                    "docs/Creating-Datasets/importing-annotations/converting-yolo",
-                                    "docs/Creating-Datasets/importing-annotations/converting-segmentation-masks",
-                                    "docs/Creating-Datasets/importing-annotations/creating-annotation-file-with-class-labels",
-                                    "docs/Creating-Datasets/importing-annotations/reusing-caption-data",
-                                    "docs/code-blocks/caption-extraction-script"
-                                ]
-                            }
-                        ]
-                    },
-                  {
-                    "group": "Curating Datasets",
-                    "pages": [
-                            "docs/Curate/tag-iteams",
-                            "docs/Curate/working-with-metadata"
-                    ]
-                  },
-                    {
-                        "group": "Managing Datasets",
-                        "pages": [
-                            "docs/Managing-Datasets/save-views",
-                            "docs/Managing-Datasets/share-dataset",
-                            "docs/Managing-Datasets/export-dataset"
-                        ]
-                    },
-                    {
-                        "group": "Exploring Datasets",
-                        "pages": [
-                            "docs/Exploring-datasets/overview",
-                            "docs/Exploring-datasets/semantic-search",
-                            "docs/Exploring-datasets/caption-search",
-                            "docs/Exploring-datasets/visual-search",
-                            "docs/Exploring-datasets/filter-dataset",
-                            "docs/Exploring-datasets/unlabeled-data-detection",
-                            "docs/Exploring-datasets/duplicate-imagesobjects",
-                            "docs/Exploring-datasets/outlier-imagesobjects",
-                            "docs/Exploring-datasets/class-outlier",
-                            "docs/Exploring-datasets/select-unique-items",
-                            {
-                                "group": "Quality Issues",
-                                "pages": [
-                                    "docs/Exploring-datasets/dataset-quality",
-                                    "docs/Exploring-datasets/dark-imagesobjects",
-                                    "docs/Exploring-datasets/blurry-imagesobjects",
-                                    "docs/Exploring-datasets/mislabeled-imagesobjects",
-                                    "docs/Exploring-datasets/bright-imagesobjects"
+                                    "docs/quick-start/navigating-visual-layer",
+                                    "docs/quick-start/dataset-inventory-ux",
+                                    "docs/quick-start/dataset-exploration-ux",
+                                    "docs/quick-start/understanding-clusters"
                                 ]
                             }
                         ]
                     },
                     {
-                        "group": "Dataset Enrichment",
+                        "group": "Explore & Search",
                         "pages": [
-                            "docs/Dataset-Enrichment/enrich_overview",
-                            "docs/Dataset-Enrichment/model-catalog",
-                            "docs/Dataset-Enrichment/analyze-enriched-dataset"
+                            "docs/explore-and-search/exploring-datasets",
+                            "docs/explore-and-search/vl-chat",
+                            "docs/explore-and-search/explore-theory",
+                            "docs/explore-and-search/recipes",
+                            "docs/explore-and-search/using-search-filter"
                         ]
                     },
                     {
-                        "group": "Changelog",
+                        "group": "Collab & Downstream",
                         "pages": [
-                            "changelog/rn"
-                        ]
-            }
-                ]
-            },
-            {
-                "tab": "API Reference",
-                "groups": [
-                    {
-                        "group": "API Documentation",
-                        "pages": [
-                            "api-reference/api-intro",
-                            "api-reference/authentication",
-                            "api-reference/create-a-dataset-from-a-public-s3-bucket",
-                            "api-reference/create-a-dataset-from-a-local-folder-for-on-prem-installation",
-                            "api-reference/retrieve-dataset-status",
-                            "api-reference/share-a-dataset-with-another-user",
-                            "api-reference/duplicate-retrieval-experimental-feature",
-                            "api-reference/visual-search",
-                            "api-reference/semantic-search",
-                            "api-reference/caption-search",
-                            "api-reference/exporting-a-dataset-via-curl-from-visual-layer",
-                            "api-reference/running-visual-layer-within-an-iframe"
-                        ]
-                    }
-                ]
-            },
-
-                        {
-                "tab": "Self-Hosting",
-                "groups": [
-                    {
-                        "group": "Installation and Configuration",
-                        "pages": [
-                            "docs/on-prem/System_requirements",
-                            "docs/on-prem/setting_up",
-                            "docs/on-prem/air-gapped-installation",
-                            "docs/on-prem/Configuration",
-                            "docs/on-prem/s3-configuration"
+                            "docs/collab-and-downstream/views",
+                            "docs/collab-and-downstream/share-dataset"
                         ]
                     },
                     {
-                        "group": "Usage",
+                        "group": "Models & Enrichment",
                         "pages": [
-                            "docs/on-prem/operation",
-                            "docs/on-prem/profiler"
+                            "docs/advanced-dataset-management/enrich-overview",
+                            "docs/models-and-enrichment/model-catalog"
+                        ]
+                    },
+                    {
+                        "group": "Advanced Dataset Management",
+                        "pages": [
+                            "docs/advanced-dataset-management/importing-annotations",
+                            "docs/advanced-features/custom-metadata",
+                            "docs/advanced-features/dicom-converter",
+                            "docs/advanced-features/tag-iteams",
+                            "docs/advanced-features/task-manager",
+                            "docs/advanced-features/model-catalog",
+                            "docs/advanced-dataset-management/export-dataset"
                         ]
                     },
                     {
                         "group": "Administration",
                         "pages": [
-                            "docs/on-prem/user-management",
-                            "docs/on-prem/Troubleshooting"
+                            "docs/self-hosting/useful-scripts",
+                            {
+                                "group": "Integrations",
+                                "pages": [
+                                    "docs/Integrations/Amazon-s3",
+                                    "docs/Integrations/google-cloud-storage"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "group": "Troubleshooting",
+                        "pages": [
+                            "docs/troubleshooting/troubleshooting-docs"
                         ]
                     }
                 ]
             },
-
             {
-                "tab": "fastdup",
-                "hidden": true,
+                "dropdown": "API Reference",
+                "icon": "file-code-2",
                 "groups": [
                     {
-                        "group": "First Steps",
+                        "group": "API Getting Started",
                         "pages": [
-                            "fastdup_docs_old/First Steps/getting-started",
-                            "fastdup_docs_old/First Steps/installation"
-                        ]
-                    },
-                    {
-                        "group": "Tutorials",
-                        "pages": [
-                            "fastdup_docs_old/Tutorials/cleaning-image-dataset",
-                            "fastdup_docs_old/Tutorials/analyzing-labeled-images",
-                            "fastdup_docs_old/Tutorials/objects-and-bounding-boxes"
-                        ]
-                    },
-                    {
-                        "group": "Loading from Data Sources",
-                        "pages": [
-                            "fastdup_docs_old/loading from data sources/roboflow-universe",
-                            "fastdup_docs_old/loading from data sources/kaggle",
-                            "fastdup_docs_old/loading from data sources/hugging-face-datasets"
-                        ]
-                    },
-                    {
-                        "group": "Data Enrichment",
-                        "pages": [
-                            "fastdup_docs_old/data enrichment/enrichment-zero-shot-classification",
-                            "fastdup_docs_old/data enrichment/enrichment-zero-shot-detection",
-                            "fastdup_docs_old/data enrichment/enrichment-zero-shot-segmentation"
-                        ]
-                    },
-                    {
-                        "group": "Embeddings",
-                        "pages": [
-                            "fastdup_docs_old/embeddings/embeddings-timm",
-                            "fastdup_docs_old/embeddings/run-on-precomputed-feature-vectors"
-                        ]
-                    },
-                    {
-                        "group": "Advanced Features",
-                        "pages": [
-                            "fastdup_docs_old/Advanced FEATURES/video-face-detection",
-                            "fastdup_docs_old/Advanced FEATURES/video-yolov5-detection"
-                        ]
-                    },
-                    {
-                        "group": "Common Uses",
-                        "pages": [
-                            "fastdup_docs_old/Common Uses/visualizing-data",
-                            "fastdup_docs_old/Common Uses/outlier-detection-and-analysis",
-                            "fastdup_docs_old/Common Uses/file-list-s3-inputs",
-                            "fastdup_docs_old/Common Uses/running-in-aws-gcp",
-                            "fastdup_docs_old/Common Uses/tuning-run-parameters",
-                            "fastdup_docs_old/Common Uses/using-labels-and-bounding-boxes",
-                            "fastdup_docs_old/Common Uses/using-your-own-model"
+                            "api-reference/api-intro",
+                            "api-reference/authentication"
                         ]
                     },
                     {
                         "group": "API Reference",
                         "pages": [
-                            "fastdup_docs_old/API Reference/v1-api",
-                            "fastdup_docs_old/API Reference/v02xx-api",
-                            "fastdup_docs_old/API Reference/api-comparison"
+                            "api-reference/apis-about",
+                            "api-reference/create-a-dataset-from-a-public-s3-bucket",
+                            "api-reference/create-a-dataset-from-a-local-folder-for-on-prem-installation",
+                            "api-reference/retrieve-dataset-status",
+                            "api-reference/share-a-dataset-with-another-user",
+                            "api-reference/visual-search",
+                            "api-reference/semantic-search",
+                            "api-reference/caption-search"
                         ]
                     },
                     {
-                        "group": "About Us",
+                        "group": "Recipes and Flows",
                         "pages": [
-                            "fastdup_docs_old/About Us/license"
+                            "api-reference/exporting-a-dataset-via-curl-from-visual-layer",
+                            "api-reference/duplicate-retrieval-experimental-feature",
+                            "api-reference/running-visual-layer-within-an-iframe"
+                        ]
+                    },
+                    {
+                        "group": "Troubleshooting",
+                        "pages": [
+                            "api-reference/troubleshooting-api"
+                        ]
+                    }
+                ]
+            },
+            {
+                "dropdown": "Self-Hosting",
+                "icon": "server",
+                "groups": [
+                    {
+                        "group": "Installation and Configuration",
+                        "pages": [
+                            "docs/self-hosting/System_requirements",
+                            "docs/self-hosting/setting_up",
+                            "docs/self-hosting/air-gapped-installation",
+                            "docs/self-hosting/Configuration",
+                            "docs/self-hosting/s3-configuration"
+                        ]
+                    },
+                    {
+                        "group": "Usage",
+                        "pages": [
+                            "docs/self-hosting/operation",
+                            "docs/self-hosting/profiler"
+                        ]
+                    },
+                    {
+                        "group": "Administration",
+                        "pages": [
+                            "docs/self-hosting/user-management",
+                            "docs/self-hosting/expiration",
+                            "docs/self-hosting/useful-scripts"
+                        ]
+                    },
+                    {
+                        "group": "Troubleshooting",
+                        "pages": [
+                            "docs/self-hosting/troubleshooting-self-hosting"
                         ]
                     }
                 ]
             }
-
         ]
     },
     "logo": {
@@ -338,12 +253,11 @@
         "dark": "/Visual Layer new colorful backgrounds for logo_horizontal VL logo copy 5.svg"
     },
     "navbar": {
-      "primary": {
-        "type": "button",
-        "label": "Try It Now!",
-        "href": "https://app.visual-layer.com/free-trial"
-      },
-      "links": []
+        "primary": {
+            "type": "button",
+            "label": "Try It Now!",
+            "href": "https://app.visual-layer.com/free-trial"
+        }
     },
     "contextual": {
         "options": [
@@ -373,66 +287,56 @@
         }
     },
     "footer": {
-      "socials": {
-        "x": "https://x.visual_layer",
-        "github": "https://github.com/visual-layer/fastdup",
-        "linkedin": "https://www.linkedin.com/company/visual-layer/",
-        "youtube": "https://www.youtube.com/@visual-layer",
-        "website": "https://www.visual-layer.com"
-      },
-      "links": [
-        {
-          "header": "Navigation",
-          "items": [
-            {
-              "label": "Home",
-              "href": "https://www.visual-layer.com"
-            },
-            {
-              "label": "Platform",
-              "href": "https://www.visual-layer.com/#platform"
-            },
-            {
-              "label": "Privacy Policy",
-              "href": "https://www.visual-layer.com/#platform"
-            },
-            {
-              "label": "Terms of Service",
-              "href": "https://www.visual-layer.com/#platform"
-            }
-          ]
+        "socials": {
+            "x": "https://x.visual_layer",
+            "github": "https://github.com/visual-layer/fastdup",
+            "linkedin": "https://www.linkedin.com/company/visual-layer/",
+            "youtube": "https://www.youtube.com/@visual-layer"
         },
-        {
-          "header": "Resources",
-          "items": [
+        "links": [
             {
-              "label": "Blog",
-              "href": "https://www.visual-layer.com/blog"
+                "header": "Navigation",
+                "items": [
+                    {
+                        "label": "Home",
+                        "href": "https://www.visual-layer.com"
+                    },
+                    {
+                        "label": "Platform",
+                        "href": "https://www.visual-layer.com/#platform"
+                    }
+                ]
             },
             {
-              "label": "Videos",
-              "href": "https://www.youtube.com/@visual-layer"
-            }
-          ]
-        },
-        {
-          "header": "Legal Notices",
-          "items": [
-            {
-              "label": "Privacy Policy",
-              "href": "https://docs.visual-layer.com/docs/privacy-policy"
+                "header": "Resources",
+                "items": [
+                    {
+                        "label": "Blog",
+                        "href": "https://www.visual-layer.com/blog"
+                    },
+                    {
+                        "label": "Videos",
+                        "href": "https://www.youtube.com/@visual-layer"
+                    },
+                    {
+                        "label": "FAQs",
+                        "href": "https://docs.visual-layer.com/docs/Help-Support/faqs"
+                    }
+                ]
             },
             {
-              "label": "Terms of Service",
-              "href": "https://docs.visual-layer.com/docs/terms-of-service"
+                "header": "Legal Notices",
+                "items": [
+                    {
+                        "label": "Privacy Policy",
+                        "href": "https://docs.visual-layer.com/docs/privacy-policy"
+                    },
+                    {
+                        "label": "Terms of Service",
+                        "href": "https://docs.visual-layer.com/docs/terms-of-service"
+                    }
+                ]
             }
-          ]
-        }
-      ]
-    },
-    "api": {
-      "playground": {
-        "display": "interactive"
-      }
+        ]
     }
 }

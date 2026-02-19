@@ -1,0 +1,390 @@
+---
+title: Exploration Recipes
+description: Step-by-step guides for common dataset curation workflows, from defect detection to training set cleanup.
+sidebarTitle: Exploration Recipes
+---
+
+Effective dataset curation requires combining multiple search and filter tools in a specific sequence. These recipes provide step-by-step workflows for common platform outcomes, helping you achieve high-quality results efficiently.
+
+## Recipe 1: Finding Diverse Examples of a Specific Pattern
+
+**Objective:** Isolate a diverse set of examples for a specific visual pattern, ensuring you capture rare variations without filling the dataset with repetitive images.
+
+**Example scenarios:**
+
+<CardGroup cols={2}>
+  <Card title="Manufacturing">
+    Surface damage patterns for defect detection training
+  </Card>
+  <Card title="Medical Imaging">
+    Specific pathology presentations across patient populations
+  </Card>
+  <Card title="Retail/Insurance">
+    Product damage types for claims processing
+  </Card>
+  <Card title="Defense & Intelligence">
+    Specific threat or anomaly patterns in surveillance data
+  </Card>
+</CardGroup>
+
+<Steps>
+
+<Step title="Broad Search">
+Start with **Semantic Search**.
+
+- **Query:** Describe the pattern in natural language (e.g., "surface damage," "cracked glass," "skin lesion")
+- **Result:** This returns a broad set of candidates, likely including some irrelevant images (false positives).
+</Step>
+
+<Step title="Visual Refinement">
+Switch to **Visual Search**.
+
+- Find a clear, high-quality example of the specific pattern you want in the search results.
+- **Crop** the image to isolate just the pattern (excluding background or irrelevant context).
+- Run the visual search to find visually similar patterns.
+</Step>
+
+<Step title="Ensure Diversity">
+Apply the **Uniques Filter**.
+
+- Set the **Uniqueness Threshold** to **High**.
+- **Why:** This hides repetitive examples of the same common pattern, surfacing visually distinct variations and edge cases.
+</Step>
+
+<Step title="Final Polish">
+Clean up the selection.
+
+- Use **Duplicate Detection** to remove near-identical frames.
+- **Save as View** with a descriptive name (e.g., "Distinctive Scratch Patterns," "Rare Lesion Variants") for your labeling team.
+</Step>
+
+</Steps>
+
+## Recipe 2: Cleaning Raw Data for Labeling
+
+**Objective:** Rapidly prepare a messy, raw dataset for labeling by removing low-quality data that would waste annotator time and budget.
+
+**Example scenarios:**
+
+<CardGroup cols={2}>
+  <Card title="Manufacturing">
+    Raw production line footage with lighting issues and redundant frames
+  </Card>
+  <Card title="Medical Imaging">
+    Scans from multiple sources with varying quality standards
+  </Card>
+  <Card title="Retail">
+    User-generated product photos with technical failures
+  </Card>
+  <Card title="Defense & Intelligence">
+    Surveillance footage with motion blur and poor lighting
+  </Card>
+  <Card title="Research">
+    Web-scraped images with inconsistent quality
+  </Card>
+</CardGroup>
+
+<Steps>
+
+<Step title="Remove Technical Failures">
+Filter by **Quality Issues**.
+
+- Set **Blurry** to `IS NOT`.
+- Set **Dark** to `IS NOT`.
+- **Result:** Removes unreadable or low-information images immediately.
+</Step>
+
+<Step title="Remove Annotation Errors">
+Filter by **Mislabels**.
+
+- Set **Mislabels** to `IS NOT`.
+- **Result:** Excludes images where existing metadata likely conflicts with visual content, preventing bad ground truth from entering the pipeline.
+</Step>
+
+<Step title="Reduce Redundancy">
+Apply **Select Uniques**.
+
+- Set threshold to **Medium**.
+- **Result:** If the ingest contains burst-mode photos or video sequences, this keeps only representative frames, significantly reducing the total count sent to labeling.
+</Step>
+
+<Step title="Export for Labeling">
+- Select all remaining items.
+- **Export** the cleaned list to JSON/CSV to hand off to your annotation workforce.
+</Step>
+
+</Steps>
+
+## Recipe 3: Balancing Common Scenarios with Rare Edge Cases
+
+**Objective:** Curate a dataset that captures both typical scenarios and rare edge cases while managing storage volumes efficiently.
+
+**Example scenarios:**
+
+<CardGroup cols={2}>
+  <Card title="Autonomous Vehicles">
+    Common driving conditions vs. rare weather, road signs, or obstacles
+  </Card>
+  <Card title="Manufacturing">
+    Standard production vs. unusual failure modes or material variations
+  </Card>
+  <Card title="Medical Imaging">
+    Common presentations vs. rare complications or co-morbidities
+  </Card>
+  <Card title="Defense & Intelligence">
+    Normal activity patterns vs. anomalous events requiring investigation
+  </Card>
+  <Card title="Retail">
+    Standard product views vs. unusual angles or lighting conditions
+  </Card>
+</CardGroup>
+
+<Steps>
+
+<Step title="Reduce Storage Costs">
+Apply **Duplicate Detection**.
+
+- **Action:** Review duplicate clusters from video sequences or burst captures.
+- **Select:** Keep one representative frame per scenario.
+- **Result:** Often reduces dataset size by 30-40% without losing scenario coverage.
+</Step>
+
+<Step title="Surface Rare Cases">
+Apply the **Outliers Filter**.
+
+- **Action:** Sort by high confidence outliers.
+- **Result:** Surfaces rare variations that are critical for model robustness but easy to miss in manual review.
+</Step>
+
+<Step title="Categorize Challenging Conditions">
+Filter by **Quality Issues**.
+
+- **Filter:** `Dark` and `Bright`.
+- **Action:** Instead of deleting these, tag them with a descriptive name (e.g., "Challenging Lighting," "Low Visibility").
+- **Result:** Creates specific subsets for testing model performance in adverse conditions.
+</Step>
+
+<Step title="Validate Coverage">
+Use **Cluster View** to verify distribution.
+
+- Review cluster sizes to ensure no single scenario dominates the dataset.
+- Use **Select Uniques** within overrepresented clusters to balance the distribution.
+</Step>
+
+</Steps>
+
+## Recipe 4: Managing Large Visual Catalogs
+
+**Objective:** Consolidate duplicate assets, enforce quality standards, and organize large collections of visual content.
+
+**Example scenarios:**
+
+<CardGroup cols={2}>
+  <Card title="E-commerce">
+    Multi-vendor product catalogs with duplicate stock photos
+  </Card>
+  <Card title="Real Estate">
+    Property listings with redundant images from different agents
+  </Card>
+  <Card title="Manufacturing">
+    Parts catalogs with multiple photos of the same component
+  </Card>
+  <Card title="Media/Creative">
+    Stock photo libraries with similar compositions
+  </Card>
+  <Card title="Digital Asset Management">
+    Corporate image libraries across departments
+  </Card>
+</CardGroup>
+
+<Steps>
+
+<Step title="Consolidate Duplicate Assets">
+Apply **Duplicate Detection**.
+
+- **Scenario:** Multiple sources upload the same or nearly identical images.
+- **Action:** Identify duplicate groups and link them to a single master asset.
+- **Result:** Prevents search results from being flooded with identical or near-identical images.
+</Step>
+
+<Step title="Enforce Quality Standards">
+Filter by **Quality Issues**.
+
+- **Filter:** `Blurry` OR `Dark` OR `Bright`.
+- **Action:** Flag these images for review, replacement, or auto-rejection.
+- **Result:** Ensures only professional-quality images remain in the catalog.
+</Step>
+
+<Step title="Organize Unlabeled Content">
+Filter by **Labels**.
+
+- **Filter:** `Labels` IS `Unlabeled`.
+- **Action:** Isolate unlabeled content and use **Semantic Search** to bulk-select and categorize items (e.g., "red sneakers," "two-bedroom apartments," "hydraulic fittings").
+</Step>
+
+<Step title="Create Curated Collections">
+- Use **Save as View** to create themed collections (e.g., "Hero Images," "Seasonal Products," "Premium Listings").
+- Share views with relevant teams to ensure everyone works from the same quality-controlled subset.
+</Step>
+
+</Steps>
+
+## Recipe 5: Identifying Annotation Inconsistencies
+
+**Objective:** Find and fix labeling errors or inconsistencies across your dataset to improve model training quality.
+
+**Example scenarios:**
+
+<CardGroup cols={2}>
+  <Card title="Manufacturing">
+    Mixed defect categories or mislabeled quality grades
+  </Card>
+  <Card title="Medical Imaging">
+    Inconsistent diagnostic labels across radiologists
+  </Card>
+  <Card title="Retail">
+    Product category errors or attribute mismatches
+  </Card>
+  <Card title="Defense & Intelligence">
+    Misclassified threat levels or event types
+  </Card>
+  <Card title="Autonomous Vehicles">
+    Inconsistent object classifications across annotators
+  </Card>
+</CardGroup>
+
+<Steps>
+
+<Step title="Find Visual-Label Mismatches">
+Apply the **Mislabels Filter**.
+
+- **Action:** Sort by high confidence mislabels.
+- **Result:** Surfaces images where the visual content doesn't align with the assigned label.
+</Step>
+
+<Step title="Review Class Outliers">
+Apply the **Outliers Filter** and filter by specific labels.
+
+- **Action:** Review images flagged as outliers within their assigned class.
+- **Result:** Finds images that are technically correct but visually anomalous for that category (e.g., drawings in a photo dataset).
+</Step>
+
+<Step title="Validate with Visual Search">
+Select a flagged image and run **Visual Search**.
+
+- **Action:** See what other images visually match this item.
+- **Result:** If all visual matches have a different label, this confirms a likely mislabel.
+</Step>
+
+<Step title="Bulk Correction">
+- Tag all confirmed errors with "Needs Relabeling."
+- **Export** this view to CSV/JSON for your annotation team to correct.
+- Track corrections by saving views before and after relabeling.
+</Step>
+
+</Steps>
+
+## Recipe 6: Creating Balanced Training Sets
+
+**Objective:** Build a training dataset with appropriate class distribution and representation across important variations.
+
+**Example scenarios:**
+
+<CardGroup cols={2}>
+  <Card title="Manufacturing">
+    Equal representation of defect types and severity levels
+  </Card>
+  <Card title="Medical Imaging">
+    Balanced demographics and presentation variations
+  </Card>
+  <Card title="Retail">
+    Proportional product categories and seasonal coverage
+  </Card>
+  <Card title="Defense & Intelligence">
+    Representative samples of normal and anomalous events
+  </Card>
+  <Card title="Autonomous Vehicles">
+    Balanced weather, lighting, and scenario types
+  </Card>
+</CardGroup>
+
+<Steps>
+
+<Step title="Assess Current Distribution">
+Use **Cluster View** and group by labels.
+
+- **Action:** Review the distribution of images across classes.
+- **Result:** Identify overrepresented and underrepresented categories.
+</Step>
+
+<Step title="Reduce Overrepresented Classes">
+For dominant classes, apply **Select Uniques**.
+
+- Set threshold to **High** to keep only the most distinctive examples.
+- **Result:** Reduces redundancy while preserving diversity within that class.
+</Step>
+
+<Step title="Augment Underrepresented Classes">
+For rare classes, use **Semantic Search** to find more examples.
+
+- **Query:** Describe the underrepresented category in detail.
+- Review results and tag valid examples to expand that class.
+</Step>
+
+<Step title="Validate Diversity">
+Within each class, check cluster distribution.
+
+- Use **Visual Search** from different cluster centers to ensure visual variety.
+- Apply **Select Uniques** to prevent any single visual pattern from dominating.
+</Step>
+
+<Step title="Export Balanced Set">
+- Save the final balanced distribution as a view.
+- **Export** with stratified sampling to maintain proportions in train/validation splits.
+</Step>
+
+</Steps>
+
+## Additional Tips for Recipe Success
+
+### Combine Filters Strategically
+
+Most recipes work best when you apply filters in a specific order:
+
+1. **Start broad** with semantic or visual search to establish scope.
+2. **Remove obvious problems** with quality filters early.
+3. **Refine for diversity** with uniqueness and outlier filters.
+4. **Final polish** with duplicate detection and targeted tagging.
+
+### Save Intermediate Steps
+
+Save views at each major step in your recipe:
+
+- Enables you to backtrack if a filter removes too much.
+- Creates audit trail for dataset curation decisions.
+- Allows different team members to review at different stages.
+
+### Iterate and Adjust
+
+These recipes are starting points, not rigid procedures:
+
+- Adjust thresholds based on your dataset characteristics.
+- Add custom metadata filters for domain-specific criteria.
+- Combine multiple recipes for complex curation workflows.
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Exploring Datasets" icon="search" href="/docs/explore-and-search/exploring-datasets">
+    The core Find-Narrow-Refine workflow philosophy
+  </Card>
+  <Card title="Using Search & Filter" icon="sliders-horizontal" href="/docs/explore-and-search/using-search-filter">
+    Detailed guide to every filter operator and option
+  </Card>
+  <Card title="Understanding Clusters" icon="grid-3x3" href="/docs/quick-start/understanding-clusters">
+    How similarity clustering powers many recipes
+  </Card>
+  <Card title="Views" icon="blend" href="/docs/collab-and-downstream/views">
+    Saving and sharing curated datasets
+  </Card>
+</CardGroup>

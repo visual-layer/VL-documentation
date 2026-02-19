@@ -87,6 +87,37 @@ Tutorials guide users through a specific use case example in order to show them 
    - Use the `<Step>` object for these procedures. Make sure outcomes are on new lines but part of the step that led to the outcome
    - Code examples in fenced code blocks
 
+**Standard Icon Mapping for Cards and Components**:
+
+Use the following icon names consistently across all documentation:
+
+- **Tutorial Objectives cards**: `icon="goal"`
+- **Tutorial Scenarios accordions**: `icon="target"`
+- **Create and/or update next step cards**: `icon="database"`
+- **General Explore next step cards**: `icon="search"`
+- **Semantic Search cards**: `icon="scan-text"`
+- **Visual Search cards**: `icon="scan-search"`
+- **Filtering cards**: `icon="sliders-horizontal"`
+- **Export cards**: `icon="download"`
+- **Share cards**: `icon="share-2"`
+- **All other collaboration and saved views**: `icon="blend"`
+- **Enrichment cards**: `icon="sparkles"`
+- **Terms next step cards**: `icon="book-a"`
+- **Deployment and Technical article and self-hosting next step cards**: `icon="blocks"`
+- **Inventory update next step cards**: `icon="layout-dashboard"`
+- **Next step cards to other tutorials**: `icon="graduation-cap"`
+- **Models and model catalog cards**: `icon="boxes"`
+- **Metadata management cards**: `icon="file-braces-corner"`
+- **API reference cards**: `icon="file-code-2"`
+- **Clusters cards**: `icon="grid-3x3"`
+- **Data quality and curation cards**: `icon="library-big"`
+- **Objects cards**: `icon="group"`
+- **Image view cards**: `icon="images"`
+- **Task manager cards**: `icon="list-checks"`
+- **Troubleshooting cards**: `icon="bug"`
+- **Users/user management cards**: `icon="users"`
+- **Administration general cards**: `icon="shield"`
+
 
 ### Mintlify Configuration
 
@@ -119,25 +150,53 @@ The repository includes extensive custom styling in `styles.css` with:
 5. Test all code examples and procedures before publishing
 
 **Content Style Guidelines**:
-- Use MDX components (Card, Steps, Tip, Note) for enhanced user experience
-- Follow established front matter structure for metadata consistency
-- Provide comprehensive concept explanations with examples
-- Create mermaid designs when appropriate to assist in conceptual content
-- Use videos and interactive content where helpful for complex procedures 
-- always make sure capitalization is absolutely consistent across content types. so for example, prepositions in titles should ALWAYS be lower case.
-- always double-check your work before finishing an implementation to ensure spacing is correct wherever you made changes. sometimes spacing can be tricky when using ** ** mid-sentnece.
-- always use active voice unless **absolutely** unavoidable. that includes preferring opening sentences with active simple present tense instead of gerunds.
-- never use "please" and never use i.e. nor e.g. Only "For example" or "Example:". And always use correct punctuation including periods - even when in ordered lists.Finally, every article must ALWAYS open with an introduction - even if minimal.
-- never use divider lines in the middle of articles unless you consult with me before starting.
+
+**Tone - Confident and Efficient**
+- State capabilities as facts. Your content provides the context. The platform helps users solve problems.
+- Professional but not formal. Write like a capable colleague, not a manual.
+- No hedging or uncertainty. Avoid "may," "might," "could potentially," or "it is possible that."
+- Let functionality speak for itself. No marketing hyperbole, excessive enthusiasm, or "revolutionizing" language.
+
+**Voice - Second Person and Active**
+- Use "your documentation," "your dataset," "your team" for direct engagement.
+- Address the user directly. "You can filter results" not "Results can be filtered."
+- Active voice unless absolutely unavoidable. Open sentences with active present tense, not gerunds.
+- Never use "please." Say "Click Submit" not "Please click Submit."
+
+**Style - Minimalist and Scannable**
+- Short paragraphs. Rarely exceed 20 words per sentence.
+- Clear headers organize content. Every section starts with introductory text.
+- **CRITICAL**: All headings must have at least one sentence before any subsections. Never place an h3 directly after an h2 without intervening text.
+- Almost no decorative language. Every word serves a function.
+- Crisp declarative sentences. State what is, not what might be.
+
+**Approach - Feature-Benefit Integration**
+- Embed value propositions in descriptions. "Semantic Search finds content using natural language, enabling intuitive exploration" combines what and why.
+- Organize by user action rather than technical capability. Focus on what users do, not what the system has.
+- No jargon for jargon's sake. Use technical terms when they clarify, not impress.
+- Never use "i.e." or "e.g." Use "For example:" or "Example:" with proper punctuation.
+
+**Formatting Standards**
+- Use MDX components (Card, Steps, Tip, Note) for enhanced user experience.
+- Capitalize consistently. Prepositions in titles always lowercase.
+- Check spacing before finishing. Formatting with ** ** mid-sentence requires attention.
+- **CRITICAL**: Both "Next Steps" and "Related Resources" sections must use CardGroup format with Card components. Never use plain bullet lists for these sections.
+- Always include periods, even in ordered lists.
+- Every article opens with an introduction, even if minimal.
+- Never use divider lines mid-article without consultation.
+- **CRITICAL**: All interface elements and names of interface areas must always be BOLD. Examples: **Dataset Inventory**, **Filter Panel**, **Action Bar**, **Search**, **Export**.
 
 ## Visual Layer Documentation Standards
 
 ### Writing Guidelines
-- **Voice**: Second person ("you"), active voice, present tense
+- **Voice**: Second person ("you"), active voice, present tense. Address users directly.
+- **Tone**: Confident and efficient. State capabilities as facts, not possibilities.
 - **Platform Naming**: "Visual Layer" (consistent capitalization)
-- **Content Strategy**: Always prioritize accuracy and usability
+- **Content Strategy**: Prioritize accuracy and usability. No lengthy explanations or marketing language.
+- **Sentence Length**: Crisp and declarative. Rarely exceed 20 words.
 - **Structure**: Include prerequisites, clear step-by-step instructions, and related resources
 - **Format**: Use relative paths for internal links, language tags on code blocks, alt text on images
+- **Approach**: Integrate features with benefits. "Duplicates detection identifies redundant frames, reducing storage costs" combines what and why.
 
 ### Git Workflow Requirements
 - NEVER use `--no-verify` when committing
@@ -147,18 +206,20 @@ The repository includes extensive custom styling in `styles.css` with:
 - NEVER skip or disable pre-commit hooks
 
 ### Documentation Quality Standards
-- Test all code examples before publishing
-- Match style and formatting of existing pages
-- Search for existing information before adding new content to avoid duplication
-- Check existing patterns for consistency
-- Start by making the smallest reasonable changes
-- Make content evergreen when possible
+- Test all code examples before publishing. Accuracy matters.
+- Match style and formatting of existing pages. Maintain consistency.
+- Search existing content before adding new material. Avoid duplication.
+- Check existing patterns. Align with established conventions.
+- Start with the smallest reasonable changes. Respect what works.
+- Make content evergreen. Avoid time-based statements.
+- Write with confidence. State capabilities as facts, not possibilities.
+- Keep sentences crisp. Rarely exceed 20 words.
 
 ### Specific Documentation Rules
-- **No "Overview" headings**: Content should flow directly from the metadata to an intro without a new heading 
+- **No "Overview" headings**: Content should flow directly from the metadata to an intro without a new heading
+- **CRITICAL - All headings require introductory text**: Every heading must have at least one sentence before any subsections. Never place an h3 directly after an h2 without text between them. Never place an h4 directly after an h3 without text between them.
 - **Section intros**: All headings must be followed by a minimal intro before starting subsections and/or lists
 - **Basic numbering for procedures**: Use simple numbered steps (1, 2, 3) rather than Steps components
-- **Intro text for sections**: Every section with subsections must include introductory text
 - **Lead-in sentences**: Every list must have an opening sentence introducing the content
 - **Related Articles**: Always include as the last section unless completely irrelevant
 
@@ -187,11 +248,13 @@ The repository includes extensive custom styling in `styles.css` with:
 - Components: Mintlify components
 
 ## Content strategy
-- Prioritize accuracy and usability of information
-- All content should be treated as evergreen, avoiding time-based statements and/or discussion of past, current, recent or future versions, releases, etc. unless writing release notes and/or unless requested to add a non-standard Note
-- Search for existing information before adding new content. Avoid duplication unless it is done for a strategic reason
-- Check existing patterns for consistency
-- Start by making the smallest reasonable changes
+- Prioritize accuracy and usability. No lengthy explanations or excessive enthusiasm.
+- Treat content as evergreen. Avoid time-based statements unless writing release notes.
+- Search existing content before adding new material. Avoid duplication unless strategic.
+- Check existing patterns for consistency. Match established style.
+- Start with the smallest reasonable changes. Respect what works.
+- State capabilities as facts. Let functionality speak for itself.
+- Organize by user action, not technical capability. Focus on what users do.
 
 ## docs.json
 
@@ -209,15 +272,19 @@ https://www.mintlify.com/docs/api-playground/mdx-setup
 
 
 ## Writing standards
-- Second-person voice ("you")
-- Prerequisites at start of procedural content
-- Test all code examples before publishing
-- Match style and formatting of existing pages
-- Include both basic and advanced use cases
-- Use ordered lists and/or steps only when the order has impact/significance
-- Language tags on all code blocks
-- Alt text on all images
-- Relative paths for internal links
+- **Voice**: Second person ("you"), active voice. Address users directly.
+- **Tone**: Confident and efficient. State facts, not possibilities.
+- **Sentences**: Short and declarative. Rarely exceed 20 words.
+- **Language**: Minimalist. No decorative language, jargon, or marketing hyperbole.
+- **Approach**: Embed value in descriptions. Combine what features are with why they matter.
+- **Prerequisites**: Include at start of procedural content.
+- **Testing**: Test all code examples before publishing.
+- **Consistency**: Match style and formatting of existing pages.
+- **Use Cases**: Include both basic and advanced use cases.
+- **Lists**: Use ordered lists only when order matters.
+- **Code Blocks**: Include language tags on all code blocks.
+- **Images**: Include alt text on all images.
+- **Links**: Use relative paths for internal links.
 
 ## Git workflow
 - NEVER use --no-verify when committing
