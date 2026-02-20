@@ -86,7 +86,6 @@
                         "pages": [
                             "docs/introduction/introduction",
                             "docs/introduction/prerequisites",
-                            "docs/introduction/how-it-works",
                             "docs/introduction/key-concepts",
                             "docs/release-notes/release-notes"
                         ]
@@ -97,8 +96,7 @@
                             {
                                 "group": "Tutorials",
                                 "pages": [
-                                    "docs/quick-start/tutorial-create-dataset",
-                                    "docs/quick-start/tutorial-explore-dataset"
+                                    "docs/quick-start/tutorial-create-dataset"
                                 ]
                             },
                             {
