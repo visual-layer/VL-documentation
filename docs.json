@@ -93,12 +93,7 @@
                     {
                         "group": "Quick Start",
                         "pages": [
-                            {
-                                "group": "Tutorials",
-                                "pages": [
-                                    "docs/quick-start/tutorial-create-dataset"
-                                ]
-                            },
+                            "docs/quick-start/tutorial-create-dataset",
                             {
                                 "group": "Navigating Visual Layer",
                                 "pages": [
