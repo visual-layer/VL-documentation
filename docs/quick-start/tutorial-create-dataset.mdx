@@ -1,141 +1,113 @@
 ---
-title: "Tutorial: Create a Dataset"
+title: "Create a Dataset"
 sidebarTitle: "Create a Dataset"
-description: "A guided walkthrough for creating and indexing your first dataset in Visual Layer."
+description: "Creating and indexing your first dataset in Visual Layer."
 ---
 
-<Card title="Tutorial Scenario" icon="target" iconType="regular">
-In this tutorial, you'll work with a small example dataset of cartoon images and videos. The dataset is intentionally simple and familiar, making it easy to focus on learning how Visual Layer handles dataset creation, upload, and indexing.
+This article explains how to create a new dataset.
 
-While this walkthrough uses a prepared dataset, the same steps apply to any ZIP file or folder containing images or videos.
-
-<Accordion title="Tutorial Objectives" icon="goal">
-
-By the end of this tutorial, you will:
-
-- Create a new dataset in Visual Layer and configure it properly
-- Upload visual data from a ZIP file and understand supported formats
-- Monitor the indexing process and understand what happens during dataset preparation
-- Verify when your dataset is fully indexed and ready for exploration
-- Navigate the Dataset Inventory to manage your datasets
-</Accordion>
-</Card>
 
 ## Prerequisites
 
-Before you begin this tutorial, make sure you have the following:
+Before you begin, make sure you have the following:
 
 - **Browser**
-  Visual Layer currently supports **Google Chrome only**.
+  **Visual Layer** currently supports **Google Chrome only**.
 
 - **Dataset ready**
-  Download the example dataset or prepare your own ZIP file of images or videos.
+  Download [our example dataset](https://github.com/visual-layer/cartoons-dataset) or prepare your own ZIP file of images or videos.
+
+
+
+## Tips for Efficient Dataset Management
+
+**Use descriptive names**: Include dates, sources, or project names to make datasets easy to identify (e.g., "ProductX-Inspection-2024-Q1")
+
+**Monitor status regularly**: Check the Task Manager for long-running operations or errors
+
+**Organize with metadata**: Add custom metadata fields during upload to enable powerful filtering later
+
+**Archive completed projects**: Delete datasets you no longer need to keep your inventory clean and stay within plan limits
+
+**Save important queries as Views**: Once inside a dataset, save filter combinations as Views for quick access to specific subsets
+
 
 
 ###### To create your dataset
 
-<Steps>
+1. Log into **Visual Layer**. 
+    
+    The homepage is the **Dataset Inventory**, where all datasets are managed.
 
-<Step title="Open Visual Layer">
-Log into Visual Layer. The homepage is the **Dataset Inventory**, where all datasets are managed.
-</Step>
+2. Click **New Dataset** (or the **+** icon) to start creating your first dataset.
 
-<Step title="Create a New Dataset">
-Click **New Dataset** (or the **+** icon) to start creating your first dataset.
-</Step>
+3. Alternatively, change the name of the dataset. We called ours Cartoon Archive.
 
-<Step title="Select the ZIP File">
-Choose **ZIP file** as the data source and upload the downloaded tutorial dataset ZIP file.
+4. Choose **ZIP file** as the data source and upload the downloaded tutorial dataset ZIP file.
 
-<img
-  src="/images/createdataset-uploadzip.png"
-  alt="Upload ZIP File"
-  style={{ width: '70%' }}
-  className="rounded"
-/>
-</Step>
+    <img
+      src="/images/createdataset-uploadzip.png"
+      alt="Upload ZIP File"
+      style={{ width: '60%' }}
+      className="rounded"
+    />
 
-<Step title="Skip Annotations">
-After uploading the ZIP file, click **Add Annotations**.  
-In the pop-up, click **Skip** to proceed without adding annotations, as this tutorial focuses on learning the basic dataset workflow.
+5. After uploading the ZIP file, click **Add Annotations**.  
 
-<img
-  src="/images/createdataset-skipannotations.png"
-  alt="Skip Annotations"
-  style={{ width: '70%' }}
-  className="rounded"
-/>
-</Step>
+    If you have no annotations to include, click **Skip** to proceed without adding annotations. Otherwise, add annotations and then continue.
 
-<Step title="Preview the Data">
-Visual Layer automatically generates a preview of the dataset. Review a few sample images and videos to confirm that the data has uploaded correctly.
 
-<img
-  src="/images/createdataset-datasetpreview.png"
-  alt="Dataset Preview"
-  style={{ width: '70%' }}
-  className="rounded"
-/>
-</Step>
+    Visual Layer automatically generates a preview of the dataset. 
+  
+6. Review a few sample images and videos to confirm that the data has uploaded correctly.
 
-<Step title="Upload and Index">
-Click **Next** to upload and index the dataset.
+    <img
+      src="/images/createdataset-datasetpreview.png"
+      alt="Dataset Preview"
+      style={{ width: '60%' }}
+      className="rounded"
+    />
 
-<img
-  src="/images/createdataset-uploaddata.png"
-  alt="Upload and Index"
-  style={{ width: '70%' }}
-  className="rounded"
-/>
+7. Click **Next** to upload and index the dataset.
 
-- Indexing starts automatically after upload.
-  <img
-  src="/images/createdataset-indexing.png"
-  alt="Indexing Started"
-  style={{ width: '70%' }}
-  className="rounded"
-  />
+    <img
+      src="/images/createdataset-uploaddata.png"
+      alt="Upload and Index"
+      style={{ width: '50%' }}
+      className="rounded"
+    />
 
-- While indexing, the dataset appears in your inventory with an "Indexing" status and shows as empty.
-  <img
-  src="/images/createdataset-emptydataset.png"
-  alt="Empty Dataset During Indexing"
-  style={{ width: '70%' }}
-  className="rounded"
-  />
+      - Indexing starts automatically after upload.
+        <img
+        src="/images/createdataset-indexing.png"
+        alt="Indexing Started"
+        style={{ width: '50%' }}
+        className="rounded"
+        />
 
-- You will receive an email when indexing completes.
+      - While indexing, the dataset appears in your inventory with an "Indexing" status and shows as empty.
+        <img
+        src="/images/createdataset-emptydataset.png"
+        alt="Empty Dataset During Indexing"
+        style={{ width: '50%' }}
+        className="rounded"
+        />
 
-<Note>
-Keep this browser tab open until indexing starts to ensure the dataset begins processing correctly.
-</Note>
-</Step>
+      - You will receive an email when indexing completes.
 
-<Step title="Dataset Indexed and Ready">
-Once indexing completes, the dataset status changes to **Ready** in the **Dataset Inventory**.
-The dataset is now fully accessible and ready to explore.
+      <Note>
+      Keep this browser tab open until indexing starts to ensure the dataset begins processing correctly.
+      </Note>
 
-<img
-  src="/images/createdataset-readydataset.png"
-  alt="Ready Dataset in Inventory"
-  style={{ width: '70%' }}
-  className="rounded"
-/>
-</Step>
+      Once indexing completes, the dataset status changes to **Ready** in the **Dataset Inventory**.
+      
+      The dataset is now fully accessible and ready to explore.
 
-<Step title="Name the Dataset">
-Enter a dataset name or use the auto-suggested name.
+      <img
+        src="/images/createdataset-readydataset.png"
+        alt="Ready Dataset in Inventory"
+        style={{ width: '90%' }}
+        className="rounded"
+      />
 
-<img
-  src="/images/dataset-changename.png"
-  alt="Dataset Name"
-  style={{ width: '70%' }}
-  className="rounded"
-/>
 
-<Info>
-Dataset names must be unique.
-</Info>
-</Step>
-
-</Steps>

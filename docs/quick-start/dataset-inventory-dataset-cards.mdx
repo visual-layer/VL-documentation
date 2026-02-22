@@ -1,0 +1,87 @@
+---
+title: "Dataset Cards Grid"
+description: "Understand dataset card components, status indicators, and available actions in the Dataset Inventory."
+sidebarTitle: "Dataset cards grid"
+---
+
+Datasets are displayed as cards in a grid layout, providing at-a-glance information and quick access to actions.
+
+<Frame>
+  <img src="/images/dataset-inventory-cards.png" alt="Dataset Cards Grid" />
+</Frame>
+
+## Dataset Card Components
+
+Each dataset card displays essential information:
+
+<Frame>
+  <img src="/images/dataset-inventory-card.png" alt="Ready Dataset in Inventory" style={{ width: '50%' }} className="rounded" />
+</Frame>
+
+<div className="integrations-table">
+
+| Field | Description |
+|-------|-------------|
+| **Dataset Name** | The title assigned during dataset creation for easy identification |
+| **Creation Date** | When the dataset was created and added to your inventory |
+| **Dataset Status** | Current state: **Ready**, **Processing**, **Uploading**, **Indexing**, **Failed**, **Resume**, or **Enriching** |
+| **Image Count** | Total number of images in the dataset |
+| **Object Count** | Number of annotated objects (if metadata or enrichment includes object detection) |
+| **Video Count** | Number of videos in the dataset (if applicable) |
+| **Video Frame Count** | Number of frames extracted from videos (if applicable) |
+| **Info Icon** <img src="/images/info-i-icon.png" width="20" /> | Hover to view additional metadata such as associated folder paths, upload source, or custom fields |
+| **Three-Dot Menu** | Access dataset actions including **Copy URL**, **Duplicate**, and **Delete** |
+
+</div>
+
+## Dataset Status Indicators
+
+Understanding status helps you know when datasets are ready for exploration:
+
+<div className="integrations-table">
+
+| Status | Meaning | Available Actions |
+|--------|---------|-------------------|
+| **Ready** | Dataset is fully indexed and available for all operations | Full access to exploration, filtering, search, enrichment, and export |
+| **Draft** | Data upload started but dataset creation was not completed | Click dataset card to resume, then click **Create Dataset** to finalize |
+| **Uploading** | Data is being transferred to Visual Layer | Wait for completion; no actions available |
+| **Indexing** | Visual Layer is analyzing images, creating embeddings, and detecting quality issues | Wait for completion; indexing may take several minutes to hours depending on dataset size |
+| **Processing** | A task is running (enrichment, label propagation, or re-indexing) | Limited actions available; some features disabled until processing completes |
+| **Enriching** | AI models are adding metadata (captions, labels, classifications) | Wait for completion; dataset remains accessible for viewing |
+| **Pending** | New media was added and requires re-indexing | Initiate re-indexing to make new media searchable and available for analysis |
+| **Resume** | Dataset creation started but not finalized; user action required | Click dataset card to resume creation and click **Create Dataset** to complete |
+| **Failed** | Dataset creation or processing encountered an error | Click dataset card to view error details; may need to recreate dataset |
+
+</div>
+
+<Note>
+Datasets can show **Ready** status even when background tasks like training or enrichment are running, since these operations don't block dataset access.
+</Note>
+
+## Card Actions
+
+Click a dataset card to open the Dataset Exploration View and begin working with your data.
+
+The **three-dot menu** provides additional actions:
+
+- **Copy URL**: Copy a direct link to share with users who already have access to the dataset.
+- **Duplicate**: Create a new, cloned dataset from the existing one.
+- **Delete**: Permanently remove the dataset (requires confirmation).
+
+<Warning>
+Deleting a dataset is irreversible. All images, metadata, annotations, and analysis results will be permanently removed.
+</Warning>
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="About the Dataset Inventory" icon="layout-dashboard" href="/docs/quick-start/dataset-inventory-ux">
+    Overview of the Dataset Inventory interface
+  </Card>
+  <Card title="Dataset Exploration Interface" icon="search" href="/docs/quick-start/dataset-exploration-ux">
+    Navigate and analyze datasets
+  </Card>
+  <Card title="Upload Data" icon="database" href="/docs/quick-start/tutorial-create-dataset">
+    Step-by-step dataset creation guide
+  </Card>
+</CardGroup>

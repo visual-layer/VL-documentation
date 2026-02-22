@@ -388,6 +388,10 @@ table {
   padding-right: 10px;
 }
 
+.integrations-table th:nth-child(3) {
+  width: 50%;
+}
+
 
 #var-table th:first-child {
   width: 25%;
@@ -700,7 +704,7 @@ h6 {
   text-emphasis: dot;
   text-emphasis-position: under;
   margin-top: 45px !important;
-  margin-bottom: -25px !important;
+  margin-bottom: 0px !important;
   text-underline-position: under;
 }
 

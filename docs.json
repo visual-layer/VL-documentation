@@ -94,13 +94,20 @@
                         "group": "Quick Start",
                         "pages": [
                             "docs/quick-start/tutorial-create-dataset",
+                            "docs/quick-start/understanding-clusters",
                             {
                                 "group": "Navigating Visual Layer",
                                 "pages": [
                                     "docs/quick-start/navigating-visual-layer",
-                                    "docs/quick-start/dataset-inventory-ux",
-                                    "docs/quick-start/dataset-exploration-ux",
-                                    "docs/quick-start/understanding-clusters"
+                                    {
+                                        "group": "Dataset Inventory",
+                                        "pages": [
+                                            "docs/quick-start/dataset-inventory-ux",
+                                            "docs/quick-start/dataset-inventory-dataset-cards",
+                                            "docs/quick-start/dataset-inventory-main-panel"
+                                        ]
+                                    },
+                                    "docs/quick-start/dataset-exploration-ux"
                                 ]
                             }
                         ]
