@@ -44,7 +44,24 @@ Query capabilities depend on your dataset's configuration. **VL Chat** can only 
   <img src="/images/vl-chat-example-pets-unusual-expressions.png" alt="VL Chat finding cats and dogs with unusual expressions" />
 </Frame>
 
-## Tips for Effective Queries
+#### Types of Queries You Can Ask
+
+**VL Chat** understands queries about different aspects of your dataset:
+
+<div className="integrations-table">
+
+| Type | Description | Examples |
+|------|-------------|---------|
+| **Filter by Issues** | Find images with specific quality issues detected by Visual Layer. | "Show me blurry images" <br /> "Find all images with duplicates" <br /> "Display images that have outlier issues" <br /> "Show me images with mislabel issues above 80% confidence" |
+| **Filter by Labels** | Search for specific labels or annotations in your dataset. | "Show me images labeled as cats" <br /> "Find all images with car labels" <br /> "Display images labeled as defective" |
+| **Filter by Tags** | Query images based on user-assigned tags. | "Show me images tagged as urgent" <br /> "Find all images with the reviewed tag" <br /> "Display images tagged for training" |
+| **Filter by Custom Metadata** | Query **Custom Metadata** fields directly if your dataset includes them. | "Show me images with temperature above 30" <br /> "Find images from Station A" <br /> "Display images where batch number is 12345" |
+| **Navigate Clusters** | Explore **Similarity Clusters** in your dataset. | "Show me cluster 5" <br /> "Display the largest cluster" <br /> "Find clusters with more than 100 images" |
+| **Combine Multiple Criteria** | Build complex queries by combining different filter types. | "Show me blurry images from cluster 3" <br /> "Find images labeled as cats with high uniqueness scores" <br /> "Display images tagged as urgent that also have blur issues" |
+
+</div>
+
+#### Tips for Effective Queries
 
 Use these guidelines to get accurate, relevant results from **VL Chat**:
 
@@ -59,7 +76,7 @@ Use these guidelines to get accurate, relevant results from **VL Chat**:
 
 </div>
 
-## Understanding Responses
+### Understanding Responses
 
 When you ask a question, **VL Chat** provides:
 
@@ -84,7 +101,7 @@ I found 23 blurry images in your dataset. Note: This dataset doesn't have a
 'Temperature' custom metadata field configured, so I could only search for blur.
 ```
 
-## Multi-Turn Conversations
+### Multi-Turn Conversations
 
 **VL Chat** maintains context across multiple messages, allowing you to refine your queries progressively:
 
@@ -102,23 +119,6 @@ Each follow-up question builds on the previous context, making exploration feel 
 <Frame>
   <img src="/images/chat-to-find-real-people.png" alt="VL Chat multi-turn conversation finding real people in a dataset" />
 </Frame>
-
-## Types of Queries You Can Ask
-
-**VL Chat** understands queries about different aspects of your dataset:
-
-<div className="integrations-table">
-
-| Type | Description | Examples |
-|------|-------------|---------|
-| **Filter by Issues** | Find images with specific quality issues detected by Visual Layer. | "Show me blurry images" <br /> "Find all images with duplicates" <br /> "Display images that have outlier issues" <br /> "Show me images with mislabel issues above 80% confidence" |
-| **Filter by Labels** | Search for specific labels or annotations in your dataset. | "Show me images labeled as cats" <br /> "Find all images with car labels" <br /> "Display images labeled as defective" |
-| **Filter by Tags** | Query images based on user-assigned tags. | "Show me images tagged as urgent" <br /> "Find all images with the reviewed tag" <br /> "Display images tagged for training" |
-| **Filter by Custom Metadata** | Query **Custom Metadata** fields directly if your dataset includes them. | "Show me images with temperature above 30" <br /> "Find images from Station A" <br /> "Display images where batch number is 12345" |
-| **Navigate Clusters** | Explore **Similarity Clusters** in your dataset. | "Show me cluster 5" <br /> "Display the largest cluster" <br /> "Find clusters with more than 100 images" |
-| **Combine Multiple Criteria** | Build complex queries by combining different filter types. | "Show me blurry images from cluster 3" <br /> "Find images labeled as cats with high uniqueness scores" <br /> "Display images tagged as urgent that also have blur issues" |
-
-</div>
 
 ## Related Resources
 
