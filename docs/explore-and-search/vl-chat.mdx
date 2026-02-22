@@ -4,22 +4,13 @@ description: "Explore and search your visual datasets using natural language que
 sidebarTitle: "VL Chat"
 ---
 
-VL Chat enables you to explore visual datasets through natural language conversations. Ask questions in plain English, and the system translates your queries into structured dataset operations, delivering results instantly.
-
-## Why Use VL Chat
-
-VL Chat eliminates the need to understand complex filter syntax or navigate through multiple UI panels. Instead of clicking through filters and dropdown menus, you can:
-
-- Ask questions naturally: "Show me blurry images from last week."
-- Combine multiple criteria: "Find images with temperature above 30 that have blur issues."
-- Navigate your data conversationally: "Show me the clearest examples from that cluster."
-- Refine results iteratively: "Now filter those to only show images tagged as urgent."
-
-The system interprets your intent, validates it against your dataset structure, and returns relevant results with clear explanations of what it found.
+VL Chat enables you to explore visual datasets through natural language. Instead of navigating filters and dropdown menus, ask questions directly: find images by quality issue, label, tag, custom metadata, or cluster. The system interprets your intent and returns results with explanations of what it found.
 
 ## Accessing VL Chat
 
 To access VL Chat, open any dataset in Visual Layer and click the **Chat** icon in the top navigation bar. The chat interface appears as a panel on the right side of your screen, allowing you to explore while viewing your dataset.
+
+Each dataset maintains its own conversation thread, which persists across sessions. To start a fresh conversation, click **New Thread** in the chat panel.
 
 ## How to Use VL Chat
 
@@ -126,62 +117,6 @@ Build complex queries by combining different filter types:
 - "Find images labeled as cats with high uniqueness scores"
 - "Display images tagged as urgent that also have blur issues"
 
-## Reviewing Query Results in JSON
-
-VL Chat provides a detailed JSON view of the structured query it generated from your natural language input. This allows you to see exactly how your question was interpreted and what filters were applied.
-
-### Accessing the JSON View
-
-When VL Chat returns results, look for the **View JSON** or **Expand Details** option in the response. Click it to see the structured representation of your query.
-
-### Understanding the JSON Structure
-
-The JSON output shows the complete query structure:
-
-```json
-{
-  "interpretation": "Understood query with confidence 0.85",
-  "confidence": 0.85,
-  "extracted_context": {
-    "entity_type": "IMAGES",
-    "vql_filters": [
-      {
-        "issues": {
-          "op": "issue",
-          "value": "blur",
-          "confidence_min": 0.8,
-          "confidence_max": 1.0
-        }
-      }
-    ]
-  },
-  "alternative_interpretations": [
-    "show all images (without blur filter)",
-    "adjust confidence threshold for blur detection"
-  ]
-}
-```
-
-**Key fields:**
-
-- **interpretation**: Plain language summary of what was understood.
-- **confidence**: How confident the system is in its interpretation (0.0 to 1.0).
-- **extracted_context**: The structured filters and parameters that will be applied.
-- **entity_type**: Whether the query targets images, objects, or clusters.
-- **vql_filters**: The specific filter conditions applied to your dataset.
-- **alternative_interpretations**: Other ways the system considered interpreting your query.
-
-### Using JSON to Refine Queries
-
-Reviewing the JSON helps you understand:
-
-- Which filters were successfully applied.
-- Which parts of your query couldn't be processed.
-- What parameters the system inferred from your natural language input.
-- Whether the interpretation matches your intent.
-
-If the JSON reveals a misinterpretation, you can rephrase your question to be more explicit about what you want.
-
 ## Tips for Effective Queries
 
 ### Be Specific About Filter Types
@@ -237,14 +172,6 @@ Organize and filter datasets for training:
 - "Find images labeled as cats that don't have the reviewed tag"
 - "Display images with low uniqueness scores"
 
-### Manufacturing Inspection
-
-Query inspection results using custom metadata:
-
-- "Show me images from Station B with defects"
-- "Find images where temperature exceeded 35 degrees"
-- "Display images from shift 2 with quality issues"
-
 ### Research and Analysis
 
 Explore dataset composition and patterns:
@@ -261,7 +188,7 @@ VL Chat can only query fields that exist in your dataset. If you reference a cus
 
 ### Confidence Scores
 
-The system provides a confidence score with each interpretation. Lower confidence (below 0.5) may indicate ambiguity in your query. Review the JSON output to see how it was interpreted.
+The system provides a confidence score with each interpretation. Lower confidence (below 0.5) may indicate ambiguity in your query. Review the alternative interpretations in the response to see how it was understood.
 
 ### Dataset-Specific Behavior
 
@@ -278,7 +205,7 @@ VL Chat interprets natural language but has specific parsing rules. Extremely co
 ## Related Resources
 
 <CardGroup cols={2}>
-  <Card title="Exploring Datasets" icon="search" href="/docs/explore-and-search/exploring-datasets">
+  <Card title="Exploring Datasets" icon="search" href="/docs/quick-start/dataset-exploration-ux">
     Learn about all dataset exploration features
   </Card>
   <Card title="Using Search & Filter" icon="sliders-horizontal" href="/docs/explore-and-search/using-search-filter">

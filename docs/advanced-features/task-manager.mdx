@@ -1,6 +1,7 @@
 ---
 title: "Task Manager"
 description: "Monitor and manage all dataset operations including creation, enrichment, and processing tasks."
+sidebarTitle: "Task manager"
 ---
 
 The **Task Manager** provides a unified view of all dataset-related operations across your Visual Layer workspace. It tracks processes such as dataset creation, enrichment, and re-indexing, displaying their current status, progress, and any errors that occurred.
@@ -40,13 +41,14 @@ The **Task Manager** displays all operations in a comprehensive table. Each row 
 
 | Column | Description |
 |--------|-------------|
-| **Dataset Name** | The name of the dataset where the operation is running or was performed. Click the dataset name to navigate directly to its exploration page. |
+| **Time** | The timestamp when the operation was initiated. Use the filter to view tasks from the last 24 hours, last 7 days, or last 14 days. |
+| **Task** | The type of operation being performed: **Dataset Creation**, **Media Addition**, **Re-indexing**, **Label Propagation**, **Model Training**, **Model Validation**, **Snapshot**, **Enrichment**, or **Custom Metadata**. Use the filter to view specific task types. |
+| **Dataset** | The name of the dataset where the operation is running or was performed. Click the dataset name to navigate directly to its exploration page. |
 | **Dataset ID** | The unique identifier for the dataset. Use filters to search by specific dataset IDs. |
-| **Task** | The type of operation being performed: **Dataset Creation**, **Enrichment**, **Training Model**, or **Re-indexing**. Use the filter to view specific task types. |
-| **Start Time** | The timestamp when the operation was initiated. Use the filter to view tasks from the last 24 hours, last 7 days, or last 14 days. |
 | **Duration** | The elapsed time since the operation started (for running tasks) or the total time the operation took (for completed tasks). Sort by this column to identify long-running operations. |
+| **User** | The user who initiated the task. (Cloud deployments only.) |
 | **Status** | The current state of the operation with progress percentage. See Status Types below for detailed descriptions. |
-| **Actions** | Access task details or retrieve Task ID for support purposes. |
+| **Actions** | Access task details or retrieve the Task ID for support purposes. |
 
 </div>
 
@@ -70,9 +72,29 @@ All tasks display one of several statuses to indicate their current state. Each 
 
 </div>
 
+## Task Concurrency
+
+When a task is running on a dataset, some operations on that dataset may be temporarily restricted until the task completes.
+
+<div className="integrations-table">
+
+| Dataset State | Available | Blocked |
+|---------------|-----------|---------|
+| **Ready** | All operations | None |
+| **Read Only** | Search, filter, share | Enrichment, re-indexing, label propagation, custom metadata |
+| **Partial Index** | Add media, re-index | Enrichment, label propagation, custom metadata |
+
+</div>
+
+A dataset enters **Read Only** state when enrichment, re-indexing, label propagation, or custom metadata tasks are active. It enters **Partial Index** state after new media is added but before re-indexing completes.
+
+<Note>
+Model Training and Model Validation tasks do not restrict dataset access. The dataset remains **Ready** while these tasks run.
+</Note>
+
 ## Working with the Task Manager Table
 
-The table displays tasks ordered by **Start Time** by default, with the most recent operations appearing first.
+The table displays tasks ordered by **Time** by default, with the most recent operations appearing first.
 
 ### Filtering Tasks
 
@@ -86,15 +108,15 @@ Each column in the **Task Manager** supports filtering to help you quickly locat
 
 - **Status = Failed** to identify problematic operations
 - **Task = Enrichment** to view all enrichment jobs
-- **Start Time = Last 24 hours** to see recent activity
+- **Time = Last 24 hours** to see recent activity
 
 ### Sorting Tasks
 
 Click any column header to sort tasks in ascending or descending order:
 
 - **Duration**: Identify long-running or slow operations
-- **Start Time**: View operations chronologically
-- **Dataset Name**: Group tasks by dataset
+- **Time**: View operations chronologically
+- **Dataset**: Group tasks by dataset
 
 ### Retrieving Task IDs
 
