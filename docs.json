@@ -106,8 +106,7 @@
                                             "docs/quick-start/dataset-inventory-dataset-cards",
                                             "docs/quick-start/dataset-inventory-main-panel"
                                         ]
-                                    },
-                                    "docs/quick-start/dataset-exploration-ux"
+                                    }
                                 ]
                             }
                         ]
@@ -115,6 +114,7 @@
                     {
                         "group": "Explore & Search",
                         "pages": [
+                            "docs/quick-start/dataset-exploration-ux",
                             "docs/explore-and-search/exploring-datasets",
                             "docs/explore-and-search/vl-chat",
                             "docs/explore-and-search/explore-theory",
