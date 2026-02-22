@@ -4,23 +4,33 @@ description: "Explore and search your visual datasets using natural language que
 sidebarTitle: "VL Chat"
 ---
 
-VL Chat enables you to explore visual datasets through natural language. Instead of navigating filters and dropdown menus, ask questions directly — find images by quality issue, label, tag, custom metadata, or cluster. The system interprets your intent and returns results with explanations of what it found.
+**VL Chat** enables you to explore visual datasets through natural language. Instead of navigating filters and dropdown menus, ask questions directly — find images by quality issue, label, tag, custom metadata, or cluster. The system interprets your intent and returns results with explanations of what it found.
 
-Query capabilities depend on your dataset's configuration. VL Chat can only search fields that exist in your data: datasets without annotations cannot filter by labels, and cluster-based queries require similarity clusters to be generated first. If you reference a field that isn't configured, the system explains this and applies the filters it can.
+## Common Use Cases
 
-Each response includes a confidence score. Lower scores (below 0.5) indicate ambiguity — review the alternative interpretations provided to confirm the result matches your intent. For complex criteria, break queries into multiple steps rather than a single nested question.
+**VL Chat** supports a range of workflows across dataset exploration and curation:
 
-## Accessing VL Chat
+<div className="integrations-table">
 
-To access VL Chat, open any dataset in Visual Layer and click <img src="/images/start-vl-chat.png" alt="Ask VL button" style={{ height: '28px', display: 'inline-block', verticalAlign: 'middle' }} /> in the top navigation bar. The chat interface appears as a panel on the right side of your screen, allowing you to explore while viewing your dataset.
+| Use Case | Description | Examples |
+|----------|-------------|---------|
+| **Quality Assurance** | Quickly identify and review quality issues. | "Show me all blur issues from today's production run" <br /> "Find outlier images in batch 12345" <br /> "Display mislabeled images above 90% confidence" |
+| **Dataset Curation** | Organize and filter datasets for training. | "Show me the most unique images from each cluster" <br /> "Find images labeled as cats that don't have the reviewed tag" <br /> "Display images with low uniqueness scores" |
+| **Research and Analysis** | Explore dataset composition and patterns. | "Show me the largest clusters" <br /> "Find images with the most labels" <br /> "Display images that appear in multiple clusters" |
 
-Each dataset maintains its own conversation thread, which persists across sessions. To start a fresh conversation, click **New Thread** in the chat panel.
+</div>
 
 ## How to Use VL Chat
 
+To access **VL Chat**, open any dataset in Visual Layer and click <img src="/images/start-vl-chat.png" alt="Ask VL button" style={{ height: '28px', display: 'inline-block', verticalAlign: 'middle' }} /> in the top navigation bar. The chat interface appears as a panel on the right side of your screen, allowing you to explore while viewing your dataset.
+
+Each dataset maintains its own conversation thread, which persists across sessions. To start a fresh conversation, click **New Thread** in the chat panel.
+
 ### Asking Questions
 
-Type your question in natural language into the chat input field and press Enter. The system processes your query and returns results along with an explanation of what it understood and what it found.
+Type your question in natural language into the chat input field and press Enter. **VL Chat** processes your query and returns results along with an explanation of what it understood and what it found.
+
+Query capabilities depend on your dataset's configuration. **VL Chat** can only search fields that exist in your data: datasets without annotations cannot filter by labels, and cluster-based queries require **Similarity Clusters** to be generated first. If you reference a field that isn't configured, the system explains this and applies the filters it can.
 
 **Example queries:**
 
@@ -33,65 +43,6 @@ Type your question in natural language into the chat input field and press Enter
 <Frame>
   <img src="/images/vl-chat-example-pets-unusual-expressions.png" alt="VL Chat finding cats and dogs with unusual expressions" />
 </Frame>
-
-### Understanding Responses
-
-When you ask a question, VL Chat provides:
-
-1. **Interpretation summary**: A clear statement of what the system understood from your query.
-2. **Validation feedback**: Information about which parts of your query were applied successfully and which weren't available.
-3. **Visual results**: The actual images or objects matching your criteria.
-4. **Alternative interpretations**: Suggestions if your query was ambiguous or if certain fields aren't available.
-
-**Example response:**
-
-```
-Understood query with confidence 0.85. Applied blur filter successfully and
-filtered to cluster 5. Showing 47 images that match your criteria.
-```
-
-If part of your query can't be processed, the system explains why:
-
-```
-I found 23 blurry images in your dataset. Note: This dataset doesn't have a
-'Temperature' custom metadata field configured, so I could only search for blur.
-```
-
-### Multi-Turn Conversations
-
-VL Chat maintains context across multiple messages, allowing you to refine your queries progressively:
-
-**You:** "Show me images with blur"
-**VL Chat:** *Returns 156 blurry images*
-
-**You:** "Now show only the ones from last week"
-**VL Chat:** *Filters the previous results to show 23 images from last week*
-
-**You:** "Which cluster has the most of these?"
-**VL Chat:** *Analyzes the filtered results and highlights cluster 12*
-
-Each follow-up question builds on the previous context, making exploration feel natural and conversational.
-
-<Frame>
-  <img src="/images/chat-to-find-real-people.png" alt="VL Chat multi-turn conversation finding real people in a dataset" />
-</Frame>
-
-## Types of Queries You Can Ask
-
-VL Chat understands queries about different aspects of your dataset:
-
-<div className="integrations-table">
-
-| Type | Description | Examples |
-|------|-------------|---------|
-| **Filter by Issues** | Find images with specific quality issues detected by Visual Layer. | "Show me blurry images" <br /> "Find all images with duplicates" <br /> "Display images that have outlier issues" <br /> "Show me images with mislabel issues above 80% confidence" |
-| **Filter by Labels** | Search for specific labels or annotations in your dataset. | "Show me images labeled as cats" <br /> "Find all images with car labels" <br /> "Display images labeled as defective" |
-| **Filter by Tags** | Query images based on user-assigned tags. | "Show me images tagged as urgent" <br /> "Find all images with the reviewed tag" <br /> "Display images tagged for training" |
-| **Filter by Custom Metadata** | Query custom metadata fields directly if your dataset includes them. | "Show me images with temperature above 30" <br /> "Find images from Station A" <br /> "Display images where batch number is 12345" |
-| **Navigate Clusters** | Explore similarity clusters in your dataset. | "Show me cluster 5" <br /> "Display the largest cluster" <br /> "Find clusters with more than 100 images" |
-| **Combine Multiple Criteria** | Build complex queries by combining different filter types. | "Show me blurry images from cluster 3" <br /> "Find images labeled as cats with high uniqueness scores" <br /> "Display images tagged as urgent that also have blur issues" |
-
-</div>
 
 ## Tips for Effective Queries
 
@@ -130,17 +81,64 @@ This approach is often clearer than trying to express everything in a single com
 
 If results don't match your expectations, review the alternative interpretations provided in the response. These suggestions often reveal where the system's understanding differed from your intent.
 
-## Common Use Cases
+## Understanding Responses
 
-VL Chat supports a range of workflows across dataset exploration and curation:
+When you ask a question, **VL Chat** provides:
+
+1. **Interpretation summary**: A clear statement of what the system understood from your query.
+2. **Validation feedback**: Information about which parts of your query were applied successfully and which weren't available.
+3. **Visual results**: The actual images or objects matching your criteria.
+4. **Alternative interpretations**: Suggestions if your query was ambiguous or if certain fields aren't available.
+
+Each response includes a confidence score. Lower scores (below 0.5) indicate ambiguity — review the alternative interpretations provided to confirm the result matches your intent. For complex criteria, break queries into multiple steps rather than a single nested question.
+
+**Example response:**
+
+```
+Understood query with confidence 0.85. Applied blur filter successfully and
+filtered to cluster 5. Showing 47 images that match your criteria.
+```
+
+If part of your query can't be processed, the system explains why:
+
+```
+I found 23 blurry images in your dataset. Note: This dataset doesn't have a
+'Temperature' custom metadata field configured, so I could only search for blur.
+```
+
+## Multi-Turn Conversations
+
+**VL Chat** maintains context across multiple messages, allowing you to refine your queries progressively:
+
+**You:** "Show me images with blur"
+**VL Chat:** *Returns 156 blurry images*
+
+**You:** "Now show only the ones from last week"
+**VL Chat:** *Filters the previous results to show 23 images from last week*
+
+**You:** "Which cluster has the most of these?"
+**VL Chat:** *Analyzes the filtered results and highlights cluster 12*
+
+Each follow-up question builds on the previous context, making exploration feel natural and conversational.
+
+<Frame>
+  <img src="/images/chat-to-find-real-people.png" alt="VL Chat multi-turn conversation finding real people in a dataset" />
+</Frame>
+
+## Types of Queries You Can Ask
+
+**VL Chat** understands queries about different aspects of your dataset:
 
 <div className="integrations-table">
 
-| Use Case | Description | Examples |
-|----------|-------------|---------|
-| **Quality Assurance** | Quickly identify and review quality issues. | "Show me all blur issues from today's production run" <br /> "Find outlier images in batch 12345" <br /> "Display mislabeled images above 90% confidence" |
-| **Dataset Curation** | Organize and filter datasets for training. | "Show me the most unique images from each cluster" <br /> "Find images labeled as cats that don't have the reviewed tag" <br /> "Display images with low uniqueness scores" |
-| **Research and Analysis** | Explore dataset composition and patterns. | "Show me the largest clusters" <br /> "Find images with the most labels" <br /> "Display images that appear in multiple clusters" |
+| Type | Description | Examples |
+|------|-------------|---------|
+| **Filter by Issues** | Find images with specific quality issues detected by Visual Layer. | "Show me blurry images" <br /> "Find all images with duplicates" <br /> "Display images that have outlier issues" <br /> "Show me images with mislabel issues above 80% confidence" |
+| **Filter by Labels** | Search for specific labels or annotations in your dataset. | "Show me images labeled as cats" <br /> "Find all images with car labels" <br /> "Display images labeled as defective" |
+| **Filter by Tags** | Query images based on user-assigned tags. | "Show me images tagged as urgent" <br /> "Find all images with the reviewed tag" <br /> "Display images tagged for training" |
+| **Filter by Custom Metadata** | Query **Custom Metadata** fields directly if your dataset includes them. | "Show me images with temperature above 30" <br /> "Find images from Station A" <br /> "Display images where batch number is 12345" |
+| **Navigate Clusters** | Explore **Similarity Clusters** in your dataset. | "Show me cluster 5" <br /> "Display the largest cluster" <br /> "Find clusters with more than 100 images" |
+| **Combine Multiple Criteria** | Build complex queries by combining different filter types. | "Show me blurry images from cluster 3" <br /> "Find images labeled as cats with high uniqueness scores" <br /> "Display images tagged as urgent that also have blur issues" |
 
 </div>
 
