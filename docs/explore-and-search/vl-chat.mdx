@@ -4,17 +4,15 @@ description: "Explore and search your visual datasets using natural language que
 sidebarTitle: "VL Chat"
 ---
 
-VL Chat enables you to explore visual datasets through natural language. Instead of navigating filters and dropdown menus, ask questions directly: find images by quality issue, label, tag, custom metadata, or cluster. The system interprets your intent and returns results with explanations of what it found.
+VL Chat enables you to explore visual datasets through natural language. Instead of navigating filters and dropdown menus, ask questions directly — find images by quality issue, label, tag, custom metadata, or cluster. The system interprets your intent and returns results with explanations of what it found.
+
+Query capabilities depend on your dataset's configuration. VL Chat can only search fields that exist in your data: datasets without annotations cannot filter by labels, and cluster-based queries require similarity clusters to be generated first. If you reference a field that isn't configured, the system explains this and applies the filters it can.
+
+Each response includes a confidence score. Lower scores (below 0.5) indicate ambiguity — review the alternative interpretations provided to confirm the result matches your intent. For complex criteria, break queries into multiple steps rather than a single nested question.
 
 ## Accessing VL Chat
 
-To access VL Chat, open any dataset in Visual Layer and click the **Ask VL** button in the top navigation bar.
-
-<Frame>
-  <img src="/images/start-vl-chat.png" alt="Ask VL button" style={{ width: '20%' }} />
-</Frame>
-
-The chat interface appears as a panel on the right side of your screen, allowing you to explore while viewing your dataset.
+To access VL Chat, open any dataset in Visual Layer and click <img src="/images/start-vl-chat.png" alt="Ask VL button" style={{ height: '28px', display: 'inline-block', verticalAlign: 'middle' }} /> in the top navigation bar. The chat interface appears as a panel on the right side of your screen, allowing you to explore while viewing your dataset.
 
 Each dataset maintains its own conversation thread, which persists across sessions. To start a fresh conversation, click **New Thread** in the chat panel.
 
@@ -145,28 +143,6 @@ VL Chat supports a range of workflows across dataset exploration and curation:
 | **Research and Analysis** | Explore dataset composition and patterns. | "Show me the largest clusters" <br /> "Find images with the most labels" <br /> "Display images that appear in multiple clusters" |
 
 </div>
-
-## Limitations and Considerations
-
-### Field Availability
-
-VL Chat can only query fields that exist in your dataset. If you reference a custom metadata field that hasn't been configured, the system explains this and shows results using the filters it could apply.
-
-### Confidence Scores
-
-The system provides a confidence score with each interpretation. Lower confidence (below 0.5) may indicate ambiguity in your query. Review the alternative interpretations in the response to see how it was understood.
-
-### Dataset-Specific Behavior
-
-Query capabilities depend on your dataset configuration:
-
-- Datasets without custom metadata cannot filter by custom fields.
-- Datasets without annotations cannot filter by labels.
-- Similarity clusters must be generated before cluster-based queries work.
-
-### Semantic Understanding
-
-VL Chat interprets natural language but has specific parsing rules. Extremely complex nested queries may need to be broken into multiple simpler questions.
 
 ## Related Resources
 
