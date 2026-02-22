@@ -1,10 +1,10 @@
 ---
-title: "Dataset Exploration View"
-description: Navigate the dataset workspace to explore, filter, search, and analyze your visual data.
-sidebarTitle: "Dataset exploration"
+title: "Exploring Datasets"
+description: "Understand the Dataset Exploration View and use a systematic workflow to curate high-quality visual collections."
+sidebarTitle: "Exploring datasets"
 ---
 
-The **Dataset Exploration View** is your primary workspace for analyzing datasets. This interface provides access to images, objects, clusters, metadata filters, search tools, and quality insights.
+The **Dataset Exploration View** is your primary workspace for analyzing datasets. It provides tools for search, filtering, cluster navigation, and quality analysis that work together in a systematic exploration workflow.
 
 <Frame>
   <img src="/images/overview-cluster-view.png" alt="Dataset Exploration View" />
@@ -26,35 +26,6 @@ When you open a dataset, the exploration interface loads with five main areas:
 
 </div>
 
-## Dataset Header
-
-The dataset header displays essential information and quick actions:
-
-<Frame>
-  <img src="https://files.readme.io/925a3ad4b525cb182babf9ce8191081f98fe1c95f69795499d8bca32b162b7de-image.png" alt="Dataset Header" />
-</Frame>
-
-<div className="integrations-table">
-
-| Field | Description |
-|-------|-------------|
-| **Dataset Name** | Click to view metadata details (hover over info icon for additional fields) |
-| **Images** | Total number of images in the dataset |
-| **Objects** | Number of annotated objects (from metadata or enrichment) |
-| **Videos** | Number of videos uploaded (if applicable) |
-| **Video Frames** | Number of extracted frames (if applicable) |
-| **Created Date** | When the dataset was created |
-| **Dataset Status** | Current state: **Ready**, **Uploading**, **Indexing**, **Processing**, **Enriching**, **Resume**, or **Failed** |
-| **Selected Items** | Shopping cart icon showing number of selected items for bulk actions |
-| **Share** | Share dataset with team members or collaborators |
-| **Export** | Download dataset items, metadata, and annotations |
-
-</div>
-
-### Dataset Metadata
-
-Hover over the info icon <img src="/images/info-i-icon.png" width="20" /> next to the dataset name to view additional metadata such as upload source, folder paths, or custom fields defined during creation.
-
 ## Navigation Tabs
 
 Three tabs organize your workflow when exploring datasets:
@@ -69,225 +40,69 @@ Three tabs organize your workflow when exploring datasets:
 
 </div>
 
-## Filter Panel
+## Exploration Workflow
 
-The **Filter Panel** provides powerful tools to narrow down your dataset based on specific criteria.
+Effective dataset curation typically involves a multi-step process rather than a single query. These steps explain how to combine Visual Layer's tools to move from broad discovery to a precise, curated selection.
 
-### Add Filter Button
+<Steps>
 
-Click **Add Filter** <img src="/images/filterbutton.png" width="100" /> to open the filter menu and select from available filter types.
+<Step title="Find: Discover Relevant Content">
+Start by casting a wide net to locate potential candidates.
 
-### Available Filters
+- **Use Semantic Search** for conceptual queries (e.g., "damaged packaging" or "outdoor crowd").
+- **Use Cluster Navigation** to browse high-level patterns without a specific query.
+- **Use Visual Search** with an external image upload to find matches for a reference asset.
 
-<div className="integrations-table">
+*Goal: Surface a broad set of results that includes your target data, accepting some initial false positives.*
+</Step>
 
-| Filter Category | Purpose | Configuration |
-|----------------|---------|---------------|
-| **Folders** | Filter by specific folder paths within your dataset | Select folders using checkboxes or path patterns |
-| **Files** | Filter by filename or file patterns | Enter filename or use wildcard patterns |
-| **Labels** | Filter by assigned label classes or unlabeled status | Select classes to include or exclude using IS/IS NOT operators |
-| **User Tags** | Filter by custom tags you've applied | Select tags from your tag list |
-| **Captions** | Search by AI-generated or imported captions | Use text search with AND/OR/NOT operators |
-| **Mislabels** | Show images flagged as potentially mislabeled | Toggle to show mislabels only or exclude them |
-| **Duplicates** | Find duplicate or near-duplicate images | Adjust similarity threshold with slider |
-| **Outliers** | Show images that differ significantly from typical patterns | Set confidence threshold for outlier detection |
-| **Quality Issues** | Filter by blur, overexposure, underexposure | Select issue types and set confidence thresholds |
-| **Select Uniques** | Show only unique images (exclude duplicates) | Adjust uniqueness threshold using slider |
+<Step title="Narrow: Refine Your Results">
+Filter out irrelevant matches to focus on your specific criteria.
 
-</div>
+- **Apply Visual Similarity** on a specific search result. Crop a region (e.g., just the defect, not the background) to narrow the search visually.
+- **Add Metadata Filters** (Folders, Labels, Dates) to restrict the search scope to relevant batches or sources.
 
-For comprehensive filter documentation, see [Search and Filter Tool Reference](/docs/explore-and-search/using-search-filter).
+*Goal: Reduce noise and focus on content that matches your specific visual or metadata requirements.*
+</Step>
 
-### Query Panel
+<Step title="Refine: Identify Distinctive Content">
+Ensure your selection represents the diversity of your data, not just the most common examples.
 
-Applied filters appear in the **Query Panel** above the content grid. All filters combine using **AND** logic.
+- **Apply the Uniques Filter** to hide repetitive content. Increasing the threshold surfaces only visually distinct items, covering edge cases and varied angles rather than just the average.
+- **Check Outliers** to find rare examples or anomalies that might be missing from the main clusters.
 
-<Frame>
-  <img src="/images/applied-filters.png" alt="Applied Filters in Query Panel" />
-</Frame>
+*Goal: Create a diverse selection that includes valuable edge cases.*
+</Step>
 
-<div className="integrations-table">
+<Step title="Clean: Remove Redundancy and Issues">
+Polish the collection before finalizing.
 
-| Control | Function |
-|---------|----------|
-| **Filter Chip** | Each applied filter shows as a chip displaying its criteria |
-| **X Button** | Click to remove an individual filter |
-| **Clear All** | Remove all applied filters at once |
-| **Edit Filter** | Click filter chip to modify criteria |
+- **Review Duplicates** to select single representative frames from burst sequences or near-identical backups.
+- **Filter Quality Issues** (blur, dark, bright) to automatically exclude unusable or low-quality assets.
 
-</div>
+*Goal: Ensure the final dataset is lean, high-quality, and free of technical flaws.*
+</Step>
 
-<Note>
-Multiple filters combine using **AND** logic. An item must satisfy all active filters to appear in results.
-</Note>
+<Step title="Organize: Save and Share">
+Preserve your work for the team.
 
-## Content Grid: Cluster View
+- **Save as View** to capture the full combination of search queries, filters, and thresholds. Team members can access the dynamic collection without rebuilding the logic.
+- **Export** the selection to JSON or CSV for downstream training or annotation workflows.
+</Step>
 
-Visual Layer automatically groups visually similar images into **clusters** during dataset indexing. Clusters help you explore patterns and organize large datasets efficiently.
-
-<Frame>
-  <img src="/images/clusters-image-view.png" alt="Cluster View" />
-</Frame>
-
-### Cluster Cards
-
-Each cluster card displays:
-
-<div className="integrations-table">
-
-| Element | Description |
-|---------|-------------|
-| **Item Count** | Total number of images matching current filters in this cluster |
-| **Prominent Labels** | Most frequent labels within the cluster |
-| **Representative Thumbnails** | Key example images that visually summarize the cluster content |
-| **Visual Similarity Icon** <img src="/images/visual-similarity-icon.png" width="24" /> | Hover over cluster to trigger visual similarity search |
-
-</div>
-
-**Click a cluster card** to drill down and view all images within that cluster.
-
-**Hover and click the similarity icon** to find clusters visually similar to the selected cluster.
-
-### Switching Between Views
-
-Toggle between different visualization modes:
-
-- **Cluster View**: Groups similar images for pattern exploration (default)
-- **Image View**: Shows individual images in a grid
-- **Object View**: Displays annotated objects grouped by visual similarity (requires object annotations)
-
-## Details Sidebar
-
-The **Details Sidebar** on the right provides dataset statistics, insights, and enrichment options.
-
-### Statistics Panel
-
-View distribution metrics for your dataset:
-
-- **Label distribution**: Breakdown of images by class
-- **Quality issue statistics**: Count of blur, dark, bright, and other quality problems
-- **Outlier count**: Number of anomalous images detected
-- **Duplicate count**: Near-identical images found
-
-Toggle between absolute values (#) and percentages (%) using the switch at the top.
-
-<Frame>
-  <img src="/images/issues-toggle.gif" alt="Toggle between counts and percentages" />
-</Frame>
-
-### Insights & Issues
-
-Visual Layer automatically detects:
-
-- **Mislabels**: Potentially incorrectly labeled images
-- **Duplicates**: Near-identical images that may be redundant
-- **Outliers**: Images significantly different from dataset norms
-- **Quality Issues**: Technical problems (blur, exposure, compression)
-
-Click any insight to automatically apply a filter and view affected images.
-
-### Enrichment Panel
-
-Access AI models to enhance your dataset:
-
-- **Model Catalog**: Browse available models for classification, captioning, and object detection
-- **Run Enrichment**: Apply selected models to generate metadata
-- **View Results**: See AI-generated labels, captions, and confidence scores
-
-For details, see [Dataset Enrichment](/docs/advanced-dataset-management/enrich-overview).
-
-## Search Tools
-
-Visual Layer provides multiple search methods to find specific content.
-
-### Visual Similarity Search
-
-Find visually similar images using deep learning embeddings:
-
-<div className="integrations-table">
-
-| Search Method | How to Access |
-|---------------|---------------|
-| **From Cluster** | Hover over a cluster card and click <img src="/images/visual-similarity-icon.png" width="24" /> |
-| **From Image Details** | Click an image, then click <img src="/images/visual-similarity-BUTTON.png" width="80" /> in the action bar |
-| **External Image Upload** | Click <img src="/images/visual-similarity-searchbaricon.png" width="24" /> near the search bar, upload an image, optionally crop, and start search |
-
-</div>
-
-See [Visual Search](/docs/explore-and-search/visual-search) for detailed instructions.
-
-### Semantic Search
-
-Use natural language queries to find content based on meaning:
-
-**Example queries:**
-- "sunset over mountains"
-- "people wearing masks"
-- "damaged products"
-
-See [How Search & Filter Work](/docs/explore-and-search/explore-theory) for a usage guide.
-
-## Action Bar
-
-The top action bar provides quick access to common operations:
-
-<div className="integrations-table">
-
-| Action | Purpose | Requirements |
-|--------|---------|--------------|
-| **Export** | Download dataset items, metadata, and annotations in JSON/CSV format | Specify export scope (all items, filtered items, or selected items) |
-| **Share** | Grant access to team members or collaborators | Configure permissions (view-only or edit) |
-| **Selected Items** | Manage and perform bulk actions on selected images | Select items using checkboxes first |
-| **Save as View** | Save current filters and search as a reusable View | Apply at least one filter or search query |
-
-</div>
-
-## Views Tab
-
-The **Views** tab displays saved filter combinations and search queries for quick access.
-
-<div className="integrations-table">
-
-| Control | Function |
-|---------|----------|
-| **Save as View** Button | <img src="/images/save-view-button.png" width="120" /> Saves current filters and search criteria |
-| **View Name** Dialog | Enter a descriptive, unique name |
-| **View Card** | Click to load the saved filter combination |
-| **Three-Dot Menu** | Access actions including **Delete** |
-
-</div>
-
-<Note>
-Views are immutable. To modify a view, delete it and create a new one with updated criteria.
-</Note>
-
-## Tips for Efficient Exploration
-
-**Start with clustering**: Use Cluster View to quickly understand dataset composition and identify patterns
-
-**Combine multiple filters**: Apply Labels + Quality Issues + Folders filters together for precise subsets
-
-**Save useful queries as Views**: Create Views for common analysis patterns (e.g., "Unlabeled High-Quality", "Mislabeled Products")
-
-**Use visual search for edge cases**: Upload reference images to find rare or specific visual patterns
-
-**Monitor statistics while filtering**: Watch the Details Sidebar to see how filters affect dataset distribution
-
-**Select items incrementally**: Build selection sets across multiple clusters for batch export or tagging
-
-**Check quality insights first**: Review automatically detected issues before starting manual review
+</Steps>
 
 ## Related Resources
 
 <CardGroup cols={2}>
-  <Card title="Search and Filter Tool Reference" icon="sliders-horizontal" href="/docs/explore-and-search/using-search-filter">
+  <Card title="Search and Filter Reference" icon="sliders-horizontal" href="/docs/explore-and-search/using-search-filter">
     Complete guide to filter types, operators, and search tools
   </Card>
-  <Card title="How Search & Filter Work" icon="scan-text" href="/docs/explore-and-search/explore-theory">
+  <Card title="How Search Works" icon="scan-text" href="/docs/explore-and-search/explore-theory">
     Concepts behind semantic search and visual similarity
   </Card>
   <Card title="Visual Search" icon="scan-search" href="/docs/explore-and-search/visual-search">
-    Find similar images
+    Find similar images using visual embeddings
   </Card>
   <Card title="Understanding Clusters" icon="grid-3x3" href="/docs/quick-start/understanding-clusters">
     How Visual Layer organizes images

@@ -115,7 +115,6 @@
                         "group": "Explore & Search",
                         "pages": [
                             "docs/quick-start/dataset-exploration-ux",
-                            "docs/explore-and-search/exploring-datasets",
                             "docs/explore-and-search/vl-chat",
                             "docs/explore-and-search/explore-theory",
                             "docs/explore-and-search/recipes",
