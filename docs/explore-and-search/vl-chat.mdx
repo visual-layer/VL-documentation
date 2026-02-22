@@ -65,16 +65,12 @@ Query capabilities depend on your dataset's configuration. **VL Chat** can only 
 
 Use these guidelines to get accurate, relevant results from **VL Chat**:
 
-<div className="integrations-table">
-
 | Rule | Explanation | Good | Less Clear |
 |------|-------------|------|------------|
 | **Be Specific About Filter Types** | When referencing labels, tags, or custom fields, use clear terminology. | "Show me images labeled as defective" | "Show me defective images" (could refer to labels, tags, or quality issues) |
 | **Use Exact Field Names** | For custom metadata, use the exact field name as it appears in your dataset. | "Show me images where Station equals A" | "Show me images from station A" (if the field is named "StationID") |
 | **Specify Thresholds Explicitly** | When filtering by numeric values or confidence scores, include specific thresholds. | "Show me blur issues above 85% confidence" | "Show me images with high blur" (what threshold defines "high"?) |
 | **Build Complex Queries Iteratively** | Start with a simple query and refine it through follow-up questions. | "Show me images with blur" <br /> "Now filter to cluster 5" <br /> "Show only the ones tagged as urgent" | "Show me blurry images from cluster 5 tagged as urgent" |
-
-</div>
 
 ### Understanding Responses
 
