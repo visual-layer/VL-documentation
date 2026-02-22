@@ -46,40 +46,18 @@ Query capabilities depend on your dataset's configuration. **VL Chat** can only 
 
 ## Tips for Effective Queries
 
-### Be Specific About Filter Types
+Use these guidelines to get accurate, relevant results from **VL Chat**:
 
-When referencing labels, tags, or custom fields, use clear terminology:
+<div className="integrations-table">
 
-- **Good**: "Show me images labeled as defective"
-- **Less clear**: "Show me defective images" (could refer to labels, tags, or quality issues)
+| Rule | Explanation | Good | Less Clear |
+|------|-------------|------|------------|
+| **Be Specific About Filter Types** | When referencing labels, tags, or custom fields, use clear terminology. | "Show me images labeled as defective" | "Show me defective images" (could refer to labels, tags, or quality issues) |
+| **Use Exact Field Names** | For custom metadata, use the exact field name as it appears in your dataset. | "Show me images where Station equals A" | "Show me images from station A" (if the field is named "StationID") |
+| **Specify Thresholds Explicitly** | When filtering by numeric values or confidence scores, include specific thresholds. | "Show me blur issues above 85% confidence" | "Show me images with high blur" (what threshold defines "high"?) |
+| **Build Complex Queries Iteratively** | Start with a simple query and refine it through follow-up questions. | "Show me images with blur" <br /> "Now filter to cluster 5" <br /> "Show only the ones tagged as urgent" | "Show me blurry images from cluster 5 tagged as urgent" |
 
-### Use Exact Field Names
-
-For custom metadata, use the exact field name as it appears in your dataset:
-
-- **Good**: "Show me images where Station equals A"
-- **Less clear**: "Show me images from station A" (if the field is named "StationID")
-
-### Specify Thresholds Explicitly
-
-When filtering by numeric values or confidence scores, include specific thresholds:
-
-- **Good**: "Show me blur issues above 85% confidence"
-- **Less clear**: "Show me images with high blur" (what threshold defines "high"?)
-
-### Build Complex Queries Iteratively
-
-Start with a simple query and refine it through follow-up questions:
-
-1. "Show me images with blur"
-2. "Now filter to cluster 5"
-3. "Show only the ones tagged as urgent"
-
-This approach is often clearer than trying to express everything in a single complex query.
-
-### Check Alternative Interpretations
-
-If results don't match your expectations, review the alternative interpretations provided in the response. These suggestions often reveal where the system's understanding differed from your intent.
+</div>
 
 ## Understanding Responses
 
@@ -90,7 +68,7 @@ When you ask a question, **VL Chat** provides:
 3. **Visual results**: The actual images or objects matching your criteria.
 4. **Alternative interpretations**: Suggestions if your query was ambiguous or if certain fields aren't available.
 
-Each response includes a confidence score. Lower scores (below 0.5) indicate ambiguity — review the alternative interpretations provided to confirm the result matches your intent. For complex criteria, break queries into multiple steps rather than a single nested question.
+Each response includes a confidence score. Lower scores (below 0.5) indicate ambiguity. If results don't match your expectations, review the alternative interpretations provided — these often reveal where the system's understanding differed from your intent. For complex criteria, break queries into multiple steps rather than a single nested question.
 
 **Example response:**
 
