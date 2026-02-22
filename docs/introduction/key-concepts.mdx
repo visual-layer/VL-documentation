@@ -1,0 +1,154 @@
+---
+title: Key Concepts
+description: Essential concepts and terminology for understanding Visual Layer's platform and features.
+sidebarTitle: Key Concepts
+---
+
+Before exploring Visual Layer, familiarize yourself with these core concepts that form the foundation of the platform. This guide organizes key terms by functional area to help you quickly understand how Visual Layer works.
+
+<Note>
+These definitions align with industry-standard terminology but focus specifically on how Visual Layer implements each concept. Definitions may vary slightly across different platforms and tools.
+</Note>
+
+## Core Platform Concepts
+
+These fundamental concepts define how Visual Layer organizes and manages your visual data.
+
+<div className="integrations-table">
+
+| Concept | Acronym | Description |
+|---------|---------|-------------|
+| **Cluster** | - | A group of visually similar images automatically organized by Visual Layer. |
+| **Dataset** | - | A collection of images and associated metadata organized for analysis and labeling. |
+| **Embedding** | - | The technology that enables Visual Layer to find visually similar images and automatically label thousands from just a few examples. |
+| **Metadata** | - | Descriptive information associated with each visual item, such as filename, dimensions, timestamps, labels, and user-defined tags. Metadata is crucial for organizing, filtering, and enriching datasets. |
+
+</div>
+
+## Data Exploration & Search
+
+Visual Layer provides multiple ways to explore and find specific content within your datasets.
+
+<div className="integrations-table">
+
+| Concept | Acronym | Description |
+|---------|---------|-------------|
+| **Cluster View** | - | A structured interface that visually presents groups of similar images, allowing you to explore related data efficiently without reviewing every individual image. |
+| **Filtering** | - | The process of narrowing down datasets by applying conditions based on metadata properties, labels, quality issues, or other attributes. Filters can be combined using AND logic for precise queries. |
+| **Image View** | - | Displays clusters of visually similar images across your dataset, enabling efficient visual browsing and pattern recognition. |
+| **Object View** | - | Displays clusters of annotated or enriched objects grouped by visual similarity. This view focuses on object-level insights (bounding boxes, specific instances) rather than whole images. |
+| **Semantic Search** | - | A search technique based on meaning and context using natural language queries (for example, "sunset over forest") rather than exact keyword matches, enabling more intuitive dataset exploration. |
+| **Similarity Vertex** | - | The reference item (image, object, or cluster) used as the starting point for visual similarity search. |
+| **Visual Search** | - | The process of finding visually similar images or objects based on a reference item. You can search using an image from your dataset or upload an external image as the query. |
+
+</div>
+
+## Data Quality & Issues
+
+Visual Layer automatically detects and helps you address common data quality problems that can impact model performance.
+
+<div className="integrations-table">
+
+| Concept | Acronym | Description |
+|---------|---------|-------------|
+| **Confidence Score** | - | A numerical measure (0-100%) indicating how certain Visual Layer is about an automatically assigned label or detected issue. Higher scores indicate greater certainty. |
+| **Duplicates** | - | Identical or near-identical images or videos within a dataset. Identifying and removing duplicates improves data quality, reduces storage costs, and prevents model overfitting. |
+| **Mislabel** | - | An incorrect or inconsistent label applied to a dataset item. Detecting and correcting mislabels ensures dataset accuracy and prevents models from learning incorrect associations. |
+| **Outliers** | - | Data points that differ significantly from the rest of the dataset. Outliers can represent edge cases, rare content, or data collection errors. Identifying outliers improves data quality and uncovers unique patterns. |
+| **Quality Issues** | - | Technical problems with images such as blur, overexposure (too bright), or underexposure (too dark) that can reduce annotation accuracy and model performance. |
+
+</div>
+
+## Data Enrichment & Labeling
+
+Visual Layer helps you add valuable metadata and labels to your datasets through both automated and semi-automated workflows.
+
+<div className="integrations-table">
+
+| Concept | Acronym | Description |
+|---------|---------|-------------|
+| **Annotations** | - | Descriptive metadata or markers added to images or objects, such as bounding boxes, class labels, or segmentation masks, to enhance dataset usability for AI training. |
+| **Bounding Box** | - | A rectangular annotation drawn around an object in an image to define its position and size for object detection tasks. |
+| **Class** | - | Each distinct type of label in your classification system. Classes are the categories that organize your labels. For example, in defect detection, classes might include "scratch," "contamination," and "pass." |
+| **Class Taxonomy** | - | The complete list of label definitions for the defect categories available in your dataset, retrieved from your inspection equipment. Once the dataset is created, you cannot add or remove categories. |
+| **Enrichment** | - | The process of adding metadata or attributes to dataset items to enhance their value. This includes automated annotations, captions, tags, or classifications generated using AI models. |
+| **Ground Truth** | - | Verified, accurate labels that serve as the authoritative reference for training and evaluating machine learning models. Ground truth is established through expert review and validation. |
+| **Iteration** | - | A complete cycle of seed selection, automatic labeling, review, and refinement during label propagation. Running multiple iterations improves labeling accuracy over time as the system learns from your feedback. |
+| **Label** | - | The category or classification assigned to a single image or object. A label answers the question "what type is this?" for a specific data point. |
+| **Label Propagation** | - | A semi-supervised learning process that combines automated pattern recognition with human oversight to label large datasets efficiently. The system learns from initial seed examples, automatically assigns labels based on confidence scores, and generates review batches of uncertain images for your verification. Each iteration refines accuracy as you approve or correct labels. |
+| **Seed** | - | The initial labeled examples you provide for each class during label propagation. These training examples teach the system what each class looks like visually. Seeds are the foundation that enables automatic labeling. |
+
+</div>
+
+## Organization & Collaboration
+
+These features help you organize your work, save useful queries, and collaborate with your team.
+
+<div className="integrations-table">
+
+| Concept | Acronym | Description |
+|---------|---------|-------------|
+| **Export** | - | The process of downloading dataset items, metadata, annotations, and labels in structured formats (JSON, CSV) for use in external tools, model training pipelines, or labeling platforms. |
+| **Model Catalog** | - | A centralized repository where you can browse, deploy, and manage AI models for enrichment, analysis, and automated labeling tasks. |
+| **Saved Views** | - | Custom configurations of filters, search queries, and sorting applied to a dataset. Saved Views allow you to revisit specific subsets of data and share them with collaborators for consistent analysis. |
+| **Selected Items** | - | The images, objects, or clusters you select for review, bulk actions, or export. Selected items can be managed as a collection for efficient data curation. |
+| **User Tags** | - | Custom labels you apply to images or objects to annotate or categorize dataset items beyond standard class labels. Tags support better organization, search, and team collaboration. |
+
+</div>
+
+## Interface Components
+
+Understanding these UI elements helps you navigate Visual Layer more effectively.
+
+<div className="integrations-table">
+
+| Concept | Acronym | Description |
+|---------|---------|-------------|
+| **Dataset Exploration View** | - | The primary workspace for exploring and analyzing a dataset. It provides access to images, objects, clusters, metadata filters, search tools, and quality insights. |
+| **Dataset Inventory** | - | The home page that displays an overview of all available datasets in your Visual Layer environment. This is your starting point for accessing and managing datasets. |
+| **Filter Menu** | - | The interface where you select and configure filters to narrow down your dataset based on specific criteria like labels, quality issues, folders, or custom metadata. |
+| **Query Panel** | - | Displays all active filters and search criteria applied to your current view. All filters in the Query Panel are combined using AND logic. |
+
+</div>
+
+## Video-Specific Concepts
+
+When working with video datasets, Visual Layer treats videos as sequences of analyzable frames.
+
+<div className="integrations-table">
+
+| Concept | Acronym | Description |
+|---------|---------|-------------|
+| **Video** | - | A media file containing a sequence of moving images. Videos are treated as datasets in Visual Layer and can be analyzed frame-by-frame for patterns, objects, and events. |
+| **Video Frame** | - | An individual still image extracted from a video sequence. Each frame can be analyzed, annotated, or searched independently, enabling detailed video content analysis. |
+
+</div>
+
+## System & Infrastructure
+
+These concepts are relevant for understanding Visual Layer's deployment options and system requirements.
+
+<div className="integrations-table">
+
+| Concept | Acronym | Description |
+|---------|---------|-------------|
+| **Central Processing Unit** | CPU | The primary processor that handles general computation tasks in Visual Layer, including dataset management, metadata processing, and system operations. For self-hosted deployments, Visual Layer requires 16 CPU cores minimum. |
+| **Graphics Processing Unit** | GPU | An optional specialized processor for accelerating visual processing tasks such as embedding generation, model inference, and large-scale image analysis. For self-hosted deployments, GPUs (such as Nvidia A10, A100, H100, or RTX 4090 with at least 24GB memory) significantly improve processing speed but are not required. |
+| **On-Premises** | - | Also referred to as "self-hosting." A deployment model where Visual Layer runs entirely within your own infrastructure, providing complete data control with no external dependencies. See [Self-Hosting](/docs/self-hosting/System_requirements) for system requirements. |
+| **Self-Hosting** | - | Also referred to as "on-premises." Visual Layer's self-managed deployment option that runs fully within your private environment. Self-hosting offers complete data control and eliminates external dependencies. See [Deploying Visual Layer](/docs/introduction/prerequisites) for deployment options. |
+
+</div>
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Deploying Visual Layer" icon="blocks" href="/docs/introduction/prerequisites">
+    Deployment options, system requirements, and prerequisites
+  </Card>
+  <Card title="Self-Hosting System Requirements" icon="blocks" href="/docs/self-hosting/System_requirements">
+    Hardware specifications for self-hosted deployment
+  </Card>
+  <Card title="Create a Dataset" icon="graduation-cap" href="/docs/quick-start/tutorial-create-dataset">
+    Get started with Visual Layer
+  </Card>
+</CardGroup>

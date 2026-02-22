@@ -1,9 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
 
+
 [data-component-part="step-line"] {
   background-color: rgb(167,56,149);
   width:3px;
+}
+
+
+[data-component-part="step-title"] {
+  margin: 2px !important;
 }
 
 .nav-anchors a, #page-title {
@@ -382,6 +388,10 @@ table {
   padding-right: 10px;
 }
 
+.integrations-table th:nth-child(3) {
+  width: 50%;
+}
+
 
 #var-table th:first-child {
   width: 25%;
@@ -445,8 +455,52 @@ table {
 
 
 #footer {
-  padding-top: 20px;
-  margin-top: 20px;
+  background-color: #1D102D !important;
+  color: white !important;
+  padding: 1.5rem 0 0.5rem 0 !important;
+  margin-top: 0 !important;
+}
+
+#footer hr,
+#footer [class*="divider"],
+#footer [class*="border"] {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#footer > * {
+  padding: 0.25rem !important;
+  margin: 0 !important;
+}
+
+#footer a,
+#footer span,
+#footer p,
+#footer h3,
+#footer h4 {
+  color: white !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#footer h3,
+#footer h4 {
+  margin-bottom: 0.5rem !important;
+}
+
+#footer ul {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#footer li {
+  margin: 0.15rem 0 !important;
+  padding: 0 !important;
+}
+
+#footer svg {
+  color: white !important;
+  fill: white !important;
 }
 
 
@@ -625,6 +679,53 @@ table {
 /* Hover to show the dropdown */
 .navbar .dropdown-container:hover {
   visibility: visible;
+}
+
+/* Accordion styling */
+[data-component-part="accordion-caret-right"] svg {
+  width: 14pt !important;
+  height: 14pt !important;
+}
+
+[data-component-part="accordion-icon"] svg {
+  background-color: #a73895 !important;
+}
+
+[data-component-part="card-icon"] svg {
+  background-color: #a73895 !important;
+}
+
+/* Process headings (h6) styling */
+h6 {
+  font-size: 1.05rem !important;
+  text-transform: uppercase;
+  color: #4E2F6C !important;
+  font-weight: 600 !important;
+  text-emphasis: dot;
+  text-emphasis-position: under;
+  margin-top: 45px !important;
+  margin-bottom: 0px !important;
+  text-underline-position: under;
+}
+
+.dark h6 {
+  color: #0197D8 !important;
+}
+
+/* Sidebar dropdown gradient border */
+#navigation-items button[id^="radix-"] {
+  position: relative;
+  border: 2px solid transparent !important;
+  border-radius: 8px !important;
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    linear-gradient(135deg, #A73895, #0097D9) border-box !important;
+}
+
+.dark #navigation-items button[id^="radix-"] {
+  background:
+    linear-gradient(#121212, #121212) padding-box,
+    linear-gradient(135deg, #A73895, #0097D9) border-box !important;
 }
 
 /* End of CSS */

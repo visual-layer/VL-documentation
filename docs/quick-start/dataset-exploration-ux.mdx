@@ -1,0 +1,110 @@
+---
+title: "Exploring Datasets"
+description: "Understand the Dataset Exploration View and use a systematic workflow to curate high-quality visual collections."
+sidebarTitle: "Exploring datasets"
+---
+
+The **Dataset Exploration View** is your primary workspace for analyzing datasets. It provides tools for search, filtering, cluster navigation, and quality analysis that work together in a systematic exploration workflow.
+
+<Frame>
+  <img src="/images/overview-cluster-view.png" alt="Dataset Exploration View" />
+</Frame>
+
+## Interface Layout
+
+When you open a dataset, the exploration interface loads with five main areas:
+
+<div className="integrations-table">
+
+| Area | Component | Description |
+|------|-----------|-------------|
+| <img src="/images/1light.png" width="28" /> | **Navigation Tabs** | Switch between Explore, Data, and Views |
+| <img src="/images/2light.png" width="28" /> | **Filter Panel** | Apply and combine search criteria to narrow your dataset |
+| <img src="/images/3light.png" width="28" /> | **Action Bar** | Access operations like export, share, and selected items management |
+| <img src="/images/4light.png" width="28" /> | **Details Sidebar** | View metadata, insights, statistics, and access enrichment features |
+| <img src="/images/5light.png" width="28" /> | **Content Grid** | Visual representation of your data in clusters, images, or objects |
+
+</div>
+
+## Navigation Tabs
+
+Three tabs organize your workflow when exploring datasets:
+
+<div className="integrations-table">
+
+| Tab | Purpose | Use Cases |
+|-----|---------|-----------|
+| **Explore** | Navigate your dataset using clusters, search, and filters | Browse patterns, find similar images, identify quality issues |
+| **Data** | View all images in a flat grid without clustering | Review entire dataset linearly, perform bulk selections |
+| **Views** | Access saved filter combinations and search queries | Quickly load previously defined queries, share analysis criteria with team |
+
+</div>
+
+## Exploration Workflow
+
+Effective dataset curation typically involves a multi-step process rather than a single query. These steps explain how to combine Visual Layer's tools to move from broad discovery to a precise, curated selection.
+
+<Steps>
+
+<Step title="Find: Discover Relevant Content">
+Start by casting a wide net to locate potential candidates.
+
+- **Use Semantic Search** for conceptual queries (e.g., "damaged packaging" or "outdoor crowd").
+- **Use Cluster Navigation** to browse high-level patterns without a specific query.
+- **Use Visual Search** with an external image upload to find matches for a reference asset.
+
+*Goal: Surface a broad set of results that includes your target data, accepting some initial false positives.*
+</Step>
+
+<Step title="Narrow: Refine Your Results">
+Filter out irrelevant matches to focus on your specific criteria.
+
+- **Apply Visual Similarity** on a specific search result. Crop a region (e.g., just the defect, not the background) to narrow the search visually.
+- **Add Metadata Filters** (Folders, Labels, Dates) to restrict the search scope to relevant batches or sources.
+
+*Goal: Reduce noise and focus on content that matches your specific visual or metadata requirements.*
+</Step>
+
+<Step title="Refine: Identify Distinctive Content">
+Ensure your selection represents the diversity of your data, not just the most common examples.
+
+- **Apply the Uniques Filter** to hide repetitive content. Increasing the threshold surfaces only visually distinct items, covering edge cases and varied angles rather than just the average.
+- **Check Outliers** to find rare examples or anomalies that might be missing from the main clusters.
+
+*Goal: Create a diverse selection that includes valuable edge cases.*
+</Step>
+
+<Step title="Clean: Remove Redundancy and Issues">
+Polish the collection before finalizing.
+
+- **Review Duplicates** to select single representative frames from burst sequences or near-identical backups.
+- **Filter Quality Issues** (blur, dark, bright) to automatically exclude unusable or low-quality assets.
+
+*Goal: Ensure the final dataset is lean, high-quality, and free of technical flaws.*
+</Step>
+
+<Step title="Organize: Save and Share">
+Preserve your work for the team.
+
+- **Save as View** to capture the full combination of search queries, filters, and thresholds. Team members can access the dynamic collection without rebuilding the logic.
+- **Export** the selection to JSON or CSV for downstream training or annotation workflows.
+</Step>
+
+</Steps>
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Search and Filter Reference" icon="sliders-horizontal" href="/docs/explore-and-search/using-search-filter">
+    Complete guide to filter types, operators, and search tools
+  </Card>
+  <Card title="How Search Works" icon="scan-text" href="/docs/explore-and-search/explore-theory">
+    Concepts behind semantic search and visual similarity
+  </Card>
+  <Card title="Visual Search" icon="scan-search" href="/docs/explore-and-search/visual-search">
+    Find similar images using visual embeddings
+  </Card>
+  <Card title="Understanding Clusters" icon="grid-3x3" href="/docs/quick-start/understanding-clusters">
+    How Visual Layer organizes images
+  </Card>
+</CardGroup>

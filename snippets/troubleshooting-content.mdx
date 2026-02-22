@@ -1,0 +1,87 @@
+This section addresses common issues and provides troubleshooting tips to help you resolve problems with Visual Layer.
+
+## Dataset Creation Errors
+
+Errors completely prevent dataset creation. Datasets with errors appear first in the inventory with "Error creating Dataset" displayed instead of a progress bar.
+
+### Common Error Types
+
+<div className="integrations-table">
+
+| Error Type | Impact | Solution |
+|-----------|--------|----------|
+| **File uploaded is corrupted** | Dataset creation fails | Ensure the file was properly saved or exported. Verify the file format is supported. Try uploading in a different format. |
+| **File is protected by password** | Dataset creation fails | Remove password protection from the compressed file and retry. |
+| **Dataset image limitation exceeded** | Dataset creation fails | Split the dataset or upload a subset of images. |
+| **Dataset file size exceeded** | Dataset creation fails | Split the dataset or convert images to a different format. |
+| **Internal server error** | Dataset creation fails | Retry dataset creation. Contact support if the problem persists. |
+
+</div>
+
+## Dataset Creation Warnings
+
+Warnings allow dataset creation but limit functionality. Successfully created datasets display a warning indication in the header. Hover over the indicator to view details.
+
+### Common Warning Types
+
+- Annotations were not in the expected format
+- Too many objects in the dataset (over 1M objects)
+
+## Self-Hosting Installation Errors
+
+### Image Not Found
+
+```sh
+docker: Error response from daemon: pull access denied for visuallayer/onprem-installer, repository does not exist or may require 'docker login'.
+```
+
+**Solution**: Ensure you are logged into Docker.
+
+### Docker Daemon Not Running
+
+```sh
+docker: Cannot connect to the Docker daemon at unix:///var/run/docker.sock.
+```
+
+**Solution**: Start the Docker daemon.
+
+### Image Pulling Fails
+
+```sh
+manifest for visuallayer/onprem-cd:2.25.6-rc6 not found: manifest unknown
+```
+
+**Solution**: Verify the software version and that you are logged into Docker with the correct user.
+
+### Platform Mismatch Warning
+
+```sh
+WARNING: The requested image's platform (linux/arm64) does not match the detected host platform (linux/amd64/v3).
+```
+
+**Solution**: This is a warning only and can be ignored.
+
+### `docker compose` Not Found
+
+```sh
+./run_profiler.sh: line 159: docker compose: command not found
+```
+
+**Solution**: Install or reinstall Docker following the official installation instructions.
+
+### PostgreSQL Operational Error
+
+```sh
+sqlalchemy.exc.OperationalError: (psycopg.OperationalError) [Errno -3] Temporary failure in name resolution
+```
+
+**Solution**: Ensure the system was brought up using the `docker up` command.
+
+## Still Need Help?
+
+Contact our support team at [support@visual-layer.com](mailto:support@visual-layer.com) for further assistance. When reporting issues, include:
+
+- Error messages or warnings you encountered
+- File types and formats you attempted to upload
+- Steps you took before encountering the problem
+- Screenshots if applicable
