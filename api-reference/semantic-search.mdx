@@ -1,0 +1,197 @@
+---
+title: Semantic Search
+description: Use AI-powered caption understanding to search your visual data semantically—not just by keyword.
+---
+
+<Card title="How This Helps" icon="magnifying-glass">
+  Semantic Search returns results based on the **meaning** of your query—not just keyword matches. It's perfect for finding relevant content using natural language.
+</Card>
+
+---
+
+## Overview
+
+The `GET /api/v1/explore/{dataset_id}` endpoint enables semantic search over captions—using models that understand language and context, not just keywords.
+
+Example query:
+
+```
+dog playing with a ball
+```
+
+May return:
+
+- “A golden retriever catching a frisbee in mid-air”
+- “Puppy chasing a red toy across the grass”
+- “Canine fetching a tennis ball at the park”
+
+Results are sorted by **relevance score** (0.0–1.0).
+
+---
+
+## Basic Caption Search
+
+```http
+GET /api/v1/explore/{dataset_id}
+```
+
+### Query Parameters
+
+- `image_caption` (string): your semantic query  
+- `textual_similarity_threshold` (float): e.g. `0.75`  
+- `entity_type` (string): e.g. `IMAGES`  
+
+### Example (cURL)
+
+```bash
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+"https://app.visual-layer.com/api/v1/explore/95233006-eddc-11ef-b303-76dbc3993eb2?image_caption=dog%20playing%20with%20ball&textual_similarity_threshold=0.75&entity_type=IMAGES"
+```
+
+---
+
+## Sample Response
+
+```json
+{
+  "clusters": [
+    {
+      "id": "4e0e4d51-0fef-4fe1-a8ec-1a82b6f4880b",
+      "entity_type": "IMAGES",
+      "size": 3,
+      "representative_id": "8dedd5e3-a95c-4d6c-aecb-bdf7c92b599a",
+      "media": [
+        {
+          "id": "8dedd5e3-a95c-4d6c-aecb-bdf7c92b599a",
+          "caption": "A dog playing with a red ball in the grass",
+          "relevance_score": 0.93
+        }
+      ]
+    }
+  ],
+  "total_pages": 1,
+  "current_page": 0
+}
+```
+
+### Response Concepts
+
+- `clusters`: Groups of visually similar results  
+- `media`: Items in each cluster  
+- `caption`: AI-generated or user-supplied description  
+- `relevance_score`: Semantic match score (0.0–1.0)
+
+---
+
+## Advanced Filtering
+
+You can add filters for labels and tags:
+
+```bash
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+"https://app.visual-layer.com/api/v1/explore/95233006-eddc-11ef-b303-76dbc3993eb2?image_caption=dog%20outdoor&textual_similarity_threshold=0.75&entity_type=IMAGES&labels=[dog,puppy]&tags=7b89e36c-c2d1-4af9-9d23-f74e018e67c5"
+```
+
+---
+
+## Retrieve Dataset Metadata
+
+```bash
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+"https://app.visual-layer.com/api/v1/explore/95233006-eddc-11ef-b303-76dbc3993eb2/exploration_metadata"
+```
+
+```json
+{
+  "dataset_name": "Dog Images Dataset",
+  "clusters_count": 42,
+  "media_count": 1250,
+  "labels": [
+    { "name": "dog", "count": 870 },
+    { "name": "person", "count": 350 }
+  ]
+}
+```
+
+---
+
+## Python Client Example
+
+```python
+import requests
+from typing import Dict, List, Optional
+
+class VisualLayerClient:
+    def __init__(self, api_url: str, api_token: str):
+        self.api_url = api_url
+        self.headers = {'Authorization': f'Bearer {api_token}'}
+
+    def search_by_caption(self, dataset_id: str, caption_query: str, 
+                          textual_similarity_threshold: float = 0.75,
+                          entity_type: str = 'IMAGES',
+                          page_number: int = 0,
+                          labels: Optional[List[str]] = None,
+                          tags: Optional[List[str]] = None) -> Dict:
+        params = {
+            'image_caption': caption_query,
+            'textual_similarity_threshold': textual_similarity_threshold,
+            'entity_type': entity_type,
+            'page_number': page_number
+        }
+        if labels:
+            params['labels'] = f"[{','.join(labels)}]"
+        if tags:
+            params['tags'] = "untagged" if tags == ["untagged"] else f"[{','.join(tags)}]"
+        
+        response = requests.get(f"{self.api_url}/api/v1/explore/{dataset_id}", headers=self.headers, params=params)
+        response.raise_for_status()
+        return response.json()
+        
+    def extract_media_info(self, results: Dict) -> List[Dict]:
+        media_items = []
+        for cluster in results.get('clusters', []):
+            for item in cluster.get('media', []):
+                media_items.append({
+                    'id': item['id'],
+                    'caption': item.get('caption'),
+                    'relevance_score': item.get('relevance_score')
+                })
+        return media_items
+```
+
+---
+
+## Example Usage
+
+```python
+from visual_layer_client_test import VisualLayerClient
+
+# Initialize client with your API token
+client = VisualLayerClient("https://app.visual-layer.com", "YOUR_TOKEN")
+
+# Basic search
+results = client.search_by_caption(
+    dataset_id="2348e2ec-860c-11ef-968d-76f1445e4fca",
+    caption_query="dog"
+)
+
+# Extract and print media results
+media_items = client.extract_media_info(results)
+print("Search results:")
+for item in media_items:
+    print(f"- ID: {item['id']}")
+    print(f"  Caption: {item['caption']}")
+    print(f"  Relevance: {item['relevance_score']}")
+    print()
+
+# Advanced search with filters
+filtered_results = client.search_by_caption(
+    dataset_id="2348e2ec-860c-11ef-968d-76f1445e4fca",
+    caption_query="dog",
+    textual_similarity_threshold=0.75,
+    labels=["dog", "puppy"]
+)
+
+filtered_items = client.extract_media_info(filtered_results)
+print(f"\nFound {len(filtered_items)} filtered results")
+```

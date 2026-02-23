@@ -1,0 +1,256 @@
+---
+title: Caption Search
+description: Search your image dataset using natural language captions—powered by semantic understanding.
+---
+
+<Card title="How This Helps" icon="magnifying-glass">
+  Caption Search enables you to retrieve relevant media using natural phrases like “beach sunset” or “red car”—not just exact keyword matches.
+</Card>
+
+---
+
+## Overview
+
+The `GET /api/v1/explore/{dataset_id}` endpoint enables semantic caption search using the `image_caption` parameter.
+
+This type of search returns results based on **intent** and **meaning**, not just exact text.
+
+### Example
+
+A query for `"beach sunset"` may return:
+
+- "A man at the beach on sunset"
+- "Golden sun setting over the ocean waves"
+
+Searching for:
+
+- `red car` — matches loosely related red items and cars
+- `"red car"` — matches images of an actual red car
+
+Each result includes a **relevance score** that quantifies the quality of the match (0.0–1.0).
+
+---
+
+## Authentication
+
+All API calls require a bearer token:
+
+```plaintext
+Authorization: Bearer {your_api_token}
+```
+
+---
+
+## Textual Caption Search
+
+### Endpoint
+
+```http
+GET /api/v1/explore/{dataset_id}
+```
+
+### Required Parameters
+
+| Name                         | Type     | Description                                                                 |
+|-----------------------------|----------|-----------------------------------------------------------------------------|
+| `image_caption`             | string   | The search query (e.g. `"beach sunset"`)                                   |
+| `threshold`                 | integer  | Clustering threshold (0–4)                                                  |
+| `entity_type`               | string   | Must be `IMAGES` or `OBJECTS`                                               |
+| `textual_similarity_threshold` | float | Score cutoff (0.0–1.0) for relevance                                        |
+
+---
+
+## Example (cURL)
+
+```bash
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+"https://app.visual-layer.com/api/v1/explore/95233006-eddc-11ef-b303-76dbc3993eb2?threshold=0&image_caption=beach%20sunset&entity_type=IMAGES"
+```
+
+---
+
+## Response Example
+
+```json
+{
+  "clusters": [
+    {
+      "id": "...",
+      "entity_type": "IMAGES",
+      "size": 4,
+      "representative_preview": "...",
+      "media": [
+        {
+          "id": "...",
+          "preview": "...",
+          "filename": "sunset_beach_aerial.jpg",
+          "caption": "Golden sun setting over the ocean waves",
+          "relevance_score": 0.92
+        }
+      ]
+    }
+  ],
+  "total_pages": 1,
+  "current_page": 0
+}
+```
+
+---
+
+## Response Breakdown
+
+- `clusters`: Visual similarity groups  
+- `media`: Individual results  
+- `caption`: Caption match  
+- `relevance_score`: Quality of the match  
+- `preview`: Thumbnail preview  
+
+---
+
+## Filter and Refine
+
+### Add Similarity Threshold
+
+```bash
+...&textual_similarity_threshold=0.85
+```
+
+### Filter by Tags and Labels
+
+```bash
+...&labels=[beach,sunset]&tags=7b89e36c-c2d1-4af9-9d23-f74e018e67c5
+```
+
+---
+
+## Python Client
+
+```python
+import requests
+from typing import Dict, List, Optional
+
+class VisualLayerClient:
+    def __init__(self, api_url: str, api_token: str):
+        self.api_url = api_url
+        self.headers = { 'Authorization': f'Bearer {api_token}' }
+
+    def search_by_caption(self, dataset_id: str, caption_query: str, threshold: int = 0,
+                          entity_type: str = 'IMAGES',
+                          textual_similarity_threshold: Optional[float] = None,
+                          page_number: int = 0,
+                          labels: Optional[List[str]] = None,
+                          tags: Optional[List[str]] = None) -> Dict:
+        params = {
+            'image_caption': caption_query,
+            'threshold': threshold,
+            'entity_type': entity_type,
+            'page_number': page_number
+        }
+        if textual_similarity_threshold is not None:
+            params['textual_similarity_threshold'] = textual_similarity_threshold
+        if labels:
+            params['labels'] = f"[{','.join(labels)}]"
+        if tags:
+            params['tags'] = "untagged" if tags == ["untagged"] else f"[{','.join(tags)}]"
+        response = requests.get(f"{self.api_url}/api/v1/explore/{dataset_id}",
+                                headers=self.headers, params=params)
+        response.raise_for_status()
+        return response.json()
+
+    def extract_media_info(self, results: Dict) -> List[Dict]:
+        media_items = []
+        for cluster in results.get('clusters', []):
+            for item in cluster.get('previews', []):
+                media_items.append({
+                    'id': item['media_id'],
+                    'preview_url': item.get('media_uri'),
+                    'caption': item.get('caption'),
+                    'relevance_score': item.get('relevance_score'),
+                    'label': item.get('label')
+                })
+        return media_items
+```
+
+---
+
+## Example Usage
+
+```python
+client = VisualLayerClient(API_URL, API_TOKEN)
+results = client.search_by_caption(dataset_id=DATASET_ID, caption_query="beach sunset", textual_similarity_threshold=0.75)
+media = client.extract_media_info(results)
+```
+
+---
+
+## Advanced Techniques
+
+### Phrase Match
+
+```bash
+image_caption="\"golden sunset\""
+```
+
+### Semantic Exclusions
+
+```bash
+image_caption=beach%20sunset%20without%20people
+```
+
+---
+
+## Best Practices
+
+- Use specific queries  
+- Set a minimum similarity threshold  
+- Use tags and labels to focus results  
+- Sort using `relevance_score`  
+- Remember: visual clusters ≠ semantic clusters
+
+---
+
+## Pagination Helper
+
+```python
+def get_all_caption_matches(client, dataset_id, caption_query, min_similarity=0.75):
+    all_media = []
+    page = 0
+    total_pages = 1
+    while page < total_pages:
+        results = client.search_by_caption(dataset_id, caption_query,
+                                           textual_similarity_threshold=min_similarity,
+                                           page_number=page)
+        all_media.extend(client.extract_media_info(results))
+        total_pages = results.get('total_pages', 1)
+        page += 1
+    return all_media
+```
+
+---
+
+## Error Handling
+
+```python
+def search_with_retries(client, dataset_id, caption_query, max_retries=3):
+    for attempt in range(max_retries):
+        try:
+            return client.search_by_caption(dataset_id, caption_query)
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code == 429:
+                time.sleep((2 ** attempt) + random.uniform(0, 1))
+            elif e.response.status_code == 401:
+                raise Exception("Check your API token.")
+            elif e.response.status_code == 404:
+                raise Exception("Dataset not found.")
+            else:
+                raise
+```
+
+---
+
+## Limitations
+
+- Max 100 results per page  
+- Minimum threshold: 0.5  
+- Quality depends on caption accuracy  
+- Complex phrasing may yield fuzzy results

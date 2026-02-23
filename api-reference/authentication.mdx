@@ -1,0 +1,191 @@
+---
+title: Authentication
+description: Retrieve cloud API credentials and generate JWT tokens for authenticated Visual Layer Cloud API access with examples.
+---
+
+<Card title="On-Prem Deployments" icon="server">
+    If you’re using an on-premises deployment, you can disregard authentication sections and omit authorization headers in requests.
+</Card>
+
+
+
+## Step 1: Get Your API Key and Secret
+
+To obtain your API key and secret:
+
+<Steps>
+
+<Step title="Log in to Visual Layer">
+Go to [https://app.visual-layer.com](https://app.visual-layer.com) and sign in with your user account.
+</Step>
+
+<Step title="Visit the API Credentials Page">
+Navigate to [https://app.visual-layer.com/api/v1/api_credentials](https://app.visual-layer.com/api/v1/api_credentials) while logged in.
+</Step>
+
+</Steps>
+
+> You must be authenticated in the browser for this to work. The request depends on your active browser session.
+
+### Request
+
+```http
+GET /api/v1/api_credentials
+Cookies: SESSION=<session from authenticated user browser session>
+```
+
+### Example Response
+
+```json
+{
+  "api_key": "<api_key>",
+  "api_secret": "<api_secret>",
+  "message": "API key created. Write down the secret – it's only shown once! If you need to access your secret again, contact Visual Layer support at support@visual-layer.com."
+}
+```
+
+You can also run this using `curl`:
+
+```bash
+curl -b SESSION=<session from authenticated user browser session> https://app.visual-layer.com/api/v1/api_credentials
+```
+
+---
+
+## Step 2: Generate JWT Token for Authentication
+
+Use your API key and secret to generate a JWT token, which is required for authenticated API requests.
+
+<Card title="JWT Token Authentication">
+JWTs must be included in the `Authorization` header as a `Bearer token` type on every request.  
+These tokens are short-lived and should be regenerated periodically.
+</Card>
+
+### Example Python Code
+
+> ⚠️  Please make sure you have `PyJWT` installed. If not, install it using: 
+```python
+python -m pip install PyJWT
+```
+
+```python
+import jwt
+from datetime import datetime, timezone, timedelta
+
+def generate_jwt(api_key: str, api_secret: str):
+    jwt_algorithm = "HS256"
+    jwt_header = {
+        'alg': jwt_algorithm,
+        'typ': 'JWT',
+        'kid': api_key,
+    }
+    
+    # Convert datetime objects to Unix timestamps (seconds since epoch)
+    now = datetime.now(tz=timezone.utc)
+    expiration = now + timedelta(minutes=10) # You can change this to a larger number if needed
+    
+    payload = {
+        'sub': api_key,
+        'iat': int(now.timestamp()),  # Convert to Unix timestamp
+        'exp': int(expiration.timestamp()),  # Convert to Unix timestamp
+        'iss': 'sdk'
+    }
+    
+    return jwt.encode(payload=payload, key=api_secret, algorithm=jwt_algorithm, headers=jwt_header)
+
+api_token = generate_jwt(api_key, api_secret)
+
+print("VL_Token:" + api_token)
+```
+
+<Tip>
+JWT tokens expire quickly by design. For best security and performance, regenerate tokens periodically based on your security requirements.
+</Tip>
+
+---
+
+## Step 3: Test Your JWT Token
+
+After generating your JWT token, you should verify it works by testing it against one of your datasets.
+
+<Card title="Why Test Your Token?" icon="check-circle">
+Testing your token immediately after generation helps you:
+- Verify the token was generated correctly
+- Confirm you have access to your datasets
+- Ensure the token is valid before integrating it into your applications
+</Card>
+
+### Test Using curl
+
+You can test your JWT token by retrieving the status of one of your datasets:
+
+```bash
+# Replace <jwt_token> with your generated JWT token
+# Replace <dataset_id> with one of your dataset IDs
+curl -H "Authorization: Bearer <jwt_token>" \
+  https://app.visual-layer.com/api/v1/dataset/<dataset_id>
+```
+
+### Test Using Python
+
+```python
+import requests
+
+# Your generated JWT token
+jwt_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+
+# One of your dataset IDs (you can find this in the URL when viewing a dataset)
+dataset_id = "your-dataset-id-here"
+
+# Make the API request
+url = f"https://app.visual-layer.com/api/v1/dataset/{dataset_id}"
+headers = {"Authorization": f"Bearer {jwt_token}"}
+
+response = requests.get(url, headers=headers)
+
+# Check the response
+if response.status_code == 200:
+    dataset_info = response.json()
+    print(f"✓ Success! Dataset: {dataset_info['display_name']}")
+    print(f"  Status: {dataset_info['status']}")
+    print(f"  Progress: {dataset_info['progress']}%")
+elif response.status_code == 401:
+    print("✗ Authentication failed - check your JWT token")
+elif response.status_code == 404:
+    print("✗ Dataset not found - check your dataset ID")
+else:
+    print(f"✗ Error: {response.status_code} - {response.text}")
+```
+
+### Expected Success Response
+
+If your token is valid, you should receive a `200 OK` response with dataset information:
+
+```json
+{
+    "id": "abc-123-def-456",
+    "display_name": "My Dataset",
+    "status": "READY",
+    "progress": 100,
+    "owned_by": "VL",
+    "created_at": "2025-10-30T10:00:00.000000"
+}
+```
+
+### Common Error Responses
+
+| Status Code | Meaning | Solution |
+|-------------|---------|----------|
+| **401 Unauthorized** | JWT token is invalid or expired | Regenerate your JWT token with correct API credentials |
+| **404 Not Found** | Dataset ID doesn't exist or you don't have access | Verify the dataset ID from your Visual Layer dashboard |
+| **403 Forbidden** | Valid token but insufficient permissions | Check that the API key has access to this dataset |
+
+<Tip>
+**Where to find your dataset ID?**
+Your dataset ID is in the browser URL when viewing a dataset:
+`https://app.visual-layer.com/dataset/<dataset_id>/data`
+</Tip>
+
+---
+
+

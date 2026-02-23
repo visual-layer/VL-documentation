@@ -1,0 +1,50 @@
+---
+title: Share a Dataset with Another User
+description: Use this endpoint to securely share a dataset with a registered user in your Visual Layer workspace.
+---
+
+<Card title="How This Helps" icon="user-plus">
+  Sharing datasets allows for seamless collaboration across team members. You can grant access to reviewers, annotators, or developers without duplicating data.
+</Card>
+
+---
+
+## API Request
+
+To share a dataset with another user:
+
+```http
+POST /api/v1/dataset/{dataset_id}/share
+Headers: Authorization: Bearer <jwt>
+```
+
+---
+
+## Form Parameters
+
+| Parameter     | Description                      |
+|---------------|----------------------------------|
+| `user_email`  | Email of the user to share with. Must be a registered Visual Layer user. |
+
+---
+
+## Example Request
+
+```bash
+curl -X POST -H "Authorization: Bearer <jwt>" \
+     -F user_email=annotator1@company.com \
+     http://localhost:9999/api/v1/dataset/{dataset_id}/share
+```
+
+---
+
+## Possible Responses
+
+| Status Code | Meaning                      |
+|-------------|------------------------------|
+| `200 OK`    | ✅ Dataset successfully shared |
+| `404`       | ❌ Failed to share dataset     |
+
+<Tip>
+Make sure the recipient's email matches an existing registered user in your Visual Layer environment.
+</Tip>

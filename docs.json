@@ -184,12 +184,6 @@
                             "docs/advanced-features/dicom-converter"
                         ]
                     },
-                    {
-                        "group": "Troubleshooting",
-                        "pages": [
-                            "api-reference/troubleshooting-api"
-                        ]
-                    }
                 ]
             },
             {
