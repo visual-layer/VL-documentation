@@ -62,20 +62,6 @@
         }
     },
     "navigation": {
-        "global": {
-            "anchors": [
-                {
-                    "anchor": "Support",
-                    "icon": "life-buoy",
-                    "href": "mailto:support@visual-layer.com"
-                },
-                {
-                    "anchor": "Blog",
-                    "icon": "pencil",
-                    "href": "https://www.visual-layer.com/blog"
-                }
-            ]
-        },
         "dropdowns": [
             {
                 "dropdown": "Docs",
@@ -125,26 +111,22 @@
                         "group": "Collab & Downstream",
                         "pages": [
                             "docs/collab-and-downstream/views",
-                            "docs/collab-and-downstream/share-dataset"
+                            "docs/collab-and-downstream/share-dataset",
+                            "docs/advanced-dataset-management/export-dataset"
                         ]
                     },
                     {
                         "group": "Models & Enrichment",
                         "pages": [
-                            "docs/advanced-dataset-management/enrich-overview",
-                            "docs/models-and-enrichment/model-catalog"
+                            "docs/advanced-dataset-management/enrich-overview"
                         ]
                     },
                     {
-                        "group": "Advanced Dataset Management",
+                        "group": "Advanced Creation & Management",
                         "pages": [
                             "docs/advanced-dataset-management/importing-annotations",
-                            "docs/advanced-features/custom-metadata",
-                            "docs/advanced-features/dicom-converter",
                             "docs/advanced-features/tag-iteams",
-                            "docs/advanced-features/task-manager",
-                            "docs/advanced-features/model-catalog",
-                            "docs/advanced-dataset-management/export-dataset"
+                            "docs/advanced-features/task-manager"
                         ]
                     },
                     {
@@ -201,6 +183,13 @@
                         ]
                     },
                     {
+                        "group": "API Guides",
+                        "pages": [
+                            "docs/advanced-features/custom-metadata",
+                            "docs/advanced-features/dicom-converter"
+                        ]
+                    },
+                    {
                         "group": "Troubleshooting",
                         "pages": [
                             "api-reference/troubleshooting-api"
@@ -252,6 +241,18 @@
         "dark": "/Visual Layer new colorful backgrounds for logo_horizontal VL logo copy 5.svg"
     },
     "navbar": {
+        "links": [
+            {
+                "label": "Support",
+                "href": "mailto:support@visual-layer.com",
+                "icon": "life-buoy"
+            },
+            {
+                "label": "Blog",
+                "href": "https://www.visual-layer.com/blog",
+                "icon": "pencil"
+            }
+        ],
         "primary": {
             "type": "button",
             "label": "Try It Now!",
