@@ -126,14 +126,9 @@
                         "pages": [
                             "docs/advanced-dataset-management/importing-annotations",
                             "docs/advanced-features/tag-iteams",
-                            "docs/advanced-features/task-manager"
-                        ]
-                    },
-                    {
-                        "group": "Administration",
-                        "pages": [
+                            "docs/advanced-features/task-manager",
                             {
-                                "group": "Integrations",
+                                "group": "Data Sources",
                                 "pages": [
                                     "docs/Integrations/Amazon-s3",
                                     "docs/Integrations/google-cloud-storage"
