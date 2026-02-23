@@ -132,7 +132,6 @@
                     {
                         "group": "Administration",
                         "pages": [
-                            "docs/self-hosting/useful-scripts",
                             {
                                 "group": "Integrations",
                                 "pages": [
@@ -179,7 +178,8 @@
                         "pages": [
                             "api-reference/exporting-a-dataset-via-curl-from-visual-layer",
                             "api-reference/duplicate-retrieval-experimental-feature",
-                            "api-reference/running-visual-layer-within-an-iframe"
+                            "api-reference/running-visual-layer-within-an-iframe",
+                            "docs/self-hosting/useful-scripts"
                         ]
                     },
                     {
