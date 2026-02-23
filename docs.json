@@ -158,7 +158,6 @@
                     {
                         "group": "API Reference",
                         "pages": [
-                            "api-reference/apis-about",
                             "api-reference/create-a-dataset-from-a-public-s3-bucket",
                             "api-reference/create-a-dataset-from-a-local-folder-for-on-prem-installation",
                             "api-reference/retrieve-dataset-status",
