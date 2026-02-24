@@ -108,12 +108,3 @@ result = add_media_to_dataset(
 )
 print(f"Added media: {result['media_id']}")
 ```
-
----
-
-## Notes
-
-- Media processing happens asynchronously after upload
-- Use the enrichment API to generate captions and embeddings for new media
-- Maximum file size: 100MB per file
-- Batch uploads: Use multiple requests or consider the bulk import endpoints
