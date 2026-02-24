@@ -160,6 +160,7 @@
                         "pages": [
                             "api-reference/create-a-dataset-from-a-public-s3-bucket",
                             "api-reference/create-a-dataset-from-a-local-folder-for-on-prem-installation",
+                            "api-reference/add-media",
                             "api-reference/retrieve-dataset-status",
                             "api-reference/share-a-dataset-with-another-user",
                             "api-reference/visual-search",
