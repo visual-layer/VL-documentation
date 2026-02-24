@@ -7,6 +7,8 @@ description: Upload and add new media files to an existing Visual Layer dataset.
   Add new images or videos to existing datasets without recreating them. Perfect for incremental data collection and dataset updates.
 </Card>
 
+This endpoint allows you to upload media files to an existing dataset. Media processing happens asynchronously after upload, with a maximum file size of 100MB per file. After adding media, use the enrichment API to generate captions and embeddings for the new items. For batch uploads, you can make multiple requests or consider using the bulk import endpoints.
+
 ---
 
 ## Prerequisites
