@@ -1,0 +1,117 @@
+---
+title: Add Media to Dataset
+description: Upload and add new media files to an existing Visual Layer dataset.
+---
+
+<Card title="How This Helps" icon="image-plus">
+  Add new images or videos to existing datasets without recreating them. Perfect for incremental data collection and dataset updates.
+</Card>
+
+---
+
+## Prerequisites
+
+- An existing dataset with a valid `dataset_id`
+- Media files in supported formats (JPEG, PNG, TIFF, MP4, etc.)
+- Valid JWT token for authentication (cloud deployments only)
+
+---
+
+## Make the API Request
+
+### Request
+
+```http
+POST /api/v1/dataset/{dataset_id}/add_media
+Headers: Authorization: Bearer <jwt>
+```
+
+### Required Parameters
+
+- `dataset_id` (path): The ID of the dataset to add media to
+- `file` (form-data): The media file to upload
+
+### Optional Parameters
+
+- `metadata` (JSON): Custom metadata to attach to the media item
+- `labels` (array): Pre-assigned labels for the media
+
+---
+
+## Example
+
+```bash
+curl -X POST -H "Authorization: Bearer <jwt>" \
+     -F "file=@/path/to/image.jpg" \
+     https://app.visual-layer.com/api/v1/dataset/{dataset_id}/add_media
+```
+
+### With Metadata
+
+```bash
+curl -X POST -H "Authorization: Bearer <jwt>" \
+     -F "file=@/path/to/image.jpg" \
+     -F 'metadata={"source":"camera_1","timestamp":"2024-01-15"}' \
+     https://app.visual-layer.com/api/v1/dataset/{dataset_id}/add_media
+```
+
+---
+
+## Sample Response
+
+```json
+{
+  "media_id": "8c...e4c",
+  "dataset_id": "95233006-eddc-11ef-b303-76dbc3993eb2",
+  "file_name": "image.jpg",
+  "status": "uploaded",
+  "processing_status": "pending"
+}
+```
+
+---
+
+## Python Client Example
+
+```python
+import requests
+
+def add_media_to_dataset(api_url: str, api_token: str, 
+                         dataset_id: str, file_path: str,
+                         metadata: dict = None):
+    headers = {'Authorization': f'Bearer {api_token}'}
+    
+    with open(file_path, 'rb') as f:
+        files = {'file': f}
+        data = {}
+        if metadata:
+            data['metadata'] = json.dumps(metadata)
+        
+        response = requests.post(
+            f"{api_url}/api/v1/dataset/{dataset_id}/add_media",
+            headers=headers,
+            files=files,
+            data=data
+        )
+        response.raise_for_status()
+        return response.json()
+
+# Usage
+result = add_media_to_dataset(
+    "https://app.visual-layer.com",
+    "YOUR_TOKEN",
+    "95233006-eddc-11ef-b303-76dbc3993eb2",
+    "/path/to/image.jpg",
+    metadata={"camera": "front", "location": "warehouse_a"}
+)
+print(f"Added media: {result['media_id']}")
+```
+
+---
+
+## Notes
+
+- Media processing happens asynchronously after upload
+- Use the enrichment API to generate captions and embeddings for new media
+- Maximum file size: 100MB per file
+- Batch uploads: Use multiple requests or consider the bulk import endpoints
