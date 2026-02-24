@@ -1,2 +1,8 @@
 # Exclude internal documentation
 internal-only/
+
+# Exclude non-documentation files
+CLAUDE.md
+
+# Exclude outdated fastdup API docs
+fastdup_docs_old/API Reference/v02xx-api.mdx
