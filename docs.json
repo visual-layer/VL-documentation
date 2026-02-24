@@ -103,6 +103,7 @@
                             "docs/quick-start/dataset-exploration-ux",
                             "docs/explore-and-search/vl-chat",
                             "docs/explore-and-search/explore-theory",
+                            "docs/explore-and-search/visual-search",
                             "docs/explore-and-search/recipes",
                             "docs/explore-and-search/using-search-filter"
                         ]
@@ -118,7 +119,8 @@
                     {
                         "group": "Models & Enrichment",
                         "pages": [
-                            "docs/advanced-dataset-management/enrich-overview"
+                            "docs/advanced-dataset-management/enrich-overview",
+                            "docs/Dataset-Enrichment/model-catalog"
                         ]
                     },
                     {
@@ -139,7 +141,8 @@
                     {
                         "group": "Troubleshooting",
                         "pages": [
-                            "docs/troubleshooting/troubleshooting-docs"
+                            "docs/troubleshooting/troubleshooting-docs",
+                            "docs/Help-Support/faqs"
                         ]
                     }
                 ]
@@ -308,7 +311,7 @@
                     },
                     {
                         "label": "FAQs",
-                        "href": "https://docs.visual-layer.com/docs/Help-Support/faqs"
+                        "href": "/docs/Help-Support/faqs"
                     }
                 ]
             },
