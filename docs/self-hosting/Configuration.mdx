@@ -2,11 +2,201 @@
 title: "Configure Settings"
 description: "Use Configuration settings to customize behavior and output when running Visual Layer backend tools or scripts."
 ---
-`LOG_LEVEL`
+
+Visual Layer can be configured through two main mechanisms: a **JSON configuration file** for application settings and feature flags, and an **environment file** for Docker Compose variables. Additionally, individual settings can be overridden using environment variables.
+
+## Configuration Hierarchy
+
+Settings are applied in the following order, where later sources override earlier ones:
+
+1. **`defaults.json`** — Built-in defaults (do not edit)
+2. **`config.json`** — Your custom configuration
+3. **Environment variables** — Override any JSON setting
+
+## Configuration File (`config.json`)
+
+The `config.json` file is located at `.vl/config.json` inside your Visual Layer installation directory. This file controls application behavior, feature flags, and pipeline settings.
+
+To customize your deployment, create or edit `.vl/config.json` with the settings you want to override:
+
+```json
+{
+  "ADD_MEDIA_ENABLED": true,
+  "DATASET_INGESTION_ONPREM_UI_ENABLED": true,
+  "DATASET_CREATION_V2": false,
+  "S3_VL_INGESTION_SERVICE_PROFILE": "",
+  "ENRICHMENT_PREVIEW_SERVICE_ENABLED": true,
+  "ENRICHMENT_INLINE_FLOW_ENABLED": true,
+  "PREPROCESS_ENABLED": true,
+  "FILE_FILTER_TREE_INCLUDE_FILES": true,
+  "SERVE_ORIGINAL_VIDEO": true,
+  "ENRICHMENT_DKMC2_ENABLED": true,
+  "FRAME_EXTRACTION_RESIZE_HEIGHT": 720
+}
+```
+
+You only need to include the settings you want to change. Any setting not present in `config.json` will use its default value from `defaults.json`.
+
+<Note>
+After modifying `config.json`, restart the Visual Layer services for changes to take effect:
+
+```bash
+./stop.sh && ./start.sh
+```
+</Note>
+
+### Feature Flags
+
+#### `ADD_MEDIA_ENABLED`
+
+**Type**: `boolean` &nbsp; **Default**: `true`
+
+Enables or disables the ability to add new media to existing datasets without requiring a full reindex. When enabled, users can upload additional images or videos to a dataset that is already indexed.
+
+#### `DATASET_INGESTION_ONPREM_UI_ENABLED`
+
+**Type**: `boolean` &nbsp; **Default**: `false`
+
+Enables the on-premises dataset ingestion UI, allowing users to create datasets directly from the web interface in self-hosted deployments. When disabled, datasets can only be created via the CLI profiler tool.
+
+#### `DATASET_CREATION_V2`
+
+**Type**: `boolean` &nbsp; **Default**: `false`
+
+Enables the updated dataset creation workflow in the UI with an improved step-by-step wizard experience.
+
+#### `S3_VL_INGESTION_SERVICE_PROFILE`
+
+**Type**: `string` &nbsp; **Default**: `""`
+
+Specifies the AWS credentials profile name used for S3-based dataset ingestion. When set, Visual Layer uses the named profile from the AWS credentials file for S3 operations. Leave empty to use the default credential chain.
+
+#### `ENRICHMENT_PREVIEW_SERVICE_ENABLED`
+
+**Type**: `boolean` &nbsp; **Default**: `false`
+
+Enables enrichment model previews. When enabled, users can preview the results of enrichment models (such as captioning, tagging, or object detection) on a sample of images before running the full enrichment on the entire dataset.
+
+#### `ENRICHMENT_INLINE_FLOW_ENABLED`
+
+**Type**: `boolean` &nbsp; **Default**: `false`
+
+Enables the inline enrichment flow, which allows enrichment models to run within the same pipeline process instead of requiring a separate enrichment step. This can simplify the enrichment workflow for on-premises deployments.
+
+#### `PREPROCESS_ENABLED`
+
+**Type**: `boolean` &nbsp; **Default**: `false`
+
+Enables the preprocessing step in the pipeline. When enabled, data goes through preprocessing (image resizing, frame extraction, cleaning) before indexing.
+
+#### `FILE_FILTER_TREE_INCLUDE_FILES`
+
+**Type**: `boolean` &nbsp; **Default**: `true`
+
+Controls whether individual files are shown in the file filter tree in the exploration UI. When enabled, the file filter tree displays both folders and individual files. When disabled, only folders are shown, which can improve performance for datasets with many files.
+
+#### `SERVE_ORIGINAL_VIDEO`
+
+**Type**: `boolean` &nbsp; **Default**: `false`
+
+When enabled, videos are served directly from their original location via the image proxy instead of being copied to the CDN directory. This reduces disk usage since videos are not duplicated, but requires the original files to remain accessible.
+
+#### `ENRICHMENT_DKMC2_ENABLED`
+
+**Type**: `boolean` &nbsp; **Default**: `false`
+
+Enables DKMC2 (Deep K-Means Clustering v2) as an available enrichment model. DKMC2 generates multiple embedding vectors per image (default 5) for fine-grained instance retrieval, improving visual search accuracy for detailed features within images.
+
+#### `FRAME_EXTRACTION_RESIZE_HEIGHT`
+
+**Type**: `integer` &nbsp; **Default**: `0`
+
+Sets the target height in pixels for resizing frames extracted from videos. A value of `0` means no resizing (original resolution is preserved). Common values include `576` and `720`. Reducing frame size decreases storage requirements and speeds up processing at the cost of lower resolution.
+
+### Other Useful Settings
+
+#### `DISABLE_AUTH`
+
+**Type**: `boolean` &nbsp; **Default**: `false`
+
+Disables authentication for the application. Typically set to `true` for single-user on-premises deployments.
+
+#### `MAX_NUM_OF_IMAGES`
+
+**Type**: `integer` &nbsp; **Default**: `100000000`
+
+Maximum number of images allowed per dataset.
+
+#### `CLEAN_THRESHOLD`
+
+**Type**: `float` &nbsp; **Default**: `-1`
+
+Similarity threshold for near-duplicate detection. Images with similarity above this threshold are flagged as near-duplicates. Set to `-1` to use the automatic threshold.
+
+***
+
+## Environment File (`.env`)
+
+The `.env` file is located at the root of the Visual Layer installation directory. It is read by Docker Compose when starting the services, and controls variables such as hardware profile, image versions, and deployment options.
+
+A typical `.env` file looks like this:
+
+```bash
+REPO=visuallayer
+IMAGE_PREFIX=onprem-
+VL_VERSION=latest
+VL_MODEL_VERSION=7.0
+PG_VERSION=16
+VL_PG_VERSION=latest
+HARDWARE=cpu
+HOST_OS=Linux
+MODEL_PACK_FROM_IMAGE=false
+```
+
+### Key `.env` Variables
+
+| Variable | Description | Example Values |
+|----------|-------------|----------------|
+| `HARDWARE` | Hardware profile for the deployment | `cpu`, `gpu` |
+| `VL_VERSION` | Visual Layer application version | `latest`, `2.33.3-rc7` |
+| `VL_MODEL_VERSION` | Version of bundled ML models | `7.0` |
+| `HOST_OS` | Host operating system | `Linux`, `Darwin` |
+| `MODEL_PACK_FROM_IMAGE` | Load models from Docker image instead of downloading | `true`, `false` |
+
+You can also add additional environment variables to the `.env` file to override any `config.json` setting. Environment variables take precedence over JSON configuration. For example, to set the log level via `.env`:
+
+```bash
+LOG_LEVEL=10
+```
+
+<Note>
+After modifying `.env`, restart the services for changes to take effect:
+
+```bash
+./stop.sh && ./start.sh
+```
+</Note>
+
+***
+
+## Environment Variable Overrides
+
+Any setting from `config.json` can also be set as an environment variable, either in the `.env` file or exported in the shell before starting Visual Layer. Environment variables always take the highest precedence.
+
+```bash
+export LOG_LEVEL='10'
+export SERVE_ORIGINAL_VIDEO=true
+```
+
+***
+
+## Individual Settings Reference
+
+### `LOG_LEVEL`
 
  **Description**: Controls how verbose the logging system is. Useful for debugging or reducing noise in production.
 
- **Accepted Values**: 
+ **Accepted Values**:
 
 `DEBUG`
 
@@ -29,7 +219,7 @@ At DEBUG, additional internal processing messages will be logged, including more
 
 ***
 
-`SWAP_RGB_CHANNELS_FOR_TIFF_HEIC`
+### `SWAP_RGB_CHANNELS_FOR_TIFF_HEIC`
 
  **Description**: Corrects color rendering issues that can occur in certain TIFF and HEIC image formats, where red and blue channels may appear reversed.
 
@@ -37,6 +227,6 @@ At DEBUG, additional internal processing messages will be logged, including more
 
 Example:
 
-```c bash
+```bash
 export SWAP_RGB_CHANNELS_FOR_TIFF_HEIC=true
 ```
