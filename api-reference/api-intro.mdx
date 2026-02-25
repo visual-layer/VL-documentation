@@ -179,23 +179,4 @@ curl -X DELETE \
 
 ## Error Handling
 
-The API uses standard HTTP status codes. Error responses include a `detail` field with a description of what went wrong.
-
-| Code | Meaning |
-|------|---------|
-| **200** | Success. |
-| **400** | Bad Request — check your request parameters. |
-| **401** | Unauthorized — check your JWT token. |
-| **403** | Forbidden — insufficient permissions or feature disabled. |
-| **404** | Not Found — resource does not exist or you do not have access. |
-| **409** | Conflict — resource state prevents the operation (for example, dataset not in `READY` status). |
-| **422** | Unprocessable Entity — invalid parameter format or value. |
-| **500** | Internal Server Error — contact support if this persists. |
-
-Example error response:
-
-```json
-{
-  "detail": "Dataset ad48d250-1232-11f1-bfca-fa39f6ed1f22 has no embedding_config — index the dataset first."
-}
-```
+All API errors return a JSON body with a `detail` field. See [Error Handling](/api-reference/errors) for the full HTTP code reference, error response format, and Python error handling patterns.

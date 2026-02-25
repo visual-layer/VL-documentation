@@ -8,7 +8,7 @@ description: Add new images or videos to an existing dataset using the Add Media
 </Card>
 
 <Note>
-The `status` field is being retired. Use `status_new` for all status checks and workflow logic. In a future update, `status_new` will be renamed to `status`.
+Use `status_new` for all status checks. The `status` field is being retired. See [Retrieve Dataset Status](/api-reference/retrieve-dataset-status).
 </Note>
 
 ---
@@ -268,6 +268,8 @@ print(f"Final status: {status_new}")
 ---
 
 ## Response Codes
+
+See [Error Handling](/api-reference/errors) for the error response format and Python handling patterns.
 
 ### Add Media (`POST /api/v1/dataset/{dataset_id}/add_media`)
 

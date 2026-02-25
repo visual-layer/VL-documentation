@@ -161,7 +161,8 @@
                         "group": "API Getting Started",
                         "pages": [
                             "api-reference/api-intro",
-                            "api-reference/authentication"
+                            "api-reference/authentication",
+                            "api-reference/errors"
                         ]
                     },
                     {

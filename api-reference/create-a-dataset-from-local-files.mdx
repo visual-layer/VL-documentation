@@ -8,7 +8,7 @@ description: Upload images or videos from your local machine to create a new Vis
 </Card>
 
 <Note>
-The `status` field is being retired. Use `status_new` for all status checks and workflow logic. In a future update, `status_new` will be renamed to `status`.
+Use `status_new` for all status checks. The `status` field is being retired. See [Retrieve Dataset Status](/api-reference/retrieve-dataset-status).
 </Note>
 
 ## Prerequisites
@@ -255,6 +255,8 @@ print(f"Dataset ready: {dataset_id}")
 ---
 
 ## Response Codes
+
+See [Error Handling](/api-reference/errors) for the error response format and Python handling patterns.
 
 | HTTP Code | Meaning |
 |-----------|---------|

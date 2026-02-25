@@ -1,0 +1,64 @@
+---
+title: Error Handling
+description: HTTP status codes, error response format, and Python error handling patterns for the Visual Layer API.
+sidebarTitle: Error Handling
+---
+
+The Visual Layer API uses standard HTTP status codes. All error responses include a `detail` field describing what went wrong.
+
+## Error Response Format
+
+Every error returns a JSON body with a single `detail` field:
+
+```json
+{
+  "detail": "Dataset ad48d250-1232-11f1-bfca-fa39f6ed1f22 has no embedding_config — index the dataset first."
+}
+```
+
+---
+
+## HTTP Status Codes
+
+| Code | Meaning |
+|------|---------|
+| **200** | Success. |
+| **202** | Accepted — request received, processing started asynchronously. |
+| **400** | Bad Request — check your request parameters. |
+| **401** | Unauthorized — your JWT token is missing, invalid, or expired. |
+| **403** | Forbidden — insufficient permissions or feature disabled. |
+| **404** | Not Found — resource does not exist or you do not have access. |
+| **409** | Conflict — resource state prevents the operation (for example, dataset not in `READY` status). |
+| **422** | Unprocessable Entity — invalid parameter format or value. |
+| **500** | Internal Server Error — contact support if this persists. |
+
+---
+
+## Python Error Handling
+
+All code examples in this documentation call `raise_for_status()`, which raises an exception on any 4xx or 5xx response. Use the following pattern to catch errors and read the `detail` message:
+
+```python
+import requests
+
+try:
+    resp = requests.post(url, headers=headers, data=payload)
+    resp.raise_for_status()
+except requests.exceptions.HTTPError as e:
+    detail = e.response.json().get("detail", e.response.text)
+    print(f"Error {e.response.status_code}: {detail}")
+    raise
+```
+
+---
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Authentication" icon="file-code-2" href="/api-reference/authentication">
+    Generate the JWT token required for all API calls.
+  </Card>
+  <Card title="Retrieve Dataset Status" icon="circle-check" href="/api-reference/retrieve-dataset-status">
+    Check dataset status before running operations.
+  </Card>
+</CardGroup>
