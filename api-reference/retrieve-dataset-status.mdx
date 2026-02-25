@@ -1,68 +1,170 @@
 ---
 title: Retrieve Dataset Status
-description: Use this endpoint to check the processing status and metadata for a specific dataset in Visual Layer.
+description: Check the processing status and metadata for a dataset using its unique dataset ID.
 ---
 
-<Card title="How This Helps" icon="circle">
-  This API call allows you to programmatically check the current status of a dataset—including readiness, progress, and metadata—using its unique `dataset_id`.
+<Card title="How This Helps" icon="hand-platter">
+  Poll this endpoint to determine when a dataset is ready for search, enrichment, or export operations. Both the dataset metadata and the current processing status are returned in a single call.
 </Card>
 
+<Note>
+The `status` field is being retired. Use `status_new` for all status checks and workflow logic. In a future update, `status_new` will be renamed to `status`.
+</Note>
+
+## Prerequisites
+
+- A valid JWT token. See [Authentication](/api-reference/authentication).
+- A dataset ID (visible in the browser URL: `https://app.visual-layer.com/dataset/<dataset_id>/data`).
+
 ---
 
-## API Request
+## Get Dataset Status
 
-To retrieve the status of a dataset, send a `GET` request to the following endpoint:
+Retrieve current status and metadata for a dataset.
 
 ```http
 GET /api/v1/dataset/{dataset_id}
-Headers: Authorization: Bearer <jwt>
+Authorization: Bearer <jwt>
+```
+
+### Example
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>"
+```
+
+### Response
+
+```json
+{
+  "id": "ad48d250-1232-11f1-bfca-fa39f6ed1f22",
+  "display_name": "My Dataset",
+  "description": "",
+  "source_type": "BUCKET",
+  "owned_by": "VL",
+  "created_at": "2025-04-24T07:44:46.136915",
+  "status_new": "READY",
+  "progress": 100,
+  "n_images": 26,
+  "n_videos": 0,
+  "n_objects": 0,
+  "fatal_error_msg": null,
+  "source_dataset_id": null
+}
+```
+
+### Key Response Fields
+
+| Field | Description |
+|-------|-------------|
+| `id` | The dataset UUID. |
+| `display_name` | The human-readable dataset name. |
+| `status_new` | The current dataset status. Use this field for all workflow logic. |
+| `progress` | Processing progress percentage (0–100). |
+| `n_images` | Total number of images in the dataset. |
+| `n_videos` | Total number of videos in the dataset. |
+| `n_objects` | Total number of detected objects (if object detection enrichment was applied). |
+| `fatal_error_msg` | Error message if processing failed; otherwise `null`. |
+
+---
+
+## Dataset Status Values
+
+| `status_new` | Description |
+|--------------|-------------|
+| `DRAFT` | Dataset is being set up. Files may be uploading but processing has not started. |
+| `INDEXING` | Dataset is being indexed for search and retrieval. |
+| `READ ONLY` | Dataset is being updated — add media, enrichment, or reindex in progress. Browsing still works. |
+| `PARTIAL INDEX` | New media was added but the dataset has not yet been re-clustered. Trigger a reindex to reach `READY`. |
+| `READY` | Dataset is fully processed and available for search, enrichment, and export. |
+| `ERROR` | Processing failed. Check `fatal_error_msg` for details. |
+
+<Tip>
+Use `status_new == "READY"` as your condition before starting enrichment, search, or export operations. `status_new == "PARTIAL INDEX"` is safe for browsing but the dataset has not yet been re-clustered.
+</Tip>
+
+---
+
+## Get Dataset Creation Status
+
+For datasets created via the ingestion workflow (local file uploads), use this endpoint to track creation progress:
+
+```http
+GET /api/v1/datasets/{dataset_id}/creation-status
+Authorization: Bearer <jwt>
+```
+
+### Example
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/datasets/<dataset_id>/creation-status"
+```
+
+### Response
+
+```json
+{
+  "status": "READY",
+  "progress": 100
+}
 ```
 
 ---
 
-## Example Request
+## Python Polling Example
 
-```bash
-curl -H "Authorization: Bearer <jwt>" https://app.visual-layer.com/api/v1/dataset/{dataset_id}
+The following example polls until a dataset reaches `READY` status.
+
+```python
+import requests
+import time
+
+VL_BASE_URL = "https://app.visual-layer.com"
+JWT_TOKEN = "<your-jwt-token>"
+DATASET_ID = "<your-dataset-id>"
+
+headers = {"Authorization": f"Bearer {JWT_TOKEN}"}
+
+while True:
+    resp = requests.get(
+        f"{VL_BASE_URL}/api/v1/dataset/{DATASET_ID}",
+        headers=headers,
+    )
+    resp.raise_for_status()
+    data = resp.json()
+    status = data.get("status_new")
+    progress = data.get("progress", 0)
+    print(f"  Status: {status} ({progress}%)")
+    if status in ("READY", "PARTIAL INDEX", "ERROR"):
+        break
+    time.sleep(15)
+
+print(f"Final status: {status}")
 ```
 
-## Example Output
+---
 
-```json
-{
-    "id": "DATASET_ID",
-    "source_dataset_id": null,
-    "owned_by": "VL",
-    "display_name": "dataset1",
-    "description": "",
-    "source_type": "BUCKET",
-    "created_at": "2025-04-24T07:44:46.136915",
-    "filename": null,
-    "sample": null,
-    "status": "READY",
-    "fatal_error_msg": null,
-    "progress": 100,
-}
-```
+## Response Codes
 
-## Dataset Status Values
+See [Error Handling](/api-reference/errors) for the error response format and Python handling patterns.
 
-The `status` field in the response can have the following values:
+| HTTP Code | Meaning |
+|-----------|---------|
+| **200** | Dataset metadata returned successfully. |
+| **401** | Unauthorized — check your JWT token. |
+| **404** | Dataset not found, or the authenticated user does not have access to it. |
 
-| Status | Description |
-|--------|-------------|
-| `NEW` | Dataset has been created but not yet started processing |
-| `PRE_PROCESSING` | Dataset is being prepared for processing |
-| `INITIALIZING` | Dataset processing is being initialized |
-| `UPLOADING` | Data is being uploaded to the system |
-| `SAVING` | Dataset data is being saved |
-| `INDEXING` | Dataset is being indexed for search and retrieval |
-| `READY` | Dataset is fully processed and ready for use |
-| `FATAL_ERROR` | An error occurred during processing that prevents completion |
-| `ENRICHING` | Dataset is being enriched with additional metadata or processing |
+---
 
-<Tip>
-Use this endpoint to track dataset readiness before continuing with enrichment, filtering, or export operations.
-</Tip>
+## Related Resources
 
-📌 For detailed reference, visit the [Dataset Status API](https://app.visual-layer.com/api/v1/docs#/datasets/get_dataset_api_v1_dataset__dataset_id__get).
+<CardGroup cols={2}>
+  <Card title="Add Media to an Existing Dataset" icon="database" href="/api-reference/add-media-to-existing-dataset">
+    Add new images or videos and monitor the resulting status transitions.
+  </Card>
+  <Card title="Authentication" icon="file-code-2" href="/api-reference/authentication">
+    Generate the JWT token required for all API calls.
+  </Card>
+</CardGroup>

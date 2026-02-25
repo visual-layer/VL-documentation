@@ -1,0 +1,255 @@
+---
+title: Enrichment
+description: Apply AI models to a dataset to generate captions, detect objects, and build embeddings for semantic search.
+---
+
+<Card title="How This Helps" icon="hand-platter">
+  Enrichment runs AI models against your dataset media to unlock advanced capabilities — caption-based search, object detection, face detection, and semantic similarity. Each enrichment operation produces a new dataset copy with the model outputs applied, leaving the original unchanged.
+</Card>
+
+<Note>
+Use `status_new` for all status checks. The `status` field is being retired. See [Retrieve Dataset Status](/api-reference/retrieve-dataset-status).
+</Note>
+
+## Prerequisites
+
+- A Visual Layer Cloud account with API access.
+- A valid JWT token. See [Authentication](/api-reference/authentication).
+- A dataset in `READY` status with its ID (visible in the browser URL when viewing a dataset: `https://app.visual-layer.com/dataset/<dataset_id>/data`).
+
+---
+
+## List Available Models
+
+Retrieve the models available for enrichment on a dataset.
+
+```http
+GET /api/v1/enrichment/{dataset_id}/list_models
+Authorization: Bearer <jwt>
+```
+
+### Example
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/enrichment/<dataset_id>/list_models"
+```
+
+### Response
+
+Returns an array of model objects. Each object includes:
+
+| Field | Description |
+|-------|-------------|
+| `id` | The model ID to use when starting enrichment. |
+| `name` | The display name of the model. |
+| `type` | The enrichment type (for example, `CAPTION_IMAGES`, `OBJECT_DETECTION`). |
+| `status` | `Active` or `Coming Soon`. Only `Active` models can be applied. |
+| `vendor` | The model provider (`VL` or `Nvidia`). |
+| `description` | What the model does. |
+| `dependencies` | Other enrichment types that must be applied first, or `null`. |
+
+```json
+[
+  {
+    "id": "vl_image_captioner_v00",
+    "name": "VL-Image-Captioner",
+    "type": "CAPTION_IMAGES",
+    "status": "Active",
+    "vendor": "VL",
+    "description": "Image captioning generates descriptive text that summarizes the content and context of the entire image input.",
+    "dependencies": null
+  },
+  {
+    "id": "vl_object_detector_v00",
+    "name": "VL-Object-Detector",
+    "type": "OBJECT_DETECTION",
+    "status": "Active",
+    "vendor": "VL",
+    "description": "Identifies and locates objects within images or videos by drawing bounding boxes and classifying each detected object.",
+    "dependencies": null
+  },
+  {
+    "id": "vl_object_captioner_v00",
+    "name": "VL-Object-Captioner",
+    "type": "CAPTION_OBJECTS",
+    "status": "Active",
+    "vendor": "VL",
+    "description": "Generates descriptive text summarizing detected objects and their interactions.",
+    "dependencies": ["OBJECT_DETECTION"]
+  }
+]
+```
+
+<Tip>
+Check the `dependencies` field before selecting models. `VL-Object-Captioner`, for example, requires `OBJECT_DETECTION` to be applied first.
+</Tip>
+
+---
+
+## Check Applied Enrichments
+
+Retrieve the enrichment configuration currently applied to a dataset.
+
+```http
+GET /api/v1/enrichment/{dataset_id}/context
+Authorization: Bearer <jwt>
+```
+
+### Example
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/enrichment/<dataset_id>/context"
+```
+
+### Response
+
+```json
+{
+  "enrichment_context_id": "3666cf3e-af2b-4c6b-b617-c796520de8fd",
+  "status": "NEW",
+  "dataset_enrichment_models": {
+    "enrichment_models": {}
+  }
+}
+```
+
+A `status` of `NEW` means no enrichments have been applied yet. An applied dataset shows the enrichment model IDs in `dataset_enrichment_models.enrichment_models`.
+
+---
+
+## Start Enrichment
+
+Apply one or more AI models to a dataset. Enrichment creates a **new dataset copy** with the model outputs applied — the original dataset is not modified.
+
+```http
+POST /api/v1/dataset/{dataset_id}/enrich_dataset
+Authorization: Bearer <jwt>
+Content-Type: application/json
+```
+
+### Request Body
+
+```json
+{
+  "enrichment_models": {
+    "<enrichment_type>": "<model_id>"
+  }
+}
+```
+
+Use the `id` values from `list_models` as the model IDs, and the corresponding `type` values as the keys.
+
+### Example
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "enrichment_models": {
+      "CAPTION_IMAGES": "vl_image_captioner_v00",
+      "OBJECT_DETECTION": "vl_object_detector_v00"
+    }
+  }' \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/enrich_dataset"
+```
+
+### Response
+
+```json
+{
+  "dataset_id": "f7a3c120-9913-11f1-b4ca-de29f6ee0a33"
+}
+```
+
+The response returns the `dataset_id` of the **new enriched copy**. Poll this new dataset's status endpoint until `status_new` reaches `READY` before running search or export operations on it.
+
+<Note>
+The source dataset enters `READ ONLY` status while enrichment runs. The enriched copy is a separate dataset — it has its own `dataset_id` and appears as a new entry in your dataset inventory.
+</Note>
+
+---
+
+## Python Example
+
+```python
+import requests
+import time
+
+VL_BASE_URL = "https://app.visual-layer.com"
+JWT_TOKEN = "<your-jwt-token>"
+DATASET_ID = "<your-dataset-id>"
+
+headers = {"Authorization": f"Bearer {JWT_TOKEN}"}
+
+# Step 1: List available models
+resp = requests.get(
+    f"{VL_BASE_URL}/api/v1/enrichment/{DATASET_ID}/list_models",
+    headers=headers,
+)
+resp.raise_for_status()
+models = resp.json()
+active_models = [m for m in models if m["status"] == "Active"]
+print(f"Available models: {[m['name'] for m in active_models]}")
+
+# Step 2: Start enrichment
+resp = requests.post(
+    f"{VL_BASE_URL}/api/v1/dataset/{DATASET_ID}/enrich_dataset",
+    headers=headers,
+    json={
+        "enrichment_models": {
+            "CAPTION_IMAGES": "vl_image_captioner_v00",
+            "OBJECT_DETECTION": "vl_object_detector_v00",
+        }
+    },
+)
+resp.raise_for_status()
+enriched_dataset_id = resp.json()["dataset_id"]
+print(f"Enriched dataset ID: {enriched_dataset_id}")
+
+# Step 3: Poll enriched dataset until READY
+while True:
+    resp = requests.get(
+        f"{VL_BASE_URL}/api/v1/dataset/{enriched_dataset_id}",
+        headers=headers,
+    )
+    resp.raise_for_status()
+    data = resp.json()
+    status = data.get("status_new")
+    progress = data.get("progress", 0)
+    print(f"  Status: {status} ({progress}%)")
+    if status in ("READY", "ERROR"):
+        break
+    time.sleep(30)
+
+print(f"Enriched dataset ready: {enriched_dataset_id}")
+```
+
+---
+
+## Response Codes
+
+See [Error Handling](/api-reference/errors) for the error response format and Python handling patterns.
+
+| HTTP Code | Meaning |
+|-----------|---------|
+| **200** | Request successful. |
+| **401** | Unauthorized — check your JWT token. |
+| **404** | Dataset not found or you do not have access. |
+| **409** | Conflict — dataset is not in a state that allows enrichment. |
+| **500** | Internal Server Error — contact support if this persists. |
+
+---
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Retrieve Dataset Status" icon="circle-check" href="/api-reference/retrieve-dataset-status">
+    Poll the enriched dataset until processing completes.
+  </Card>
+  <Card title="Semantic Search" icon="scan-text" href="/api-reference/semantic-search">
+    Use caption and semantic embeddings generated by enrichment for search.
+  </Card>
+</CardGroup>

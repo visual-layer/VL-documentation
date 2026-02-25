@@ -128,14 +128,20 @@
                         "pages": [
                             "docs/advanced-dataset-management/importing-annotations",
                             "docs/advanced-features/tag-iteams",
-                            "docs/advanced-features/task-manager",
+                            "docs/advanced-features/task-manager"
+                        ]
+                    },
+                    {
+                        "group": "Integrations",
+                        "pages": [
                             {
                                 "group": "Data Sources",
                                 "pages": [
                                     "docs/Integrations/Amazon-s3",
                                     "docs/Integrations/google-cloud-storage"
                                 ]
-                            }
+                            },
+                            "api-reference/running-visual-layer-within-an-iframe"
                         ]
                     },
                     {
@@ -155,36 +161,48 @@
                         "group": "API Getting Started",
                         "pages": [
                             "api-reference/api-intro",
-                            "api-reference/authentication"
+                            "api-reference/authentication",
+                            "api-reference/errors"
                         ]
                     },
                     {
-                        "group": "API Reference",
+                        "group": "Create a Dataset",
                         "pages": [
                             "api-reference/create-a-dataset-from-a-public-s3-bucket",
-                            "api-reference/create-a-dataset-from-a-local-folder-for-on-prem-installation",
+                            "api-reference/create-a-dataset-from-local-files",
+                            "api-reference/create-a-dataset-from-a-local-folder-for-on-prem-installation"
+                        ]
+                    },
+                    {
+                        "group": "Manage Datasets",
+                        "pages": [
                             "api-reference/retrieve-dataset-status",
                             "api-reference/add-media-to-existing-dataset",
                             "api-reference/share-a-dataset-with-another-user",
-                            "api-reference/visual-search",
-                            "api-reference/semantic-search",
-                            "api-reference/caption-search"
+                            "api-reference/enrichment",
+                            "api-reference/saved-views"
                         ]
                     },
                     {
-                        "group": "Recipes and Flows",
+                        "group": "Search",
+                        "pages": [
+                            "api-reference/visual-search",
+                            "api-reference/semantic-search"
+                        ]
+                    },
+                    {
+                        "group": "Guides",
                         "pages": [
                             "api-reference/exporting-a-dataset-via-curl-from-visual-layer",
                             "api-reference/duplicate-retrieval-experimental-feature",
-                            "api-reference/running-visual-layer-within-an-iframe",
-                            "docs/self-hosting/useful-scripts"
+                            "docs/advanced-features/custom-metadata",
+                            "docs/advanced-features/dicom-converter"
                         ]
                     },
                     {
-                        "group": "API Guides",
+                        "group": "Useful Scripts",
                         "pages": [
-                            "docs/advanced-features/custom-metadata",
-                            "docs/advanced-features/dicom-converter"
+                            "docs/self-hosting/useful-scripts"
                         ]
                     }
                 ]
@@ -312,7 +330,7 @@
                     },
                     {
                         "label": "FAQs",
-                        "href": "/docs/Help-Support/faqs"
+                        "href": "https://docs.visual-layer.com/docs/Help-Support/faqs"
                     }
                 ]
             },

@@ -1,104 +1,253 @@
 ---
-title: "Visual Search"
-slug: "️visual-search"
+title: Visual Search
+description: Search for visually similar images by uploading a query image or referencing an existing media item in your dataset.
 ---
-To search by external query image, upload external the image and make it  
-available as a query image by issuing the following call:
 
-## Upload an Image for Search
+<Card title="How Visual Search Works" icon="scan-search">
+  Visual Search finds images that look like your query image. Upload any image—even one not in your dataset—and Visual Layer returns the most visually similar media, ranked by similarity score.
+</Card>
+
+## Prerequisites
+
+- A dataset in `READY` status with at least one indexed embedding model.
+- A valid JWT token. See [Authentication](/api-reference/authentication).
+- A dataset ID (visible in the browser URL when viewing a dataset: `https://app.visual-layer.com/dataset/<dataset_id>/data`).
+
+<Note>
+Visual search requires the dataset to have been indexed with a visual embedding model. Datasets created through the standard upload workflow include this automatically.
+</Note>
+
+## How It Works
+
+Visual search is a two-step process.
+
+1. Upload your query image to register it as a search anchor — the API returns an `anchor_media_id`.
+2. Pass that `anchor_media_id` to the Explore endpoint to retrieve ranked results.
+
+---
+
+## Step 1: Upload a Query Image
+
+Upload an image to use as the search reference.
 
 ```http
-POST /api/v1/dataset/{dataset-id}/search-image-similarity?entity_type=IMAGES&bounding_box=X,Y,WIDTH,HEIGHT
-Headers: Authorization: Bearer <jwt>
+POST /api/v1/dataset/{dataset_id}/search-image-similarity
+Authorization: Bearer <jwt>
+Content-Type: multipart/form-data
 ```
 
-### Request Parameters:
+### Parameters
 
-- `file`: Query image file
-- `bounding_box` (optional): X, Y, Width, Height
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `dataset_id` | string (UUID) | Yes | The dataset to search within. |
+| `entity_type` | string | Yes | `IMAGES` or `OBJECTS`. |
+| `threshold` | integer | No | Clustering threshold (0–4). Use `0` for the finest granularity. |
+| `file` | file | Yes | The query image file (multipart form field). |
+| `bounding_box` | string (JSON) | No | Focus search on a sub-region: `{"x":0.1,"y":0.2,"width":0.5,"height":0.6}` — values are fractions of image dimensions (0.0–1.0). |
 
-## Visual Layer API - Dataset Exploration
+### Example
 
-After uploading the image you can call exploration endpoint with anchor media id:
-
-`GET /api/v1/explore/{dataset-id}` 
-
-```http
-GET /api/v1/explore/{dataset-id}?threshold=0&anchor_type={anchor_type}&entity_type={ENTITY_TYPE}&page_number={PAGE_NUMBER}&anchor_media_id={anchor_media_id}
-Headers: Authorization: Bearer <jwt>
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -F "file=@/path/to/query_image.jpg" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/search-image-similarity?threshold=0&entity_type=IMAGES"
 ```
 
-### Query Parameters
-
-- `entity_type` IMAGES or OBJECTS
-- `anchor_type` MEDIA or UPLOAD for when you uploaded the image using the upload endpoint
-- `anchor_media_id` id of the image you want to use as anchor, returned from the upload for search endpoint
-- `threshold` similarity threshold(0-4) the search results are clustered according to this value 
-- `PAGE_NUMBER`: Which page of results to view (e.g., 0 for start)
-
-### relevance_score
-
-Each result item includes a `relevance_score`, which measures similarity to the anchor image.
-
-- **Scale:**  
-  `0` = Most similar  
-  `2` = Least similar  
-- This score is based on cosine distance and is available per media item in the response.
-
-## Sample Response
+### Response
 
 ```json
-  {
-    "clusters": [
-        {
-            "cluster_id": "bffbc083-f5a6-426d-a9cf-c0b8a3ed232a",
-            "type": "IMAGES",
-            "n_images": 7,
-            "n_objects": -1,
-            "n_videos": -1,
-            "n_frames": -1,
-            "size_display_value": "0B",
-            "similarity_threshold": "1",
-            "previews": [
-                {
-                    "type": "IMAGE",
-                    "media_id": "8c...e4c",
-                    "media_uri": "/.../e4c.jpg",
-                    "media_thumb_uri": "/.../e4c.jpg.webp",
-                    "caption": "The image presents..",
-                    "image_id": "8c...e4c",
-                    "image_uri": "/..3e4c.jpg",
-                    "bounding_box": null,
-                    "file_name": "5049.tif",
-                    "original_uri": "visual-layer/datasets/huji-geo/5049.tif",
-                    "video_uri": "",
-                    "frame_timestamp": null,
-                    "labels": null,
-                    "user_tags": null,
-                    "relevance_score": 0.1304212444996986,
-                    "relevance_score_type": "cosine_distance"
-                }
-      ],
-    "metadata": {
-        "used_duckdb": false
-    }
+{
+  "anchor_media_id": "f9d612d4-1234-11f1-bfca-fa39f6ed1f22",
+  "anchor_type": "UPLOAD"
 }
 ```
 
+Save both `anchor_media_id` and `anchor_type` — you need them in Step 2.
 
-### Example:
+---
 
-```sh
-curl -H "Authorization: Bearer <jwt>" https://app.visual-layer.com/api/v1/explore/{dataset-id}?threshold=0&entity_type=IMAGES&page_number=0&anchor_media_id={anchor_media_id}
+## Step 2: Retrieve Results
+
+Pass the anchor values to the Explore endpoint to get ranked results.
+
+```http
+GET /api/v1/explore/{dataset_id}
+Authorization: Bearer <jwt>
 ```
 
+### Parameters
 
-## Notes:
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `anchor_media_id` | string (UUID) | Yes | The `anchor_media_id` returned in Step 1. |
+| `anchor_type` | string | Yes | `UPLOAD` when using a query image you uploaded; `MEDIA` when referencing an existing image in the dataset. |
+| `entity_type` | string | Yes | `IMAGES` or `OBJECTS`. |
+| `threshold` | integer | No | Clustering threshold (0–4). Must match the value used in Step 1. |
+| `page_number` | integer | No | Page index for pagination (0-based). Results are paginated at 100 clusters per page. |
 
-- Results are paginated with a fixed page size of 100 clusters per page
-- Higher threshold values (0-4 depending on the dataset granularity options) create more granular clusters with stricter similarity requirements
-- When using anchor-based similarity search, results are ordered by similarity to the anchor
-- The entity_type parameter controls whether to return image clusters, object clusters, or both
-- For similarity search with an uploaded image, first use the /search-image-similarity endpoint
+### Example
 
-More detailed example is [here](https://github.com/visual-layer/documentation/blob/main/notebooks/Image%20search%20via%20api/Visual%20Layer%20api%20example.ipynb)
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/explore/<dataset_id>?threshold=0&entity_type=IMAGES&page_number=0&anchor_media_id=f9d612d4-1234-11f1-bfca-fa39f6ed1f22&anchor_type=UPLOAD"
+```
+
+### Response
+
+```json
+{
+  "clusters": [
+    {
+      "cluster_id": "39df7adc-16b7-406e-ac34-e4a24476bbf6",
+      "type": "IMAGES",
+      "n_images": 7,
+      "n_objects": 0,
+      "n_videos": 0,
+      "similarity_threshold": "0",
+      "relevance_score": 0.13,
+      "relevance_score_type": "cosine_distance",
+      "previews": [
+        {
+          "type": "IMAGE",
+          "media_id": "300dad2c-1234-11f1-8483-5a879df30de4",
+          "media_uri": "https://cdn.example.com/.../image.jpg",
+          "media_thumb_uri": "https://cdn.example.com/.../thumb.webp",
+          "caption": null,
+          "file_name": "00046.jpg",
+          "bounding_box": null,
+          "relevance_score": 0.13,
+          "relevance_score_type": "cosine_distance",
+          "width": 786,
+          "height": 492
+        }
+      ],
+      "labels": null,
+      "user_tags": null,
+      "captions": null
+    }
+  ],
+  "metadata": {
+    "used_duckdb": true
+  }
+}
+```
+
+### Understanding `relevance_score`
+
+When `relevance_score_type` is `cosine_distance`, a **lower score means more similar** to your query image.
+
+- `0.0` — identical
+- `~0.1–0.3` — highly similar
+- `~0.5+` — loosely related
+
+---
+
+## Search by Region (Bounding Box)
+
+Focus the search on a specific area of the query image using `bounding_box`. Values are fractions of the image dimensions (0.0–1.0).
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -F "file=@/path/to/image.jpg" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/search-image-similarity?threshold=0&entity_type=IMAGES&bounding_box=%7B%22x%22%3A0.1%2C%22y%22%3A0.2%2C%22width%22%3A0.5%2C%22height%22%3A0.6%7D"
+```
+
+---
+
+## Search by Existing Media ID
+
+To find images similar to one already in your dataset, skip Step 1 and use `anchor_type=MEDIA` directly. The `media_id` is returned in the `media_id` field of any Explore endpoint response — for example, from a previous visual or semantic search result.
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/explore/<dataset_id>?threshold=0&entity_type=IMAGES&page_number=0&anchor_media_id=<media_id>&anchor_type=MEDIA"
+```
+
+---
+
+## Python Example
+
+The following example runs a full visual search workflow.
+
+```python
+import requests
+import time
+
+VL_BASE_URL = "https://app.visual-layer.com"
+JWT_TOKEN = "<your-jwt-token>"
+DATASET_ID = "<your-dataset-id>"
+QUERY_IMAGE_PATH = "/path/to/query_image.jpg"
+
+headers = {"Authorization": f"Bearer {JWT_TOKEN}"}
+
+# Step 1: Upload query image
+with open(QUERY_IMAGE_PATH, "rb") as f:
+    resp = requests.post(
+        f"{VL_BASE_URL}/api/v1/dataset/{DATASET_ID}/search-image-similarity",
+        headers=headers,
+        params={"threshold": 0, "entity_type": "IMAGES"},
+        files={"file": f},
+    )
+resp.raise_for_status()
+anchor = resp.json()
+anchor_media_id = anchor["anchor_media_id"]
+anchor_type = anchor["anchor_type"]
+
+# Step 2: Fetch results
+resp = requests.get(
+    f"{VL_BASE_URL}/api/v1/explore/{DATASET_ID}",
+    headers=headers,
+    params={
+        "threshold": 0,
+        "entity_type": "IMAGES",
+        "page_number": 0,
+        "anchor_media_id": anchor_media_id,
+        "anchor_type": anchor_type,
+    },
+)
+resp.raise_for_status()
+results = resp.json()
+
+clusters = results.get("clusters", [])
+print(f"Found {len(clusters)} similar clusters")
+
+for cluster in clusters:
+    score = cluster.get("relevance_score")
+    n = cluster.get("n_images")
+    cid = cluster.get("cluster_id")
+    print(f"  Cluster {cid[:8]}... — {n} images, similarity score: {score:.3f}")
+    for preview in cluster.get("previews", [])[:3]:
+        print(f"    {preview['file_name']} ({preview['relevance_score']:.3f})")
+```
+
+---
+
+## Response Codes
+
+See [Error Handling](/api-reference/errors) for the error response format and Python handling patterns.
+
+| HTTP Code | Status | Description |
+|-----------|--------|-------------|
+| **200** | OK | Upload successful, anchor returned. |
+| **202** | Accepted | Request accepted for processing. |
+| **400** | Bad Request | Missing or invalid parameters. Check `entity_type` and that a file was provided. |
+| **401** | Unauthorized | Invalid or expired JWT token. |
+| **404** | Not Found | Dataset not found or not accessible with your credentials. |
+| **409** | Conflict | Dataset status is not `READY`. |
+| **500** | Internal Server Error | Server-side error. |
+
+---
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Semantic Search" icon="scan-text" href="/api-reference/semantic-search">
+    Search using natural language text queries.
+  </Card>
+  <Card title="Explore API" icon="search" href="/api-reference/api-intro">
+    Browse and filter all dataset media.
+  </Card>
+</CardGroup>
