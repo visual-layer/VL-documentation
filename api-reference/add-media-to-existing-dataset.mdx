@@ -327,13 +327,15 @@ READY ──[add_media]──> READ ONLY ──> PARTIAL INDEX
                                          READY
 ```
 
-| Phase | `status_new` | What's Happening |
-|-------|--------------|------------------|
-| Before | `READY` | Dataset is idle, ready for operations. |
-| Processing | `READ ONLY` | New media is being processed. Browsing still works. |
-| Awaiting Reindex | `PARTIAL INDEX` | New media is visible but the dataset has not been re-clustered. |
-| Reindexing | `READ ONLY` → `INDEXING` | Re-clustering in progress. |
-| Complete | `READY` | All media processed and clustered. |
+| Phase | `status_new` |
+|-------|--------------|
+| Before | `READY` |
+| Processing | `READ ONLY` |
+| Awaiting Reindex | `PARTIAL INDEX` |
+| Reindexing | `READ ONLY` → `INDEXING` |
+| Complete | `READY` |
+
+For a description of each status value, see [Retrieve Dataset Status](/api-reference/retrieve-dataset-status).
 
 <Tip>
 With `auto_reindex=true`, the flow goes directly from `UPDATING` through reindexing back to `READY` without stopping at `PARTIAL INDEX`.
