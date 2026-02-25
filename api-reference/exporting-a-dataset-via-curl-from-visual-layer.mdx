@@ -1,33 +1,51 @@
 ---
-title: Exporting a Dataset via `curl`
-description: Learn how to export datasets from Visual Layer using shell commands—no SDK required.
+title: Exporting a Dataset
+description: Export dataset metadata and media using the Visual Layer API—supports full dataset export and selective export by cluster or media ID.
 ---
 
-<Card title="How This Helps" icon="cloud-arrow-down">
-Export datasets directly using `curl` without needing Python or SDKs. Ideal for automation scripts or CLI-based workflows.
+<Card title="How This Helps" icon="download">
+  Export your dataset's metadata, labels, and media files for use in training pipelines, annotation tools, or downstream analysis. Both full and selective exports are supported.
 </Card>
 
+## Prerequisites
+
+- A dataset in `READY` status.
+- A valid JWT token. See [Authentication](/api-reference/authentication).
+
 ---
 
-## Initiate Export
+## Full Dataset Export
 
-Use a `GET` request to trigger export:
+Export all media and metadata for an entire dataset. This is an asynchronous operation — initiate the export, poll for completion, then download the result.
 
-```bash
-curl -X GET "https://app.visual-layer.com/api/v1/dataset/<DATASET_ID>/export_context_async" \
-  -H "Accept: application/json, text/plain, */*" \
-  -G \
-  --data-urlencode "file_name=export.zip" \
-  --data-urlencode "export_format=json" \
-  --data-urlencode "include_images=false"
+### Step 1: Initiate Export
+
+```http
+GET /api/v1/dataset/{dataset_id}/export_context_async
+Authorization: Bearer <jwt>
 ```
 
-- `<DATASET_ID>`: Your dataset ID  
-- `export_format`: Supported values are `json` or `parquet`  
-- `include_images`: `true` or `false`  
-- `file_name`: Name for the output ZIP  
+### Parameters
 
-### Sample Response
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `file_name` | string | Yes | Name for the output ZIP file. |
+| `export_format` | string | Yes | `json` or `parquet`. |
+| `include_images` | boolean | No | Set to `true` to include image files in the export. Default: `false`. |
+
+### Example
+
+```bash
+curl -G \
+  -H "Authorization: Bearer <jwt>" \
+  -H "Accept: application/json" \
+  --data-urlencode "file_name=export.zip" \
+  --data-urlencode "export_format=json" \
+  --data-urlencode "include_images=false" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/export_context_async"
+```
+
+### Response
 
 ```json
 {
@@ -35,125 +53,190 @@ curl -X GET "https://app.visual-layer.com/api/v1/dataset/<DATASET_ID>/export_con
 }
 ```
 
----
+Save the `id` — you need it to poll export status.
 
-## Poll Export Status
-
-Use the export `id` to monitor progress:
+### Step 2: Poll Export Status
 
 ```bash
-curl -X GET "https://app.visual-layer.com/api/v1/dataset/<DATASET_ID>/export_status?export_task_id=<TASK_ID>" \
-  -H "Accept: application/json, text/plain, */*"
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/export_status?export_task_id=<task_id>"
 ```
 
-Response includes a download URI once `"status": "COMPLETED"`.
+### Status Response
+
+```json
+{
+  "status": "COMPLETED",
+  "download_uri": "https://s3.amazonaws.com/.../export.zip?..."
+}
+```
+
+Poll until `status` is `COMPLETED` or `FAILED`.
+
+### Step 3: Download
+
+```bash
+curl -L "<download_uri>" --output export.zip
+```
+
+Use `-L` to follow S3 redirects.
 
 ---
 
-## Download ZIP
+## Selective Export
 
-When ready, download your dataset:
+Export specific media items or entire clusters using `POST /api/v1/dataset/{dataset_id}/export_entities_async`. This is useful for exporting only the results of a search or filter operation.
+
+```http
+POST /api/v1/dataset/{dataset_id}/export_entities_async
+Authorization: Bearer <jwt>
+Content-Type: application/json
+```
+
+### Query Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `export_format` | string | `json` or `parquet`. |
+| `include_images` | boolean | Include image files in the export. |
+
+### Export by Media IDs
 
 ```bash
-curl -L "<DOWNLOAD_URI>" --output exported_dataset.zip
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "media_selection": [
+      {
+        "type": "media",
+        "payload": {
+          "media_ids": ["9e8da312-d954-4844-afc7-357c458c5b03"]
+        }
+      }
+    ]
+  }' \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/export_entities_async?include_images=true&export_format=json"
 ```
 
-Use the `-L` flag to follow redirects (required for S3 links).
-
----
-
-## Unzip and Explore
-
-Extract the ZIP archive:
+### Export by Cluster
 
 ```bash
-unzip exported_dataset.zip -d exported_dataset
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "media_selection": [
+      {
+        "type": "cluster",
+        "payload": {
+          "cluster_id": "4e0e4d51-0fef-4fe1-a8ec-1a82b6f4880b",
+          "cluster_filters": {
+            "entity_type": "IMAGES"
+          },
+          "exclude_media_ids": []
+        }
+      }
+    ]
+  }' \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/export_entities_async?include_images=true&export_format=json"
 ```
 
-Example folder structure:
-
-```
-exported_dataset/
-├── metadata.parquet
-└── images/
-    ├── image1.jpg
-    ├── image2.jpg
-```
+Both return the same response format as the full export — an `id` to use for polling status.
 
 ---
 
 ## Full Automation Script
 
+The following script handles the complete export workflow: initiate, poll, download, and extract.
+
 ```bash
 #!/bin/bash
 
 DATASET_ID="your-dataset-id"
+JWT_TOKEN="your-jwt-token"
 FILENAME="export.zip"
 
 echo "Initiating export..."
-EXPORT_TASK_RESPONSE=$(curl -s -G "https://app.visual-layer.com/api/v1/dataset/$DATASET_ID/export_context_async" \
-  -H "Accept: application/json, text/plain, */*" \
+EXPORT_TASK_RESPONSE=$(curl -s -G \
+  -H "Authorization: Bearer $JWT_TOKEN" \
+  -H "Accept: application/json" \
   --data-urlencode "file_name=$FILENAME" \
   --data-urlencode "export_format=json" \
-  --data-urlencode "include_images=false")
+  --data-urlencode "include_images=false" \
+  "https://app.visual-layer.com/api/v1/dataset/$DATASET_ID/export_context_async")
 
 EXPORT_TASK_ID=$(echo $EXPORT_TASK_RESPONSE | grep -o '"id":"[^"]*' | cut -d':' -f2 | tr -d '"')
-
 echo "Export Task ID: $EXPORT_TASK_ID"
 
-echo "Waiting for export to complete..."
+echo "Polling for completion..."
 STATUS="PENDING"
 while [ "$STATUS" != "COMPLETED" ]; do
-  STATUS_RESPONSE=$(curl -s "https://app.visual-layer.com/api/v1/dataset/$DATASET_ID/export_status?export_task_id=$EXPORT_TASK_ID" \
-    -H "Accept: application/json, text/plain, */*")
+  STATUS_RESPONSE=$(curl -s \
+    -H "Authorization: Bearer $JWT_TOKEN" \
+    "https://app.visual-layer.com/api/v1/dataset/$DATASET_ID/export_status?export_task_id=$EXPORT_TASK_ID")
   STATUS=$(echo $STATUS_RESPONSE | grep -o '"status":"[^"]*' | cut -d':' -f2 | tr -d '"')
-  echo "Status: $STATUS"
+  echo "  Status: $STATUS"
   [ "$STATUS" = "FAILED" ] && echo "Export failed." && exit 1
   [ "$STATUS" != "COMPLETED" ] && sleep 5
 done
 
 DOWNLOAD_URI=$(echo $STATUS_RESPONSE | grep -o '"download_uri":"[^"]*' | cut -d':' -f2- | sed 's/^"//' | sed 's/"$//' | sed 's/\\//g')
-echo "Downloading ZIP..."
+echo "Downloading..."
 curl -L "$DOWNLOAD_URI" --output $FILENAME
 
-echo "Unzipping..."
+echo "Extracting..."
 unzip $FILENAME -d exported_dataset
 
-echo "Done!"
+echo "Done."
 ```
 
 ---
 
-## Filter Exported Data by Uniqueness
+## Working with Exported Data
 
-Use `pandas` to find the most unique images:
+After extraction, the archive contains a metadata file (Parquet or JSON) and optionally an `images/` folder.
+
+### Filter by Uniqueness Score
 
 ```python
 import pandas as pd
 
 df = pd.read_parquet("exported_dataset/metadata.parquet")
-top_unique_images = df.sort_values(by="uniqueness_score", ascending=False).head(100)
-top_unique_images.to_csv("top_unique_images.csv", index=False)
+top_unique = df.sort_values(by="uniqueness_score", ascending=False).head(100)
+top_unique.to_csv("top_unique_images.csv", index=False)
 ```
 
----
-
-## Copy Filtered Images
+### Copy Filtered Images
 
 ```python
 import os, shutil
 
 os.makedirs("top_unique_images", exist_ok=True)
-for fname in top_unique_images["image_filename"]:
+for fname in top_unique["image_filename"]:
     shutil.copy(f"exported_dataset/images/{fname}", f"top_unique_images/{fname}")
 ```
 
 ---
 
-## Summary
+## Response Codes
 
-- Initiated export  
-- Polled export status  
-- Downloaded and unzipped archive  
-- Parsed metadata using `pandas`  
-- Used `uniqueness_score` for image filtering
+| HTTP Code | Meaning |
+|-----------|---------|
+| **200** | Export task ID returned. |
+| **401** | Unauthorized — check your JWT token. |
+| **404** | Dataset not found. |
+| **409** | Dataset is not in `READY` status. |
+
+---
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Semantic Search" icon="scan-text" href="/api-reference/semantic-search">
+    Use VQL filters to find specific content before exporting.
+  </Card>
+  <Card title="Share a Dataset" icon="share-2" href="/api-reference/share-a-dataset-with-another-user">
+    Grant teammates access to your dataset.
+  </Card>
+</CardGroup>

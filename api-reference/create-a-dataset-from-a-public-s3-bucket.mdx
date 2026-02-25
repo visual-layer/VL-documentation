@@ -1,49 +1,142 @@
 ---
-title: Create a Dataset from a Public S3 Bucket
-description: Learn how to create a new dataset in Visual Layer using data from a public S3 bucket.
+title: Create a Dataset from an S3 Bucket
+description: Create a new Visual Layer dataset by pointing to a public or private S3 bucket using the cloud API.
 ---
 
 <Card title="How This Helps" icon="database">
-  Use this method to quickly create datasets from publicly hosted S3 buckets. Ideal for demos, testing, or ingesting open datasets without manual upload.
+  Creating a dataset from S3 is the recommended approach for production workflows. Point the API at your S3 bucket path and Visual Layer handles ingestion, indexing, and clustering automatically.
 </Card>
 
----
+<Note>
+The `status` field is being retired. Use `status_new` for all status checks and workflow logic. In a future update, `status_new` will be renamed to `status`.
+</Note>
 
 ## Prerequisites
 
-This feature is **only supported in cloud-hosted environments**.
-
-Before using this endpoint, ensure your S3 bucket is configured for public access. For setup instructions, see [Public S3 Bucket Setup](/docs/Integrations/public-s3-bucket-setup).
+- A Visual Layer Cloud account with API access.
+- A valid JWT token. See [Authentication](/api-reference/authentication).
+- An S3 bucket containing your images or videos, accessible to Visual Layer.
 
 ---
 
-## Make the API Request
+## Create a Dataset from S3
 
-To create a dataset using a public S3 bucket, send a `POST` request to the following endpoint:
-
-### Request
+Send a `POST` request with your bucket path to create a new dataset.
 
 ```http
 POST /api/v1/dataset
-Headers: Authorization: Bearer <jwt>
+Authorization: Bearer <jwt>
+Content-Type: multipart/form-data
 ```
 
-### Required Form Parameters
+### Parameters
 
-- `dataset_name`: *(string)* – The name of the dataset to create  
-- `bucket_path`: *(string)* – The path to the public S3 bucket containing your data  
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `dataset_name` | string | Yes | The display name for the new dataset. |
+| `bucket_path` | string | Yes | S3 path to the bucket or folder containing your media files. |
+
+### Example
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -F "dataset_name=my_dataset" \
+  -F "bucket_path=s3://my-bucket/images/" \
+  "https://app.visual-layer.com/api/v1/dataset"
+```
+
+### Response
+
+```json
+{
+  "dataset_id": "ad48d250-1232-11f1-bfca-fa39f6ed1f22"
+}
+```
+
+Save the `dataset_id` — you need it for all subsequent operations on this dataset.
+
+<Tip>
+Dataset creation is asynchronous. After the initial request, poll `GET /api/v1/dataset/{dataset_id}` until `status_new` is `READY` before running search or export operations.
+</Tip>
 
 ---
 
-## Example
+## Monitor Dataset Status
+
+Poll the dataset status endpoint to track progress.
 
 ```bash
-curl -X POST -H "Authorization: Bearer <jwt>" \
-     -F dataset_name=api_test \
-     -F bucket_path=public_test_bucket \
-     https://app.visual-layer.com/api/v1/dataset
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>"
 ```
 
-<Tip>
-The `dataset_id` returned in the response will be used for all future operations on that dataset.
-</Tip>
+The response includes a `status_new` field that transitions from `INDEXING` to `READY` when complete. See [Retrieve Dataset Status](/api-reference/retrieve-dataset-status) for full status documentation.
+
+---
+
+## Python Example
+
+```python
+import requests
+import time
+
+VL_BASE_URL = "https://app.visual-layer.com"
+JWT_TOKEN = "<your-jwt-token>"
+
+headers = {"Authorization": f"Bearer {JWT_TOKEN}"}
+
+# Step 1: Create dataset from S3
+resp = requests.post(
+    f"{VL_BASE_URL}/api/v1/dataset",
+    headers=headers,
+    data={
+        "dataset_name": "my_dataset",
+        "bucket_path": "s3://my-bucket/images/",
+    },
+)
+resp.raise_for_status()
+dataset_id = resp.json()["dataset_id"]
+print(f"Created dataset: {dataset_id}")
+
+# Step 2: Poll until READY
+while True:
+    resp = requests.get(
+        f"{VL_BASE_URL}/api/v1/dataset/{dataset_id}",
+        headers=headers,
+    )
+    resp.raise_for_status()
+    data = resp.json()
+    status = data.get("status_new")
+    progress = data.get("progress", 0)
+    print(f"  Status: {status} ({progress}%)")
+    if status in ("READY", "ERROR"):
+        break
+    time.sleep(30)
+
+print(f"Dataset ready: {dataset_id}")
+```
+
+---
+
+## Response Codes
+
+| HTTP Code | Meaning |
+|-----------|---------|
+| **200** | Dataset created successfully. |
+| **400** | Bad Request — missing or invalid parameters. |
+| **401** | Unauthorized — check your JWT token. |
+| **500** | Internal Server Error — check that the S3 path is accessible. |
+
+---
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Retrieve Dataset Status" icon="circle-check" href="/api-reference/retrieve-dataset-status">
+    Poll dataset status until processing completes.
+  </Card>
+  <Card title="Add Media to an Existing Dataset" icon="database" href="/api-reference/add-media-to-existing-dataset">
+    Incrementally add new media to an indexed dataset.
+  </Card>
+</CardGroup>

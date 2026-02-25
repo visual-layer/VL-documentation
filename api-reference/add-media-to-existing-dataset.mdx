@@ -7,6 +7,10 @@ description: Add new images or videos to an existing dataset using the Add Media
   Incrementally add new media (images or videos) to an already-indexed dataset without re-processing everything from scratch. New media is processed as an independent batch and becomes immediately visible. When ready, trigger a full reindex to re-cluster the entire dataset.
 </Card>
 
+<Note>
+The `status` field is being retired. Use `status_new` for all status checks and workflow logic. In a future update, `status_new` will be renamed to `status`.
+</Note>
+
 ---
 
 ## Prerequisites
@@ -39,7 +43,7 @@ Exactly **one** media source must be provided per request:
 |--------|-----------|-------------|
 | **S3 Folder** (Recommended) | `s3_uri` | Path to an S3 bucket folder containing media files |
 | **S3 Manifest** | `s3_uri` | Path to a `.csv`, `.parquet`, or `.txt` manifest file listing media |
-| **Direct Upload** | `files[]` | One or more files uploaded via multipart form |
+| **Direct Upload** | `files` | One or more files uploaded via multipart form |
 | **Archive Upload** | `archive` | A single `.zip`, `.tar`, or `.tar.gz` archive |
 
 ### Optional Parameters
@@ -170,14 +174,14 @@ The reindex endpoint only accepts datasets in `PARTIAL INDEX` status. If the dat
 
 ## Alternative: Direct File Upload
 
-Upload individual files directly via multipart form:
+Upload individual files directly via multipart form. Use the `files` field (not `files[]`):
 
 ```bash
 curl -X POST \
   -H "Authorization: Bearer <jwt>" \
-  -F "files[]=@/path/to/image1.jpg" \
-  -F "files[]=@/path/to/image2.jpg" \
-  -F "files[]=@/path/to/video.mp4" \
+  -F "files=@/path/to/image1.jpg" \
+  -F "files=@/path/to/image2.jpg" \
+  -F "files=@/path/to/video.mp4" \
   https://app.visual-layer.com/api/v1/dataset/<dataset_id>/add_media
 ```
 
@@ -313,21 +317,21 @@ Common error messages:
 After calling add media, the dataset goes through these status transitions:
 
 ```
-READY ──[add_media]──> UPDATING (READ ONLY) ──> PARTIAL INDEX
-                                                       │
-                                          [reindex] ───┘
-                                                       │
-                                                       v
-                                                     READY
+READY ──[add_media]──> READ ONLY ──> PARTIAL INDEX
+                                           │
+                               [reindex] ──┘
+                                           │
+                                           v
+                                         READY
 ```
 
-| Phase | `status` | `status_new` | What's Happening |
-|-------|----------|--------------|------------------|
-| Before | `READY` | `READY` | Dataset is idle, ready for operations |
-| Processing | `UPDATING` | `READ ONLY` | New media is being processed (browsing still works) |
-| Awaiting Reindex | `PENDING_INDEX` | `PARTIAL INDEX` | New media is visible but dataset is not re-clustered |
-| Reindexing | `INDEXING` | `INDEXING` | Full re-clustering in progress |
-| Complete | `READY` | `READY` | All media processed and clustered |
+| Phase | `status_new` | What's Happening |
+|-------|--------------|------------------|
+| Before | `READY` | Dataset is idle, ready for operations. |
+| Processing | `READ ONLY` | New media is being processed. Browsing still works. |
+| Awaiting Reindex | `PARTIAL INDEX` | New media is visible but the dataset has not been re-clustered. |
+| Reindexing | `READ ONLY` → `INDEXING` | Re-clustering in progress. |
+| Complete | `READY` | All media processed and clustered. |
 
 <Tip>
 With `auto_reindex=true`, the flow goes directly from `UPDATING` through reindexing back to `READY` without stopping at `PARTIAL INDEX`.

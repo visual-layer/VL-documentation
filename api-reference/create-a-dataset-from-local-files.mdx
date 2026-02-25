@@ -1,0 +1,278 @@
+---
+title: Create a Dataset from Local Files
+description: Upload images or videos from your local machine to create a new Visual Layer dataset using the cloud ingestion API.
+---
+
+<Card title="How This Helps" icon="database">
+  The local file upload workflow lets you create datasets directly from files on your machine without needing cloud storage. It's a four-step process: create the dataset, open a transaction, upload your files, then trigger processing.
+</Card>
+
+<Note>
+The `status` field is being retired. Use `status_new` for all status checks and workflow logic. In a future update, `status_new` will be renamed to `status`.
+</Note>
+
+## Prerequisites
+
+- A Visual Layer Cloud account with API access.
+- A valid JWT token. See [Authentication](/api-reference/authentication).
+- Images or video files available on your local machine.
+
+<Note>
+For large datasets (hundreds of files or more), uploading from an S3 bucket is simpler and more reliable. See [Create a Dataset from S3](/api-reference/create-a-dataset-from-a-public-s3-bucket). Archives (`.zip`, `.tar`, `.tar.gz`) are **not supported** for initial dataset creation — use individual files or S3 instead.
+</Note>
+
+---
+
+## Upload Workflow
+
+Creating a dataset from local files follows a four-step ingestion process.
+
+1. Create the dataset to get a `dataset_id`.
+2. Open a transaction to get a `transaction_id`.
+3. Upload your files to the transaction — one or more requests, each with multiple files.
+4. Trigger processing to start indexing.
+
+---
+
+## Step 1: Create the Dataset
+
+Create a new empty dataset and receive a `dataset_id`.
+
+```http
+GET /api/v1/ingestion/new_dataset?dataset_name={name}
+Authorization: Bearer <jwt>
+```
+
+### Example
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/ingestion/new_dataset?dataset_name=My+Dataset"
+```
+
+### Response
+
+```json
+{
+  "dataset_id": "ad48d250-1232-11f1-bfca-fa39f6ed1f22"
+}
+```
+
+Save the `dataset_id` — all subsequent steps require it.
+
+---
+
+## Step 2: Open a Transaction
+
+Open a file upload transaction to receive a `transaction_id`.
+
+```http
+GET /api/v1/ingestion/{dataset_id}/data_files
+Authorization: Bearer <jwt>
+```
+
+### Example
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/ingestion/<dataset_id>/data_files"
+```
+
+### Response
+
+```json
+{
+  "trans_id": 3610
+}
+```
+
+---
+
+## Step 3: Upload Files
+
+Upload files to the open transaction. Each request uses the `files` form field. You can send multiple files per request and make multiple requests to the same `transaction_id` before triggering processing.
+
+```http
+POST /api/v1/ingestion/{dataset_id}/data_files/{transaction_id}
+Authorization: Bearer <jwt>
+Content-Type: multipart/form-data
+```
+
+### Single Request (few files)
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -F "files=@/path/to/image1.jpg" \
+  -F "files=@/path/to/image2.jpg" \
+  -F "files=@/path/to/image3.jpg" \
+  "https://app.visual-layer.com/api/v1/ingestion/<dataset_id>/data_files/<transaction_id>"
+```
+
+A successful upload returns `HTTP 202 Accepted`.
+
+### Large Batches (hundreds of files)
+
+Split uploads across multiple requests to the same transaction. Send batches of approximately 50 files per request to avoid hitting request size limits.
+
+```bash
+# Batch 1 (files 1–50)
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -F "files=@image_001.jpg" \
+  -F "files=@image_002.jpg" \
+  # ... up to ~50 files
+  "https://app.visual-layer.com/api/v1/ingestion/<dataset_id>/data_files/<transaction_id>"
+
+# Batch 2 (files 51–100)
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -F "files=@image_051.jpg" \
+  # ...
+  "https://app.visual-layer.com/api/v1/ingestion/<dataset_id>/data_files/<transaction_id>"
+```
+
+Do not call `process_files` until all batches are uploaded.
+
+---
+
+## Step 4: Trigger Processing
+
+Once all files are uploaded, trigger ingestion to start indexing.
+
+```http
+POST /api/v1/ingestion/{dataset_id}/process_files/{transaction_id}
+Authorization: Bearer <jwt>
+```
+
+### Example
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/ingestion/<dataset_id>/process_files/<transaction_id>"
+```
+
+A successful request returns `HTTP 202 Accepted`. Processing runs asynchronously.
+
+---
+
+## Monitor Dataset Status
+
+Poll the dataset status endpoint to track progress. The dataset moves through `INDEXING` and reaches `READY` when complete.
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>"
+```
+
+See [Retrieve Dataset Status](/api-reference/retrieve-dataset-status) for full status documentation.
+
+---
+
+## Python Example (with batched upload)
+
+The following example runs the complete four-step workflow with batched uploads for large file sets.
+
+```python
+import requests
+import os
+import time
+
+VL_BASE_URL = "https://app.visual-layer.com"
+JWT_TOKEN = "<your-jwt-token>"
+IMAGE_FOLDER = "/path/to/images"
+BATCH_SIZE = 50  # files per upload request
+
+headers = {"Authorization": f"Bearer {JWT_TOKEN}"}
+
+# Step 1: Create dataset
+resp = requests.get(
+    f"{VL_BASE_URL}/api/v1/ingestion/new_dataset",
+    headers=headers,
+    params={"dataset_name": "My Dataset"},
+)
+resp.raise_for_status()
+dataset_id = resp.json()["dataset_id"]
+print(f"Created dataset: {dataset_id}")
+
+# Step 2: Open transaction
+resp = requests.get(
+    f"{VL_BASE_URL}/api/v1/ingestion/{dataset_id}/data_files",
+    headers=headers,
+)
+resp.raise_for_status()
+transaction_id = resp.json()["trans_id"]
+print(f"Transaction ID: {transaction_id}")
+
+# Step 3: Upload files in batches
+image_files = sorted([
+    os.path.join(IMAGE_FOLDER, f)
+    for f in os.listdir(IMAGE_FOLDER)
+    if f.lower().endswith((".jpg", ".jpeg", ".png", ".webp", ".mp4", ".mov"))
+])
+print(f"Uploading {len(image_files)} file(s) in batches of {BATCH_SIZE}...")
+
+for i in range(0, len(image_files), BATCH_SIZE):
+    batch = image_files[i:i + BATCH_SIZE]
+    file_handles = [("files", open(fp, "rb")) for fp in batch]
+    resp = requests.post(
+        f"{VL_BASE_URL}/api/v1/ingestion/{dataset_id}/data_files/{transaction_id}",
+        headers=headers,
+        files=file_handles,
+    )
+    for _, fh in file_handles:
+        fh.close()
+    resp.raise_for_status()
+    print(f"  Uploaded batch {i // BATCH_SIZE + 1} ({len(batch)} files)")
+
+# Step 4: Trigger processing
+resp = requests.post(
+    f"{VL_BASE_URL}/api/v1/ingestion/{dataset_id}/process_files/{transaction_id}",
+    headers=headers,
+)
+resp.raise_for_status()
+print("Processing started.")
+
+# Poll until READY
+while True:
+    resp = requests.get(
+        f"{VL_BASE_URL}/api/v1/dataset/{dataset_id}",
+        headers=headers,
+    )
+    resp.raise_for_status()
+    data = resp.json()
+    status = data.get("status_new")
+    progress = data.get("progress", 0)
+    print(f"  Status: {status} ({progress}%)")
+    if status in ("READY", "ERROR"):
+        break
+    time.sleep(15)
+
+print(f"Dataset ready: {dataset_id}")
+```
+
+---
+
+## Response Codes
+
+| HTTP Code | Meaning |
+|-----------|---------|
+| **200** / **202** | Request accepted successfully. |
+| **400** | Bad Request — missing parameters or unsupported file format. |
+| **401** | Unauthorized — check your JWT token. |
+| **404** | Dataset or transaction not found. |
+| **422** | Unprocessable — check that the `files` field name is correct (not `files[]`). |
+
+---
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Create a Dataset from S3" icon="database" href="/api-reference/create-a-dataset-from-a-public-s3-bucket">
+    Recommended for large datasets — point to an S3 folder instead of uploading files directly.
+  </Card>
+  <Card title="Add Media to an Existing Dataset" icon="database" href="/api-reference/add-media-to-existing-dataset">
+    Add new files — including archives — to an already-indexed dataset.
+  </Card>
+</CardGroup>

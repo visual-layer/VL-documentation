@@ -1,59 +1,183 @@
 ---
 title: Duplicate Retrieval
-description: Learn how to retrieve visually duplicate media items from a dataset using the API.
+description: Find visually duplicate or near-duplicate media in your dataset using VQL filters or threshold parameters on the Explore endpoint.
 ---
 
 <Card title="How This Helps" icon="copy">
-  Identify duplicate media in your dataset using internal media IDs. This helps streamline cleanup, reduce redundancy, and improve data quality before training or export.
+  Duplicate detection helps you identify redundant images or frames across your dataset. Use it to streamline cleanup, reduce storage, and improve data quality before training or export.
 </Card>
 
+## Prerequisites
+
+- A dataset in `READY` status.
+- A valid JWT token. See [Authentication](/api-reference/authentication).
+
 ---
 
-## Step 1: Retrieve Internal Media ID
+## Find Duplicates Using VQL
 
-To begin, retrieve the internal media ID for a file based on its `original_media_uri`.
+The preferred approach uses the Visual Query Language (VQL) filter on the [Explore endpoint](/api-reference/api-intro). The `duplicates` filter groups visually similar media into duplicate clusters.
 
 ```http
-GET /api/v1/dataset/{dataset_id}/search_media_metadata/id?original_media_uri={url_encoded_original_media_uri}
-Headers: Authorization: Bearer <jwt>
+GET /api/v1/explore/{dataset_id}?vql=[...]&entity_type=IMAGES&threshold=0
+Authorization: Bearer <jwt>
 ```
+
+### VQL Duplicates Filter
+
+Pass a `duplicates` filter in the `vql` array:
+
+```json
+[{"duplicates": {"op": "duplicates", "value": 0.95}}]
+```
+
+The `value` field sets the similarity threshold (0.0–1.0). A value of `0.95` returns only clusters where images are at least 95% similar to each other. Lower values return more permissive groupings.
 
 ### Example
 
 ```bash
 curl -H "Authorization: Bearer <jwt>" \
-     "https://app.visual-layer.com/api/v1/dataset/{dataset_id}/media/id?original_media_uri={url_encoded_original_media_uri}"
+  "https://app.visual-layer.com/api/v1/explore/<dataset_id>?vql=%5B%7B%22duplicates%22%3A%7B%22op%22%3A%22duplicates%22%2C%22value%22%3A0.95%7D%7D%5D&entity_type=IMAGES&threshold=0"
 ```
 
-**Response:**
+Decoded VQL:
+```json
+[{"duplicates": {"op": "duplicates", "value": 0.95}}]
+```
 
-- ✅ `200 OK`: Returns the internal media ID as text
-- ❌ `404`: Media not found in the dataset
+### Response
+
+```json
+{
+  "clusters": [
+    {
+      "cluster_id": "d0470097-0c77-4a9c-9edf-289680df7f71",
+      "type": "IMAGES",
+      "n_images": 3,
+      "similarity_threshold": "0",
+      "relevance_score": null,
+      "previews": [
+        {
+          "type": "IMAGE",
+          "media_id": "300dad2c-1234-11f1-8483-5a879df30de4",
+          "media_uri": "https://cdn.example.com/.../image.jpg",
+          "media_thumb_uri": "https://cdn.example.com/.../thumb.webp",
+          "file_name": "car_001.jpg",
+          "width": 1920,
+          "height": 1080
+        }
+      ],
+      "labels": null,
+      "user_tags": null
+    }
+  ],
+  "metadata": {
+    "used_duckdb": true
+  }
+}
+```
+
+Each cluster in the response contains a group of near-duplicate images. The `previews` array shows representative images from the group.
 
 ---
 
-## Step 2: Retrieve Duplicates Using Media ID
+## Find Duplicates Using `duplicate_threshold`
 
-Once you have the media ID, use this endpoint to find duplicates:
-
-```http
-GET /api/v1/dataset/{dataset_id}/media/{media_id}/duplicates
-Headers: Authorization: Bearer <jwt>
-```
-
-### Example
+You can also use the `duplicate_threshold` query parameter directly on the Explore endpoint as a simpler alternative to VQL.
 
 ```bash
 curl -H "Authorization: Bearer <jwt>" \
-     https://app.visual-layer.com/api/v1/dataset/{dataset_id}/media/{media_id}/duplicates
+  "https://app.visual-layer.com/api/v1/explore/<dataset_id>?duplicate_threshold=0.95&entity_type=IMAGES&threshold=0"
 ```
 
-**Response:**
-
-Returns a JSON array containing `0` or more duplicate media IDs.
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `duplicate_threshold` | float | Similarity cutoff (0.0–1.0). Returns only clusters containing near-duplicates at this threshold or higher. |
 
 ---
 
-<Tip>
-This feature is currently under development and subject to change.
-</Tip>
+## Filter by Uniqueness
+
+To find the most unique images (the opposite of duplicates), use the `uniqueness` VQL filter.
+
+```json
+[{"uniqueness": {"op": "uniqueness", "value": 0.8}}]
+```
+
+This returns images with a uniqueness score above the specified threshold. Higher values mean more unique content.
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/explore/<dataset_id>?vql=%5B%7B%22uniqueness%22%3A%7B%22op%22%3A%22uniqueness%22%2C%22value%22%3A0.8%7D%7D%5D&entity_type=IMAGES&threshold=0"
+```
+
+---
+
+## Python Example
+
+The following example retrieves all duplicate clusters and prints a summary.
+
+```python
+import requests
+from urllib.parse import quote
+import json
+
+VL_BASE_URL = "https://app.visual-layer.com"
+JWT_TOKEN = "<your-jwt-token>"
+DATASET_ID = "<your-dataset-id>"
+
+headers = {"Authorization": f"Bearer {JWT_TOKEN}"}
+
+def find_duplicates(similarity_threshold: float = 0.95, page: int = 0):
+    vql = json.dumps([{"duplicates": {"op": "duplicates", "value": similarity_threshold}}])
+    resp = requests.get(
+        f"{VL_BASE_URL}/api/v1/explore/{DATASET_ID}",
+        headers=headers,
+        params={
+            "vql": vql,
+            "entity_type": "IMAGES",
+            "threshold": 0,
+            "page_number": page,
+        },
+    )
+    resp.raise_for_status()
+    return resp.json()
+
+results = find_duplicates(similarity_threshold=0.95)
+clusters = results.get("clusters", [])
+print(f"Found {len(clusters)} duplicate cluster(s)")
+
+total_duplicates = sum(c.get("n_images", 0) for c in clusters)
+print(f"Total duplicate images: {total_duplicates}")
+
+for cluster in clusters:
+    n = cluster.get("n_images")
+    cid = cluster.get("cluster_id", "")[:8]
+    print(f"  Cluster {cid}... — {n} near-duplicate images")
+    for preview in cluster.get("previews", [])[:3]:
+        print(f"    {preview['file_name']}")
+```
+
+---
+
+## Response Codes
+
+| HTTP Code | Meaning |
+|-----------|---------|
+| **200** | Results returned successfully. |
+| **401** | Unauthorized — check your JWT token. |
+| **404** | Dataset not found. |
+| **422** | Invalid query parameters — check VQL syntax or threshold value. |
+
+---
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Semantic Search" icon="scan-text" href="/api-reference/semantic-search">
+    Search using natural language text queries with VQL.
+  </Card>
+  <Card title="Export a Dataset" icon="download" href="/api-reference/exporting-a-dataset-via-curl-from-visual-layer">
+    Export duplicate clusters for downstream deduplication.
+  </Card>
+</CardGroup>

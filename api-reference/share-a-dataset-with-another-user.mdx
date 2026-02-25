@@ -1,50 +1,144 @@
 ---
 title: Share a Dataset with Another User
-description: Use this endpoint to securely share a dataset with a registered user in your Visual Layer workspace.
+description: Grant another registered user access to your dataset using the Visual Layer sharing API.
 ---
 
-<Card title="How This Helps" icon="user-plus">
-  Sharing datasets allows for seamless collaboration across team members. You can grant access to reviewers, annotators, or developers without duplicating data.
+<Card title="How This Helps" icon="share-2">
+  Dataset sharing lets you collaborate with teammates without duplicating data. You can grant access to reviewers, annotators, or developers using a single API call.
 </Card>
 
+## Prerequisites
+
+- A dataset in `READY` status.
+- A valid JWT token. See [Authentication](/api-reference/authentication).
+- The recipient must be a registered Visual Layer user.
+
 ---
 
-## API Request
+## Share a Dataset
 
-To share a dataset with another user:
+Grant another user access to your dataset by sending their email address in a `PUT` request.
 
 ```http
-POST /api/v1/dataset/{dataset_id}/share
-Headers: Authorization: Bearer <jwt>
+PUT /api/v1/manage/{dataset_id}/invite
+Authorization: Bearer <jwt>
+Content-Type: application/json
 ```
 
----
+### Parameters
 
-## Form Parameters
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `grant_to_user_email` | string | Yes | Email address of the user to grant access. Must be a registered Visual Layer account. |
 
-| Parameter     | Description                      |
-|---------------|----------------------------------|
-| `user_email`  | Email of the user to share with. Must be a registered Visual Layer user. |
-
----
-
-## Example Request
+### Example
 
 ```bash
-curl -X POST -H "Authorization: Bearer <jwt>" \
-     -F user_email=annotator1@company.com \
-     http://localhost:9999/api/v1/dataset/{dataset_id}/share
+curl -X PUT \
+  -H "Authorization: Bearer <jwt>" \
+  -H "Content-Type: application/json" \
+  -d '{"grant_to_user_email": "colleague@example.com"}' \
+  "https://app.visual-layer.com/api/v1/manage/<dataset_id>/invite"
+```
+
+A successful request returns `HTTP 200` with a `null` body.
+
+---
+
+## List Dataset Members
+
+Retrieve the list of users who currently have access to a dataset.
+
+```http
+GET /api/v1/manage/{dataset_id}/share
+Authorization: Bearer <jwt>
+```
+
+### Example
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/manage/<dataset_id>/share"
+```
+
+### Response
+
+```json
+[
+  {
+    "email": "owner@example.com",
+    "role": "owner"
+  },
+  {
+    "email": "colleague@example.com",
+    "role": "viewer"
+  }
+]
 ```
 
 ---
 
-## Possible Responses
+## Python Example
 
-| Status Code | Meaning                      |
-|-------------|------------------------------|
-| `200 OK`    | ✅ Dataset successfully shared |
-| `404`       | ❌ Failed to share dataset     |
+```python
+import requests
 
-<Tip>
-Make sure the recipient's email matches an existing registered user in your Visual Layer environment.
-</Tip>
+VL_BASE_URL = "https://app.visual-layer.com"
+JWT_TOKEN = "<your-jwt-token>"
+DATASET_ID = "<your-dataset-id>"
+
+headers = {"Authorization": f"Bearer {JWT_TOKEN}"}
+
+# Share dataset with a colleague
+resp = requests.put(
+    f"{VL_BASE_URL}/api/v1/manage/{DATASET_ID}/invite",
+    headers={**headers, "Content-Type": "application/json"},
+    json={"grant_to_user_email": "colleague@example.com"},
+)
+resp.raise_for_status()
+print("Dataset shared successfully.")
+
+# List current members
+resp = requests.get(
+    f"{VL_BASE_URL}/api/v1/manage/{DATASET_ID}/share",
+    headers=headers,
+)
+resp.raise_for_status()
+members = resp.json()
+print(f"Dataset has {len(members)} member(s):")
+for member in members:
+    print(f"  {member['email']} — {member['role']}")
+```
+
+---
+
+## Response Codes
+
+### Invite (`PUT /api/v1/manage/{dataset_id}/invite`)
+
+| HTTP Code | Meaning |
+|-----------|---------|
+| **200** | User access granted successfully. |
+| **401** | Unauthorized — check your JWT token. |
+| **404** | Dataset not found, or the specified email does not match a registered Visual Layer account. |
+
+### List Members (`GET /api/v1/manage/{dataset_id}/share`)
+
+| HTTP Code | Meaning |
+|-----------|---------|
+| **200** | Members list returned successfully. |
+| **401** | Unauthorized — check your JWT token. |
+| **404** | Dataset not found. |
+
+---
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Add Media to an Existing Dataset" icon="database" href="/api-reference/add-media-to-existing-dataset">
+    Add new images or videos to an indexed dataset.
+  </Card>
+  <Card title="Export a Dataset" icon="download" href="/api-reference/exporting-a-dataset-via-curl-from-visual-layer">
+    Export dataset media and metadata.
+  </Card>
+</CardGroup>

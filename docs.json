@@ -162,6 +162,7 @@
                         "group": "API Reference",
                         "pages": [
                             "api-reference/create-a-dataset-from-a-public-s3-bucket",
+                            "api-reference/create-a-dataset-from-local-files",
                             "api-reference/create-a-dataset-from-a-local-folder-for-on-prem-installation",
                             "api-reference/retrieve-dataset-status",
                             "api-reference/add-media-to-existing-dataset",
@@ -312,7 +313,7 @@
                     },
                     {
                         "label": "FAQs",
-                        "href": "/docs/Help-Support/faqs"
+                        "href": "https://docs.visual-layer.com/docs/Help-Support/faqs"
                     }
                 ]
             },

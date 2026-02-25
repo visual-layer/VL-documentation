@@ -1,109 +1,83 @@
 ---
 title: API Introduction
-description: An introduction to the Visual Layer API
+description: An overview of the Visual Layer REST API — search, enrichment, export, and dataset management.
 sidebarTitle: "API Introduction"
 ---
 
-The Visual Layer API provides access to search, enrichment, and export capabilities for your visual datasets.
+The Visual Layer API provides programmatic access to dataset management, visual search, semantic search, enrichment, and export capabilities.
 
-## Cloud API vs On-Premises API
+## Cloud API vs. On-Premises API
 
-Authentication requirements differ by deployment type:
+Authentication requirements differ by deployment type.
 
-- **Cloud API**: All calls require authentication with JWT tokens.
+- **Cloud API**: All calls require a JWT bearer token. See [Authentication](/api-reference/authentication).
 - **On-Premises API**: Authentication is not required. Omit authorization headers from all requests.
 
-## Search for Similar Content
+---
 
-Search for similar content using an existing media ID:
+## Search
 
-```bash
-curl -H "Authorization: Bearer <jwt-token>" \
-  "https://app.visual-layer.com/api/v1/explore/<dataset-id>?threshold=0&entity_type=IMAGES&page_number=0&anchor_media_id=<media-id>&anchor_type=MEDIA"
-```
+Two search modes are available through the Explore endpoint (`GET /api/v1/explore/{dataset_id}`).
 
-## Vector Search
-
-Perform semantic vector search using text:
+**Visual Search** finds images visually similar to a query image. It is a two-step process: upload the query image to get an `anchor_media_id`, then pass that ID to the Explore endpoint.
 
 ```bash
-curl -X POST -H "Authorization: Bearer <jwt-token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "text": "person wearing a hat",
-    "entity_type": "IMAGES",
-    "limit": 10
-  }' \
-  "https://app.visual-layer.com/api/v1/vector_search/<dataset-id>"
-```
-
-Get available embedding models:
-
-```bash
-curl -H "Authorization: Bearer <jwt-token>" \
-  "https://app.visual-layer.com/api/v1/vector_search/<dataset-id>/embedding_models"
-```
-
-## Search with Uploaded Images
-
-Upload an image for visual search:
-
-```bash
-curl -X POST -H "Authorization: Bearer <jwt-token>" \
+# Step 1: Upload query image
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
   -F "file=@/path/to/search_image.jpg" \
-  "https://app.visual-layer.com/api/v1/dataset/<dataset-id>/search-image-similarity?threshold=0&entity_type=IMAGES"
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/search-image-similarity?threshold=0&entity_type=IMAGES"
 ```
-
-Response:
-
-```json
-{
-  "anchor_media_id": "4e0e4d51-0fef-4fe1-a8ec-1a82b6f4880b",
-  "anchor_type": "UPLOAD"
-}
-```
-
-Use those values with the exploration API to view results:
 
 ```bash
-curl -H "Authorization: Bearer <jwt-token>" \
-  "https://app.visual-layer.com/api/v1/explore/<dataset-id>?threshold=0&entity_type=IMAGES&page_number=0&anchor_media_id=4e0e4d51-0fef-4fe1-a8ec-1a82b6f4880b&anchor_type=UPLOAD"
+# Step 2: Retrieve results
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/explore/<dataset_id>?threshold=0&entity_type=IMAGES&page_number=0&anchor_media_id=<anchor_media_id>&anchor_type=UPLOAD"
 ```
 
-Specify a bounding box to focus the search on a specific region:
+To search by an image already in your dataset, skip Step 1 and use `anchor_type=MEDIA` with the existing `media_id`.
+
+**Semantic Search** finds images using natural language. Pass a `caption` query parameter or use VQL text filters for more control.
 
 ```bash
-curl -X POST -H "Authorization: Bearer <jwt-token>" \
-  -F "file=@/path/to/search_image.jpg" \
-  "https://app.visual-layer.com/api/v1/dataset/<dataset-id>/search-image-similarity?threshold=0&entity_type=IMAGES&bounding_box={\"x\":0.1,\"y\":0.2,\"width\":0.5,\"height\":0.6}"
+# Caption search
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/explore/<dataset_id>?caption=cars+on+highway&entity_type=IMAGES&threshold=0"
 ```
+
+```bash
+# VQL semantic search
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/explore/<dataset_id>?vql=%5B%7B%22text%22%3A%7B%22op%22%3A%22semantic%22%2C%22value%22%3A%22cars+on+highway%22%7D%7D%5D&entity_type=IMAGES&threshold=0"
+```
+
+For full documentation, see [Visual Search](/api-reference/visual-search) and [Semantic Search](/api-reference/semantic-search).
+
+---
 
 ## Enrichment
 
-Use the enrichment endpoints to apply AI models to your datasets.
+Enrichment applies AI models to your dataset to generate captions, detect objects, and build embeddings for semantic search. Enrichment creates a **new copy** of the dataset with the model outputs applied — it does not modify the original.
 
-### Available Models
-
-List available enrichment models:
+### List Available Models
 
 ```bash
-curl -H "Authorization: Bearer <jwt-token>" \
-  "https://app.visual-layer.com/api/v1/enrichment/<dataset-id>/list_models"
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/enrichment/<dataset_id>/list_models"
 ```
 
-Get enrichment context for a dataset:
+### Check Applied Enrichments
 
 ```bash
-curl -H "Authorization: Bearer <jwt-token>" \
-  "https://app.visual-layer.com/api/v1/enrichment/<dataset-id>/context"
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/enrichment/<dataset_id>/context"
 ```
 
-### Enriching Datasets
-
-Start enrichment with specific models:
+### Start Enrichment
 
 ```bash
-curl -X POST -H "Authorization: Bearer <jwt-token>" \
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
   -H "Content-Type: application/json" \
   -d '{
     "enrichment_models": {
@@ -111,164 +85,117 @@ curl -X POST -H "Authorization: Bearer <jwt-token>" \
       "OBJECT_DETECTION": "vl_object_detector_v00"
     }
   }' \
-  "https://app.visual-layer.com/api/v1/dataset/<dataset-id>/enrich_dataset"
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/enrich_dataset"
 ```
 
-Use detailed model configurations to pass additional parameters:
+The response returns the ID of the new enriched dataset copy.
 
-```bash
-curl -X POST -H "Authorization: Bearer <jwt-token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "enrichment_models": {
-      "CAPTION_IMAGES": {
-        "id": "moondream2_image_captioner_v00",
-        "metadata": {
-          "prompt": "Describe this image in detail"
-        }
-      },
-      "OBJECT_DETECTION": "vl_object_detector_v00"
-    }
-  }' \
-  "https://app.visual-layer.com/api/v1/dataset/<dataset-id>/enrich_dataset"
-```
-
-Get preview results before running a full enrichment:
-
-```bash
-curl -X POST -H "Authorization: Bearer <jwt-token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "enrichment_models": {
-      "CAPTION_IMAGES": {
-        "id": "vl_image_captioner_v00",
-        "metadata": {}
-      },
-      "OBJECT_DETECTION": {
-        "id": "vl_object_detector_v00",
-        "metadata": {}
-      }
-    }
-  }' \
-  "https://app.visual-layer.com/api/v1/enrichment/<dataset-id>/<enrichment-context-id>/previews_enrichment_result"
-```
-
-### Checking Enrichment Status
-
-Check enrichment status:
-
-```bash
-curl -H "Authorization: Bearer <jwt-token>" \
-  "https://app.visual-layer.com/api/v1/enrichment/<dataset-id>/<enrichment-context-id>/status"
-```
-
-Abort an enrichment process:
-
-```bash
-curl -X DELETE -H "Authorization: Bearer <jwt-token>" \
-  "https://app.visual-layer.com/api/v1/enrichment/<dataset-id>/<enrichment-context-id>/abort"
-```
+---
 
 ## Export and Sharing
 
-Use the export and sharing endpoints to retrieve data and collaborate on datasets.
+Export dataset metadata and media as a ZIP archive, or share a dataset with another user.
 
-### Exporting Content
-
-Export entities asynchronously:
+### Export All Media
 
 ```bash
-curl -X POST -H "Authorization: Bearer <jwt-token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "media_selection": [
-      {
-        "type": "media",
-        "payload": {
-          "media_ids": ["9e8da312-d954-4844-afc7-357c458c5b03"]
-        }
-      }
-    ]
-  }' \
-  "https://app.visual-layer.com/api/v1/dataset/<dataset-id>/export_entities_async?include_images=true&export_format=json"
+curl -G \
+  -H "Authorization: Bearer <jwt>" \
+  --data-urlencode "file_name=export.zip" \
+  --data-urlencode "export_format=json" \
+  --data-urlencode "include_images=false" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/export_context_async"
 ```
 
-Export an entire cluster:
+### Export Selected Media or Clusters
 
 ```bash
-curl -X POST -H "Authorization: Bearer <jwt-token>" \
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
   -H "Content-Type: application/json" \
   -d '{
     "media_selection": [
       {
         "type": "cluster",
         "payload": {
-          "cluster_id": "4e0e4d51-0fef-4fe1-a8ec-1a82b6f4880b",
-          "cluster_filters": {
-            "entity_type": "IMAGES"
-          },
+          "cluster_id": "<cluster_id>",
+          "cluster_filters": {"entity_type": "IMAGES"},
           "exclude_media_ids": []
         }
       }
     ]
   }' \
-  "https://app.visual-layer.com/api/v1/dataset/<dataset-id>/export_entities_async?include_images=true&export_format=json"
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/export_entities_async?include_images=true&export_format=json"
 ```
 
-### Monitoring Export Status
-
-Check export task status:
+### Check Export Status
 
 ```bash
-curl -H "Authorization: Bearer <jwt-token>" \
-  "https://app.visual-layer.com/api/v1/dataset/<dataset-id>/export_status?export_task_id=<export-task-id>"
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/export_status?export_task_id=<export_task_id>"
 ```
 
-### Sharing Views
-
-Create a saved view:
+### Share a Dataset
 
 ```bash
-curl -X POST -H "Authorization: Bearer <jwt-token>" \
-  -F "name=Dogs and Cats View" \
-  "https://app.visual-layer.com/api/v1/dataset/<dataset-id>/views?labels=[dog,cat]&threshold=0&entity_type=IMAGES"
+curl -X PUT \
+  -H "Authorization: Bearer <jwt>" \
+  -H "Content-Type: application/json" \
+  -d '{"grant_to_user_email": "colleague@example.com"}' \
+  "https://app.visual-layer.com/api/v1/manage/<dataset_id>/invite"
 ```
 
-List saved views:
+---
+
+## Saved Views
+
+Save a filtered view of a dataset to return to it later.
+
+### Create a View
 
 ```bash
-curl -H "Authorization: Bearer <jwt-token>" \
-  "https://app.visual-layer.com/api/v1/dataset/<dataset-id>/views"
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -F "name=Cars at Night" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/views?threshold=0&entity_type=IMAGES"
 ```
 
-Delete a saved view:
+### List Views
 
 ```bash
-curl -X DELETE -H "Authorization: Bearer <jwt-token>" \
-  "https://app.visual-layer.com/api/v1/dataset/<dataset-id>/views/<view-id>"
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/views"
 ```
+
+### Delete a View
+
+```bash
+curl -X DELETE \
+  -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/views/<view_id>"
+```
+
+---
 
 ## Error Handling
 
-The API uses standard HTTP status codes:
+The API uses standard HTTP status codes. Error responses include a `detail` field with a description of what went wrong.
 
-- **200**: Success.
-- **400**: Bad Request — check your request parameters.
-- **401**: Unauthorized — check your authentication token.
-- **404**: Not Found — resource doesn't exist.
-- **500**: Internal Server Error — server-side issue.
+| Code | Meaning |
+|------|---------|
+| **200** | Success. |
+| **400** | Bad Request — check your request parameters. |
+| **401** | Unauthorized — check your JWT token. |
+| **403** | Forbidden — insufficient permissions or feature disabled. |
+| **404** | Not Found — resource does not exist or you do not have access. |
+| **409** | Conflict — resource state prevents the operation (for example, dataset not in `READY` status). |
+| **422** | Unprocessable Entity — invalid parameter format or value. |
+| **500** | Internal Server Error — contact support if this persists. |
 
-When an error occurs, the response includes details about what went wrong:
+Example error response:
 
 ```json
 {
-  "detail": [
-    {
-      "type": "missing",
-      "loc": ["body", "name"],
-      "msg": "Field required",
-      "input": null
-    }
-  ]
+  "detail": "Dataset ad48d250-1232-11f1-bfca-fa39f6ed1f22 has no embedding_config — index the dataset first."
 }
 ```
