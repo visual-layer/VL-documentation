@@ -134,14 +134,14 @@
                     {
                         "group": "Integrations",
                         "pages": [
-                            "api-reference/running-visual-layer-within-an-iframe",
                             {
                                 "group": "Data Sources",
                                 "pages": [
                                     "docs/Integrations/Amazon-s3",
                                     "docs/Integrations/google-cloud-storage"
                                 ]
-                            }
+                            },
+                            "api-reference/running-visual-layer-within-an-iframe"
                         ]
                     },
                     {
