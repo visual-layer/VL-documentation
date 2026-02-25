@@ -128,7 +128,13 @@
                         "pages": [
                             "docs/advanced-dataset-management/importing-annotations",
                             "docs/advanced-features/tag-iteams",
-                            "docs/advanced-features/task-manager",
+                            "docs/advanced-features/task-manager"
+                        ]
+                    },
+                    {
+                        "group": "Integrations",
+                        "pages": [
+                            "api-reference/running-visual-layer-within-an-iframe",
                             {
                                 "group": "Data Sources",
                                 "pages": [
@@ -184,19 +190,18 @@
                         ]
                     },
                     {
-                        "group": "Recipes and Flows",
+                        "group": "Guides",
                         "pages": [
                             "api-reference/exporting-a-dataset-via-curl-from-visual-layer",
                             "api-reference/duplicate-retrieval-experimental-feature",
-                            "api-reference/running-visual-layer-within-an-iframe",
-                            "docs/self-hosting/useful-scripts"
+                            "docs/advanced-features/custom-metadata",
+                            "docs/advanced-features/dicom-converter"
                         ]
                     },
                     {
-                        "group": "API Guides",
+                        "group": "Useful Scripts",
                         "pages": [
-                            "docs/advanced-features/custom-metadata",
-                            "docs/advanced-features/dicom-converter"
+                            "docs/self-hosting/useful-scripts"
                         ]
                     }
                 ]
