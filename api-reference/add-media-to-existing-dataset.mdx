@@ -1,0 +1,361 @@
+---
+title: Add Media to an Existing Dataset
+description: Add new images or videos to an existing dataset using the Add Media API. Supports S3 bulk paths, direct file uploads, and archive uploads.
+---
+
+<Card title="How This Helps" icon="plus">
+  Incrementally add new media (images or videos) to an already-indexed dataset without re-processing everything from scratch. New media is processed as an independent batch and becomes immediately visible. When ready, trigger a full reindex to re-cluster the entire dataset.
+</Card>
+
+---
+
+## Prerequisites
+
+Before calling the Add Media API, ensure:
+
+1. **Dataset status** is `READY` or `PARTIAL INDEX`
+2. **Dataset has an embedding config** — the dataset must have been indexed at least once with an embedding model so new media uses the same model for consistency
+3. **Authentication** — you need a valid JWT token or session cookie (see [Authentication](/api-reference/authentication))
+
+<Note>
+You can verify your dataset status using the [Retrieve Dataset Status](/api-reference/retrieve-dataset-status) endpoint before attempting to add media.
+</Note>
+
+---
+
+## API Endpoint
+
+```http
+POST /api/v1/dataset/{dataset_id}/add_media
+Content-Type: multipart/form-data
+Authorization: Bearer <jwt>
+```
+
+### Media Sources
+
+Exactly **one** media source must be provided per request:
+
+| Source | Form Field | Description |
+|--------|-----------|-------------|
+| **S3 Folder** (Recommended) | `s3_uri` | Path to an S3 bucket folder containing media files |
+| **S3 Manifest** | `s3_uri` | Path to a `.csv`, `.parquet`, or `.txt` manifest file listing media |
+| **Direct Upload** | `files[]` | One or more files uploaded via multipart form |
+| **Archive Upload** | `archive` | A single `.zip`, `.tar`, or `.tar.gz` archive |
+
+### Optional Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `auto_reindex` | boolean | `false` | Automatically run a full reindex after the partial update completes |
+| `assume_role` | string | `null` | AWS IAM role ARN to assume for cross-account S3 access |
+| `batch_n_videos` | integer | `null` | Override auto-calculated video count (for resource allocation) |
+| `batch_n_images` | integer | `null` | Override auto-calculated image count (for resource allocation) |
+| `batch_n_objects` | integer | `null` | Override auto-calculated object count (for resource allocation) |
+| `use_spot` | boolean | `null` | Allow pod scheduling on spot instances (cloud only) |
+
+---
+
+## Recommended: Add Media from S3 Bulk Path
+
+For production workflows, using an S3 folder is the recommended approach. Point `s3_uri` to a folder in your S3 bucket containing images and/or videos.
+
+### Step 1: Identify your dataset ID
+
+Find your dataset ID from the Visual Layer UI (it's in the browser URL when viewing a dataset: `https://app.visual-layer.com/dataset/<dataset_id>/data`), or list your datasets via the API:
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  https://app.visual-layer.com/api/v1/datasets
+```
+
+### Step 2: Verify dataset is ready
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  https://app.visual-layer.com/api/v1/dataset/<dataset_id>
+```
+
+Confirm the response shows `"status_new": "READY"` or `"status_new": "PARTIAL INDEX"`.
+
+### Step 3: Add media from S3
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -F "s3_uri=s3://your-bucket/path/to/media/folder/" \
+  https://app.visual-layer.com/api/v1/dataset/<dataset_id>/add_media
+```
+
+A successful request returns **HTTP 202 Accepted** with an empty body. The processing runs asynchronously in the background.
+
+---
+
+## Working Example
+
+The following example was tested against a live Visual Layer Cloud environment and demonstrates adding 5 TikTok videos from an S3 bucket to an existing dataset.
+
+### Add videos from S3
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -F "s3_uri=s3://visual-layer/datasets/tiktok_users/amit46473/" \
+  https://app.visual-layer.com/api/v1/dataset/54c51218-db7a-11f0-b8bd-ea1ec7478511/add_media
+```
+
+**Response:** `HTTP 202 Accepted` (empty body)
+
+### Poll dataset status
+
+After submitting, the dataset transitions to `UPDATING` / `READ ONLY` while processing:
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  https://app.visual-layer.com/api/v1/dataset/54c51218-db7a-11f0-b8bd-ea1ec7478511
+```
+
+```json
+{
+  "id": "54c51218-db7a-11f0-b8bd-ea1ec7478511",
+  "display_name": "tomer1344",
+  "status": "UPDATING",
+  "status_new": "READ ONLY",
+  "n_images": 17,
+  "n_videos": 31,
+  "progress": 100
+}
+```
+
+Once processing completes, the dataset moves to `PARTIAL INDEX`, indicating new media has been added but the dataset has not yet been re-clustered.
+
+---
+
+## Add Media with Auto-Reindex
+
+If you want the dataset to be fully re-clustered automatically after the new media is processed, set `auto_reindex=true`:
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -F "s3_uri=s3://your-bucket/path/to/media/" \
+  -F "auto_reindex=true" \
+  https://app.visual-layer.com/api/v1/dataset/<dataset_id>/add_media
+```
+
+This runs a combined workflow: **partial update** (process new media) followed by **reindex** (re-cluster everything). The dataset returns to `READY` when complete.
+
+<Tip>
+Use `auto_reindex=true` when you want a single API call to handle everything. Omit it if you plan to add multiple batches before re-clustering.
+</Tip>
+
+---
+
+## Manual Reindex
+
+If you added media without `auto_reindex`, the dataset enters `PARTIAL INDEX` status. You can trigger a manual reindex when ready:
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  https://app.visual-layer.com/api/v1/dataset/<dataset_id>/reindex
+```
+
+**Response:** `HTTP 202 Accepted`
+
+<Note>
+The reindex endpoint only accepts datasets in `PARTIAL INDEX` status. If the dataset is still processing (`READ ONLY`), wait for it to finish before triggering reindex.
+</Note>
+
+---
+
+## Alternative: Direct File Upload
+
+Upload individual files directly via multipart form:
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -F "files[]=@/path/to/image1.jpg" \
+  -F "files[]=@/path/to/image2.jpg" \
+  -F "files[]=@/path/to/video.mp4" \
+  https://app.visual-layer.com/api/v1/dataset/<dataset_id>/add_media
+```
+
+## Alternative: Archive Upload
+
+Upload a single archive file:
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -F "archive=@/path/to/media.zip" \
+  https://app.visual-layer.com/api/v1/dataset/<dataset_id>/add_media
+```
+
+---
+
+## Cross-Account S3 Access
+
+If your S3 data is in a different AWS account, use the `assume_role` parameter:
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -F "s3_uri=s3://external-bucket/images/" \
+  -F "assume_role=arn:aws:iam::123456789012:role/VisualLayerAccess" \
+  https://app.visual-layer.com/api/v1/dataset/<dataset_id>/add_media
+```
+
+---
+
+## Python Example
+
+```python
+import requests
+
+VL_BASE_URL = "https://app.visual-layer.com"
+JWT_TOKEN = "<your-jwt-token>"
+DATASET_ID = "<your-dataset-id>"
+
+headers = {"Authorization": f"Bearer {JWT_TOKEN}"}
+
+# Step 1: Verify dataset is READY
+resp = requests.get(
+    f"{VL_BASE_URL}/api/v1/dataset/{DATASET_ID}",
+    headers=headers,
+)
+dataset = resp.json()
+print(f"Dataset: {dataset['display_name']}, Status: {dataset['status_new']}")
+
+if dataset["status_new"] not in ("READY", "PARTIAL INDEX"):
+    print(f"Dataset is {dataset['status_new']} — cannot add media.")
+    exit(1)
+
+# Step 2: Add media from S3
+resp = requests.post(
+    f"{VL_BASE_URL}/api/v1/dataset/{DATASET_ID}/add_media",
+    headers=headers,
+    data={"s3_uri": "s3://your-bucket/path/to/media/"},
+)
+
+if resp.status_code == 202:
+    print("Add media accepted — processing in background.")
+else:
+    print(f"Error: {resp.status_code} — {resp.text}")
+    exit(1)
+
+# Step 3: Poll status until processing completes
+import time
+
+while True:
+    resp = requests.get(
+        f"{VL_BASE_URL}/api/v1/dataset/{DATASET_ID}",
+        headers=headers,
+    )
+    status_new = resp.json()["status_new"]
+    print(f"  Status: {status_new}")
+    if status_new in ("READY", "PARTIAL INDEX", "ERROR"):
+        break
+    time.sleep(30)
+
+print(f"Final status: {status_new}")
+```
+
+---
+
+## Response Codes
+
+### Add Media (`POST /api/v1/dataset/{dataset_id}/add_media`)
+
+| HTTP Code | Status | Meaning | Common Cause |
+|-----------|--------|---------|--------------|
+| **202** | Accepted | Processing started successfully | Request valid, pipeline triggered asynchronously |
+| **400** | Bad Request | Invalid request parameters | Missing embedding config, invalid S3 URI, no media source provided, or multiple media sources in one request |
+| **403** | Forbidden | Feature disabled or insufficient permissions | `ADD_MEDIA_ENABLED` is false, or user lacks write access to the dataset |
+| **404** | Not Found | Dataset not found | Dataset does not exist, or the authenticated user does not have access to it |
+| **409** | Conflict | Dataset state incompatible | Dataset status is not `READY` or `PARTIAL INDEX`, or another add media / reindex operation is already running |
+| **500** | Internal Server Error | Server-side failure | File upload to S3 failed, or pipeline trigger failed |
+
+### Reindex (`POST /api/v1/dataset/{dataset_id}/reindex`)
+
+| HTTP Code | Status | Meaning | Common Cause |
+|-----------|--------|---------|--------------|
+| **202** | Accepted | Reindex started successfully | Request valid, reindex pipeline triggered |
+| **404** | Not Found | Dataset not found | Dataset does not exist or user lacks access |
+| **409** | Conflict | Dataset state incompatible | Dataset status is not `PARTIAL INDEX` |
+| **500** | Internal Server Error | Server-side failure | Pipeline trigger failed |
+
+### Error Response Format
+
+Error responses return a JSON body with a `detail` field:
+
+```json
+{
+  "detail": "Operation 'add_media' is blocked while MEDIA_ADDITION task is running"
+}
+```
+
+Common error messages:
+
+| Error Message | HTTP Code | What to Do |
+|---------------|-----------|------------|
+| `"Dataset not found"` | 404 | Check the dataset ID and your access permissions |
+| `"Dataset {id} has no embedding_config..."` | 400 | The dataset must be fully indexed at least once before adding media |
+| `"Exactly one media source must be provided: files[], s3_uri, or archive"` | 400 | Provide exactly one media source per request |
+| `"Invalid S3 URI or no media files found at {uri}"` | 400 | Check the S3 path exists and contains supported media files |
+| `"Operation 'add_media' is blocked while MEDIA_ADDITION task is running"` | 409 | Wait for the current operation to finish before starting another |
+| `"Add media feature is not enabled"` | 403 | Contact your administrator to enable the add media feature |
+
+---
+
+## Dataset Status Flow
+
+After calling add media, the dataset goes through these status transitions:
+
+```
+READY ──[add_media]──> UPDATING (READ ONLY) ──> PARTIAL INDEX
+                                                       │
+                                          [reindex] ───┘
+                                                       │
+                                                       v
+                                                     READY
+```
+
+| Phase | `status` | `status_new` | What's Happening |
+|-------|----------|--------------|------------------|
+| Before | `READY` | `READY` | Dataset is idle, ready for operations |
+| Processing | `UPDATING` | `READ ONLY` | New media is being processed (browsing still works) |
+| Awaiting Reindex | `PENDING_INDEX` | `PARTIAL INDEX` | New media is visible but dataset is not re-clustered |
+| Reindexing | `INDEXING` | `INDEXING` | Full re-clustering in progress |
+| Complete | `READY` | `READY` | All media processed and clustered |
+
+<Tip>
+With `auto_reindex=true`, the flow goes directly from `UPDATING` through reindexing back to `READY` without stopping at `PARTIAL INDEX`.
+</Tip>
+
+---
+
+## On-Premises (Docker Compose)
+
+For on-premises installations, use the pipeline service endpoint:
+
+```bash
+curl "http://localhost:2080/api/v1/process/add_media?dataset_id=<dataset_id>&path=/data/new_images"
+```
+
+Or use the CLI tool:
+
+```bash
+# Add media without auto-reindex
+./run_profiler.sh -o add_media -d <dataset_id> -p /path/to/new/media
+
+# Add media with auto-reindex
+./run_profiler.sh -o add_media -d <dataset_id> -p /path/to/new/media -a
+
+# Manual reindex later
+./run_profiler.sh -o reindex -d <dataset_id>
+```
+
+<Note>
+On-premises add media uses local file paths instead of S3 URIs. The `path` parameter must be an absolute path accessible from the pipeline container.
+</Note>
