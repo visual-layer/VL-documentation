@@ -11,6 +11,7 @@ description: Search for visually similar images by uploading a query image or re
 
 - A dataset in `READY` status with at least one indexed embedding model.
 - A valid JWT token. See [Authentication](/api-reference/authentication).
+- A dataset ID (visible in the browser URL when viewing a dataset: `https://app.visual-layer.com/dataset/<dataset_id>/data`).
 
 <Note>
 Visual search requires the dataset to have been indexed with a visual embedding model. Datasets created through the standard upload workflow include this automatically.
@@ -158,7 +159,7 @@ curl -X POST \
 
 ## Search by Existing Media ID
 
-To find images similar to one already in your dataset, skip Step 1 and use `anchor_type=MEDIA` directly.
+To find images similar to one already in your dataset, skip Step 1 and use `anchor_type=MEDIA` directly. The `media_id` is returned in the `media_id` field of any Explore endpoint response — for example, from a previous visual or semantic search result.
 
 ```bash
 curl -H "Authorization: Bearer <jwt>" \

@@ -10,6 +10,7 @@ description: Export dataset metadata and media using the Visual Layer API—supp
 ## Prerequisites
 
 - A dataset in `READY` status.
+- A dataset ID (visible in the browser URL when viewing a dataset: `https://app.visual-layer.com/dataset/<dataset_id>/data`).
 - A valid JWT token. See [Authentication](/api-reference/authentication).
 
 ---
@@ -102,6 +103,8 @@ Content-Type: application/json
 
 ### Export by Media IDs
 
+`media_ids` are returned in the `media_id` field of any Explore endpoint response (visual search, semantic search, or duplicate retrieval results).
+
 ```bash
 curl -X POST \
   -H "Authorization: Bearer <jwt>" \
@@ -120,6 +123,8 @@ curl -X POST \
 ```
 
 ### Export by Cluster
+
+`cluster_id` values are returned in the `cluster_id` field of Explore endpoint responses and are visible in the Visual Layer UI when browsing clusters.
 
 ```bash
 curl -X POST \
