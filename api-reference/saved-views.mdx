@@ -1,0 +1,206 @@
+---
+title: Saved Views
+description: Create, list, and delete saved views of a dataset to bookmark filtered states for reuse.
+---
+
+<Card title="How This Helps" icon="blend">
+  A saved view captures the current filter state of a dataset — entity type, search query, VQL filters, and threshold — so you can return to the same filtered perspective without reconfiguring it. Views are tied to a dataset and visible to anyone with access to it.
+</Card>
+
+## Prerequisites
+
+- A Visual Layer Cloud account with API access.
+- A valid JWT token. See [Authentication](/api-reference/authentication).
+- A dataset ID. See [Retrieve Dataset Status](/api-reference/retrieve-dataset-status).
+
+---
+
+## Create a View
+
+Save the current filter state of a dataset as a named view.
+
+```http
+POST /api/v1/dataset/{dataset_id}/views
+Authorization: Bearer <jwt>
+Content-Type: multipart/form-data
+```
+
+Pass filter parameters as query parameters on the URL. The view name is sent as a form field.
+
+### Parameters
+
+| Parameter | Location | Type | Required | Description |
+|-----------|----------|------|----------|-------------|
+| `name` | form field | string | Yes | Display name for the view. |
+| `entity_type` | query param | string | No | `IMAGES`, `OBJECTS`, or `VIDEOS`. |
+| `threshold` | query param | number | No | Similarity threshold (0–1). |
+| `caption` | query param | string | No | Caption search query to save with the view. |
+| `vql` | query param | string | No | URL-encoded VQL filter array. |
+
+### Example
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -F "name=Cars at Night" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/views?threshold=0&entity_type=IMAGES"
+```
+
+### Response
+
+```json
+{
+  "id": "63c53171-888a-4447-ae2a-1beeff6944cf",
+  "dataset_id": "b1a39406-123d-11f1-9353-fa39f6ed1f22",
+  "name": "Cars at Night",
+  "created_at": "2026-02-25T13:19:50.583298",
+  "created_by": {
+    "user_id": "5aadb880-2e5c-445b-a26e-4bc029f1b640",
+    "email": "rachel@visual-layer.com",
+    "name": "Rachel Cheyfitz"
+  },
+  "filters": {
+    "entity_type": "IMAGES",
+    "threshold": "0",
+    "caption": null,
+    "vql": []
+  },
+  "stats": {
+    "n_images": -1,
+    "n_objects": -1,
+    "n_video_frames": -1
+  },
+  "total_results": 0,
+  "monitoring_enabled": true,
+  "alerting_enabled": true
+}
+```
+
+Save the `id` — you need it to delete the view later.
+
+---
+
+## List Views
+
+Retrieve all saved views for a dataset.
+
+```http
+GET /api/v1/dataset/{dataset_id}/views
+Authorization: Bearer <jwt>
+```
+
+### Example
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/views"
+```
+
+### Response
+
+```json
+{
+  "views": [
+    {
+      "id": "63c53171-888a-4447-ae2a-1beeff6944cf",
+      "name": "Cars at Night",
+      "created_at": "2026-02-25T13:19:50.583298",
+      "filters": {
+        "entity_type": "IMAGES",
+        "threshold": "0"
+      },
+      "total_results": 0
+    }
+  ]
+}
+```
+
+---
+
+## Delete a View
+
+Delete a saved view by its ID.
+
+```http
+DELETE /api/v1/dataset/{dataset_id}/views/{view_id}
+Authorization: Bearer <jwt>
+```
+
+### Example
+
+```bash
+curl -X DELETE \
+  -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/views/<view_id>"
+```
+
+A successful request returns HTTP 200 with a `null` body.
+
+---
+
+## Python Example
+
+```python
+import requests
+
+VL_BASE_URL = "https://app.visual-layer.com"
+JWT_TOKEN = "<your-jwt-token>"
+DATASET_ID = "<your-dataset-id>"
+
+headers = {"Authorization": f"Bearer {JWT_TOKEN}"}
+
+# Create a view
+resp = requests.post(
+    f"{VL_BASE_URL}/api/v1/dataset/{DATASET_ID}/views",
+    headers=headers,
+    params={"entity_type": "IMAGES", "threshold": 0},
+    data={"name": "Cars at Night"},
+)
+resp.raise_for_status()
+view = resp.json()
+view_id = view["id"]
+print(f"Created view: {view_id}")
+
+# List views
+resp = requests.get(
+    f"{VL_BASE_URL}/api/v1/dataset/{DATASET_ID}/views",
+    headers=headers,
+)
+resp.raise_for_status()
+views = resp.json()["views"]
+print(f"Total views: {len(views)}")
+for v in views:
+    print(f"  {v['id']} — {v['name']}")
+
+# Delete a view
+resp = requests.delete(
+    f"{VL_BASE_URL}/api/v1/dataset/{DATASET_ID}/views/{view_id}",
+    headers=headers,
+)
+resp.raise_for_status()
+print(f"Deleted view: {view_id}")
+```
+
+---
+
+## Response Codes
+
+| HTTP Code | Meaning |
+|-----------|---------|
+| **200** | Request successful. |
+| **401** | Unauthorized — check your JWT token. |
+| **404** | Dataset or view not found. |
+| **500** | Internal Server Error — contact support if this persists. |
+
+---
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Visual Search" icon="scan-search" href="/api-reference/visual-search">
+    Search by image similarity — save the result state as a view.
+  </Card>
+  <Card title="Semantic Search" icon="scan-text" href="/api-reference/semantic-search">
+    Search by caption or VQL — save the result state as a view.
+  </Card>
+</CardGroup>

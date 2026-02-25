@@ -171,7 +171,9 @@
                         "pages": [
                             "api-reference/retrieve-dataset-status",
                             "api-reference/add-media-to-existing-dataset",
-                            "api-reference/share-a-dataset-with-another-user"
+                            "api-reference/share-a-dataset-with-another-user",
+                            "api-reference/enrichment",
+                            "api-reference/saved-views"
                         ]
                     },
                     {
