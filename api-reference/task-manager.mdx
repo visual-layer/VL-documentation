@@ -1,0 +1,299 @@
+---
+title: Task Manager
+description: List, filter, abort, and retry dataset tasks programmatically.
+---
+
+<Card title="How This Helps" icon="hand-platter">
+  The Task Manager API gives you programmatic access to all dataset operations — creation, enrichment, re-indexing, snapshot operations, and more. Monitor progress, abort long-running tasks, and retry failed ones without switching to the UI.
+</Card>
+
+## Prerequisites
+
+- A Visual Layer Cloud account with API access.
+- A valid JWT token. See [Authentication](/api-reference/authentication).
+
+---
+
+## List Tasks
+
+Retrieve a paginated list of tasks across all datasets you have access to.
+
+```http
+GET /api/v1/tasks
+Authorization: Bearer <jwt>
+```
+
+### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `dataset_id` | UUID | No | Filter by dataset ID. |
+| `dataset_name` | string | No | Filter by dataset name. |
+| `task_type` | string | No | Filter by task type. See [Task Types](#task-types) for valid values. |
+| `task_status` | string | No | Filter by status. See [Task Statuses](#task-statuses) for valid values. |
+| `created_by` | string | No | Filter by the email address of the user who initiated the task. |
+| `start_time_from` | datetime | No | Return tasks initiated on or after this timestamp (ISO 8601). |
+| `start_time_to` | datetime | No | Return tasks initiated on or before this timestamp (ISO 8601). |
+| `sort_by` | string | No | Sort field: `start_time`, `status`, `task_type`, `dataset_name`, `dataset_id`, or `created_by`. |
+| `sort_order` | string | No | `asc` or `desc` (default: `desc`). |
+| `page` | integer | No | Page number, 1-based (default: `1`). |
+| `page_size` | integer | No | Results per page, 5–50 (default: `20`). |
+
+### Example
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/tasks?task_status=FAILED&start_time_from=2026-03-01T00:00:00Z"
+```
+
+### Response
+
+```json
+{
+  "tasks": [
+    {
+      "task_id": "a1b2c3d4-5678-90ab-cdef-1234567890ab",
+      "dataset_id": "b1a39406-123d-11f1-9353-fa39f6ed1f22",
+      "dataset_name": "Product Images Q1",
+      "dataset_status": "READY",
+      "created_by": "rachel@visual-layer.com",
+      "task_type": "ENRICHMENT",
+      "status": "FAILED",
+      "status_message": "Enrichment failed",
+      "progress_percentage": 45,
+      "error_message": "Model timeout after 300s",
+      "start_time": "2026-03-01T14:30:00Z",
+      "end_time": "2026-03-01T14:35:12Z"
+    }
+  ],
+  "total": 1,
+  "page": 1,
+  "page_size": 20
+}
+```
+
+### Task Object Fields
+
+| Field | Description |
+|-------|-------------|
+| `task_id` | Unique identifier for the task. |
+| `dataset_id` | The dataset this task operates on. |
+| `dataset_name` | Display name of the dataset. |
+| `dataset_status` | Current dataset status (`READY`, `READ_ONLY`, `PARTIAL_INDEX`). |
+| `created_by` | Email address of the user who initiated the task. |
+| `task_type` | The operation type. See [Task Types](#task-types). |
+| `status` | Current task status. See [Task Statuses](#task-statuses). |
+| `status_message` | Short description of the current state. |
+| `progress_percentage` | Completion percentage (0–100), or `null` if not available. |
+| `error_message` | Error details if the task failed, otherwise `null`. |
+| `start_time` | ISO 8601 timestamp when the task started. |
+| `end_time` | ISO 8601 timestamp when the task reached a final state, or `null` if still running. |
+
+---
+
+## Get Filter Options
+
+Retrieve the available values for each filter field. Use this to populate filter dropdowns in custom integrations.
+
+```http
+GET /api/v1/tasks/filters
+Authorization: Bearer <jwt>
+```
+
+### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `start_time_from` | datetime | No | Scope filter options to tasks from this timestamp onward. |
+| `start_time_to` | datetime | No | Scope filter options to tasks before this timestamp. |
+
+### Example
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/tasks/filters"
+```
+
+### Response
+
+```json
+{
+  "dataset_names": ["Product Images Q1", "Training Set v2"],
+  "dataset_ids": ["b1a39406-123d-11f1-9353-fa39f6ed1f22"],
+  "task_types": ["DATASET_CREATION", "ENRICHMENT", "REINDEX"],
+  "created_by": ["rachel@visual-layer.com", "alex@visual-layer.com"]
+}
+```
+
+---
+
+## Abort a Task
+
+Cancel a running dataset creation task. The task stops processing and its status changes to `ABORTED`.
+
+```http
+POST /api/v1/tasks/{task_id}/abort
+Authorization: Bearer <jwt>
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `task_id` | UUID | Yes | The ID of the task to abort. |
+
+### Example
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/tasks/<task_id>/abort"
+```
+
+### Response
+
+Returns the updated task object with `status` set to `ABORTED`.
+
+<Note>
+Only **Dataset Creation** tasks can be aborted. Tasks in the final commit phase or in a completed state (`COMPLETED`, `FAILED`, `ABORTED`) cannot be aborted and return a `409 Conflict` response.
+</Note>
+
+---
+
+## Retry a Task
+
+Restart a failed or aborted dataset creation task. The task resets to `INITIALIZING` and re-triggers the processing pipeline with the same configuration.
+
+```http
+POST /api/v1/tasks/{task_id}/retry
+Authorization: Bearer <jwt>
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `task_id` | UUID | Yes | The ID of the task to retry. |
+
+### Example
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/tasks/<task_id>/retry"
+```
+
+### Response
+
+Returns the updated task object with `status` set to `INITIALIZING`.
+
+<Note>
+Only **Dataset Creation** tasks in `FAILED` or `ABORTED` status can be retried. All previously uploaded media is preserved and reprocessed. A `400 Bad Request` is returned if the task is not in a retryable state.
+</Note>
+
+---
+
+## Task Types
+
+The following task types appear in the `task_type` field:
+
+<div className="integrations-table">
+
+| Task Type | Description |
+|-----------|-------------|
+| `DATASET_CREATION` | Creating a new dataset from uploaded media. |
+| `MEDIA_ADDITION` | Adding new images or videos to an existing dataset. |
+| `REINDEX` | Re-indexing a dataset after media addition to incorporate new items into the dataset index. |
+| `ENRICHMENT` | Running an AI enrichment model on the dataset. |
+| `CUSTOM_METADATA` | Importing or updating custom metadata fields. |
+| `SNAPSHOT_RESTORE` | Restoring a dataset to a previously saved snapshot state. |
+| `SNAPSHOT_CLONE` | Creating a new independent dataset from a snapshot. |
+
+</div>
+
+---
+
+## Task Statuses
+
+The following values appear in the `status` field:
+
+<div className="integrations-table">
+
+| Status | Description |
+|--------|-------------|
+| `INITIALIZING` | The task is performing initial setup and validation. |
+| `RUNNING` | The task is actively processing. `progress_percentage` reflects completion. |
+| `COMPLETED` | The task finished successfully. |
+| `FAILED` | The task encountered an error. Check `error_message` for details. |
+| `ABORTED` | The task was manually cancelled by a user. |
+
+</div>
+
+---
+
+## Python Example
+
+```python
+import requests
+import time
+
+VL_BASE_URL = "https://app.visual-layer.com"
+JWT_TOKEN = "<your-jwt-token>"
+
+headers = {"Authorization": f"Bearer {JWT_TOKEN}"}
+
+# List all failed tasks from the past week
+resp = requests.get(
+    f"{VL_BASE_URL}/api/v1/tasks",
+    headers=headers,
+    params={
+        "task_status": "FAILED",
+        "start_time_from": "2026-02-24T00:00:00Z",
+        "sort_by": "start_time",
+        "sort_order": "desc",
+    },
+)
+resp.raise_for_status()
+data = resp.json()
+print(f"Found {data['total']} failed tasks")
+
+for task in data["tasks"]:
+    print(f"  {task['task_type']} on {task['dataset_name']}: {task['error_message']}")
+
+    # Retry failed dataset creation tasks
+    if task["task_type"] == "DATASET_CREATION":
+        retry_resp = requests.post(
+            f"{VL_BASE_URL}/api/v1/tasks/{task['task_id']}/retry",
+            headers=headers,
+        )
+        retry_resp.raise_for_status()
+        print(f"    Retried task {task['task_id']}")
+```
+
+---
+
+## Response Codes
+
+See [Error Handling](/api-reference/errors) for the error response format and Python handling patterns.
+
+| HTTP Code | Meaning |
+|-----------|---------|
+| **200** | Request successful. |
+| **400** | Bad request — task is not in a retryable state (retry endpoint). |
+| **401** | Unauthorized — check your JWT token. |
+| **404** | Task or dataset not found. |
+| **409** | Conflict — task cannot be aborted (already completed, failed, or in commit phase). |
+| **500** | Internal Server Error — contact support if this persists. |
+
+---
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Task Manager (UI)" icon="list-checks" href="/docs/advanced-features/task-manager">
+    Monitor and manage tasks from the Visual Layer interface.
+  </Card>
+  <Card title="Retrieve Dataset Status" icon="circle-check" href="/api-reference/retrieve-dataset-status">
+    Check a dataset's current processing state.
+  </Card>
+</CardGroup>

@@ -112,6 +112,7 @@
                         "group": "Collab & Downstream",
                         "pages": [
                             "docs/collab-and-downstream/views",
+                            "docs/collab-and-downstream/saved-views",
                             "docs/collab-and-downstream/share-dataset",
                             "docs/advanced-dataset-management/export-dataset"
                         ]
@@ -127,8 +128,10 @@
                         "group": "Advanced Creation & Management",
                         "pages": [
                             "docs/advanced-dataset-management/importing-annotations",
+                            "docs/advanced-dataset-management/dataset-snapshots",
                             "docs/advanced-features/tag-iteams",
-                            "docs/advanced-features/task-manager"
+                            "docs/advanced-features/task-manager",
+                            "docs/advanced-features/notifications"
                         ]
                     },
                     {
@@ -180,7 +183,8 @@
                             "api-reference/add-media-to-existing-dataset",
                             "api-reference/share-a-dataset-with-another-user",
                             "api-reference/enrichment",
-                            "api-reference/saved-views"
+                            "api-reference/saved-views",
+                            "api-reference/task-manager"
                         ]
                     },
                     {

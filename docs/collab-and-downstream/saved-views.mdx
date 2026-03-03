@@ -1,0 +1,213 @@
+---
+title: "Saved Views"
+description: "Create, monitor, share, and manage named filter queries that dynamically track matching results across your dataset."
+sidebarTitle: "Saved Views"
+---
+
+Saved Views are persistent, named filter queries attached to a dataset. Each view captures a complete set of filters — search terms, labels, quality issues, tags, metadata, and thresholds — so you can return to the exact same data slice at any time. The underlying data stays current: views always reflect the latest results matching your criteria.
+
+Use Saved Views to:
+
+- Preserve complex filter combinations for repeated use without manual reconfiguration
+- Track how result counts change over time as new media enters the dataset
+- Receive alerts when new data matches your filter criteria
+- Share filtered perspectives with collaborators for coordinated review workflows
+
+Key characteristics:
+
+- Views do not duplicate or store data. They act as persistent filter definitions.
+- Views are dataset-specific and visible to all collaborators with access to that dataset.
+- Views are immutable. To change a view's filters, delete it and create a new one.
+- Monitoring tracks result changes over time. Alerting notifies you when new matches appear.
+
+---
+
+## Creating a View
+
+Save any active filter combination as a named view.
+
+1. Open a dataset and apply filters, search queries, or similarity conditions in the **Explore** tab.
+2. Click **Save View** in the **Filter Panel**.
+3. Enter a descriptive name for the view.
+4. Click **Save**.
+
+The view is created and appears in both the **Filter Panel** dropdown and the **Views** tab.
+
+<Frame>
+  <img src="/images/save-view-dialog-placeholder.png" alt="Save View dialog with name input field" />
+</Frame>
+
+{/* TODO: Add screenshot of the Save View input popover */}
+
+<Note>
+View names must be unique within a dataset. If a name already exists, an error message appears and the **Save** button is disabled.
+</Note>
+
+### What Gets Captured
+
+A saved view records the complete filter state at the moment of creation:
+
+- Text and semantic search queries
+- VQL (Visual Query Language) filters
+- Label and tag selections
+- Quality issue filters (duplicates, outliers, mislabels)
+- Entity type (images, objects, or video frames)
+- Similarity thresholds
+- Metadata source filters
+- Folder path filters
+
+The view also captures a snapshot of the current result counts (images, objects, and video frames) at creation time.
+
+---
+
+## Accessing Saved Views
+
+Saved views are accessible from two locations.
+
+### From the Explore Tab
+
+Click **Save View** in the **Filter Panel** to open the views dropdown. The dropdown lists all saved views for the current dataset. Click any view name to load its filters into the current exploration session.
+
+The currently active view appears first in the list. Click it again to clear the view and return to unfiltered exploration.
+
+A **See all views** link at the bottom of the dropdown navigates to the **Views** tab for the full views list.
+
+### From the Views Tab
+
+Navigate to the **Views** tab from the dataset header. The **Views** tab displays all saved views in a table with detailed information and management options.
+
+<Frame>
+  <img src="/images/saved-views-table-placeholder.png" alt="Views tab showing table of saved views with monitoring data" />
+</Frame>
+
+{/* TODO: Add screenshot of the Views tab table */}
+
+### Views Table Columns
+
+The **Views** tab table displays the following information for each view:
+
+<div className="integrations-table">
+
+| Column | Description |
+|--------|-------------|
+| **Name** | The view name. Click to expand the row and see full details. |
+| **Total Results** | The cumulative count of items matching the view's filters. |
+| **Last Result** | How long ago the most recent matching result was detected. |
+| **Creation Time** | When the view was created. |
+| **Created By** | The user who created the view, shown as avatar and name. |
+| **Monitoring** | Toggle to enable or disable alerts for this view. |
+
+</div>
+
+---
+
+## Exploring a View's Results
+
+Open a saved view to see its matching results and trend data.
+
+1. Navigate to the **Views** tab.
+2. Click a view row to expand it.
+
+The expanded row displays two sections:
+
+### Query Details
+
+A read-only display of all filters captured in the view, shown as filter badges. Click **Explore Results** to navigate to the **Explore** tab with these filters applied.
+
+### Trend Results and Preview
+
+The expanded view displays a split panel:
+
+- **Trend Results** (left): A bar chart showing how the result count has changed over time. The chart displays the last 8 data points with timestamps and counts. Hover over any bar to see the exact date and count.
+- **Preview** (right): A scrollable grid of thumbnail images from the matching results.
+
+<Frame>
+  <img src="/images/saved-views-expanded-placeholder.png" alt="Expanded view row showing trend chart and image preview grid" />
+</Frame>
+
+{/* TODO: Add screenshot of an expanded view row showing the trend chart and preview grid */}
+
+---
+
+## Monitoring and Alerts
+
+Saved Views include built-in monitoring that tracks how result counts change over time. When new media is added to a dataset through the [API](/api-reference/add-media-to-existing-dataset) and matches a view's filter criteria, the monitoring system detects the change and updates the view's trend data.
+
+### Enabling Alerts
+
+Each view has a monitoring toggle in the **Monitoring** column of the **Views** tab. When alerts are enabled, you receive a notification through [Monitor Alerts](/docs/advanced-features/notifications) whenever new results matching the view's filters are detected.
+
+1. Navigate to the **Views** tab.
+2. Click the toggle in the **Monitoring** column for the relevant view.
+
+The toggle switches between an active bell icon (alerts on) and a muted bell icon (alerts off).
+
+<Frame>
+  <img src="/images/saved-views-monitoring-toggle-placeholder.png" alt="Monitoring toggle in the Views table showing active and muted states" />
+</Frame>
+
+{/* TODO: Add screenshot showing the monitoring toggle in both states */}
+
+<Note>
+Alerts are delivered to all users with access to the dataset, not just the view creator. See [Monitor Alerts](/docs/advanced-features/notifications) for details on viewing and managing alerts.
+</Note>
+
+---
+
+## Sharing a View
+
+Share a saved view with a collaborator by email. Sharing sends an email with the view details and a link to open it.
+
+1. Navigate to the **Views** tab.
+2. Click the **Share** icon on the view row.
+3. In the **Share this View** panel, optionally enter a personal message (up to 250 characters).
+4. Enter the recipient's email address.
+5. Click **Invite**.
+
+The recipient receives an email with the view context and a direct link.
+
+<Frame>
+  <img src="/images/saved-views-share-panel-placeholder.png" alt="Share this View panel with message field and email input" />
+</Frame>
+
+{/* TODO: Add screenshot of the Share this View panel */}
+
+<Note>
+Views are accessible to all collaborators on the dataset. The share feature sends an email notification to draw a specific person's attention to the view — it does not grant additional access.
+</Note>
+
+---
+
+## Deleting a View
+
+Remove a view that is no longer needed.
+
+1. Navigate to the **Views** tab.
+2. Click the three-dot menu on the view row.
+3. Select **Delete**.
+4. Confirm the deletion in the dialog that appears.
+
+The view and its trend data are permanently removed.
+
+<Note>
+Views are immutable. To modify a view's filters, delete the existing view, apply new filters in the **Explore** tab, and save a new view.
+</Note>
+
+---
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Monitor Alerts" icon="blend" href="/docs/advanced-features/notifications">
+    View and manage alerts triggered by monitored saved views.
+  </Card>
+  <Card title="Search and Filter" icon="sliders-horizontal" href="/docs/explore-and-search/using-search-filter">
+    Build the filter combinations that drive your saved views.
+  </Card>
+  <Card title="Add Media via API" icon="database" href="/api-reference/add-media-to-existing-dataset">
+    Add new media to trigger monitoring updates on saved views.
+  </Card>
+  <Card title="Saved Views API" icon="file-code-2" href="/api-reference/saved-views">
+    Create, list, and delete saved views programmatically.
+  </Card>
+</CardGroup>
