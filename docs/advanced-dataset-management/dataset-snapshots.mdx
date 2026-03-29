@@ -107,7 +107,7 @@ Clone a snapshot to create a new, independent dataset from a saved state. The or
 4. Select **Clone**.
 5. Confirm the clone operation in the dialog that appears.
 
-A new dataset is created with the name **{Original Dataset Name} (cloned)**. A **Snapshot Clone** task appears in the **Task Manager** where you can track progress. The cloned dataset appears in the **Dataset Inventory** once processing completes.
+A new dataset is created with the name **\{Original Dataset Name\} (cloned)**. A **Snapshot Clone** task appears in the **Task Manager** where you can track progress. The cloned dataset appears in the **Dataset Inventory** once processing completes.
 
 <Frame>
   <img src="/images/snapshot-clone-confirm-placeholder.png" alt="Clone Snapshot confirmation dialog" />
@@ -127,7 +127,7 @@ Update the name or description of any snapshot without affecting its saved data.
 2. Click the three-dot menu on the snapshot you want to edit.
 3. Select **Edit**.
 4. Update the **Name** or **Description**.
-5. Click **Create** to save.
+5. Click **Save**.
 
 ## Removing a Snapshot
 
@@ -158,18 +158,26 @@ The ID is copied to your clipboard.
 
 Keep the following constraints in mind when working with snapshots:
 
-- Snapshots require the dataset to be in **Ready** status for create, restore, and clone operations.
-- Only one snapshot operation (create, restore, or clone) can run at a time per dataset. The three-dot menu actions are disabled on other snapshots while an operation is in progress.
-- Restore and clone operations put the dataset in **Read Only** status, blocking other data-modifying tasks until the operation completes.
+- Creating a snapshot requires the dataset to be in **Ready** status. Restore and clone also accept **Partial Index** and **Error** statuses.
+- Snapshot creation is blocked while another operation is running — enrichment, media addition, re-indexing, label propagation, custom metadata import, or another snapshot restore.
+- Restore and clone operations put the dataset in **Read Only** status, blocking all data-modifying tasks until the operation completes.
+- Clone operations run on the new dataset, so they do not block operations on the source dataset.
+- The snapshot marked as **Current Version** cannot be deleted. Create a new snapshot to change the current version first.
 - Snapshots are available only for datasets created with snapshot support enabled. Older datasets may not support this feature.
 
 ## Related Resources
 
 <CardGroup cols={2}>
+  <Card title="Snapshots API" icon="file-code-2" href="/api-reference/snapshots">
+    Manage snapshots programmatically — create, list, restore, clone, and delete via the REST API.
+  </Card>
   <Card title="Task Manager" icon="list-checks" href="/docs/advanced-features/task-manager">
     Track snapshot restore and clone operations alongside other dataset tasks.
   </Card>
   <Card title="Export Dataset" icon="download" href="/docs/advanced-dataset-management/export-dataset">
     Export a specific version of your dataset after restoring a snapshot.
+  </Card>
+  <Card title="Enrichment" icon="sparkles" href="/docs/advanced-dataset-management/enrich-overview">
+    Create a snapshot before running enrichment models as a safety net.
   </Card>
 </CardGroup>
