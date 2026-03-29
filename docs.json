@@ -205,6 +205,14 @@
                         ]
                     },
                     {
+                        "group": "Self-Hosted Administration",
+                        "pages": [
+                            "api-reference/user-management",
+                            "api-reference/workspaces",
+                            "api-reference/admin-settings"
+                        ]
+                    },
+                    {
                         "group": "Useful Scripts",
                         "pages": [
                             "docs/self-hosting/useful-scripts"

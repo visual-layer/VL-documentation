@@ -1,0 +1,174 @@
+---
+title: Admin Settings
+description: View and update runtime configuration settings on self-hosted Visual Layer deployments.
+---
+
+<Note>
+This API is available on self-hosted deployments only. See [Self-Hosting](/docs/self-hosting/setting_up) for setup instructions.
+</Note>
+
+<Card title="How This Helps" icon="hand-platter">
+  The Admin Settings API allows administrators to view and change runtime configuration without restarting the application. Toggle feature flags, adjust thresholds, and fine-tune system behavior — all changes take effect immediately.
+</Card>
+
+## Prerequisites
+
+- A self-hosted Visual Layer deployment (`RUN_MODE=ONPREM`).
+- An authenticated session. If user management is enabled, the Admin workspace role is required.
+
+---
+
+## Get a Setting
+
+Retrieve the current value of a configuration setting.
+
+```http
+GET /api/v1/admin/settings?key={key}
+```
+
+### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | string | Yes | Setting name in `UPPER_SNAKE_CASE`. Hyphens are automatically converted to underscores. |
+
+### Example
+
+```bash
+curl "https://<your-vl-domain>/api/v1/admin/settings?key=DATASET_SNAPSHOTS_ENABLED"
+```
+
+### Response
+
+```json
+{
+  "value": "true"
+}
+```
+
+The endpoint returns the value from the runtime settings database if it has been overridden. Otherwise, it returns the application default. All values are returned as strings.
+
+---
+
+## Update a Setting
+
+Change a configuration setting at runtime. The new value takes effect immediately for all subsequent API requests.
+
+```http
+POST /api/v1/admin/settings
+Content-Type: application/json
+```
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `key` | string | Yes | Setting name in `UPPER_SNAKE_CASE`. |
+| `value` | any | Yes | New value. Stored as a string regardless of type. |
+
+### Example
+
+```bash
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"key": "VL_CHAT_ENABLED", "value": "true"}' \
+  "https://<your-vl-domain>/api/v1/admin/settings"
+```
+
+### Response
+
+```json
+{
+  "value": "true"
+}
+```
+
+<Warning>
+Setting changes take effect immediately for all users. Test changes in a non-production environment first. Invalid setting names return a `400` error — only settings that exist in the application configuration can be modified.
+</Warning>
+
+---
+
+## Common Settings
+
+The following settings are commonly adjusted on self-hosted deployments:
+
+### Feature Toggles
+
+<div className="integrations-table">
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `DATASET_SNAPSHOTS_ENABLED` | boolean | `true` | Enable dataset snapshot support. |
+| `VL_CHAT_ENABLED` | boolean | varies | Enable the VL Chat AI assistant. |
+| `ENRICHMENT_INLINE_FLOW_ENABLED` | boolean | `false` | Enable the inline enrichment workflow. |
+| `DATASET_SHARE_ENABLED` | boolean | `true` | Allow dataset sharing between users. |
+| `ADD_MEDIA_ENABLED` | boolean | `true` | Allow adding media to existing datasets. |
+| `DELETE_DATASET_ENABLED` | boolean | `true` | Allow dataset deletion. |
+
+</div>
+
+### System Configuration
+
+<div className="integrations-table">
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `LOG_LEVEL` | string | `INFO` | Application log level: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. |
+| `SWAP_RGB_CHANNELS_FOR_TIFF_HEIC` | boolean | `false` | Swap RGB channels when processing TIFF and HEIC images. |
+
+</div>
+
+---
+
+## Python Example
+
+```python
+import requests
+
+VL_BASE_URL = "https://<your-vl-domain>"
+session = requests.Session()
+# Authenticate via OIDC flow first, then use the session cookie
+
+# Check current setting
+resp = session.get(
+    f"{VL_BASE_URL}/api/v1/admin/settings",
+    params={"key": "VL_CHAT_ENABLED"},
+)
+resp.raise_for_status()
+print(f"VL_CHAT_ENABLED: {resp.json()['value']}")
+
+# Enable a feature
+resp = session.post(
+    f"{VL_BASE_URL}/api/v1/admin/settings",
+    json={"key": "VL_CHAT_ENABLED", "value": "true"},
+)
+resp.raise_for_status()
+print(f"Updated to: {resp.json()['value']}")
+```
+
+---
+
+## Response Codes
+
+See [Error Handling](/api-reference/errors) for the error response format.
+
+| HTTP Code | Meaning |
+|-----------|---------|
+| **200** | Request successful. |
+| **400** | Setting name does not exist in the application configuration. |
+| **403** | Forbidden — not an on-prem deployment, or insufficient admin privileges. |
+| **500** | Internal Server Error — contact support if this persists. |
+
+---
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="User Management" icon="users" href="/api-reference/user-management">
+    Manage user accounts on self-hosted deployments.
+  </Card>
+  <Card title="Configuration" icon="blocks" href="/docs/self-hosting/Configuration">
+    Environment-level configuration options for self-hosted deployments.
+  </Card>
+</CardGroup>

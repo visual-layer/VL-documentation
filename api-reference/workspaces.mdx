@@ -1,0 +1,404 @@
+---
+title: Workspaces & Organizations
+description: List workspaces and organizations, view members, and manage workspace roles on self-hosted deployments.
+sidebarTitle: "Workspaces"
+---
+
+<Note>
+This API is available on self-hosted deployments only. See [Self-Hosting](/docs/self-hosting/setting_up) for setup instructions.
+</Note>
+
+<Card title="How This Helps" icon="hand-platter">
+  Workspaces organize users and datasets within an organization. Use these endpoints to list workspaces, view membership, check access levels, and change member roles — all programmatically.
+</Card>
+
+## Prerequisites
+
+- A self-hosted Visual Layer deployment with authentication enabled.
+- An authenticated session with a workspace member account.
+- Admin role required for role-change operations.
+
+---
+
+## List Workspaces
+
+Retrieve all workspaces the authenticated user belongs to.
+
+```http
+GET /api/v1/workspaces
+```
+
+### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `organization_id` | UUID | No | Filter workspaces by organization. |
+
+### Example
+
+```bash
+curl "https://<your-vl-domain>/api/v1/workspaces"
+```
+
+### Response
+
+```json
+{
+  "workspaces": [
+    {
+      "id": "00000000-0000-0000-0000-000000000001",
+      "organization_id": "00000000-0000-0000-0000-000000000001",
+      "name": "Default Workspace",
+      "created_at": "2026-01-15T10:00:00.000000",
+      "updated_at": null,
+      "permissions": {
+        "can_view": true,
+        "can_manage_members": true,
+        "can_edit_roles": true,
+        "can_create_dataset": true
+      }
+    }
+  ]
+}
+```
+
+### Workspace Object Fields
+
+<div className="integrations-table">
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | UUID | Workspace identifier. |
+| `organization_id` | UUID | Parent organization ID. |
+| `name` | string | Workspace display name. |
+| `created_at` | datetime | ISO 8601 creation timestamp. |
+| `updated_at` | datetime or null | Last update timestamp. |
+| `permissions` | object or null | Authenticated user's permissions in this workspace. |
+
+</div>
+
+### Permission Fields
+
+<div className="integrations-table">
+
+| Field | Description |
+|-------|-------------|
+| `can_view` | User can view workspace contents. |
+| `can_manage_members` | User can add/remove members and change roles (Admin only). |
+| `can_edit_roles` | User can modify member roles (Admin only). |
+| `can_create_dataset` | User can create new datasets in this workspace. |
+
+</div>
+
+---
+
+## Get Workspace
+
+Retrieve details for a specific workspace.
+
+```http
+GET /api/v1/workspaces/{workspace_id}
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `workspace_id` | UUID | Yes | Workspace ID. |
+
+### Example
+
+```bash
+curl "https://<your-vl-domain>/api/v1/workspaces/<workspace_id>"
+```
+
+### Response
+
+Returns a single [Workspace object](#workspace-object-fields).
+
+---
+
+## List Workspace Members
+
+Retrieve all members of a workspace with their roles.
+
+```http
+GET /api/v1/workspace/members
+```
+
+### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `workspace_id` | UUID | No | Workspace ID. Defaults to the user's primary workspace. |
+
+### Example
+
+```bash
+curl "https://<your-vl-domain>/api/v1/workspace/members"
+```
+
+### Response
+
+```json
+{
+  "members": [
+    {
+      "user_id": "5aadb880-2e5c-445b-a26e-4bc029f1b640",
+      "username": "rachel",
+      "email": "rachel@visual-layer.com",
+      "firstName": "Rachel",
+      "lastName": "Cheyfitz",
+      "role": "admin",
+      "created_at": "2026-01-15T10:00:00.000000"
+    },
+    {
+      "user_id": "b3c4d5e6-7890-abcd-ef01-234567890abc",
+      "username": "alex.dev",
+      "email": "alex@company.com",
+      "firstName": "Alex",
+      "lastName": "Developer",
+      "role": "editor",
+      "created_at": "2026-02-20T14:30:00.000000"
+    }
+  ],
+  "total": 2
+}
+```
+
+### Member Object Fields
+
+<div className="integrations-table">
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `user_id` | UUID | Visual Layer user ID. |
+| `username` | string | Login username. |
+| `email` | string or null | User email address. |
+| `firstName` | string or null | First name. |
+| `lastName` | string or null | Last name. |
+| `role` | string | Workspace role: `admin`, `editor`, or `viewer`. |
+| `created_at` | datetime | ISO 8601 timestamp of when the user joined the workspace. |
+
+</div>
+
+---
+
+## Update Member Role
+
+Change a workspace member's role. Admin access required.
+
+```http
+PUT /api/v1/workspace/members/{member_user_id}/role
+Content-Type: application/json
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `member_user_id` | UUID | Yes | User ID of the member to update. |
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `role` | string | Yes | New role: `admin`, `editor`, or `viewer`. |
+| `workspace_id` | UUID | No | Workspace ID. Defaults to the user's primary workspace. |
+
+### Example
+
+```bash
+curl -X PUT \
+  -H "Content-Type: application/json" \
+  -d '{"role": "editor"}' \
+  "https://<your-vl-domain>/api/v1/workspace/members/<member_user_id>/role"
+```
+
+### Response
+
+Returns the updated [Member object](#member-object-fields).
+
+### Role Change Behavior
+
+Role changes have cascading effects depending on the transition:
+
+**Promoting to Admin** (single-workspace mode):
+- All existing admins are demoted to Editor.
+- The promoted user receives Keycloak admin roles.
+- All affected users are logged out and must re-authenticate.
+
+**Demoting to Viewer:**
+- All dataset-level permissions above Viewer are revoked.
+- Datasets owned by the demoted user are transferred to the admin performing the change.
+- If the user was an admin, Keycloak admin roles are revoked.
+
+<Note>
+You cannot change your own role. Attempting to do so returns a `400` error.
+</Note>
+
+---
+
+## Check Settings Access
+
+Check the authenticated user's access level for workspace settings.
+
+```http
+GET /api/v1/workspace/settings/access
+```
+
+### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `workspace_id` | UUID | No | Workspace ID. Defaults to the user's primary workspace. |
+
+### Example
+
+```bash
+curl "https://<your-vl-domain>/api/v1/workspace/settings/access"
+```
+
+### Response
+
+```json
+{
+  "can_access": true,
+  "can_manage": true,
+  "role": "admin"
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `can_access` | `true` if the user is a member of the workspace. |
+| `can_manage` | `true` if the user can manage members and settings (Admin only). |
+| `role` | User's role in the workspace: `admin`, `editor`, `viewer`, or `null`. |
+
+---
+
+## List Organizations
+
+Retrieve all organizations the authenticated user belongs to.
+
+```http
+GET /api/v1/organizations
+```
+
+### Example
+
+```bash
+curl "https://<your-vl-domain>/api/v1/organizations"
+```
+
+### Response
+
+```json
+{
+  "organizations": [
+    {
+      "id": "00000000-0000-0000-0000-000000000001",
+      "name": "Default Organization",
+      "created_at": "2026-01-15T10:00:00.000000",
+      "updated_at": null
+    }
+  ]
+}
+```
+
+---
+
+## Get Organization
+
+Retrieve details for a specific organization.
+
+```http
+GET /api/v1/organizations/{organization_id}
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `organization_id` | UUID | Yes | Organization ID. |
+
+### Example
+
+```bash
+curl "https://<your-vl-domain>/api/v1/organizations/<organization_id>"
+```
+
+### Response
+
+```json
+{
+  "id": "00000000-0000-0000-0000-000000000001",
+  "name": "Default Organization",
+  "created_at": "2026-01-15T10:00:00.000000",
+  "updated_at": null
+}
+```
+
+---
+
+## Python Example
+
+```python
+import requests
+
+VL_BASE_URL = "https://<your-vl-domain>"
+session = requests.Session()
+# Authenticate via OIDC flow first, then use the session cookie
+
+# List workspaces
+resp = session.get(f"{VL_BASE_URL}/api/v1/workspaces")
+resp.raise_for_status()
+workspaces = resp.json()["workspaces"]
+for ws in workspaces:
+    manage = "admin" if ws["permissions"]["can_manage_members"] else "member"
+    print(f"  {ws['name']} ({manage})")
+
+# List members of default workspace
+resp = session.get(f"{VL_BASE_URL}/api/v1/workspace/members")
+resp.raise_for_status()
+members = resp.json()
+print(f"\nWorkspace members: {members['total']}")
+for m in members["members"]:
+    print(f"  {m['username']} — {m['role']}")
+
+# Promote a member to editor
+member_id = members["members"][-1]["user_id"]
+resp = session.put(
+    f"{VL_BASE_URL}/api/v1/workspace/members/{member_id}/role",
+    json={"role": "editor"},
+)
+resp.raise_for_status()
+print(f"\nUpdated {resp.json()['username']} to editor")
+```
+
+---
+
+## Response Codes
+
+See [Error Handling](/api-reference/errors) for the error response format.
+
+| HTTP Code | Meaning |
+|-----------|---------|
+| **200** | Request successful. |
+| **400** | Validation error or self-role-change attempt. |
+| **403** | Forbidden — user management not enabled, or insufficient permissions. |
+| **404** | Workspace, organization, or member not found. |
+| **500** | Internal Server Error — contact support if this persists. |
+
+---
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="User Management" icon="users" href="/api-reference/user-management">
+    Create, update, and delete user accounts on self-hosted deployments.
+  </Card>
+  <Card title="Admin Settings" icon="blocks" href="/api-reference/admin-settings">
+    View and update runtime configuration settings.
+  </Card>
+</CardGroup>
