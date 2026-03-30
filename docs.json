@@ -112,6 +112,7 @@
                         "group": "Collab & Downstream",
                         "pages": [
                             "docs/collab-and-downstream/views",
+                            "docs/collab-and-downstream/saved-views",
                             "docs/collab-and-downstream/share-dataset",
                             "docs/advanced-dataset-management/export-dataset"
                         ]
@@ -127,8 +128,10 @@
                         "group": "Advanced Creation & Management",
                         "pages": [
                             "docs/advanced-dataset-management/importing-annotations",
+                            "docs/advanced-dataset-management/dataset-snapshots",
                             "docs/advanced-features/tag-iteams",
-                            "docs/advanced-features/task-manager"
+                            "docs/advanced-features/task-manager",
+                            "docs/advanced-features/notifications"
                         ]
                     },
                     {
@@ -180,7 +183,9 @@
                             "api-reference/add-media-to-existing-dataset",
                             "api-reference/share-a-dataset-with-another-user",
                             "api-reference/enrichment",
-                            "api-reference/saved-views"
+                            "api-reference/snapshots",
+                            "api-reference/saved-views",
+                            "api-reference/task-manager"
                         ]
                     },
                     {
@@ -197,6 +202,14 @@
                             "api-reference/duplicate-retrieval-experimental-feature",
                             "docs/advanced-features/custom-metadata",
                             "docs/advanced-features/dicom-converter"
+                        ]
+                    },
+                    {
+                        "group": "Self-Hosted Administration",
+                        "pages": [
+                            "api-reference/user-management",
+                            "api-reference/workspaces",
+                            "api-reference/admin-settings"
                         ]
                     },
                     {

@@ -1,0 +1,513 @@
+---
+title: Snapshots
+description: Create, list, update, restore, clone, and delete dataset snapshots for version control and safe rollbacks.
+---
+
+<Card title="How This Helps" icon="hand-platter">
+  Snapshots capture the exact state of a dataset — media, metadata, enrichment models, clustering, tags, and labels — at a specific point in time. Use them to create checkpoints before risky operations, roll back to known-good states, or clone a dataset version for parallel experimentation.
+</Card>
+
+## Prerequisites
+
+- A Visual Layer Cloud account with API access.
+- A valid JWT token. See [Authentication](/api-reference/authentication).
+- A dataset ID for a dataset in **Ready** status with snapshot support enabled. See [Retrieve Dataset Status](/api-reference/retrieve-dataset-status).
+
+<Note>
+Snapshots are available only for datasets created with snapshot support. Older datasets created before this feature may not support snapshots. Contact support to enable snapshot support on an existing dataset.
+</Note>
+
+---
+
+## List Snapshots
+
+Retrieve all snapshots for a dataset, ordered newest first.
+
+```http
+GET /api/v1/dataset/{dataset_id}/snapshot
+Authorization: Bearer <jwt>
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `dataset_id` | UUID | Yes | The dataset to list snapshots for. |
+
+### Example
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/snapshot"
+```
+
+### Response
+
+```json
+[
+  {
+    "snapshot_id": "183163fa-e999-43da-b92f-964b445af9d7",
+    "snapshot_name": "pre-enrichment-checkpoint",
+    "source_dataset_name": "Product Images Q1",
+    "created_at": "2026-03-29T12:21:33.090247",
+    "created_by": "rachel@visual-layer.com",
+    "n_images": 26,
+    "n_videos": 0,
+    "description": "Checkpoint before running VL-Image-Tagger enrichment",
+    "reason": "manual",
+    "training_model_id": null,
+    "training_model_name": null,
+    "is_current": true,
+    "is_restoring": false
+  },
+  {
+    "snapshot_id": "94b33dbd-f211-47b2-b7b8-ececa5fecac2",
+    "snapshot_name": "Product Images Q1_snapshot_94b33dbd",
+    "source_dataset_name": "Product Images Q1",
+    "created_at": "2026-02-25T10:24:45.690903",
+    "created_by": "rachel@visual-layer.com",
+    "n_images": 26,
+    "n_videos": 0,
+    "description": "",
+    "reason": "creation",
+    "training_model_id": null,
+    "training_model_name": null,
+    "is_current": false,
+    "is_restoring": false
+  }
+]
+```
+
+### Snapshot Object Fields
+
+Each snapshot in the response contains the following fields:
+
+<div className="integrations-table">
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `snapshot_id` | UUID | Unique identifier for the snapshot. |
+| `snapshot_name` | string | Display name. Defaults to `{dataset_name}_snapshot_{snapshot_id}` if not set at creation. |
+| `source_dataset_name` | string | Name of the dataset this snapshot belongs to. |
+| `created_at` | datetime | ISO 8601 timestamp of when the snapshot was created. |
+| `created_by` | string | Email address of the user who created the snapshot. |
+| `n_images` | integer | Number of images in the dataset at the time of the snapshot. |
+| `n_videos` | integer | Number of videos in the dataset at the time of the snapshot. |
+| `description` | string | User-provided description, or empty string if none. |
+| `reason` | string | How the snapshot was created: `manual`, `creation`, or `clone`. |
+| `training_model_id` | UUID or null | Associated training model ID, if the snapshot was created during model training. |
+| `training_model_name` | string or null | Display name of the associated training model. |
+| `is_current` | boolean | `true` if this snapshot represents the dataset's active state. |
+| `is_restoring` | boolean | `true` if a restore operation is currently in progress for this snapshot. |
+
+</div>
+
+The `reason` field indicates how the snapshot was created:
+
+- **`creation`** — Automatically created when the dataset was first indexed.
+- **`manual`** — Created by a user through the API or UI.
+- **`clone`** — Created as part of a clone operation.
+
+---
+
+## Create a Snapshot
+
+Save the current state of a dataset as a named checkpoint.
+
+```http
+POST /api/v1/dataset/{dataset_id}/snapshot
+Authorization: Bearer <jwt>
+Content-Type: application/json
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `dataset_id` | UUID | Yes | The dataset to snapshot. |
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | No | Display name for the snapshot. Defaults to `{dataset_name}_snapshot_{snapshot_id}` if omitted. |
+| `description` | string | No | Optional description to record why you created this checkpoint. Defaults to empty string. |
+
+### Example
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "pre-enrichment-checkpoint", "description": "Before running VL-Image-Tagger"}' \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/snapshot"
+```
+
+### Response
+
+Returns the created snapshot object. See [Snapshot Object Fields](#snapshot-object-fields) for the full schema.
+
+```json
+{
+  "snapshot_id": "183163fa-e999-43da-b92f-964b445af9d7",
+  "snapshot_name": "pre-enrichment-checkpoint",
+  "source_dataset_name": "Product Images Q1",
+  "created_at": "2026-03-29T12:21:33.090247",
+  "created_by": "rachel@visual-layer.com",
+  "n_images": 26,
+  "n_videos": 0,
+  "description": "Before running VL-Image-Tagger",
+  "reason": "manual",
+  "training_model_id": null,
+  "training_model_name": null,
+  "is_current": true,
+  "is_restoring": false
+}
+```
+
+The new snapshot becomes the dataset's current version (`is_current: true`).
+
+<Warning>
+Snapshot creation is blocked while any of the following operations are running on the dataset: dataset creation, enrichment, media addition, re-indexing, label propagation, custom metadata import, or snapshot restore. Wait for the active operation to complete before creating a snapshot.
+</Warning>
+
+---
+
+## Update a Snapshot
+
+Change the name or description of an existing snapshot. This does not affect the snapshot's saved data.
+
+```http
+PATCH /api/v1/dataset/{dataset_id}/snapshot/{snapshot_id}
+Authorization: Bearer <jwt>
+Content-Type: application/json
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `dataset_id` | UUID | Yes | The dataset the snapshot belongs to. |
+| `snapshot_id` | UUID | Yes | The snapshot to update. |
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | No | New display name for the snapshot. |
+| `description` | string | No | New description text. |
+
+Include at least one field. Both fields are optional individually.
+
+### Example
+
+```bash
+curl -X PATCH \
+  -H "Authorization: Bearer <jwt>" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "v1-baseline", "description": "Original dataset before any enrichment"}' \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/snapshot/<snapshot_id>"
+```
+
+### Response
+
+Returns the updated snapshot object. See [Snapshot Object Fields](#snapshot-object-fields) for the full schema.
+
+---
+
+## Restore a Snapshot
+
+Revert a dataset to a previously saved snapshot state. This is an asynchronous operation — the dataset enters **Read Only** status while the restore processes.
+
+```http
+POST /api/v1/dataset/{dataset_id}/snapshot/{snapshot_id}/restore
+Authorization: Bearer <jwt>
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `dataset_id` | UUID | Yes | The dataset to restore into. |
+| `snapshot_id` | UUID or `current` | Yes | The snapshot to restore from. Use the literal string `current` to restore the latest stable snapshot. |
+
+### Example
+
+```bash
+# Restore a specific snapshot
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/snapshot/<snapshot_id>/restore"
+
+# Restore the latest stable snapshot
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/snapshot/current/restore"
+```
+
+### Response
+
+Returns HTTP `202 Accepted` with an empty body. The restore operation runs asynchronously.
+
+Track the restore progress using the [Task Manager API](/api-reference/task-manager). A `SNAPSHOT_RESTORE` task appears with the dataset's ID. The dataset returns to **Ready** status once the restore completes.
+
+<Warning>
+Restore replaces all current dataset data — media, metadata, enrichment results, clustering, tags, and labels — with the snapshot's saved state. This operation cannot be undone. Create a new snapshot of the current state before restoring if you want to preserve it.
+</Warning>
+
+### State During Restore
+
+While a restore is in progress:
+
+- The dataset status changes to **Read Only**.
+- The snapshot's `is_restoring` field is `true` in the list response.
+- All data-modifying operations (enrichment, media addition, re-indexing) are blocked.
+- Read operations (search, explore, export) continue to work against the pre-restore data.
+
+---
+
+## Clone a Snapshot
+
+Create a new, independent dataset from a snapshot. The original dataset is unaffected. This is an asynchronous operation.
+
+```http
+POST /api/v1/dataset/{dataset_id}/snapshot/{snapshot_id}/clone
+Authorization: Bearer <jwt>
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `dataset_id` | UUID | Yes | The source dataset containing the snapshot. |
+| `snapshot_id` | UUID | Yes | The snapshot to clone from. |
+
+### Example
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/snapshot/<snapshot_id>/clone"
+```
+
+### Response
+
+Returns HTTP `202 Accepted` with an empty body. The clone operation runs asynchronously.
+
+The new dataset appears in the **Dataset Inventory** with the name `{Original Dataset Name} (cloned)`. Track the clone progress using the [Task Manager API](/api-reference/task-manager). A `SNAPSHOT_CLONE` task appears for the new dataset.
+
+<Note>
+The cloned dataset is fully independent. Changes to the clone do not affect the original dataset, and changes to the original do not affect the clone.
+</Note>
+
+---
+
+## Delete a Snapshot
+
+Remove a snapshot from the catalog. This is a soft delete — the snapshot is hidden from all API responses but does not affect the dataset's current data or any datasets previously cloned from the snapshot.
+
+```http
+DELETE /api/v1/dataset/{dataset_id}/snapshot/{snapshot_id}
+Authorization: Bearer <jwt>
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `dataset_id` | UUID | Yes | The dataset the snapshot belongs to. |
+| `snapshot_id` | UUID | Yes | The snapshot to delete. |
+
+### Example
+
+```bash
+curl -X DELETE \
+  -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/snapshot/<snapshot_id>"
+```
+
+### Response
+
+Returns HTTP `200 OK` with an empty body.
+
+<Note>
+The snapshot marked as the current version cannot be deleted. Create a new snapshot first to change the current version, then delete the old one.
+</Note>
+
+---
+
+## Python Example
+
+This example demonstrates the full snapshot lifecycle: listing existing snapshots, creating a checkpoint, verifying it, and cleaning up.
+
+```python
+import requests
+import time
+
+VL_BASE_URL = "https://app.visual-layer.com"
+JWT_TOKEN = "<your-jwt-token>"
+DATASET_ID = "<your-dataset-id>"
+
+headers = {"Authorization": f"Bearer {JWT_TOKEN}"}
+
+# List existing snapshots
+resp = requests.get(
+    f"{VL_BASE_URL}/api/v1/dataset/{DATASET_ID}/snapshot",
+    headers=headers,
+)
+resp.raise_for_status()
+snapshots = resp.json()
+print(f"Existing snapshots: {len(snapshots)}")
+for s in snapshots:
+    current = " (current)" if s["is_current"] else ""
+    print(f"  {s['snapshot_name']}: {s['n_images']} images, {s['reason']}{current}")
+
+# Create a checkpoint before enrichment
+resp = requests.post(
+    f"{VL_BASE_URL}/api/v1/dataset/{DATASET_ID}/snapshot",
+    headers=headers,
+    json={
+        "name": "pre-enrichment-checkpoint",
+        "description": "Before running VL-Image-Tagger enrichment",
+    },
+)
+resp.raise_for_status()
+snapshot = resp.json()
+snapshot_id = snapshot["snapshot_id"]
+print(f"\nCreated snapshot: {snapshot_id}")
+print(f"  Name: {snapshot['snapshot_name']}")
+print(f"  Images: {snapshot['n_images']}, Videos: {snapshot['n_videos']}")
+
+# Update the snapshot description
+resp = requests.patch(
+    f"{VL_BASE_URL}/api/v1/dataset/{DATASET_ID}/snapshot/{snapshot_id}",
+    headers=headers,
+    json={"description": "Baseline before VL-Image-Tagger v2 enrichment run"},
+)
+resp.raise_for_status()
+print(f"  Updated description: {resp.json()['description']}")
+
+# Restore a previous snapshot (async — returns 202)
+previous_id = snapshots[-1]["snapshot_id"]  # oldest snapshot
+resp = requests.post(
+    f"{VL_BASE_URL}/api/v1/dataset/{DATASET_ID}/snapshot/{previous_id}/restore",
+    headers=headers,
+)
+if resp.status_code == 202:
+    print(f"\nRestore initiated for snapshot {previous_id}")
+    print("Track progress in Task Manager (task_type=SNAPSHOT_RESTORE)")
+
+# Poll task manager for restore completion
+while True:
+    resp = requests.get(
+        f"{VL_BASE_URL}/api/v1/tasks",
+        headers=headers,
+        params={"dataset_id": DATASET_ID, "task_type": "SNAPSHOT_RESTORE"},
+    )
+    resp.raise_for_status()
+    tasks = resp.json()["tasks"]
+    latest = tasks[0] if tasks else None
+    if latest and latest["status"] in ("COMPLETED", "FAILED"):
+        print(f"  Restore {latest['status'].lower()}")
+        break
+    time.sleep(5)
+```
+
+---
+
+## Use Cases
+
+### Checkpoint Before Enrichment
+
+Create a snapshot before running a new enrichment model. If the results are unsatisfactory, restore the snapshot to undo the enrichment and try a different model.
+
+```bash
+# 1. Create checkpoint
+curl -X POST -H "Authorization: Bearer <jwt>" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "pre-captioning", "description": "Before VL-Image-Captioner run"}' \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/snapshot"
+
+# 2. Run enrichment (separate API call)
+# ...
+
+# 3. If results are not satisfactory, restore the checkpoint
+curl -X POST -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/snapshot/<snapshot_id>/restore"
+```
+
+### A/B Test Enrichment Models
+
+Clone a snapshot to create two identical datasets, then apply different enrichment models to each for comparison.
+
+```bash
+# 1. Create a snapshot of the baseline dataset
+curl -X POST -H "Authorization: Bearer <jwt>" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "baseline-for-comparison"}' \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/snapshot"
+
+# 2. Clone the snapshot to a new dataset
+curl -X POST -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/snapshot/<snapshot_id>/clone"
+
+# 3. Run Model A on the original, Model B on the clone, and compare results
+```
+
+### Audit Trail
+
+List all snapshots to see the history of dataset checkpoints and understand how the dataset evolved over time.
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/snapshot"
+```
+
+The `reason` field distinguishes between the automatic creation snapshot, manual checkpoints, and cloned versions.
+
+---
+
+## Operation Constraints
+
+Keep the following constraints in mind when working with the Snapshot API:
+
+- The dataset must be in **Ready** status to create a snapshot. Restore and clone also accept **Partial Index** and **Error** statuses.
+- Snapshot creation is blocked while another operation is running (enrichment, media addition, re-indexing, label propagation, custom metadata import, or snapshot restore).
+- Restore is blocked while any major operation is running, including other restore or clone operations.
+- Clone operations run on the new dataset, so they do not block operations on the source dataset.
+- The current version snapshot cannot be deleted. Create a new snapshot to change the current version first.
+- Restore and clone are asynchronous. The dataset enters **Read Only** status during restore. Track progress through the [Task Manager API](/api-reference/task-manager).
+
+---
+
+## Response Codes
+
+See [Error Handling](/api-reference/errors) for the error response format and Python handling patterns.
+
+| HTTP Code | Meaning |
+|-----------|---------|
+| **200** | Request successful (list, create, update, delete). |
+| **202** | Accepted — async operation started (restore, clone). |
+| **403** | Forbidden — snapshot feature not enabled for this dataset, or insufficient permissions. |
+| **404** | Dataset or snapshot not found. |
+| **409** | Conflict — dataset not in valid status, conflicting operation running, or attempting to delete the current version. |
+| **500** | Internal Server Error — contact support if this persists. |
+
+---
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Dataset Snapshots (UI)" icon="database" href="/docs/advanced-dataset-management/dataset-snapshots">
+    Manage snapshots from the Visual Layer interface.
+  </Card>
+  <Card title="Task Manager" icon="list-checks" href="/api-reference/task-manager">
+    Track snapshot restore and clone operations programmatically.
+  </Card>
+  <Card title="Enrichment" icon="sparkles" href="/api-reference/enrichment">
+    Run AI models on your dataset — create a snapshot first as a safety net.
+  </Card>
+  <Card title="Export Dataset" icon="download" href="/api-reference/exporting-a-dataset-via-curl-from-visual-layer">
+    Export a specific version of your dataset after restoring a snapshot.
+  </Card>
+</CardGroup>

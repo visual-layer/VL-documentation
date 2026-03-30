@@ -3,6 +3,68 @@ title: Release Notes & Updates
 description: "Stay up-to-date with the latest features, enhancements, and bug fixes in Visual Layer. This page provides a comprehensive changelog of all product updates."
 ---
 
+
+<Update label="2025-09-01" version="2.44.2">
+
+## New Features
+
+This release introduces:
+
+- a [new embedding model](#new-embedding-model) that enhances textual search, clustering, and mislabel detection capabilities
+- a [new filter](#new-filter) to allow users to filter bounding boxes by object (pixel) size.
+
+### New Embedding Model
+
+We are excited to announce the introduction of a new embedding model that expands the way teams can explore, organize, and validate their data. By combining these improvements, the model:
+
+- Reduces dependency on expensive infrastructure
+- Strengthens insights through better clustering
+- Raises the overall trustworthiness of datas through improved quality checks
+
+#### Textual Search Without GPUs
+
+Until now, running rich text-based searches across large datasets often required specialized hardware such as GPUs and additional compute time. With this release, our model delivers efficient, accurate textual search on standard CPUs, making it easier and more cost-effective to integrate into everyday workflows.
+
+<Frame>
+  <img src="/images/improved-embedding.png" />
+</Frame>
+
+#### Improved Clustering Capabilities
+
+The new architecture enhances how related items are grouped together, producing clusters that are more coherent and meaningful. This makes pattern discovery faster and the results more reliable, whether you're mapping themes or identifying anomalies.
+
+#### Stronger Mislabel Detection
+
+Identifying mislabeled data has always been a challenge. This version offers a step forward with sharper, more consistent detection methods, reducing noise and improving dataset quality with less manual intervention.
+
+### New Filter
+
+This version introduces a filter by object (pixel) size (width, height).
+
+This filter allows users to view only bounding boxes (objects) above/below a specified size (in squared pixels).
+
+
+<Frame>
+  <img src="/images/filter-by-object-size.png" />
+</Frame>
+
+<Frame>
+  <img src="/images/filter-by-object-size2.png" />
+</Frame>
+
+
+This is intended to help QA reviewers and annotators quickly focus on large or significant objects without visual noise from very small detections.
+
+## Enhancements & Fixes
+
+- Duplicates filter availablity issues after performing a visual search by uploading an external image have been resolved.
+- Custom metadata: Increased the enum values limitation from 20 to 100.
+- Resolved thumbnail generation inefficiencies from S3 buckets.
+
+
+</Update>
+
+
 <Update label="2025-05-08" >
 We are excited to present the latest release of Visual Layer. This update introduces powerful new ways to search, explore, and manage visual datasets while streamlining the UI for speed and clarity.
 
@@ -20,9 +82,9 @@ Filter menu organization and iconography have been updated including a unified s
 
 ### Optimized Filter Logic
 
-Visual Layer now provides logical query operators. 
+Visual Layer now provides logical query operators.
 
-We've refined the right panel to remove outdated filter controls. Now, you can build filters and review or edit. All applied filters are currently combined using AND logic. Slice and dice your dataset more precisely and seamlessly combine visual and metadata filters for high-volume review. 
+We've refined the right panel to remove outdated filter controls. Now, you can build filters and review or edit. All applied filters are currently combined using AND logic. Slice and dice your dataset more precisely and seamlessly combine visual and metadata filters for high-volume review.
 
 Set flexible conditions per filter type, including:
 
@@ -36,7 +98,7 @@ Set flexible conditions per filter type, including:
   <img src="/images/filters-operators-2.png" />
 </Frame>
 
-### Streamlined Insights 
+### Streamlined Insights
 
 All your dataset insights are now accessible in one place through the redesigned right panel. Easily navigate between statistics, enrichment models, and quality issues without visual clutter. You can also toggle between # (absolute values) and % (relative values) to view data in the format that matters most to you.
 
@@ -64,7 +126,7 @@ You can now:
 
 ### Better Documentation to Support You
 
-We've upgraded our documentation to make it faster, clearer, and easier to navigate. 
+We've upgraded our documentation to make it faster, clearer, and easier to navigate.
 
 You'll notice:
 

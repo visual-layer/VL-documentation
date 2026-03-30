@@ -1,0 +1,496 @@
+---
+title: User Management
+description: Create, update, delete, and manage users on self-hosted Visual Layer deployments.
+---
+
+<Note>
+This API is available on self-hosted deployments only. See [Self-Hosting](/docs/self-hosting/setting_up) for setup instructions and [User Management: OIDC Integration](/docs/self-hosting/user-management) for authentication configuration.
+</Note>
+
+<Card title="How This Helps" icon="hand-platter">
+  The User Management API provides programmatic control over user accounts on self-hosted deployments. Create users, assign roles, reset passwords, manage sessions, and control workspace membership — all through REST endpoints backed by Keycloak.
+</Card>
+
+## Prerequisites
+
+- A self-hosted Visual Layer deployment with authentication enabled (`DISABLE_AUTH: false`).
+- An authenticated session with a user that has the Keycloak `manage-users` realm role (for write operations) or `view-users` role (for read operations).
+- User management enabled (automatic when `RUN_MODE=ONPREM` and auth is not disabled).
+
+---
+
+## List Users
+
+Retrieve all users registered in the system.
+
+```http
+GET /api/v1/keycloak/admin/users
+```
+
+### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `search` | string | No | Filter by username or name. |
+| `max_results` | integer | No | Maximum results to return (1–1000, default: 100). |
+| `first` | integer | No | Offset for pagination (default: 0). |
+
+### Example
+
+```bash
+curl "https://<your-vl-domain>/api/v1/keycloak/admin/users?search=rachel&max_results=50"
+```
+
+### Response
+
+```json
+{
+  "users": [
+    {
+      "id": "a1b2c3d4-5678-90ab-cdef-1234567890ab",
+      "username": "rachel",
+      "firstName": "Rachel",
+      "lastName": "Cheyfitz",
+      "enabled": true,
+      "createdTimestamp": 1765725376466,
+      "roles": ["manage-users", "view-users"],
+      "lastAccess": 1774785258000
+    }
+  ],
+  "total": 1
+}
+```
+
+### User Object Fields
+
+<div className="integrations-table">
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Keycloak user ID. |
+| `username` | string | Login username. |
+| `firstName` | string or null | First name. |
+| `lastName` | string or null | Last name. |
+| `enabled` | boolean | Whether the account is active. Disabled users cannot log in. |
+| `createdTimestamp` | integer or null | Account creation time in milliseconds since epoch. |
+| `roles` | array of strings | Keycloak realm roles assigned to the user. |
+| `lastAccess` | integer or null | Most recent session activity in milliseconds since epoch. |
+
+</div>
+
+---
+
+## Get User
+
+Retrieve details for a specific user.
+
+```http
+GET /api/v1/keycloak/admin/users/{user_id}
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `user_id` | string | Yes | Keycloak user ID or Visual Layer user ID (UUID). Auto-resolved if a VL user ID is provided. |
+
+### Example
+
+```bash
+curl "https://<your-vl-domain>/api/v1/keycloak/admin/users/<user_id>"
+```
+
+### Response
+
+Returns a single [User object](#user-object-fields).
+
+---
+
+## Create User
+
+Create a new user account. This is an atomic operation — the user is created in both Keycloak and the Visual Layer database. If either step fails, the operation is rolled back.
+
+```http
+POST /api/v1/keycloak/admin/users
+Content-Type: application/json
+```
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `username` | string | Yes | Login username (3–255 characters, no whitespace). |
+| `password` | string | Yes | Initial password (minimum 8 characters). |
+| `firstName` | string | Yes | First name (1–255 characters). |
+| `lastName` | string | Yes | Last name (1–255 characters). |
+| `enabled` | boolean | No | Whether the account is active (default: `true`). |
+| `workspace_role` | string | No | Workspace role to assign: `admin`, `editor`, or `viewer` (default: `viewer`). |
+
+### Example
+
+```bash
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "alex.dev",
+    "password": "secureP@ss123",
+    "firstName": "Alex",
+    "lastName": "Developer",
+    "workspace_role": "editor"
+  }' \
+  "https://<your-vl-domain>/api/v1/keycloak/admin/users"
+```
+
+### Response (201 Created)
+
+Returns the created [User object](#user-object-fields).
+
+<Warning>
+Promoting a user to the `admin` role in single-workspace mode demotes all existing admins to `editor`. Only one admin is allowed per workspace. The demoted admins are logged out and must re-authenticate.
+</Warning>
+
+---
+
+## Update User
+
+Update the username or enabled status of an existing user.
+
+```http
+PATCH /api/v1/keycloak/admin/users/{user_id}
+Content-Type: application/json
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `user_id` | string | Yes | Keycloak user ID or Visual Layer user ID. |
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `username` | string | No | New username (3–255 characters, no whitespace). |
+| `enabled` | boolean | No | Set to `false` to disable the account. |
+
+Include at least one field.
+
+### Example
+
+```bash
+curl -X PATCH \
+  -H "Content-Type: application/json" \
+  -d '{"enabled": false}' \
+  "https://<your-vl-domain>/api/v1/keycloak/admin/users/<user_id>"
+```
+
+### Response
+
+Returns the updated [User object](#user-object-fields).
+
+---
+
+## Delete User
+
+Permanently remove a user account. This is an atomic operation that cleans up all associated data.
+
+```http
+DELETE /api/v1/keycloak/admin/users/{user_id}
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `user_id` | string | Yes | Keycloak user ID or Visual Layer user ID. |
+
+### Example
+
+```bash
+curl -X DELETE \
+  "https://<your-vl-domain>/api/v1/keycloak/admin/users/<user_id>"
+```
+
+### Response
+
+```json
+{
+  "message": "User deleted successfully"
+}
+```
+
+The deletion process:
+
+1. Transfers ownership of all datasets owned by the deleted user to the admin performing the deletion.
+2. Removes all workspace membership records.
+3. Deletes the user from Keycloak.
+4. Deletes the shadow user record from the Visual Layer database.
+
+<Warning>
+You cannot delete your own account. Attempting to do so returns a `400` error. In single-workspace mode, you also cannot delete the last remaining admin — promote another user first.
+</Warning>
+
+---
+
+## Reset Password
+
+Reset a user's password. The new password is set as temporary — the user must change it on next login.
+
+```http
+POST /api/v1/keycloak/admin/users/{user_id}/reset-password
+Content-Type: application/json
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `user_id` | string | Yes | Keycloak user ID or Visual Layer user ID. |
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `password` | string | Yes | New temporary password (minimum 8 characters). |
+
+### Example
+
+```bash
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"password": "newTempP@ss456"}' \
+  "https://<your-vl-domain>/api/v1/keycloak/admin/users/<user_id>/reset-password"
+```
+
+### Response
+
+```json
+{
+  "message": "Password reset successfully"
+}
+```
+
+The user is automatically logged out from all active sessions and must re-authenticate with the new temporary password.
+
+---
+
+## Logout User
+
+Terminate all active sessions for a user, forcing them to re-authenticate.
+
+```http
+POST /api/v1/keycloak/admin/users/{user_id}/logout
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `user_id` | string | Yes | Keycloak user ID or Visual Layer user ID. |
+
+### Example
+
+```bash
+curl -X POST \
+  "https://<your-vl-domain>/api/v1/keycloak/admin/users/<user_id>/logout"
+```
+
+### Response
+
+```json
+{
+  "message": "User logged out successfully"
+}
+```
+
+---
+
+## Get User Sessions
+
+List all active sessions for a user.
+
+```http
+GET /api/v1/keycloak/admin/users/{user_id}/sessions
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `user_id` | string | Yes | Keycloak user ID or Visual Layer user ID. |
+
+### Example
+
+```bash
+curl "https://<your-vl-domain>/api/v1/keycloak/admin/users/<user_id>/sessions"
+```
+
+### Response
+
+```json
+{
+  "sessions": [
+    {
+      "id": "session-uuid-here",
+      "username": "rachel",
+      "ipAddress": "192.168.1.100",
+      "start": 1774785258000,
+      "lastAccess": 1774786000000,
+      "clients": {}
+    }
+  ],
+  "total": 1
+}
+```
+
+---
+
+## Update User Roles
+
+Replace all realm roles assigned to a user.
+
+```http
+PUT /api/v1/keycloak/admin/users/{user_id}/roles
+Content-Type: application/json
+```
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `user_id` | string | Yes | Keycloak user ID or Visual Layer user ID. |
+
+### Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `roles` | array of strings | Yes | Complete list of realm role names to assign. Replaces all existing roles. |
+
+### Example
+
+```bash
+curl -X PUT \
+  -H "Content-Type: application/json" \
+  -d '{"roles": ["view-users", "query-users"]}' \
+  "https://<your-vl-domain>/api/v1/keycloak/admin/users/<user_id>/roles"
+```
+
+### Response
+
+Returns the updated [User object](#user-object-fields) with the new roles.
+
+<Note>
+This endpoint replaces all existing roles. Include every role the user should have, not just the ones you want to add. Invalid role names are silently ignored.
+</Note>
+
+---
+
+## Roles Reference
+
+### Workspace Roles
+
+Workspace roles control what a user can do within Visual Layer. Assign these via the `workspace_role` field when creating users, or through the [Workspace Members API](/api-reference/workspaces).
+
+<div className="integrations-table">
+
+| Role | Permissions |
+|------|------------|
+| **Admin** | Full control — manage users, change roles, create and delete datasets, configure settings. |
+| **Editor** | Create and edit datasets, run enrichment, export data. Cannot manage users or settings. |
+| **Viewer** | Read-only access — explore datasets, run searches, view results. Cannot modify data. |
+
+</div>
+
+### Keycloak Realm Roles
+
+These roles control access to the User Management API itself. They are managed through Keycloak and determine which API endpoints a user can call.
+
+<div className="integrations-table">
+
+| Role | Grants Access To |
+|------|-----------------|
+| `manage-users` | Create, update, delete users. Reset passwords. Manage roles. |
+| `view-users` | List users, get user details, view sessions. |
+| `query-users` | Query users (required for full user management). |
+| `query-groups` | Query user groups (required for full user management). |
+
+</div>
+
+---
+
+## Python Example
+
+```python
+import requests
+
+VL_BASE_URL = "https://<your-vl-domain>"
+session = requests.Session()
+# Authenticate via OIDC flow first, then use the session cookie
+
+# List all users
+resp = session.get(f"{VL_BASE_URL}/api/v1/keycloak/admin/users")
+resp.raise_for_status()
+users = resp.json()
+print(f"Total users: {users['total']}")
+for user in users["users"]:
+    status = "active" if user["enabled"] else "disabled"
+    print(f"  {user['username']} ({status}) — roles: {', '.join(user['roles'])}")
+
+# Create a new editor
+resp = session.post(
+    f"{VL_BASE_URL}/api/v1/keycloak/admin/users",
+    json={
+        "username": "new.analyst",
+        "password": "initialP@ss789",
+        "firstName": "New",
+        "lastName": "Analyst",
+        "workspace_role": "editor",
+    },
+)
+resp.raise_for_status()
+new_user = resp.json()
+print(f"\nCreated user: {new_user['username']} (ID: {new_user['id']})")
+
+# Disable a user account
+resp = session.patch(
+    f"{VL_BASE_URL}/api/v1/keycloak/admin/users/{new_user['id']}",
+    json={"enabled": False},
+)
+resp.raise_for_status()
+print(f"Disabled user: {resp.json()['username']}")
+```
+
+---
+
+## Response Codes
+
+See [Error Handling](/api-reference/errors) for the error response format.
+
+| HTTP Code | Meaning |
+|-----------|---------|
+| **200** | Request successful. |
+| **201** | User created successfully. |
+| **400** | Validation error, self-deletion attempt, or last admin deletion attempt. |
+| **401** | Unauthorized — no valid session or token. |
+| **403** | Forbidden — user management not enabled, or insufficient Keycloak roles. |
+| **404** | User not found. |
+| **500** | Internal Server Error — contact support if this persists. |
+
+---
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="OIDC Integration" icon="shield" href="/docs/self-hosting/user-management">
+    Configure your Identity Provider for Single Sign-On with Visual Layer.
+  </Card>
+  <Card title="Workspaces & Organizations" icon="users" href="/api-reference/workspaces">
+    Manage workspace membership and roles programmatically.
+  </Card>
+  <Card title="Admin Settings" icon="blocks" href="/api-reference/admin-settings">
+    View and update runtime configuration on self-hosted deployments.
+  </Card>
+  <Card title="Self-Hosting Setup" icon="server" href="/docs/self-hosting/setting_up">
+    Install and configure a self-hosted Visual Layer deployment.
+  </Card>
+</CardGroup>

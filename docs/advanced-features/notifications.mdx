@@ -1,0 +1,86 @@
+---
+title: "Monitor Alerts"
+description: "Receive real-time alerts when saved views detect new results matching your filter criteria."
+sidebarTitle: "Monitor Alerts"
+---
+
+**Monitor Alerts** notify you when new data matching a saved view's filters is detected in your dataset. Alerts surface automatically as you work, keeping you informed of changes without requiring manual checks.
+
+Use **Monitor Alerts** to:
+
+- Track incoming data that matches quality filters or search criteria
+- Stay aware of new results across monitored views without switching context
+- Coordinate review workflows across team members with shared dataset access
+
+<Note>
+**Monitor Alerts** are tied to **Saved Views**. Each alert corresponds to a saved view that has alerting enabled. To receive alerts, create a saved view and enable monitoring on it. See [Save Views](/docs/collab-and-downstream/views) for setup details.
+</Note>
+
+## Accessing Monitor Alerts
+
+The **Monitor Alerts** panel is accessible from the dataset exploration view.
+
+1. Navigate to any dataset.
+2. Click the **bell icon** in the top-right area of the dataset header toolbar.
+
+The **Monitor Alerts** panel opens, listing all alerts for the current dataset.
+
+<Frame>
+  <img src="/images/monitor-alerts-panel-placeholder.png" alt="Monitor Alerts panel showing recent alerts" />
+</Frame>
+
+{/* TODO: Add screenshot of the Monitor Alerts bell icon and dropdown panel */}
+
+### Alert Badge
+
+The bell icon displays a **badge count** indicating the number of unread alerts. The badge updates in real time as new alerts arrive. When all alerts are read, the badge disappears.
+
+<Frame>
+  <img src="/images/monitor-alerts-badge-placeholder.png" alt="Bell icon with unread alert count badge" />
+</Frame>
+
+{/* TODO: Add screenshot showing the bell icon with a badge count */}
+
+## Understanding Alerts
+
+Each alert in the **Monitor Alerts** panel represents a saved view that detected new matching results. Alert entries display the following information:
+
+<div className="integrations-table">
+
+| Field | Description |
+|-------|-------------|
+| **View Name** | The name of the saved view that triggered the alert. |
+| **Description** | Indicates that new results were detected matching the view's filters. |
+| **Timestamp** | Relative time since the alert was generated (for example, "2 minutes ago"). |
+
+</div>
+
+Unread alerts appear with a highlighted background. Read alerts appear with a transparent background.
+
+## Marking Alerts as Read
+
+All alerts in the panel are automatically marked as read when you close the **Monitor Alerts** panel. Open the panel, review your alerts, and close it to clear the unread count.
+
+## How Alerts Are Generated
+
+Alerts are generated through the saved view monitoring system:
+
+1. A saved view with alerting enabled is periodically evaluated against the dataset.
+2. When new media is added to the dataset through the [API](/api-reference/add-media-to-existing-dataset) and matches the view's filter criteria, an alert is created.
+3. The alert is delivered to all users with access to the dataset.
+4. The bell icon badge count updates in real time.
+
+<Note>
+Alerts are scoped to the current dataset. Each dataset has its own independent alert stream. Switch between datasets to view alerts for each one.
+</Note>
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Save Views" icon="blend" href="/docs/collab-and-downstream/views">
+    Create saved views and enable monitoring to start receiving alerts.
+  </Card>
+  <Card title="Search and Filter" icon="sliders-horizontal" href="/docs/explore-and-search/using-search-filter">
+    Build filter criteria that drive your saved views and alerts.
+  </Card>
+</CardGroup>
