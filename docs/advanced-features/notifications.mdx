@@ -23,11 +23,23 @@ Monitoring is enabled by default when a saved view is created. The system record
 
 The evaluation cycle runs automatically after each media batch completes processing:
 
-1. New media is added to the dataset (through the [Add Media API](/api-reference/add-media-to-existing-dataset) or the UI).
-2. The pipeline processes the batch (indexing, embedding, clustering).
-3. After processing completes, the system evaluates every monitored view for that dataset.
-4. For each view, the system counts how many items in the new batch match the view's filter criteria.
-5. The result count and timestamp are recorded as a data point in the view's trend history.
+<Steps>
+  <Step title="New media arrives">
+    New media is added to the dataset through the [Add Media API](/api-reference/add-media-to-existing-dataset) or the UI.
+  </Step>
+  <Step title="Pipeline processes the batch">
+    The pipeline indexes, embeds, and clusters the incoming media.
+  </Step>
+  <Step title="Monitored views are evaluated">
+    After processing completes, the system evaluates every monitored view for that dataset.
+  </Step>
+  <Step title="Matches are counted">
+    For each view, the system counts how many items in the new batch match the view's filter criteria.
+  </Step>
+  <Step title="Trend data is recorded">
+    The result count and timestamp are recorded as a data point in the view's trend history.
+  </Step>
+</Steps>
 
 <Note>
 Monitoring evaluates only new batches that arrive after the view was created. Historical data added before the view existed is not retroactively evaluated.
