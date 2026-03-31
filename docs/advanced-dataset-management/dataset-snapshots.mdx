@@ -4,17 +4,21 @@ description: "Create, restore, and clone named checkpoints of your dataset state
 sidebarTitle: "Dataset Snapshots"
 ---
 
-Snapshots provide version control for your datasets. Each snapshot captures the exact state of a dataset — media, metadata, enrichment models, clustering, tags, and labels — at a specific point in time. Restore any snapshot to roll back changes, or clone one to create an independent copy for parallel work.
+Snapshots provide version control for your datasets. Each snapshot captures the exact state of a dataset — media, metadata, enrichment models, clustering, tags, and labels — at a specific point in time. Every dataset starts with an automatically created snapshot, and each pipeline operation (dataset creation, media addition, re-indexing) automatically creates a new revision before it runs. Restore any snapshot to roll back changes, or clone one to create an independent copy for parallel work.
 
 Use snapshots to:
 
-- Save a checkpoint before re-indexing, enrichment, or bulk metadata changes
-- Roll back to a known-good state after an operation produces unexpected results
-- Clone a dataset version to test different enrichment models without affecting the original
+- Save a checkpoint before re-indexing, enrichment, or bulk metadata changes.
+- Roll back to a known-good state after an operation produces unexpected results.
+- Clone a dataset version to test different enrichment models without affecting the original.
 
 <Note>
-Visual Layer automatically creates an initial snapshot when a dataset is first created. This snapshot appears in the **Snapshot Catalog** alongside any snapshots you create manually.
+Snapshot **Create**, **Restore**, and **Clone** actions require the **Editor** or **Owner** dataset role. Viewers cannot perform these operations.
 </Note>
+
+<Warning>
+Snapshot **Create**, **Restore**, and **Clone** are disabled while other tasks (adding media, enrichment, re-indexing) are running. Wait for in-progress operations to complete before working with snapshots.
+</Warning>
 
 ## Accessing the Snapshot Catalog
 
@@ -26,10 +30,8 @@ The **Snapshot Catalog** lists all saved snapshots for a dataset in chronologica
 The **Snapshot Catalog** drawer opens on the right side of the screen.
 
 <Frame>
-  <img src="/images/snapshot-catalog-placeholder.png" alt="Snapshot Catalog drawer showing list of saved snapshots" />
+  <img src="/images/snapshot-catalog.png" alt="Snapshot Catalog drawer showing list of saved snapshots" />
 </Frame>
-
-{/* TODO: Add screenshot of the Snapshot Catalog drawer */}
 
 ### Snapshot Catalog Fields
 
@@ -49,11 +51,15 @@ Each snapshot entry in the catalog displays the following information:
 
 </div>
 
+<Frame>
+  <img src="/images/snapshot-options.png" alt="Snapshot three-dot menu showing Edit, Clone, Copy Snapshot ID, Restore, and Remove options" />
+</Frame>
+
 Use the search bar at the top of the catalog to filter snapshots by name or description.
 
 ## Creating a Snapshot
 
-Create a snapshot to save the current state of your dataset before making changes.
+Create a snapshot to save the current state of your dataset before making changes. Automatic revisions are created by the system before each pipeline operation and do not require user action — this procedure describes creating a snapshot manually.
 
 1. Open the **Snapshot Catalog** by clicking the **Snapshots** icon in the dataset header.
 2. Click **Create a snapshot**.
@@ -61,13 +67,13 @@ Create a snapshot to save the current state of your dataset before making change
 4. Optionally, enter a **Description** to record why you created this checkpoint.
 5. Click **Create**.
 
-The snapshot is saved and appears at the top of the **Snapshot Catalog**.
+The snapshot is saved and appears at the top of the **Snapshot Catalog**. While the snapshot is being created, the **Snapshots** icon displays a spinning indicator.
 
 <Frame>
-  <img src="/images/snapshot-create-dialog-placeholder.png" alt="Create Snapshot dialog with name and description fields" />
+  <img src="/images/snapshot-create-dialog.png" alt="Create Snapshot dialog with name and description fields" />
 </Frame>
 
-{/* TODO: Add screenshot of the Create Snapshot dialog */}
+If snapshot creation fails, a toast notification appears with the error details. The dataset returns to **Ready** status if the failure occurred in a recoverable stage. If the failure is unrecoverable, the dataset enters **Error** status.
 
 <Note>
 Snapshots can only be created when the dataset is in **Ready** status. If the dataset is processing another operation, wait for it to complete before creating a snapshot.
@@ -75,27 +81,23 @@ Snapshots can only be created when the dataset is in **Ready** status. If the da
 
 ## Restoring a Snapshot
 
-Restore a snapshot to revert the dataset to a previously saved state. All changes made since that snapshot — including media additions, enrichment, metadata updates, and tag changes — are replaced with the snapshot's data.
+Restore a snapshot to revert the dataset to a previously saved state. All changes made since that snapshot — including media additions, enrichment, metadata updates, and tag changes — are replaced with the snapshot's data. Restoration is available for any snapshot except the one marked as **Current Version**.
 
 1. Open the **Snapshot Catalog**.
 2. Locate the snapshot you want to restore.
 3. Click the three-dot menu on the snapshot entry.
 4. Select **Restore**.
-5. Confirm the restore operation in the dialog that appears.
+5. In the confirmation dialog, click **Yes** to confirm the restore operation.
 
 The dataset enters **Read Only** status while the restore processes. A **Snapshot Restore** task appears in the **Task Manager** where you can track progress. The dataset returns to **Ready** status once the restore completes.
 
 <Frame>
-  <img src="/images/snapshot-restore-confirm-placeholder.png" alt="Restore Snapshot confirmation dialog" />
+  <img src="/images/snapshot-restore-confirm.png" alt="Restore Snapshot confirmation dialog" />
 </Frame>
-
-{/* TODO: Add screenshot of the Restore Snapshot confirmation dialog */}
 
 <Note>
 Restore replaces all current dataset data with the snapshot's saved state. This operation cannot be undone. Create a new snapshot of the current state before restoring if you want to preserve it.
 </Note>
-
-The **Restore** option does not appear for the snapshot marked as **Current Version**, since the dataset already matches that state.
 
 ## Cloning from a Snapshot
 
@@ -107,13 +109,11 @@ Clone a snapshot to create a new, independent dataset from a saved state. The or
 4. Select **Clone**.
 5. Confirm the clone operation in the dialog that appears.
 
-A new dataset is created with the name **\{Original Dataset Name\} (cloned)**. A **Snapshot Clone** task appears in the **Task Manager** where you can track progress. The cloned dataset appears in the **Dataset Inventory** once processing completes.
+A new dataset is created with the name **{Original Dataset Name} (cloned)**, and an initial snapshot is created in the new dataset. A **Snapshot Clone** task appears in the **Task Manager** where you can track progress. **Restore**, **Clone**, and **Remove** are disabled on the source snapshot while the operation is in progress. The cloned dataset appears in the **Dataset Inventory** once processing completes.
 
 <Frame>
-  <img src="/images/snapshot-clone-confirm-placeholder.png" alt="Clone Snapshot confirmation dialog" />
+  <img src="/images/snapshot-clone-confirm.png" alt="Clone Snapshot confirmation dialog" />
 </Frame>
-
-{/* TODO: Add screenshot of the Clone Snapshot confirmation dialog */}
 
 <Note>
 The cloned dataset is fully independent. Changes to the clone do not affect the original dataset, and changes to the original do not affect the clone.
@@ -127,7 +127,11 @@ Update the name or description of any snapshot without affecting its saved data.
 2. Click the three-dot menu on the snapshot you want to edit.
 3. Select **Edit**.
 4. Update the **Name** or **Description**.
-5. Click **Save**.
+5. Click **Update**.
+
+<Frame>
+  <img src="/images/snapshot-update-edit-details.png" alt="Update Snapshot dialog with name and description fields" />
+</Frame>
 
 ## Removing a Snapshot
 
@@ -136,9 +140,13 @@ Remove a snapshot you no longer need from the catalog.
 1. Open the **Snapshot Catalog**.
 2. Click the three-dot menu on the snapshot you want to remove.
 3. Select **Remove**.
-4. Confirm the removal in the dialog that appears.
+4. In the confirmation dialog, click **Yes** to confirm the removal.
 
 The snapshot is removed from the catalog. Removing a snapshot does not affect the dataset, its current data, or any datasets previously cloned from the snapshot.
+
+<Frame>
+  <img src="/images/snapshot-remove-confirm.png" alt="Remove Snapshot confirmation dialog" />
+</Frame>
 
 <Note>
 The snapshot marked as **Current Version** cannot be removed.
@@ -153,6 +161,14 @@ Copy a snapshot's unique identifier for use with the API or when contacting supp
 3. Select **Copy Snapshot ID**.
 
 The ID is copied to your clipboard.
+
+## Navigating Between Versions
+
+The **Snapshot Catalog** allows restoration to any snapshot, whether it was created earlier or later than the current version. This enables movement both forward and backward through the dataset's history — restoring to an older checkpoint or advancing to a more recent one.
+
+<Note>
+Snapshot **Create**, **Restore**, and **Clone** operations put the dataset in **Read Only** status and block all data-modifying tasks until the operation completes.
+</Note>
 
 ## Snapshot Limitations
 
