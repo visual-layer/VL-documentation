@@ -1,23 +1,24 @@
 ---
-title: Saved Views
-description: Create, list, and delete saved views of a dataset to bookmark filtered states for reuse.
+title: "Saved Views, Monitoring, and Alerting"
+description: "Create, list, and delete saved views. Retrieve monitoring trend data and control alert delivery for monitored views."
+sidebarTitle: "Saved Views"
 ---
 
 <Card title="How This Helps" icon="hand-platter">
-  A saved view captures the current filter state of a dataset — entity type, search query, VQL filters, and threshold — so you can return to the same filtered perspective without reconfiguring it. Views are tied to a dataset and visible to anyone with access to it.
+  Saved views capture filter states as named, reusable queries attached to a dataset. Every view automatically tracks how result counts change over time as new media arrives, and alerting notifies all dataset collaborators when new matches are detected.
 </Card>
 
 ## Prerequisites
 
-- A Visual Layer Cloud account with API access.
+- A **Visual Layer** Cloud account with API access.
 - A valid JWT token. See [Authentication](/api-reference/authentication).
-- A dataset ID. See [Retrieve Dataset Status](/api-reference/retrieve-dataset-status).
+- A dataset ID. Find it in the browser URL when viewing a dataset (`https://app.visual-layer.com/dataset/<dataset_id>/data`) or via the [Datasets API](/api-reference/retrieve-dataset-status).
 
 ---
 
 ## Create a View
 
-Save the current filter state of a dataset as a named view.
+Save the current filter state of a dataset as a named view. Monitoring is enabled automatically on all new views, and alerting defaults to enabled.
 
 ```http
 POST /api/v1/dataset/{dataset_id}/views
@@ -29,34 +30,39 @@ Pass filter parameters as query parameters on the URL. The view name is sent as 
 
 ### Parameters
 
+<div className="integrations-table">
+
 | Parameter | Location | Type | Required | Description |
 |-----------|----------|------|----------|-------------|
-| `name` | form field | string | Yes | Display name for the view. |
-| `entity_type` | query param | string | No | `IMAGES`, `OBJECTS`, or `VIDEOS`. |
-| `threshold` | query param | number | No | Similarity threshold (0–1). |
-| `caption` | query param | string | No | Caption search query to save with the view. |
-| `vql` | query param | string | No | URL-encoded VQL filter array. |
+| `dataset_id` | path | UUID | Yes | The dataset to attach the view to. |
+| `name` | form field | string | Yes | Display name for the view. Must be unique within the dataset. |
+| `entity_type` | query | string | No | Entity filter: `IMAGES`, `OBJECTS`, or `VIDEOS`. |
+| `threshold` | query | number | No | Similarity threshold (0–1). |
+| `caption` | query | string | No | Semantic search query to save with the view. |
+| `vql` | query | string | No | URL-encoded VQL filter array. |
+
+</div>
 
 ### Example
 
 ```bash
 curl -X POST \
   -H "Authorization: Bearer <jwt>" \
-  -F "name=Cars at Night" \
+  -F "name=Damaged windshields" \
   "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/views?threshold=0&entity_type=IMAGES"
 ```
 
-### Response
+### Response (200)
 
 ```json
 {
-  "id": "63c53171-888a-4447-ae2a-1beeff6944cf",
-  "dataset_id": "b1a39406-123d-11f1-9353-fa39f6ed1f22",
-  "name": "Cars at Night",
-  "created_at": "2026-02-25T13:19:50.583298",
+  "id": "94431831-ceeb-4e21-8c5b-84c78783bd4b",
+  "dataset_id": "a981fc0c-2d1f-11f1-a7ca-d2580fa2deac",
+  "name": "Damaged windshields",
+  "created_at": "2026-03-31T16:47:19.264591",
   "created_by": {
-    "user_id": "5aadb880-2e5c-445b-a26e-4bc029f1b640",
-    "email": "rachel@visual-layer.com",
+    "user_id": "8f2f00c0-8446-49de-935f-0e9e058cb2a8",
+    "email": "rachel@cheyfitz.me",
     "name": "Rachel Cheyfitz"
   },
   "filters": {
@@ -70,24 +76,40 @@ curl -X POST \
     "n_objects": -1,
     "n_video_frames": -1
   },
-  "total_results": 0,
   "monitoring_enabled": true,
-  "alerting_enabled": true
+  "monitoring_started_at": "2026-03-31T16:47:19.264591",
+  "alerting_enabled": true,
+  "total_results": 0,
+  "last_results": null
 }
 ```
 
-Save the `id` — you need it to delete the view later.
+Save the `id` from the response for use with trend, alerting, and delete operations.
+
+<Note>
+The `stats` fields show `-1` at creation time because the view has not yet been evaluated against any data batch. Values populate after the first monitoring evaluation.
+</Note>
 
 ---
 
 ## List Views
 
-Retrieve all saved views for a dataset.
+Retrieve all saved views for a dataset, including their current monitoring state and result counts.
 
 ```http
 GET /api/v1/dataset/{dataset_id}/views
 Authorization: Bearer <jwt>
 ```
+
+### Parameters
+
+<div className="integrations-table">
+
+| Parameter | Location | Type | Required | Description |
+|-----------|----------|------|----------|-------------|
+| `dataset_id` | path | UUID | Yes | The dataset to list views for. |
+
+</div>
 
 ### Example
 
@@ -96,20 +118,37 @@ curl -H "Authorization: Bearer <jwt>" \
   "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/views"
 ```
 
-### Response
+### Response (200)
 
 ```json
 {
   "views": [
     {
-      "id": "63c53171-888a-4447-ae2a-1beeff6944cf",
-      "name": "Cars at Night",
-      "created_at": "2026-02-25T13:19:50.583298",
+      "id": "94431831-ceeb-4e21-8c5b-84c78783bd4b",
+      "dataset_id": "a981fc0c-2d1f-11f1-a7ca-d2580fa2deac",
+      "name": "Damaged windshields",
+      "created_at": "2026-03-31T16:47:19.264591",
+      "created_by": {
+        "user_id": "8f2f00c0-8446-49de-935f-0e9e058cb2a8",
+        "email": "rachel@cheyfitz.me",
+        "name": "Rachel Cheyfitz"
+      },
       "filters": {
         "entity_type": "IMAGES",
-        "threshold": "0"
+        "threshold": "1",
+        "caption": null,
+        "vql": []
       },
-      "total_results": 0
+      "stats": {
+        "n_images": 1875,
+        "n_objects": 0,
+        "n_video_frames": 0
+      },
+      "monitoring_enabled": true,
+      "monitoring_started_at": "2026-03-31T16:47:19.264591",
+      "alerting_enabled": true,
+      "total_results": 1875,
+      "last_results": "2026-03-31T17:02:08.056090"
     }
   ]
 }
@@ -119,12 +158,23 @@ curl -H "Authorization: Bearer <jwt>" \
 
 ## Delete a View
 
-Delete a saved view by its ID.
+Remove a saved view and its associated trend data from a dataset.
 
 ```http
 DELETE /api/v1/dataset/{dataset_id}/views/{view_id}
 Authorization: Bearer <jwt>
 ```
+
+### Parameters
+
+<div className="integrations-table">
+
+| Parameter | Location | Type | Required | Description |
+|-----------|----------|------|----------|-------------|
+| `dataset_id` | path | UUID | Yes | The dataset the view belongs to. |
+| `view_id` | path | UUID | Yes | The view to delete. |
+
+</div>
 
 ### Example
 
@@ -134,7 +184,127 @@ curl -X DELETE \
   "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/views/<view_id>"
 ```
 
-A successful request returns HTTP 200 with a `null` body.
+A successful request returns HTTP 200 with a `null` body. Deleting a view also removes its trend history and stops all associated alerting.
+
+---
+
+## Get View Trend Data
+
+Retrieve the monitoring trend history for a view. Each data point represents one batch evaluation, showing how many new items matched the view's filters when that batch was processed.
+
+```http
+GET /api/v1/dataset/{dataset_id}/views/{view_id}/trend
+Authorization: Bearer <jwt>
+```
+
+### Parameters
+
+<div className="integrations-table">
+
+| Parameter | Location | Type | Required | Description |
+|-----------|----------|------|----------|-------------|
+| `dataset_id` | path | UUID | Yes | The dataset the view belongs to. |
+| `view_id` | path | UUID | Yes | The view to retrieve trend data for. Monitoring must be enabled. |
+
+</div>
+
+### Example
+
+```bash
+curl -H "Authorization: Bearer <jwt>" \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/views/<view_id>/trend"
+```
+
+### Response (200)
+
+```json
+{
+  "points": [
+    {
+      "timestamp": "2026-03-31T17:02:08.056090",
+      "batch_id": "a863a595-5aaf-45d3-89a9-073a73d59671",
+      "count": 1875,
+      "cumulative": 1875
+    }
+  ],
+  "total_results": 1875,
+  "last_results": "2026-03-31T17:02:08.056090"
+}
+```
+
+### Trend Point Fields
+
+<div className="integrations-table">
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `timestamp` | datetime | When the batch was processed. |
+| `batch_id` | UUID | The media batch that was evaluated. |
+| `count` | integer | Number of new items matching the view's filters in this batch. |
+| `cumulative` | integer | Running total of all matching items across all evaluated batches. |
+
+</div>
+
+<Note>
+Returns HTTP 400 if monitoring is not enabled for the view. Returns HTTP 404 if the view does not exist or does not belong to the specified dataset.
+</Note>
+
+---
+
+## Enable or Disable Alerting
+
+Control whether a monitored view sends alert notifications when new matches are detected. Monitoring (trend data collection) continues regardless of this setting.
+
+```http
+POST /api/v1/dataset/{dataset_id}/views/{view_id}/alerting
+Authorization: Bearer <jwt>
+Content-Type: application/json
+```
+
+### Parameters
+
+<div className="integrations-table">
+
+| Parameter | Location | Type | Required | Description |
+|-----------|----------|------|----------|-------------|
+| `dataset_id` | path | UUID | Yes | The dataset the view belongs to. |
+| `view_id` | path | UUID | Yes | The view to configure alerting for. |
+| `enabled` | body (JSON) | boolean | Yes | `true` to enable alerts, `false` to disable. |
+
+</div>
+
+### Request Body
+
+```json
+{
+  "request": {
+    "enabled": true
+  }
+}
+```
+
+<Note>
+The `enabled` field is nested inside a `request` object in the JSON body.
+</Note>
+
+### Example
+
+```bash
+# Disable alerting
+curl -X POST \
+  -H "Authorization: Bearer <jwt>" \
+  -H "Content-Type: application/json" \
+  -d '{"request": {"enabled": false}}' \
+  "https://app.visual-layer.com/api/v1/dataset/<dataset_id>/views/<view_id>/alerting"
+```
+
+### Response (200)
+
+```json
+{
+  "alerting_enabled": false
+}
+```
 
 ---
 
@@ -154,12 +324,14 @@ resp = requests.post(
     f"{VL_BASE_URL}/api/v1/dataset/{DATASET_ID}/views",
     headers=headers,
     params={"entity_type": "IMAGES", "threshold": 0},
-    data={"name": "Cars at Night"},
+    data={"name": "Damaged windshields"},
 )
 resp.raise_for_status()
 view = resp.json()
 view_id = view["id"]
 print(f"Created view: {view_id}")
+print(f"  Monitoring: {view['monitoring_enabled']}")
+print(f"  Alerting: {view['alerting_enabled']}")
 
 # List views
 resp = requests.get(
@@ -168,9 +340,26 @@ resp = requests.get(
 )
 resp.raise_for_status()
 views = resp.json()["views"]
-print(f"Total views: {len(views)}")
 for v in views:
-    print(f"  {v['id']} — {v['name']}")
+    print(f"  {v['name']} — {v['total_results']} results, alerting={v['alerting_enabled']}")
+
+# Get trend data
+resp = requests.get(
+    f"{VL_BASE_URL}/api/v1/dataset/{DATASET_ID}/views/{view_id}/trend",
+    headers=headers,
+)
+resp.raise_for_status()
+trend = resp.json()
+print(f"Trend: {len(trend['points'])} data points, {trend['total_results']} total results")
+
+# Disable alerting (keep monitoring active)
+resp = requests.post(
+    f"{VL_BASE_URL}/api/v1/dataset/{DATASET_ID}/views/{view_id}/alerting",
+    headers=headers,
+    json={"request": {"enabled": False}},
+)
+resp.raise_for_status()
+print(f"Alerting: {resp.json()['alerting_enabled']}")
 
 # Delete a view
 resp = requests.delete(
@@ -187,22 +376,46 @@ print(f"Deleted view: {view_id}")
 
 See [Error Handling](/api-reference/errors) for the error response format and Python handling patterns.
 
-| HTTP Code | Meaning |
-|-----------|---------|
-| **200** | Request successful. |
-| **401** | Unauthorized — check your JWT token. |
-| **404** | Dataset or view not found. |
-| **500** | Internal Server Error — contact support if this persists. |
+### Views Endpoints
+
+<div className="integrations-table">
+
+| HTTP Code | Meaning | Common Cause |
+|-----------|---------|--------------|
+| **200** | Request successful. | |
+| **400** | Bad request. | Monitoring not enabled for the view (trend/alerting endpoints). |
+| **401** | Unauthorized. | Invalid or expired JWT token. |
+| **404** | Not found. | Dataset or view does not exist, or the view does not belong to the specified dataset. |
+| **422** | Validation error. | Missing required fields or malformed request body. |
+| **500** | Internal server error. | Contact support if this persists. |
+
+</div>
+
+---
+
+## Best Practices
+
+- **Create views before adding media.** Monitoring evaluates only batches that arrive after the view was created. Views created after a media addition do not retroactively evaluate older batches.
+- **Use descriptive view names.** View names appear in alert notifications and trend charts. Clear names like "Damaged windshields" or "Mislabeled training data" make alerts immediately actionable.
+- **Disable alerting for informational views.** If a view tracks long-term trends but does not require immediate attention, disable alerting to reduce notification noise while keeping trend data collection active.
+- **Poll trend data for dashboards.** The trend endpoint returns cumulative counts suitable for building monitoring dashboards. Poll periodically after batch additions to track data quality over time.
+- **Delete unused views.** Each view is evaluated on every batch addition. Removing views that are no longer needed reduces processing overhead.
 
 ---
 
 ## Related Resources
 
 <CardGroup cols={2}>
-  <Card title="Visual Search" icon="scan-search" href="/api-reference/visual-search">
-    Search by image similarity — save the result state as a view.
+  <Card title="Notifications API" icon="file-code-2" href="/api-reference/notifications">
+    List, read, and manage alert notifications delivered by monitored views.
   </Card>
-  <Card title="Semantic Search" icon="scan-text" href="/api-reference/semantic-search">
-    Search by caption or VQL — save the result state as a view.
+  <Card title="Saved Views" icon="blend" href="/docs/collab-and-downstream/saved-views">
+    Create and manage saved views through the Visual Layer UI.
+  </Card>
+  <Card title="Monitoring and Alerts" icon="blend" href="/docs/advanced-features/notifications">
+    Understand how monitoring and alerting works across your datasets.
+  </Card>
+  <Card title="Add Media" icon="database" href="/api-reference/add-media-to-existing-dataset">
+    Add media to datasets, triggering monitoring evaluation on all views.
   </Card>
 </CardGroup>

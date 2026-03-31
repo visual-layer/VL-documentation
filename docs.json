@@ -111,7 +111,6 @@
                     {
                         "group": "Collab & Downstream",
                         "pages": [
-                            "docs/collab-and-downstream/views",
                             "docs/collab-and-downstream/saved-views",
                             "docs/collab-and-downstream/share-dataset",
                             "docs/advanced-dataset-management/export-dataset"
@@ -185,6 +184,7 @@
                             "api-reference/enrichment",
                             "api-reference/snapshots",
                             "api-reference/saved-views",
+                            "api-reference/notifications",
                             "api-reference/task-manager"
                         ]
                     },
