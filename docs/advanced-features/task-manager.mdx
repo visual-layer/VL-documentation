@@ -124,7 +124,7 @@ Each entry in the **Task** column represents one of the following operations:
 | **Dataset Creation** | Creating a new dataset from uploaded media. Triggered when you complete the dataset creation wizard. |
 | **Media Addition** | Adding new image or video files to an existing dataset. |
 | **Reindex** | Re-indexing a dataset to fully incorporate newly added media into the dataset index. Follows a **Media Addition** task when a full re-index is required. |
-| **Enrichment** | Running an enrichment model on a dataset. Triggered from the dataset's enrichment panel. |
+| **Enrichment** | Running an enrichment model on a dataset. Triggered from the enrichment panel for that dataset. |
 | **Label Propagation** | Propagating labels across similar items in the dataset. |
 | **Model Training** | Training a custom model using dataset data. |
 | **Model Validation** | Validating a trained model against dataset data. |
@@ -180,7 +180,7 @@ When a task shows **Failed** status:
 4. After resolving the issue, retry the operation from the relevant dataset or workflow.
 
 <Note>
-Failed dataset creation tasks require starting the creation process again. Failed enrichment tasks can be retried from the dataset's enrichment panel.
+Failed dataset creation tasks require starting the creation process again. Failed enrichment tasks can be retried from the enrichment panel for that dataset.
 </Note>
 
 ## Task Manager Limitations
