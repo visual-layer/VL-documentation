@@ -190,7 +190,7 @@ A successful request returns HTTP 200 with a `null` body. Deleting a view also r
 
 ## Get View Trend Data
 
-Retrieve the monitoring trend history for a view. Each data point represents one batch evaluation, showing how many new items matched the view's filters when that batch was processed.
+Retrieve the monitoring trend history for a view. Each data point represents one batch evaluation, showing how many new items matched the view filters when that batch was processed.
 
 ```http
 GET /api/v1/dataset/{dataset_id}/views/{view_id}/trend
@@ -240,7 +240,7 @@ curl -H "Authorization: Bearer <jwt>" \
 |-------|------|-------------|
 | `timestamp` | datetime | When the batch was processed. |
 | `batch_id` | UUID | The media batch that was evaluated. |
-| `count` | integer | Number of new items matching the view's filters in this batch. |
+| `count` | integer | Number of new items matching the view filters in this batch. |
 | `cumulative` | integer | Running total of all matching items across all evaluated batches. |
 
 </div>

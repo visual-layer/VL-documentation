@@ -81,7 +81,7 @@ Snapshots can only be created when the dataset is in **Ready** status. If the da
 
 ## Restoring a Snapshot
 
-Restore a snapshot to revert the dataset to a previously saved state. All changes made since that snapshot — including media additions, enrichment, metadata updates, and tag changes — are replaced with the snapshot's data. Restoration is available for any snapshot except the one marked as **Current Version**.
+Restore a snapshot to revert the dataset to a previously saved state. All changes made since that snapshot — including media additions, enrichment, metadata updates, and tag changes — are replaced with the data saved in that snapshot. Restoration is available for any snapshot except the one marked as **Current Version**.
 
 1. Open the **Snapshot Catalog**.
 2. Locate the snapshot you want to restore.
@@ -96,7 +96,7 @@ The dataset enters **Read Only** status while the restore processes. A **Snapsho
 </Frame>
 
 <Note>
-Restore replaces all current dataset data with the snapshot's saved state. This operation cannot be undone. Create a new snapshot of the current state before restoring if you want to preserve it.
+Restore replaces all current dataset data with the saved state of the snapshot. This operation cannot be undone. Create a new snapshot of the current state before restoring if you want to preserve it.
 </Note>
 
 ## Cloning from a Snapshot
@@ -109,7 +109,7 @@ Clone a snapshot to create a new, independent dataset from a saved state. The or
 4. Select **Clone**.
 5. Confirm the clone operation in the dialog that appears.
 
-A new dataset is created with the name **{Original Dataset Name} (cloned)**, and an initial snapshot is created in the new dataset. A **Snapshot Clone** task appears in the **Task Manager** where you can track progress. **Restore**, **Clone**, and **Remove** are disabled on the source snapshot while the operation is in progress. The cloned dataset appears in the **Dataset Inventory** once processing completes.
+A new dataset is created with the name **\{Original Dataset Name\} (cloned)**, and an initial snapshot is created in the new dataset. A **Snapshot Clone** task appears in the **Task Manager** where you can track progress. **Restore**, **Clone**, and **Remove** are disabled on the source snapshot while the operation is in progress. The cloned dataset appears in the **Dataset Inventory** once processing completes.
 
 <Frame>
   <img src="/images/snapshot-clone-confirm.png" alt="Clone Snapshot confirmation dialog" />
@@ -154,7 +154,7 @@ The snapshot marked as **Current Version** cannot be removed.
 
 ## Copying a Snapshot ID
 
-Copy a snapshot's unique identifier for use with the API or when contacting support.
+Copy the unique identifier for a snapshot for use with the API or when contacting support.
 
 1. Open the **Snapshot Catalog**.
 2. Click the three-dot menu on the relevant snapshot.

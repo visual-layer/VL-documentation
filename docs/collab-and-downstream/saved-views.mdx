@@ -17,7 +17,7 @@ Key characteristics:
 
 - Views do not duplicate or store data. They act as persistent filter definitions.
 - Views are dataset-specific and visible to all collaborators with access to that dataset.
-- Views are immutable. To change a view's filters, delete it and create a new one.
+- Views are immutable. To change the view filters, delete it and create a new one.
 - Monitoring tracks result changes over time. Alerting notifies you when new matches appear.
 
 ---
@@ -87,7 +87,7 @@ The **Views** tab table displays the following information for each view:
 | Column | Description |
 |--------|-------------|
 | **Name** | The view name. Click to expand the row and see full details. |
-| **Total Results** | The cumulative count of items matching the view's filters. |
+| **Total Results** | The cumulative count of items matching the view filters. |
 | **Last Result** | How long ago the most recent matching result was detected. |
 | **Creation Time** | When the view was created. |
 | **Created By** | The user who created the view, shown as avatar and name. |
@@ -125,7 +125,7 @@ The expanded view displays a split panel:
 
 ## Monitoring and Alerts
 
-Every saved view automatically tracks how result counts change over time. Each time new media is added to the dataset, the monitoring system evaluates all views and records how many new items match each view's filter criteria. This builds a trend history visible in the expanded view row.
+Every saved view automatically tracks how result counts change over time. Each time new media is added to the dataset, the monitoring system evaluates all views and records how many new items match each view filter criteria. This builds a trend history visible in the expanded view row.
 
 Alerting extends monitoring with real-time notifications. The **Monitoring** column in the **Views** tab controls whether a view sends alerts when new matches are detected. Click the toggle to enable or disable alerts for any view.
 
@@ -173,7 +173,7 @@ Remove a view that is no longer needed.
 The view and its trend data are permanently removed.
 
 <Note>
-Views are immutable. To modify a view's filters, delete the existing view, apply new filters in the **Explore** tab, and save a new view.
+Views are immutable. To modify the view filters, delete the existing view, apply new filters in the **Explore** tab, and save a new view.
 </Note>
 
 ---

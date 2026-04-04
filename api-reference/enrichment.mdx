@@ -164,7 +164,7 @@ curl -X POST \
 }
 ```
 
-The response returns the `dataset_id` of the **new enriched copy**. Poll this new dataset's status endpoint until `status_new` reaches `READY` before running search or export operations on it.
+The response returns the `dataset_id` of the **new enriched copy**. Poll the status endpoint for this new dataset until `status_new` reaches `READY` before running search or export operations on it.
 
 <Note>
 The source dataset enters `READ ONLY` status while enrichment runs. The enriched copy is a separate dataset — it has its own `dataset_id` and appears as a new entry in your dataset inventory.
