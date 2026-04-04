@@ -70,7 +70,7 @@
                     {
                         "group": "Introduction",
                         "pages": [
-                            "landing",
+                            "index",
                             "docs/introduction/introduction",
                             "docs/introduction/prerequisites",
                             "docs/introduction/key-concepts",
@@ -262,7 +262,8 @@
     },
     "logo": {
         "light": "/Visual Layer new colorful backgrounds for logo_horizontal VL logo copy 5.svg",
-        "dark": "/Visual Layer new colorful backgrounds for logo_horizontal VL logo copy 5.svg"
+        "dark": "/Visual Layer new colorful backgrounds for logo_horizontal VL logo copy 5.svg",
+        "href": "/"
     },
     "navbar": {
         "links": [
