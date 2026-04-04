@@ -728,4 +728,208 @@ h6 {
     linear-gradient(135deg, #A73895, #0097D9) border-box !important;
 }
 
+/* ── Landing page ── */
+
+.vl-landing {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Hero: white background with diagonal gradient band */
+.vl-landing-hero {
+  background: #ffffff;
+  padding: 6rem 2rem 12rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.dark .vl-landing-hero {
+  background: #0f1117;
+}
+
+/* Diagonal gradient band — smooth curve via SVG clipPath */
+.vl-landing-hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #A63B94 0%, #0197D8 50%, #1BC07D 100%);
+  clip-path: url(#hero-curve);
+  opacity: 0.5;
+  filter: blur(30px);
+  pointer-events: none;
+}
+
+/* Hide the SVG defs element */
+.vl-landing-svg-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Soft fade at the bottom edge */
+.vl-landing-hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(to bottom, transparent, #ffffff);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.dark .vl-landing-hero::after {
+  background: linear-gradient(to bottom, transparent, #0f1117);
+}
+
+.vl-landing-hero-inner {
+  max-width: 770px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.vl-landing-logo {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 1.5rem;
+  display: block;
+}
+
+.vl-landing-title {
+  font-family: 'Inter', Helvetica Neue, Arial, sans-serif !important;
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #4E2F6C;
+  margin: 0 0 1rem;
+}
+
+.dark .vl-landing-title {
+  color: #ffffff;
+}
+
+.vl-landing-subtitle {
+  font-family: 'Inter', Helvetica Neue, Arial, sans-serif !important;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.6;
+  color: #251649;
+  margin: 0 0 2rem;
+}
+
+/* CTA buttons */
+.vl-landing-cta-row {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.vl-landing-cta-primary,
+.vl-landing-cta-secondary {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-family: 'Inter', Helvetica Neue, Arial, sans-serif !important;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.vl-landing-cta-primary {
+  background: #4E2F6C;
+  color: #ffffff;
+}
+
+.dark .vl-landing-cta-primary {
+  background: #ffffff;
+  color: #251649;
+}
+
+.vl-landing-cta-secondary {
+  background: rgba(255, 255, 255, 0.15);
+  color: #251649;
+  border: 1px solid rgba(37, 22, 73, 0.3);
+}
+
+.vl-landing-cta-primary:hover,
+.vl-landing-cta-secondary:hover {
+  opacity: 0.85;
+}
+
+/* Tertiary: text-only link below the two buttons */
+.vl-landing-cta-tertiary-row {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.vl-landing-cta-tertiary {
+  font-family: 'Inter', Helvetica Neue, Arial, sans-serif !important;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgba(37, 22, 73, 0.85);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(37, 22, 73, 0.4);
+  padding-bottom: 2px;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.vl-landing-cta-tertiary:hover {
+  color: #251649;
+  border-color: rgba(37, 22, 73, 0.8);
+}
+
+/* Sections below the hero */
+.vl-landing-section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 3rem 2rem 1rem;
+}
+
+.vl-landing-section-last {
+  padding-bottom: 4rem;
+}
+
+.vl-landing-section-title {
+  font-family: 'Inter', Helvetica Neue, Arial, sans-serif !important;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4E2F6C;
+  margin: 0 0 1.5rem;
+  text-align: center;
+}
+
+.dark .vl-landing-section-title {
+  color: #e4e4e7;
+}
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  .vl-landing-hero {
+    padding: 4rem 1.5rem 6rem;
+  }
+
+  .vl-landing-title {
+    font-size: 2rem;
+  }
+
+  .vl-landing-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .vl-landing-section {
+    padding: 2rem 1rem 0.5rem;
+  }
+}
+
 /* End of CSS */

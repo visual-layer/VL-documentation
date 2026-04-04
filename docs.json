@@ -70,6 +70,7 @@
                     {
                         "group": "Introduction",
                         "pages": [
+                            "landing",
                             "docs/introduction/introduction",
                             "docs/introduction/prerequisites",
                             "docs/introduction/key-concepts",

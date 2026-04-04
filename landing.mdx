@@ -1,0 +1,110 @@
+---
+title: "Visual Layer Documentation"
+description: "Find, fix, and organize visual datasets at scale. Guides, tutorials, and API references for the Visual Layer platform."
+mode: "custom"
+---
+
+<svg className="vl-landing-svg-defs" aria-hidden="true">
+  <defs>
+    <clipPath id="hero-curve" clipPathUnits="objectBoundingBox">
+      <path d="M 0 0 L 1 0 L 1 0.5 C 1 0.6, 0.85 0.65, 0.65 0.7 C 0.4 0.76, 0.15 0.85, 0 1.1 Z" />
+    </clipPath>
+  </defs>
+</svg>
+
+<div className="vl-landing">
+
+{/* ── Hero ── */}
+<div className="vl-landing-hero">
+  <div className="vl-landing-hero-inner">
+    <h1 className="vl-landing-title">Visual Layer Documentation</h1>
+    <p className="vl-landing-subtitle">
+      Discover insights at scale. Find, fix, and organize visual datasets with confidence.
+    </p>
+    <div className="vl-landing-cta-row">
+      <a href="/docs/quick-start/tutorial-create-dataset" className="vl-landing-cta-primary">Get Started</a>
+      <a href="/api-reference/api-intro" className="vl-landing-cta-secondary">API Reference</a>
+    </div>
+    <div className="vl-landing-cta-tertiary-row">
+      <a href="/docs/self-hosting/setting_up" className="vl-landing-cta-tertiary">Self-Hosting Guide →</a>
+    </div>
+  </div>
+</div>
+
+{/* ── Capabilities ── */}
+<div className="vl-landing-section">
+  <h2 className="vl-landing-section-title">What Visual Layer Does</h2>
+  <CardGroup cols={3}>
+    <Card title="Explore and Discover" icon="search" href="/docs/quick-start/dataset-exploration-ux">
+      Search by text or visual similarity, filter by labels, tags, and metadata.
+    </Card>
+    <Card title="Build and Curate" icon="library-big" href="/docs/advanced-dataset-management/enrich-overview">
+      Ingest data, enrich with AI models, and organize with metadata and tags.
+    </Card>
+    <Card title="Collaborate and Organize" icon="blend" href="/docs/collab-and-downstream/saved-views">
+      Save views, share datasets, tag images, and monitor changes.
+    </Card>
+  </CardGroup>
+</div>
+
+{/* ── Quick start paths ── */}
+<div className="vl-landing-section">
+  <h2 className="vl-landing-section-title">Start Here</h2>
+  <CardGroup cols={2}>
+    <Card title="Create Your First Dataset" icon="graduation-cap" href="/docs/quick-start/tutorial-create-dataset">
+      Upload images, run indexing, and explore your data in under 10 minutes.
+    </Card>
+    <Card title="Deploy Visual Layer" icon="blocks" href="/docs/introduction/prerequisites">
+      Choose between cloud and self-hosted deployment, and configure your environment.
+    </Card>
+    <Card title="Search and Filter" icon="sliders-horizontal" href="/docs/explore-and-search/using-search-filter">
+      Learn the query tools for navigating your datasets.
+    </Card>
+    <Card title="Key Concepts" icon="book-a" href="/docs/introduction/key-concepts">
+      Core terminology: datasets, clusters, enrichment, and curation.
+    </Card>
+  </CardGroup>
+</div>
+
+{/* ── Feature areas ── */}
+<div className="vl-landing-section">
+  <h2 className="vl-landing-section-title">Browse by Topic</h2>
+  <CardGroup cols={3}>
+    <Card title="Enrichment" icon="sparkles" href="/docs/advanced-dataset-management/enrich-overview">
+      Run vision AI models on your dataset.
+    </Card>
+    <Card title="Dataset Snapshots" icon="database" href="/docs/advanced-dataset-management/dataset-snapshots">
+      Version-control for your datasets.
+    </Card>
+    <Card title="Custom Metadata" icon="file-json" href="/docs/advanced-features/custom-metadata">
+      Import and filter by your own metadata fields.
+    </Card>
+    <Card title="VL Chat" icon="message-square-text" href="/docs/explore-and-search/vl-chat">
+      Explore datasets with natural language queries.
+    </Card>
+    <Card title="Monitoring and Alerts" icon="bell-dot" href="/docs/advanced-features/notifications">
+      Track view counts and receive alerts on data changes.
+    </Card>
+    <Card title="Self-Hosting" icon="blocks" href="/docs/self-hosting/setting_up">
+      Deploy and manage Visual Layer on your infrastructure.
+    </Card>
+  </CardGroup>
+</div>
+
+{/* ── Resources strip ── */}
+<div className="vl-landing-section vl-landing-section-last">
+  <h2 className="vl-landing-section-title">Resources</h2>
+  <CardGroup cols={3}>
+    <Card title="Release Notes" icon="megaphone" href="/docs/release-notes/release-notes">
+      Latest platform updates and new features.
+    </Card>
+    <Card title="FAQs" icon="life-buoy" href="/docs/Help-Support/faqs">
+      Answers to common questions.
+    </Card>
+    <Card title="Model Catalog" icon="boxes" href="/docs/Dataset-Enrichment/model-catalog">
+      Browse available enrichment models and their capabilities.
+    </Card>
+  </CardGroup>
+</div>
+
+</div>
