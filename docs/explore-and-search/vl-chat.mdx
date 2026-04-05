@@ -30,7 +30,7 @@ Each dataset maintains its own conversation thread, which persists across sessio
 
 Type your question in natural language into the chat input field and press Enter. **VL Chat** processes your query and returns results along with an explanation of what it understood and what it found.
 
-Query capabilities depend on your dataset's configuration. **VL Chat** can only search fields that exist in your data: datasets without annotations cannot filter by labels, and cluster-based queries require **Similarity Clusters** to be generated first. If you reference a field that isn't configured, the system explains this and applies the filters it can.
+Query capabilities depend on the dataset configuration. **VL Chat** can only search fields that exist in your data: datasets without annotations cannot filter by labels, and cluster-based queries require **Similarity Clusters** to be generated first. If you reference a field that isn't configured, the system explains this and applies the filters it can.
 
 **Example queries:**
 
@@ -81,7 +81,7 @@ When you ask a question, **VL Chat** provides:
 - **Visual results**: The actual images or objects matching your criteria.
 - **Alternative interpretations**: Suggestions if your query was ambiguous or if certain fields aren't available.
 
-Each response includes a confidence score. Lower scores (below 0.5) indicate ambiguity. If results don't match your expectations, review the alternative interpretations provided — these often reveal where the system's understanding differed from your intent. For complex criteria, break queries into multiple steps rather than a single nested question.
+Each response includes a confidence score. Lower scores (below 0.5) indicate ambiguity. If results don't match your expectations, review the alternative interpretations provided — these often reveal where the system interpretation differed from your intent. For complex criteria, break queries into multiple steps rather than a single nested question.
 
 **Example response:**
 

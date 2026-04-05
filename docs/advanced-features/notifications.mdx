@@ -1,86 +1,168 @@
 ---
-title: "Monitor Alerts"
-description: "Receive real-time alerts when saved views detect new results matching your filter criteria."
-sidebarTitle: "Monitor Alerts"
+title: "Monitoring and Alerts"
+description: "Track how saved view results change over time and receive real-time alerts when new data matches your filter criteria."
+sidebarTitle: "Monitoring & Alerts"
 ---
 
-**Monitor Alerts** notify you when new data matching a saved view's filters is detected in your dataset. Alerts surface automatically as you work, keeping you informed of changes without requiring manual checks.
+Monitoring tracks how the results of your [Saved Views](/docs/collab-and-downstream/saved-views) change over time. Each time new media is added to a dataset, the monitoring system evaluates every monitored view against the incoming batch and records how many items match. This builds a trend history that shows when and how frequently new data matches your filter criteria.
 
-Use **Monitor Alerts** to:
+Alerting extends monitoring with real-time notifications. When a monitored view detects new matching results in an incoming batch, an alert is delivered to all users with access to the dataset. Alerts appear as a badge on the bell icon in the dataset header, keeping you informed without interrupting your workflow.
 
-- Track incoming data that matches quality filters or search criteria
-- Stay aware of new results across monitored views without switching context
-- Coordinate review workflows across team members with shared dataset access
+Use monitoring and alerts to:
+
+- Track incoming data quality by watching for new duplicates, outliers, or mislabeled items.
+- Detect shifts in data distribution when new batches consistently match certain filter criteria.
+- Coordinate team review by alerting all dataset collaborators when relevant new data arrives.
+- Build a historical record of how result counts evolve across successive data additions.
+
+---
+
+## How Monitoring Works
+
+Monitoring is enabled by default when a saved view is created. The system records a `monitoring_started_at` timestamp and begins tracking results from that point forward.
+
+The evaluation cycle runs automatically after each media batch completes processing:
+
+<Steps>
+  <Step title="New media arrives">
+    New media is added to the dataset through the [Add Media API](/api-reference/add-media-to-existing-dataset) or the UI.
+  </Step>
+  <Step title="Pipeline processes the batch">
+    The pipeline indexes, embeds, and clusters the incoming media.
+  </Step>
+  <Step title="Monitored views are evaluated">
+    After processing completes, the system evaluates every monitored view for that dataset.
+  </Step>
+  <Step title="Matches are counted">
+    For each view, the system counts how many items in the new batch match the view filter criteria.
+  </Step>
+  <Step title="Trend data is recorded">
+    The result count and timestamp are recorded as a data point in the view trend history.
+  </Step>
+</Steps>
 
 <Note>
-**Monitor Alerts** are tied to **Saved Views**. Each alert corresponds to a saved view that has alerting enabled. To receive alerts, create a saved view and enable monitoring on it. See [Save Views](/docs/collab-and-downstream/views) for setup details.
+Monitoring evaluates only new batches that arrive after the view was created. Historical data added before the view existed is not retroactively evaluated.
 </Note>
 
-## Accessing Monitor Alerts
+### Trend Data
 
-The **Monitor Alerts** panel is accessible from the dataset exploration view.
+Each evaluation produces a data point containing the batch timestamp and the number of matching items. These data points accumulate into a trend history visible in the **Views** tab.
 
-1. Navigate to any dataset.
-2. Click the **bell icon** in the top-right area of the dataset header toolbar.
-
-The **Monitor Alerts** panel opens, listing all alerts for the current dataset.
+The expanded view row displays a **Trend Results** bar chart on the left side, showing the last 8 data points with timestamps and counts. Hover over any bar to see the exact date and result count.
 
 <Frame>
-  <img src="/images/monitor-alerts-panel-placeholder.png" alt="Monitor Alerts panel showing recent alerts" />
+  <img src="/images/saved-views-monitoring-trenddata.png" alt="Expanded view row showing trend chart with result counts and image preview grid" />
 </Frame>
 
-{/* TODO: Add screenshot of the Monitor Alerts bell icon and dropdown panel */}
+The **Total Results** column in the **Views** table shows the cumulative count of all matching items across all evaluated batches. The **Last Result** column shows when the most recent match was detected.
+
+---
+
+## Enabling and Disabling Alerts
+
+Monitoring runs automatically on all saved views, but alerts are controlled separately through the **Monitoring** toggle in the **Views** tab. Enabling alerts means you receive a notification whenever a batch evaluation finds new matching results for that view.
+
+1. Navigate to the **Views** tab from the dataset header.
+2. Locate the view in the table.
+3. Click the toggle in the **Monitoring** column.
+
+The toggle switches between an active bell icon (alerts on) and a muted bell icon (alerts off). When the toggle is active, all users with access to the dataset receive alerts for that view.
+
+<Frame>
+  <img src="/images/saved-views-monitoring-toggle.png" alt="Monitoring toggle in the Views table showing active and muted alert states" />
+</Frame>
+
+<Note>
+The monitoring toggle controls alert delivery only. Trend data collection continues regardless of the toggle state. Disabling alerts does not stop the system from tracking result counts.
+</Note>
+
+---
+
+## Accessing Alerts
+
+Alerts are accessible from the bell icon in the dataset header toolbar.
 
 ### Alert Badge
 
-The bell icon displays a **badge count** indicating the number of unread alerts. The badge updates in real time as new alerts arrive. When all alerts are read, the badge disappears.
+The bell icon displays a **badge count** indicating the number of unread alerts for the current dataset. The badge updates in real time as new alerts arrive. When all alerts are read, the badge disappears.
 
 <Frame>
-  <img src="/images/monitor-alerts-badge-placeholder.png" alt="Bell icon with unread alert count badge" />
+  <img src="/images/monitor-alerts-badge.png" alt="Bell icon with unread alert count badge" />
 </Frame>
 
-{/* TODO: Add screenshot showing the bell icon with a badge count */}
+### Alert Panel
 
-## Understanding Alerts
+Click the bell icon to open the **Monitor Alerts** panel. The panel lists all alerts for the current dataset, with the most recent alerts at the top.
 
-Each alert in the **Monitor Alerts** panel represents a saved view that detected new matching results. Alert entries display the following information:
+Each alert entry displays the following information:
 
 <div className="integrations-table">
 
 | Field | Description |
 |-------|-------------|
 | **View Name** | The name of the saved view that triggered the alert. |
-| **Description** | Indicates that new results were detected matching the view's filters. |
+| **Description** | Indicates that new results were detected matching the view filters. |
+| **Result Count** | The number of new items matching the view criteria in the evaluated batch. |
 | **Timestamp** | Relative time since the alert was generated (for example, "2 minutes ago"). |
 
 </div>
 
+<Note>
 Unread alerts appear with a highlighted background. Read alerts appear with a transparent background.
+</Note>
 
-## Marking Alerts as Read
+---
 
-All alerts in the panel are automatically marked as read when you close the **Monitor Alerts** panel. Open the panel, review your alerts, and close it to clear the unread count.
+## Managing Alerts
 
-## How Alerts Are Generated
+The **Monitor Alerts** panel provides basic alert management.
 
-Alerts are generated through the saved view monitoring system:
+### Marking Alerts as Read
 
-1. A saved view with alerting enabled is periodically evaluated against the dataset.
-2. When new media is added to the dataset through the [API](/api-reference/add-media-to-existing-dataset) and matches the view's filter criteria, an alert is created.
-3. The alert is delivered to all users with access to the dataset.
-4. The bell icon badge count updates in real time.
+All alerts in the panel are automatically marked as read when the panel is closed. Open the panel, review your alerts, and close it to clear the unread count.
+
+### Alert Scope
+
+Alerts are scoped to the current dataset. Each dataset has its own independent alert stream. Switch between datasets to view alerts specific to each one.
+
+### Alert Delivery
+
+When a monitored view with alerting enabled detects new matching results, the system delivers an alert to **all users with access to the dataset** — not just the view creator. This includes users with direct access as well as users who have access through group membership.
 
 <Note>
-Alerts are scoped to the current dataset. Each dataset has its own independent alert stream. Switch between datasets to view alerts for each one.
+Alert delivery is event-driven and uses real-time streaming. The bell icon badge updates without requiring a page refresh.
 </Note>
+
+---
+
+## Monitoring Without Alerts
+
+Monitoring and alerting serve different purposes and can be used independently. Every saved view automatically collects trend data, building a history of how result counts change with each new data batch. This trend data is always available in the expanded view row, regardless of whether alerts are enabled.
+
+Use trend data without alerts when you want to:
+
+- Review data patterns retrospectively during scheduled analysis sessions.
+- Compare result counts across multiple views to identify shifts in data composition.
+- Track long-term trends without the interruption of per-batch notifications.
+
+Enable alerts when you want immediate, real-time notification that new data matches your criteria.
+
+---
 
 ## Related Resources
 
 <CardGroup cols={2}>
-  <Card title="Save Views" icon="blend" href="/docs/collab-and-downstream/views">
-    Create saved views and enable monitoring to start receiving alerts.
+  <Card title="Saved Views" icon="blend" href="/docs/collab-and-downstream/saved-views">
+    Create saved views with filter criteria that monitoring evaluates against incoming data.
   </Card>
   <Card title="Search and Filter" icon="sliders-horizontal" href="/docs/explore-and-search/using-search-filter">
-    Build filter criteria that drive your saved views and alerts.
+    Build the filter combinations that drive your saved views and monitoring.
+  </Card>
+  <Card title="Add Media via API" icon="database" href="/api-reference/add-media-to-existing-dataset">
+    Add new media to datasets, triggering monitoring evaluation on all views.
+  </Card>
+  <Card title="Task Manager" icon="list-checks" href="/docs/advanced-features/task-manager">
+    Track media addition and processing tasks that trigger monitoring evaluation.
   </Card>
 </CardGroup>

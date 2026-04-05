@@ -17,7 +17,7 @@ Key characteristics:
 
 - Views do not duplicate or store data. They act as persistent filter definitions.
 - Views are dataset-specific and visible to all collaborators with access to that dataset.
-- Views are immutable. To change a view's filters, delete it and create a new one.
+- Views are immutable. To change the view filters, delete it and create a new one.
 - Monitoring tracks result changes over time. Alerting notifies you when new matches appear.
 
 ---
@@ -34,10 +34,8 @@ Save any active filter combination as a named view.
 The view is created and appears in both the **Filter Panel** dropdown and the **Views** tab.
 
 <Frame>
-  <img src="/images/save-view-dialog-placeholder.png" alt="Save View dialog with name input field" />
+  <img src="/images/save-view-dialog.png" alt="Save View dialog with name input field" />
 </Frame>
-
-{/* TODO: Add screenshot of the Save View input popover */}
 
 <Note>
 View names must be unique within a dataset. If a name already exists, an error message appears and the **Save** button is disabled.
@@ -77,10 +75,8 @@ A **See all views** link at the bottom of the dropdown navigates to the **Views*
 Navigate to the **Views** tab from the dataset header. The **Views** tab displays all saved views in a table with detailed information and management options.
 
 <Frame>
-  <img src="/images/saved-views-table-placeholder.png" alt="Views tab showing table of saved views with monitoring data" />
+  <img src="/images/saved-views-table.png" alt="Views tab showing table of saved views with monitoring data" />
 </Frame>
-
-{/* TODO: Add screenshot of the Views tab table */}
 
 ### Views Table Columns
 
@@ -91,7 +87,7 @@ The **Views** tab table displays the following information for each view:
 | Column | Description |
 |--------|-------------|
 | **Name** | The view name. Click to expand the row and see full details. |
-| **Total Results** | The cumulative count of items matching the view's filters. |
+| **Total Results** | The cumulative count of items matching the view filters. |
 | **Last Result** | How long ago the most recent matching result was detected. |
 | **Creation Time** | When the view was created. |
 | **Created By** | The user who created the view, shown as avatar and name. |
@@ -122,35 +118,24 @@ The expanded view displays a split panel:
 - **Preview** (right): A scrollable grid of thumbnail images from the matching results.
 
 <Frame>
-  <img src="/images/saved-views-expanded-placeholder.png" alt="Expanded view row showing trend chart and image preview grid" />
+  <img src="/images/saved-views-expanded.png" alt="Expanded view row showing trend chart and image preview grid" />
 </Frame>
-
-{/* TODO: Add screenshot of an expanded view row showing the trend chart and preview grid */}
 
 ---
 
 ## Monitoring and Alerts
 
-Saved Views include built-in monitoring that tracks how result counts change over time. When new media is added to a dataset through the [API](/api-reference/add-media-to-existing-dataset) and matches a view's filter criteria, the monitoring system detects the change and updates the view's trend data.
+Every saved view automatically tracks how result counts change over time. Each time new media is added to the dataset, the monitoring system evaluates all views and records how many new items match each view filter criteria. This builds a trend history visible in the expanded view row.
 
-### Enabling Alerts
-
-Each view has a monitoring toggle in the **Monitoring** column of the **Views** tab. When alerts are enabled, you receive a notification through [Monitor Alerts](/docs/advanced-features/notifications) whenever new results matching the view's filters are detected.
-
-1. Navigate to the **Views** tab.
-2. Click the toggle in the **Monitoring** column for the relevant view.
-
-The toggle switches between an active bell icon (alerts on) and a muted bell icon (alerts off).
+Alerting extends monitoring with real-time notifications. The **Monitoring** column in the **Views** tab controls whether a view sends alerts when new matches are detected. Click the toggle to enable or disable alerts for any view.
 
 <Frame>
-  <img src="/images/saved-views-monitoring-toggle-placeholder.png" alt="Monitoring toggle in the Views table showing active and muted states" />
+  <img src="/images/saved-views-monitoring-toggle.png" alt="Monitoring toggle in the Views table showing active and muted alert states" />
 </Frame>
 
-{/* TODO: Add screenshot showing the monitoring toggle in both states */}
+When alerts are enabled, all users with access to the dataset receive a notification through the bell icon in the dataset header whenever new results are detected.
 
-<Note>
-Alerts are delivered to all users with access to the dataset, not just the view creator. See [Monitor Alerts](/docs/advanced-features/notifications) for details on viewing and managing alerts.
-</Note>
+For a full explanation of how monitoring works, trend data, alert delivery, and alert management, see [Monitoring and Alerts](/docs/advanced-features/notifications).
 
 ---
 
@@ -167,10 +152,8 @@ Share a saved view with a collaborator by email. Sharing sends an email with the
 The recipient receives an email with the view context and a direct link.
 
 <Frame>
-  <img src="/images/saved-views-share-panel-placeholder.png" alt="Share this View panel with message field and email input" />
+  <img src="/images/saved-views-share-panel.png" alt="Share this View panel with message field and email input" />
 </Frame>
-
-{/* TODO: Add screenshot of the Share this View panel */}
 
 <Note>
 Views are accessible to all collaborators on the dataset. The share feature sends an email notification to draw a specific person's attention to the view — it does not grant additional access.
@@ -190,7 +173,7 @@ Remove a view that is no longer needed.
 The view and its trend data are permanently removed.
 
 <Note>
-Views are immutable. To modify a view's filters, delete the existing view, apply new filters in the **Explore** tab, and save a new view.
+Views are immutable. To modify the view filters, delete the existing view, apply new filters in the **Explore** tab, and save a new view.
 </Note>
 
 ---
@@ -198,8 +181,8 @@ Views are immutable. To modify a view's filters, delete the existing view, apply
 ## Related Resources
 
 <CardGroup cols={2}>
-  <Card title="Monitor Alerts" icon="blend" href="/docs/advanced-features/notifications">
-    View and manage alerts triggered by monitored saved views.
+  <Card title="Monitoring and Alerts" icon="blend" href="/docs/advanced-features/notifications">
+    Track result trends and receive real-time alerts when new data matches your views.
   </Card>
   <Card title="Search and Filter" icon="sliders-horizontal" href="/docs/explore-and-search/using-search-filter">
     Build the filter combinations that drive your saved views.

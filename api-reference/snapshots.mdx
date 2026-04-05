@@ -97,7 +97,7 @@ Each snapshot in the response contains the following fields:
 | `reason` | string | How the snapshot was created: `manual`, `creation`, or `clone`. |
 | `training_model_id` | UUID or null | Associated training model ID, if the snapshot was created during model training. |
 | `training_model_name` | string or null | Display name of the associated training model. |
-| `is_current` | boolean | `true` if this snapshot represents the dataset's active state. |
+| `is_current` | boolean | `true` if this snapshot represents the active state of the dataset. |
 | `is_restoring` | boolean | `true` if a restore operation is currently in progress for this snapshot. |
 
 </div>
@@ -165,7 +165,7 @@ Returns the created snapshot object. See [Snapshot Object Fields](#snapshot-obje
 }
 ```
 
-The new snapshot becomes the dataset's current version (`is_current: true`).
+The new snapshot becomes the current version of the dataset (`is_current: true`).
 
 <Warning>
 Snapshot creation is blocked while any of the following operations are running on the dataset: dataset creation, enrichment, media addition, re-indexing, label propagation, custom metadata import, or snapshot restore. Wait for the active operation to complete before creating a snapshot.
@@ -175,7 +175,7 @@ Snapshot creation is blocked while any of the following operations are running o
 
 ## Update a Snapshot
 
-Change the name or description of an existing snapshot. This does not affect the snapshot's saved data.
+Change the name or description of an existing snapshot. This does not affect the saved data in the snapshot.
 
 ```http
 PATCH /api/v1/dataset/{dataset_id}/snapshot/{snapshot_id}
@@ -249,10 +249,10 @@ curl -X POST \
 
 Returns HTTP `202 Accepted` with an empty body. The restore operation runs asynchronously.
 
-Track the restore progress using the [Task Manager API](/api-reference/task-manager). A `SNAPSHOT_RESTORE` task appears with the dataset's ID. The dataset returns to **Ready** status once the restore completes.
+Track the restore progress using the [Task Manager API](/api-reference/task-manager). A `SNAPSHOT_RESTORE` task appears with the dataset ID. The dataset returns to **Ready** status once the restore completes.
 
 <Warning>
-Restore replaces all current dataset data — media, metadata, enrichment results, clustering, tags, and labels — with the snapshot's saved state. This operation cannot be undone. Create a new snapshot of the current state before restoring if you want to preserve it.
+Restore replaces all current dataset data — media, metadata, enrichment results, clustering, tags, and labels — with the saved state of the snapshot. This operation cannot be undone. Create a new snapshot of the current state before restoring if you want to preserve it.
 </Warning>
 
 ### State During Restore
@@ -260,7 +260,7 @@ Restore replaces all current dataset data — media, metadata, enrichment result
 While a restore is in progress:
 
 - The dataset status changes to **Read Only**.
-- The snapshot's `is_restoring` field is `true` in the list response.
+- The snapshot `is_restoring` field is `true` in the list response.
 - All data-modifying operations (enrichment, media addition, re-indexing) are blocked.
 - Read operations (search, explore, export) continue to work against the pre-restore data.
 
@@ -304,7 +304,7 @@ The cloned dataset is fully independent. Changes to the clone do not affect the 
 
 ## Delete a Snapshot
 
-Remove a snapshot from the catalog. This is a soft delete — the snapshot is hidden from all API responses but does not affect the dataset's current data or any datasets previously cloned from the snapshot.
+Remove a snapshot from the catalog. This is a soft delete — the snapshot is hidden from all API responses but does not affect the current dataset data or any datasets previously cloned from the snapshot.
 
 ```http
 DELETE /api/v1/dataset/{dataset_id}/snapshot/{snapshot_id}

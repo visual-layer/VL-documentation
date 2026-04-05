@@ -4,29 +4,29 @@ description: "Monitor and manage all dataset operations including creation, enri
 sidebarTitle: "Task Manager"
 ---
 
-The **Task Manager** provides a unified view of all dataset-related operations across your Visual Layer workspace. It tracks processes such as dataset creation, enrichment, and re-indexing, displaying their current status, progress, and any errors that occurred.
+The **Task Manager** provides a unified view of all dataset-related operations across your **Visual Layer** workspace. It tracks processes such as dataset creation, media addition, re-indexing, label propagation, model training, model validation, snapshot operations, enrichment, and custom metadata imports, displaying their current status, progress, and any errors that occurred.
 
 Use the **Task Manager** to:
 
-- Monitor active operations in real-time
-- Track operation history from the past 14 days
-- Identify and troubleshoot failed processes
+- Monitor active operations in real-time.
+- Track operation history from the past 14 days.
+- Identify and troubleshoot failed processes.
 
 <Note>
-The **Task Manager** maintains a visible history of all operations performed in the past 14 days.
+The **Task Manager** maintains a visible history of all operations performed in the past 14 days. Older tasks are automatically archived.
 </Note>
 
 ## Accessing the Task Manager
 
-To access the **Task Manager**:
+The **Task Manager** is available from any screen in Visual Layer.
 
 1. Go to the **Navigation Panel** on the left side of the screen.
-2. Click the Task Manager icon ![](/images/task-manager-icon.png).
+2. Click the **Task Manager** icon ![](/images/task-manager-icon.png).
 
 The **Task Manager** opens, displaying all operations from the past 14 days.
 
 <Frame>
-  <img src="/images/task-manager.png" alt="Task Manager Interface" />
+  <img src="/images/task-manager.png" alt="Task Manager interface showing operation history" />
 </Frame>
 
 <Note>
@@ -35,20 +35,20 @@ If no operations have been performed in the past 14 days, the table appears empt
 
 ## Understanding the Task Table
 
-The **Task Manager** displays all operations in a comprehensive table. Each row represents a single task and contains the following information:
+The **Task Manager** displays all operations in a table format. Each row represents a single task and contains the following information:
 
 <div className="integrations-table">
 
 | Column | Description |
 |--------|-------------|
-| **Time** | The timestamp when the operation was initiated. Use the filter to view tasks from the last 24 hours, last 7 days, or last 14 days. |
-| **Task** | The type of operation being performed: **Dataset Creation**, **Media Addition**, **Re-indexing**, **Label Propagation**, **Model Training**, **Model Validation**, **Snapshot**, **Enrichment**, or **Custom Metadata**. Use the filter to view specific task types. |
-| **Dataset** | The name of the dataset where the operation is running or was performed. Click the dataset name to navigate directly to its exploration page. |
-| **Dataset ID** | The unique identifier for the dataset. Use filters to search by specific dataset IDs. |
-| **Duration** | The elapsed time since the operation started (for running tasks) or the total time the operation took (for completed tasks). Sort by this column to identify long-running operations. |
+| **Time** | The timestamp when the operation was initiated. |
+| **Task** | The type of operation being performed. See [Task Types](#task-types) below for a description of each task type. |
+| **Dataset** | The name of the dataset where the operation is running or was performed. Click the dataset name to navigate directly to its **Explore** page. |
+| **Dataset ID** | The unique identifier for the dataset. |
+| **Duration** | The elapsed time since the operation started (for running tasks) or the total time the operation took (for completed tasks). The counter starts only once the task begins processing — tasks in **Pending** status do not accumulate duration. Sort by this column to identify long-running operations. |
 | **User** | The user who initiated the task. (Cloud deployments only.) |
-| **Status** | The current state of the operation with progress percentage. See Status Types below for detailed descriptions. |
-| **Actions** | Access task details or retrieve the Task ID for support purposes. |
+| **Status** | The current state of the operation with progress percentage. See [Task Statuses](#task-statuses) below for detailed descriptions. |
+| **Actions** | Access the task's unique identifier for copying. |
 
 </div>
 
@@ -56,83 +56,111 @@ The **Task Manager** displays all operations in a comprehensive table. Each row 
 The **Task Manager** tracks operation-level status independently from overall dataset status. A dataset can show **Ready** status in the **Dataset Inventory** even when the **Task Manager** displays completed tasks like **Enrichment** or **Training**, since these operations do not block dataset access.
 </Note>
 
-## Status Types
+## Working with the Task Table
 
-All tasks display one of several statuses to indicate their current state. Each status includes a percentage to show progress through the operation.
-
-<div className="integrations-table">
-
-| Status | Description |
-|--------|-------------|
-| **Queued** | Task is waiting to begin processing |
-| **Running** | Task is actively executing with progress percentage |
-| **Completed** | Task finished successfully |
-| **Failed** | Task encountered an error and stopped. Click the task row for error details. |
-| **Cancelled** | Task was manually stopped before completion |
-
-</div>
-
-## Task Concurrency
-
-When a task is running on a dataset, some operations on that dataset may be temporarily restricted until the task completes.
-
-<div className="integrations-table">
-
-| Dataset State | Available | Blocked |
-|---------------|-----------|---------|
-| **Ready** | All operations | None |
-| **Read Only** | Search, filter, share | Enrichment, re-indexing, label propagation, custom metadata |
-| **Partial Index** | Add media, re-index | Enrichment, label propagation, custom metadata |
-
-</div>
-
-A dataset enters **Read Only** state when enrichment, re-indexing, label propagation, or custom metadata tasks are active. It enters **Partial Index** state after new media is added but before re-indexing completes.
-
-<Note>
-Model Training and Model Validation tasks do not restrict dataset access. The dataset remains **Ready** while these tasks run.
-</Note>
-
-## Working with the Task Manager Table
-
-The table displays tasks ordered by **Time** by default, with the most recent operations appearing first.
+The table displays tasks ordered by **Time** by default, with the most recent operations appearing first. Click any column header to sort tasks in ascending or descending order.
 
 ### Filtering Tasks
 
-Each column in the **Task Manager** supports filtering to help you quickly locate specific operations:
+The filter bar at the top of the table narrows the task list by multiple criteria.
 
-1. Click the filter icon in any column header.
-2. Select the desired values from the dropdown.
-3. Click **Apply** to update the table.
+<div className="integrations-table">
 
-**Common filter combinations:**
+| Filter | Description |
+|--------|-------------|
+| **Time** | Filter by time range: **Last 24 Hours**, **Last 7 Days**, or **Last 14 Days** (default). |
+| **Task** | Filter by task type (Dataset Creation, Media Addition, Reindex, Snapshot Restore, Snapshot Clone, Enrichment, and others). |
+| **Dataset** | Filter by dataset name. |
+| **Dataset ID** | Filter by the unique dataset identifier. |
+| **Status** | Filter by task status (Pending, Initializing, Running, Completed, Failed, Aborted). |
+| **Operated by** | Filter by the user who triggered the task. |
 
-- **Status = Failed** to identify problematic operations
-- **Task = Enrichment** to view all enrichment jobs
-- **Time = Last 24 hours** to see recent activity
+</div>
+
+Click **Reset** to clear all filters and return to the default view.
 
 ### Sorting Tasks
 
 Click any column header to sort tasks in ascending or descending order:
 
-- **Duration**: Identify long-running or slow operations
-- **Time**: View operations chronologically
-- **Dataset**: Group tasks by dataset
+- **Duration**: Identify long-running or slow operations.
+- **Time**: View operations chronologically.
+- **Dataset**: Group tasks by dataset.
 
 ### Retrieving Task IDs
 
-Task IDs are useful when contacting Visual Layer support about specific operations:
+Task IDs are useful when contacting **Visual Layer** support about specific operations.
 
 1. Click the **Actions** menu (three dots) for the relevant task row.
 2. Select **Copy Task ID**.
-3. The ID is copied to your clipboard for sharing with support.
+
+The ID is copied to your clipboard.
+
+## Task Statuses
+
+All tasks display one of the following statuses to indicate their current state. Each status includes a percentage to show progress through the operation.
+
+<div className="integrations-table">
+
+| Status | Description |
+|--------|-------------|
+| **Pending** | The task is queued and waiting for a required resource to become available. Multiple pipeline tasks can run in parallel when resources allow, but GPU-bound tasks such as dataset creation run one at a time. The duration counter does not start until the task begins processing. |
+| **Initializing** | The operation is performing initial validations, uploading data, or downloading resources. Progress percentage reflects completion of initialization steps. |
+| **Running** | The operation is actively processing. Progress percentage reflects completion of the overall operation. |
+| **Completed** | The operation completed successfully. Progress shows 100%. |
+| **Failed** | The operation encountered an error and could not complete. Hover over the status to view the error message explaining what went wrong. |
+| **Aborted** | The operation was manually stopped by a user before completion. |
+
+</div>
+
+## Task Types
+
+Each entry in the **Task** column represents one of the following operations:
+
+<div className="integrations-table">
+
+| Task | Description |
+|------|-------------|
+| **Dataset Creation** | Creating a new dataset from uploaded media. Triggered when you complete the dataset creation wizard. |
+| **Media Addition** | Adding new image or video files to an existing dataset. |
+| **Reindex** | Re-indexing a dataset to fully incorporate newly added media into the dataset index. Follows a **Media Addition** task when a full re-index is required. |
+| **Enrichment** | Running an enrichment model on a dataset. Triggered from the enrichment panel for that dataset. |
+| **Label Propagation** | Propagating labels across similar items in the dataset. |
+| **Model Training** | Training a custom model using dataset data. |
+| **Model Validation** | Validating a trained model against dataset data. |
+| **Custom Metadata** | Importing custom metadata into a dataset. |
+| **Snapshot Restore** | Rolling back the dataset to the state captured by a specific snapshot. Triggered from the **Snapshot Catalog**. |
+| **Snapshot Clone** | Creating a new, independent dataset from the data in a specific snapshot. Triggered from the **Snapshot Catalog**. |
+
+</div>
+
+## Task Concurrency
+
+When a data-modifying task runs, the dataset enters **Read Only** status and other data-modifying tasks are blocked until the current task completes.
+
+<div className="integrations-table">
+
+| Dataset Status | Available Operations | Blocked Operations |
+|----------------|---------------------|--------------------|
+| **Ready** | All operations | None |
+| **Read Only** | Visual Search, Semantic Search, filtering, share dataset, add user tags | Media Addition, re-indexing, Snapshot Create/Restore/Clone, enrichment, label propagation, custom metadata |
+| **Partial Index** | Add media, re-index, Snapshot Create/Restore/Clone | Enrichment, label propagation, custom metadata |
+
+</div>
+
+A dataset enters **Read Only** status when enrichment, re-indexing, label propagation, custom metadata, or snapshot tasks are active. It enters **Partial Index** status after new media is added but before re-indexing completes.
+
+<Note>
+**Model Training** and **Model Validation** tasks do not restrict dataset access. The dataset remains **Ready** while these tasks run.
+</Note>
 
 ## Monitoring Active Operations
 
 The **Task Manager** updates automatically as tasks progress. Active operations display real-time updates:
 
-- **Progress percentage** increases as the task advances
-- **Duration** counts up continuously for running tasks
-- **Status** changes reflect task state transitions
+- **Progress percentage** increases as the task advances.
+- **Duration** counts up continuously for running tasks.
+- **Status** changes reflect task state transitions.
 
 <Tip>
 Keep the **Task Manager** open in a separate browser tab to monitor long-running operations without interrupting your work in datasets.
@@ -142,36 +170,35 @@ Keep the **Task Manager** open in a separate browser tab to monitor long-running
 
 When a task shows **Failed** status:
 
-1. Click the task row to expand error details.
+1. Hover over the status or click the task row to view error details.
 2. Review the error message for specific failure reasons.
 3. Common issues include:
-   - Insufficient storage space
-   - Invalid metadata formats
-   - Network connectivity problems
-   - Incompatible file types
-
+   - Insufficient storage space.
+   - Invalid metadata formats.
+   - Network connectivity problems.
+   - Incompatible file types.
 4. After resolving the issue, retry the operation from the relevant dataset or workflow.
 
 <Note>
-Failed dataset creation tasks require starting the creation process again. Failed enrichment tasks can be retried from the dataset's enrichment panel.
+Failed dataset creation tasks require starting the creation process again. Failed enrichment tasks can be retried from the enrichment panel for that dataset.
 </Note>
 
 ## Task Manager Limitations
 
-**14-Day History Window**: The **Task Manager** only displays operations from the past 14 days. Older tasks are automatically archived.
+Keep the following constraints in mind when working with the **Task Manager**:
 
-**Read-Only Interface**: You cannot cancel or modify most running tasks directly from the **Task Manager**. To stop an operation, navigate to the dataset and use the relevant controls. Dataset creation tasks can be aborted and retried via the [Task Manager API](/api-reference/task-manager).
-
-**No Bulk Actions**: Each task must be reviewed or managed individually.
+- **14-Day History Window**: The **Task Manager** only displays operations from the past 14 days. Older tasks are automatically archived.
+- **Read-Only Interface**: You cannot cancel or modify most running tasks directly from the **Task Manager**. To stop an operation, navigate to the dataset and use the relevant controls. Dataset creation tasks can be aborted and retried via the [Task Manager API](/api-reference/task-manager).
+- **No Bulk Actions**: Each task must be reviewed or managed individually.
 
 ## Related Resources
 
 <CardGroup cols={2}>
   <Card title="Upload Data" icon="database" href="/docs/quick-start/tutorial-create-dataset">
-    Create datasets and monitor creation tasks
+    Create datasets and monitor creation tasks.
   </Card>
   <Card title="Dataset Enrichment" icon="sparkles" href="/docs/advanced-dataset-management/enrich-overview">
-    Enrich datasets and track enrichment tasks
+    Enrich datasets and track enrichment tasks.
   </Card>
   <Card title="Dataset Snapshots" icon="library-big" href="/docs/advanced-dataset-management/dataset-snapshots">
     Track snapshot restore and clone operations in the Task Manager.
