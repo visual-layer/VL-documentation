@@ -1,23 +1,24 @@
 ---
 title: "Configure Settings"
-description: "Use Configuration settings to customize behavior and output when running Visual Layer backend tools or scripts."
+description: "Customize Visual Layer behavior through config.json, environment files, and environment variable overrides for self-hosted deployments."
+sidebarTitle: "Configuration"
 ---
 
-Visual Layer can be configured through two main mechanisms: a **JSON configuration file** for application settings and feature flags, and an **environment file** for Docker Compose variables. Additionally, individual settings can be overridden using environment variables.
+**Visual Layer** uses two configuration mechanisms for self-hosted deployments: a JSON configuration file for application settings and feature flags, and an environment file for Docker Compose variables. Environment variables can override either source.
 
 ## Configuration Hierarchy
 
 Settings are applied in the following order, where later sources override earlier ones:
 
-1. **`defaults.json`** — Built-in defaults (do not edit)
-2. **`config.json`** — Your custom configuration
-3. **Environment variables** — Override any JSON setting
+1. **`defaults.json`** — Built-in defaults (do not edit).
+2. **`config.json`** — Your custom configuration.
+3. **Environment variables** — Override any JSON setting.
 
 ## Configuration File (`config.json`)
 
-The `config.json` file is located at `.vl/config.json` inside your Visual Layer installation directory. This file controls application behavior, feature flags, and pipeline settings.
+The `config.json` file is located at `.vl/config.json` inside your **Visual Layer** installation directory. This file controls application behavior, feature flags, and pipeline settings. Include only the settings you want to change — any setting not present in `config.json` uses its default value from `defaults.json`.
 
-To customize your deployment, create or edit `.vl/config.json` with the settings you want to override:
+To customize your deployment, create or edit `.vl/config.json`:
 
 ```json
 {
@@ -35,10 +36,8 @@ To customize your deployment, create or edit `.vl/config.json` with the settings
 }
 ```
 
-You only need to include the settings you want to change. Any setting not present in `config.json` will use its default value from `defaults.json`.
-
 <Note>
-After modifying `config.json`, restart the Visual Layer services for changes to take effect:
+After modifying `config.json`, restart **Visual Layer** services for changes to take effect:
 
 ```bash
 ./stop.sh && ./start.sh
@@ -47,99 +46,58 @@ After modifying `config.json`, restart the Visual Layer services for changes to 
 
 ### Feature Flags
 
-#### `ADD_MEDIA_ENABLED`
+The following feature flags control which capabilities are available in your deployment.
 
-**Type**: `boolean` &nbsp; **Default**: `true`
+<div className="integrations-table">
 
-Enables or disables the ability to add new media to existing datasets without requiring a full reindex. When enabled, users can upload additional images or videos to a dataset that is already indexed.
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `ADD_MEDIA_ENABLED` | boolean | `true` | Allow adding new media to existing datasets without a full reindex. |
+| `DATASET_INGESTION_ONPREM_UI_ENABLED` | boolean | `false` | Enable dataset creation from the web interface. When disabled, datasets can only be created via the CLI profiler tool. |
+| `DATASET_CREATION_V2` | boolean | `false` | Enable the updated dataset creation workflow with a step-by-step wizard. |
+| `ENRICHMENT_PREVIEW_SERVICE_ENABLED` | boolean | `false` | Allow previewing enrichment model results on a sample before running on the full dataset. |
+| `ENRICHMENT_INLINE_FLOW_ENABLED` | boolean | `false` | Run enrichment models within the same pipeline process instead of requiring a separate step. |
+| `PREPROCESS_ENABLED` | boolean | `false` | Enable preprocessing (image resizing, frame extraction, cleaning) before indexing. |
+| `ENRICHMENT_DKMC2_ENABLED` | boolean | `false` | Enable DKMC2 (Deep K-Means Clustering v2), which generates multiple embedding vectors per image for fine-grained instance retrieval. |
 
-#### `DATASET_INGESTION_ONPREM_UI_ENABLED`
+</div>
 
-**Type**: `boolean` &nbsp; **Default**: `false`
+### Storage and Media Settings
 
-Enables the on-premises dataset ingestion UI, allowing users to create datasets directly from the web interface in self-hosted deployments. When disabled, datasets can only be created via the CLI profiler tool.
+These settings control how media files are stored, processed, and displayed.
 
-#### `DATASET_CREATION_V2`
+<div className="integrations-table">
 
-**Type**: `boolean` &nbsp; **Default**: `false`
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `S3_VL_INGESTION_SERVICE_PROFILE` | string | `""` | AWS credentials profile name for S3-based ingestion. Leave empty to use the default credential chain. |
+| `FILE_FILTER_TREE_INCLUDE_FILES` | boolean | `true` | Show individual files in the file filter tree. Disabling this improves performance for datasets with many files. |
+| `SERVE_ORIGINAL_VIDEO` | boolean | `false` | Serve videos from their original location instead of copying to the CDN directory. Reduces disk usage but requires original files to remain accessible. |
+| `FRAME_EXTRACTION_RESIZE_HEIGHT` | integer | `0` | Target height in pixels for video frame extraction. `0` preserves original resolution. Common values: `576`, `720`. |
 
-Enables the updated dataset creation workflow in the UI with an improved step-by-step wizard experience.
+</div>
 
-#### `S3_VL_INGESTION_SERVICE_PROFILE`
+### General Settings
 
-**Type**: `string` &nbsp; **Default**: `""`
+Additional settings for authentication, dataset limits, and data quality.
 
-Specifies the AWS credentials profile name used for S3-based dataset ingestion. When set, Visual Layer uses the named profile from the AWS credentials file for S3 operations. Leave empty to use the default credential chain.
+<div className="integrations-table">
 
-#### `ENRICHMENT_PREVIEW_SERVICE_ENABLED`
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `DISABLE_AUTH` | boolean | `false` | Disable authentication. Typically set to `true` for single-user deployments. |
+| `MAX_NUM_OF_IMAGES` | integer | `100000000` | Maximum number of images allowed per dataset. |
+| `CLEAN_THRESHOLD` | float | `-1` | Similarity threshold for near-duplicate detection. Images above this threshold are flagged as near-duplicates. `-1` uses the automatic threshold. |
+| `LOG_LEVEL` | string | `INFO` | Controls logging verbosity. Accepted values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. At `DEBUG`, additional internal processing messages are logged including detailed diagnostics. |
+| `SWAP_RGB_CHANNELS_FOR_TIFF_HEIC` | boolean | `false` | Correct color rendering for TIFF and HEIC images where red and blue channels appear reversed. |
 
-**Type**: `boolean` &nbsp; **Default**: `false`
-
-Enables enrichment model previews. When enabled, users can preview the results of enrichment models (such as captioning, tagging, or object detection) on a sample of images before running the full enrichment on the entire dataset.
-
-#### `ENRICHMENT_INLINE_FLOW_ENABLED`
-
-**Type**: `boolean` &nbsp; **Default**: `false`
-
-Enables the inline enrichment flow, which allows enrichment models to run within the same pipeline process instead of requiring a separate enrichment step. This can simplify the enrichment workflow for on-premises deployments.
-
-#### `PREPROCESS_ENABLED`
-
-**Type**: `boolean` &nbsp; **Default**: `false`
-
-Enables the preprocessing step in the pipeline. When enabled, data goes through preprocessing (image resizing, frame extraction, cleaning) before indexing.
-
-#### `FILE_FILTER_TREE_INCLUDE_FILES`
-
-**Type**: `boolean` &nbsp; **Default**: `true`
-
-Controls whether individual files are shown in the file filter tree in the exploration UI. When enabled, the file filter tree displays both folders and individual files. When disabled, only folders are shown, which can improve performance for datasets with many files.
-
-#### `SERVE_ORIGINAL_VIDEO`
-
-**Type**: `boolean` &nbsp; **Default**: `false`
-
-When enabled, videos are served directly from their original location via the image proxy instead of being copied to the CDN directory. This reduces disk usage since videos are not duplicated, but requires the original files to remain accessible.
-
-#### `ENRICHMENT_DKMC2_ENABLED`
-
-**Type**: `boolean` &nbsp; **Default**: `false`
-
-Enables DKMC2 (Deep K-Means Clustering v2) as an available enrichment model. DKMC2 generates multiple embedding vectors per image (default 5) for fine-grained instance retrieval, improving visual search accuracy for detailed features within images.
-
-#### `FRAME_EXTRACTION_RESIZE_HEIGHT`
-
-**Type**: `integer` &nbsp; **Default**: `0`
-
-Sets the target height in pixels for resizing frames extracted from videos. A value of `0` means no resizing (original resolution is preserved). Common values include `576` and `720`. Reducing frame size decreases storage requirements and speeds up processing at the cost of lower resolution.
-
-### Other Useful Settings
-
-#### `DISABLE_AUTH`
-
-**Type**: `boolean` &nbsp; **Default**: `false`
-
-Disables authentication for the application. Typically set to `true` for single-user on-premises deployments.
-
-#### `MAX_NUM_OF_IMAGES`
-
-**Type**: `integer` &nbsp; **Default**: `100000000`
-
-Maximum number of images allowed per dataset.
-
-#### `CLEAN_THRESHOLD`
-
-**Type**: `float` &nbsp; **Default**: `-1`
-
-Similarity threshold for near-duplicate detection. Images with similarity above this threshold are flagged as near-duplicates. Set to `-1` to use the automatic threshold.
-
-***
+</div>
 
 ## Environment File (`.env`)
 
-The `.env` file is located at the root of the Visual Layer installation directory. It is read by Docker Compose when starting the services, and controls variables such as hardware profile, image versions, and deployment options.
+The `.env` file is located at the root of the **Visual Layer** installation directory. Docker Compose reads this file when starting services. It controls hardware profile, image versions, and deployment options.
 
-A typical `.env` file looks like this:
+A typical `.env` file:
 
 ```bash
 REPO=visuallayer
@@ -155,18 +113,25 @@ MODEL_PACK_FROM_IMAGE=false
 
 ### Key `.env` Variables
 
+The following variables control the deployment environment.
+
+<div className="integrations-table">
+
 | Variable | Description | Example Values |
 |----------|-------------|----------------|
-| `HARDWARE` | Hardware profile for the deployment | `cpu`, `gpu` |
-| `VL_VERSION` | Visual Layer application version | `latest`, `2.33.3-rc7` |
-| `VL_MODEL_VERSION` | Version of bundled ML models | `7.0` |
-| `HOST_OS` | Host operating system | `Linux`, `Darwin` |
-| `MODEL_PACK_FROM_IMAGE` | Load models from Docker image instead of downloading | `true`, `false` |
+| `HARDWARE` | Hardware profile for the deployment. | `cpu`, `gpu` |
+| `VL_VERSION` | **Visual Layer** application version. | `latest`, `2.33.3-rc7` |
+| `VL_MODEL_VERSION` | Version of bundled ML models. | `7.0` |
+| `HOST_OS` | Host operating system. | `Linux`, `Darwin` |
+| `MODEL_PACK_FROM_IMAGE` | Load models from Docker image instead of downloading. | `true`, `false` |
 
-You can also add additional environment variables to the `.env` file to override any `config.json` setting. Environment variables take precedence over JSON configuration. For example, to set the log level via `.env`:
+</div>
+
+You can also add `config.json` settings as environment variables in the `.env` file. Environment variables take precedence over JSON configuration:
 
 ```bash
 LOG_LEVEL=10
+SERVE_ORIGINAL_VIDEO=true
 ```
 
 <Note>
@@ -177,56 +142,28 @@ After modifying `.env`, restart the services for changes to take effect:
 ```
 </Note>
 
-***
-
 ## Environment Variable Overrides
 
-Any setting from `config.json` can also be set as an environment variable, either in the `.env` file or exported in the shell before starting Visual Layer. Environment variables always take the highest precedence.
+Any `config.json` setting can be set as an environment variable, either in the `.env` file or exported in the shell before starting **Visual Layer**. Environment variables always take the highest precedence.
 
 ```bash
 export LOG_LEVEL='10'
 export SERVE_ORIGINAL_VIDEO=true
 ```
 
-***
+## Related Resources
 
-## Individual Settings Reference
-
-### `LOG_LEVEL`
-
- **Description**: Controls how verbose the logging system is. Useful for debugging or reducing noise in production.
-
- **Accepted Values**:
-
-`DEBUG`
-
-`INFO` (default)
-
-`WARNING`
-
-`ERROR`
-
-`CRITICAL`
-
-Example:
-
-```bash
-export LOG_LEVEL='10'
-# then run the profiler on-prem according to the run_profiler.sh instructions
-```
-
-At DEBUG, additional internal processing messages will be logged, including more detailed diagnostics (e.g., when the log level is set to 10, extra diagnostic info is shown).
-
-***
-
-### `SWAP_RGB_CHANNELS_FOR_TIFF_HEIC`
-
- **Description**: Corrects color rendering issues that can occur in certain TIFF and HEIC image formats, where red and blue channels may appear reversed.
-
- **Behavior**: When enabled, the red and blue color channels are swapped while green remains unchanged. This ensures that images are displayed using the expected RGB format across all systems.
-
-Example:
-
-```bash
-export SWAP_RGB_CHANNELS_FOR_TIFF_HEIC=true
-```
+<CardGroup cols={2}>
+  <Card title="Installation" icon="blocks" href="/docs/self-hosting/setting_up">
+    Install and start Visual Layer on your infrastructure.
+  </Card>
+  <Card title="S3 Configuration" icon="blocks" href="/docs/self-hosting/s3-configuration">
+    Configure S3 storage for self-hosted deployments.
+  </Card>
+  <Card title="System Requirements" icon="blocks" href="/docs/self-hosting/System_requirements">
+    Hardware and software prerequisites for self-hosted deployments.
+  </Card>
+  <Card title="Useful Scripts" icon="file-code-2" href="/docs/self-hosting/useful-scripts">
+    Maintenance and administration scripts for self-hosted environments.
+  </Card>
+</CardGroup>
