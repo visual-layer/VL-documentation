@@ -29,9 +29,11 @@ The **Snapshot Catalog** lists all saved snapshots for a dataset in chronologica
 
 The **Snapshot Catalog** drawer opens on the right side of the screen.
 
+<div className="frame-portrait">
 <Frame>
   <img src="/images/snapshot-catalog.png" alt="Snapshot Catalog drawer showing list of saved snapshots" />
 </Frame>
+</div>
 
 ### Snapshot Catalog Fields
 
@@ -52,7 +54,7 @@ Each snapshot entry in the catalog displays the following information:
 </div>
 
 <Frame>
-  <img src="/images/snapshot-options.png" alt="Snapshot three-dot menu showing Edit, Clone, Copy Snapshot ID, Restore, and Remove options" />
+  <img src="/images/snapshot-options.png" alt="Snapshot three-dot menu showing Edit, Clone, Copy Snapshot ID, Restore, and Remove options" className="img-sm" />
 </Frame>
 
 Use the search bar at the top of the catalog to filter snapshots by name or description.
@@ -70,7 +72,7 @@ Create a snapshot to save the current state of your dataset before making change
 The snapshot is saved and appears at the top of the **Snapshot Catalog**. While the snapshot is being created, the **Snapshots** icon displays a spinning indicator.
 
 <Frame>
-  <img src="/images/snapshot-create-dialog.png" alt="Create Snapshot dialog with name and description fields" />
+  <img src="/images/snapshot-create-dialog.png" alt="Create Snapshot dialog with name and description fields" className="img-sm" />
 </Frame>
 
 If snapshot creation fails, a toast notification appears with the error details. The dataset returns to **Ready** status if the failure occurred in a recoverable stage. If the failure is unrecoverable, the dataset enters **Error** status.
@@ -92,7 +94,7 @@ Restore a snapshot to revert the dataset to a previously saved state. All change
 The dataset enters **Read Only** status while the restore processes. A **Snapshot Restore** task appears in the **Task Manager** where you can track progress. The dataset returns to **Ready** status once the restore completes.
 
 <Frame>
-  <img src="/images/snapshot-restore-confirm.png" alt="Restore Snapshot confirmation dialog" />
+  <img src="/images/snapshot-restore-confirm.png" alt="Restore Snapshot confirmation dialog" className="img-sm" />
 </Frame>
 
 <Note>
@@ -112,7 +114,7 @@ Clone a snapshot to create a new, independent dataset from a saved state. The or
 A new dataset is created with the name **\{Original Dataset Name\} (cloned)**, and an initial snapshot is created in the new dataset. A **Snapshot Clone** task appears in the **Task Manager** where you can track progress. **Restore**, **Clone**, and **Remove** are disabled on the source snapshot while the operation is in progress. The cloned dataset appears in the **Dataset Inventory** once processing completes.
 
 <Frame>
-  <img src="/images/snapshot-clone-confirm.png" alt="Clone Snapshot confirmation dialog" />
+  <img src="/images/snapshot-clone-confirm.png" alt="Clone Snapshot confirmation dialog" className="img-sm" />
 </Frame>
 
 <Note>
@@ -130,7 +132,7 @@ Update the name or description of any snapshot without affecting its saved data.
 5. Click **Update**.
 
 <Frame>
-  <img src="/images/snapshot-update-edit-details.png" alt="Update Snapshot dialog with name and description fields" />
+  <img src="/images/snapshot-update-edit-details.png" alt="Update Snapshot dialog with name and description fields" className="img-sm" />
 </Frame>
 
 ## Removing a Snapshot
@@ -145,7 +147,7 @@ Remove a snapshot you no longer need from the catalog.
 The snapshot is removed from the catalog. Removing a snapshot does not affect the dataset, its current data, or any datasets previously cloned from the snapshot.
 
 <Frame>
-  <img src="/images/snapshot-remove-confirm.png" alt="Remove Snapshot confirmation dialog" />
+  <img src="/images/snapshot-remove-confirm.png" alt="Remove Snapshot confirmation dialog" className="img-sm" />
 </Frame>
 
 <Note>

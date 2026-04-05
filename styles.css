@@ -455,7 +455,7 @@ table {
 
 
 #footer {
-  background-color: #1D102D !important;
+  background-color: #0f1117 !important;
   color: white !important;
   padding: 1.5rem 0 0.5rem 0 !important;
   margin-top: 0 !important;
@@ -930,6 +930,48 @@ h6 {
   .vl-landing-section {
     padding: 2rem 1rem 0.5rem;
   }
+}
+
+/* Cap screenshot height and prevent width stretching */
+.prose img,
+article img {
+  max-height: 500px;
+  width: auto !important;
+}
+
+/* Horizontal/landscape screenshots — allow larger */
+@container (min-width: 0px) {
+  .prose img[src$=".png"],
+  article img[src$=".png"] {
+    max-height: 500px;
+  }
+}
+
+/* Vertical/portrait screenshots — constrain more */
+.img-sm { max-height: 250px !important; }
+
+/* Strip Frame background and shrink-wrap to image */
+div.rounded-xl.overflow-hidden.flex.justify-center {
+  background: transparent !important;
+  border: none !important;
+  width: fit-content !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Portrait frame width cap */
+.frame-portrait {
+  max-width: 320px;
+  margin: 0 auto;
+}
+.img-md { max-height: 450px !important; width: auto !important; }
+.img-lg { max-height: 600px !important; width: auto !important; }
+.img-portrait { height: auto !important; }
+
+/* Limit lightbox zoom for small images */
+img.img-sm[data-rmiz-modal-img] {
+  max-width: 30% !important;
+  max-height: 90% !important;
 }
 
 /* End of CSS */
