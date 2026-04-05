@@ -130,7 +130,6 @@ Key configuration in `docs.json` and `fastdup-docs.json`:
 ### Assets Organization
 - `/images/` - Screenshots, videos, and diagrams organized by feature
 - `/favicon.png` and `/favicon.svg` - Brand assets for site favicon
-- `/api-reference/openapi.json` - OpenAPI specification for REST API
 - `styles.css` - Global styling customizations and Visual Layer branding
 
 ### Custom Styling
