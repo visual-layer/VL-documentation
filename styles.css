@@ -393,6 +393,37 @@ table {
 }
 
 
+/* Config reference tables — 4 columns with Description taking majority width */
+.config-table table {
+  border-collapse: collapse;
+  border-style: solid;
+  max-width: fit-content;
+  text-align: left;
+  table-layout: fixed;
+  border-color: #000000;
+}
+
+.config-table th:first-child,
+.config-table td:first-child {
+  width: 22%;
+  word-break: break-all;
+}
+
+.config-table th:nth-child(2),
+.config-table td:nth-child(2) {
+  width: 8%;
+}
+
+.config-table th:nth-child(3),
+.config-table td:nth-child(3) {
+  width: 8%;
+}
+
+.config-table th:nth-child(4),
+.config-table td:nth-child(4) {
+  width: 62%;
+}
+
 #var-table th:first-child {
   width: 25%;
 }

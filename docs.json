@@ -230,8 +230,14 @@
                             "docs/self-hosting/System_requirements",
                             "docs/self-hosting/setting_up",
                             "docs/self-hosting/air-gapped-installation",
-                            "docs/self-hosting/Configuration",
-                            "docs/self-hosting/s3-configuration"
+                            {
+                                "group": "Configuration",
+                                "pages": [
+                                    "docs/self-hosting/configuration-overview",
+                                    "docs/self-hosting/Configuration",
+                                    "docs/self-hosting/s3-configuration"
+                                ]
+                            }
                         ]
                     },
                     {

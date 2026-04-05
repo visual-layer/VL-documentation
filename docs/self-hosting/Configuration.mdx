@@ -1,7 +1,7 @@
 ---
-title: "Configure Settings"
+title: "General Settings"
 description: "Customize Visual Layer behavior through config.json, environment files, and environment variable overrides for self-hosted deployments."
-sidebarTitle: "Configuration"
+sidebarTitle: "General Settings"
 ---
 
 **Visual Layer** uses two configuration mechanisms for self-hosted deployments: a JSON configuration file for application settings and feature flags, and an environment file for Docker Compose variables. Environment variables can override either source.
@@ -10,9 +10,9 @@ sidebarTitle: "Configuration"
 
 Settings are applied in the following order, where later sources override earlier ones:
 
-1. **`defaults.json`** — Built-in defaults (do not edit).
-2. **`config.json`** — Your custom configuration.
-3. **Environment variables** — Override any JSON setting.
+- **`defaults.json`** — Built-in defaults (do not edit).
+- **[`config.json`](#configuration-file-configjson)** — Your custom configuration.
+- **[Environment variables](#environment-file-env)** — Override any JSON setting.
 
 ## Configuration File (`config.json`)
 
@@ -48,7 +48,7 @@ After modifying `config.json`, restart **Visual Layer** services for changes to 
 
 The following feature flags control which capabilities are available in your deployment.
 
-<div className="integrations-table">
+<div className="config-table">
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
@@ -66,7 +66,7 @@ The following feature flags control which capabilities are available in your dep
 
 These settings control how media files are stored, processed, and displayed.
 
-<div className="integrations-table">
+<div className="config-table">
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
@@ -81,7 +81,7 @@ These settings control how media files are stored, processed, and displayed.
 
 Additional settings for authentication, dataset limits, and data quality.
 
-<div className="integrations-table">
+<div className="config-table">
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
@@ -142,9 +142,9 @@ After modifying `.env`, restart the services for changes to take effect:
 ```
 </Note>
 
-## Environment Variable Overrides
+### Environment Variable Overrides
 
-Any `config.json` setting can be set as an environment variable, either in the `.env` file or exported in the shell before starting **Visual Layer**. Environment variables always take the highest precedence.
+Any `config.json` setting can also be set as an environment variable exported in the shell before starting **Visual Layer**. Environment variables always take the highest precedence.
 
 ```bash
 export LOG_LEVEL='10'
