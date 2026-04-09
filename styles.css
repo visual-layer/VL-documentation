@@ -1007,4 +1007,34 @@ img.img-sm[data-rmiz-modal-img] {
   max-height: 90% !important;
 }
 
+/* Legal cards — compact variant */
+.vl-landing-legal {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
+}
+
+.vl-landing-legal hr {
+  border: none;
+  border-top: 1px solid rgba(37, 22, 73, 0.12);
+  margin: 0 0 1.5rem;
+}
+
+.dark .vl-landing-legal hr {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.vl-landing-legal [data-component-part="card"] {
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.8rem !important;
+}
+
+.vl-landing-legal [data-component-part="card-title"] {
+  font-size: 0.85rem !important;
+}
+
+.vl-landing-legal [data-component-part="card-content"] {
+  display: none !important;
+}
+
 /* End of CSS */
