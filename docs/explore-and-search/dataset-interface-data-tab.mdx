@@ -4,11 +4,7 @@ description: "Reference for the Data tab inside a Visual Layer dataset — setup
 sidebarTitle: "Data tab"
 ---
 
-The **Data** tab is the dataset's setup and status surface. It shows how the dataset was configured, the media that was ingested into it, and the history of operations that have run on it.
-
-<Note>
-This page is a scaffold. Each section below will be filled in with complete coverage as the reference is built out.
-</Note>
+The **Data** tab is the dataset's setup and status surface. It shows how the dataset was configured, the media that was ingested into it, and the history of operations that have run on it. Open the **Data** tab to confirm a dataset is ready, to spot-check what was uploaded, or to review past activity.
 
 ## Layout Overview
 
@@ -18,29 +14,48 @@ The Data tab is organized into three areas.
 
 | Region | Purpose |
 |--------|---------|
-| **Creation Checklist** | Shows the five setup stages the dataset passed through: data source, annotations, index type, upload, and indexing |
+| **Creation Checklist** | The five setup stages the dataset passed through: data source, annotations, index type, upload, and indexing |
 | **Media Preview** | A grid preview of the media that was uploaded into the dataset |
-| **Activity Log** | A chronological log of operations (saving, indexing, ready, and so on) with timestamps |
+| **Activity Log** | A chronological log of operations on the dataset with timestamps and status |
 
 </div>
 
 ## Creation Checklist
 
-The creation checklist displays the five stages that completed when the dataset was created: **Select Data Source**, **Add Annotations**, **Select Index Type**, **Upload Data**, and **Visual Layer Indexing**.
+The creation checklist displays the five stages that ran when the dataset was created. Each completed stage is marked, so the checklist doubles as a record of how the dataset was configured.
 
-_Scaffold: Document what each stage represents, the state it shows after completion, and how the checklist relates to the dataset status._
+<div className="integrations-table">
+
+| Stage | What It Represents |
+|-------|--------------------|
+| **Select Data Source** | The data source the media came from (ZIP upload, cloud bucket, and so on). See [Create a Dataset](/docs/quick-start/tutorial-create-dataset) for the supported sources. |
+| **Add Annotations** | Any annotation file attached at creation time. Skipped if the dataset was created without annotations. |
+| **Select Index Type** | The index configuration applied to the dataset at creation. |
+| **Upload Data** | The upload step that transferred media into Visual Layer. |
+| **Visual Layer Indexing** | The embedding and enrichment step that makes the dataset searchable. While this stage runs, the dataset shows an **Indexing** status in the **Dataset Inventory**. |
+
+</div>
+
+The checklist reflects the dataset's **status** as shown in the [Dataset Inventory](/docs/quick-start/dataset-inventory-ux). Once all five stages complete, the dataset status changes to **Ready** and its content becomes available in the [Explore tab](/docs/explore-and-search/dataset-interface-explore-tab).
 
 ## Media Preview
 
-The media preview shows a paginated grid of the images uploaded to the dataset along with file names and label availability indicators.
+The media preview is a paginated grid of the images uploaded into the dataset. Each card shows the image, its file name, and an indicator for whether labels were supplied with it.
 
-_Scaffold: Document the grid, file-name display, labels-available indicator, and any hover or click affordances._
+Use the preview to confirm that the right files landed in the dataset, to sanity-check a sample before running enrichment, or to verify that label files were attached where expected. Clicking into the [Explore tab](/docs/explore-and-search/dataset-interface-explore-tab) gives you the full browsing, search, and filter experience.
 
 ## Activity Log
 
-The activity log lists completed and in-progress operations for the dataset with timestamps and status indicators.
+The activity log is the chronological record of operations run on the dataset. Each entry shows the operation type, a timestamp, and a status.
 
-_Scaffold: Document each log entry type, status indicator, and any filter or sort controls on the log panel._
+Typical entries include:
+
+- Dataset creation and configuration steps
+- Upload and indexing runs
+- Enrichment jobs triggered from the [Enrich tab](/docs/explore-and-search/dataset-interface-enrich-tab)
+- Export and share actions
+
+Use the activity log as a quick answer to "what happened to this dataset and when?" For long-running operations still in flight, the [Task Manager](/docs/advanced-features/task-manager) shows live status across every dataset.
 
 ## Related Resources
 
@@ -48,13 +63,13 @@ _Scaffold: Document each log entry type, status indicator, and any filter or sor
   <Card title="Dataset Interface Reference" icon="layout-dashboard" href="/docs/explore-and-search/dataset-interface-reference">
     Overview of the full dataset workspace and the four tabs
   </Card>
+  <Card title="Create a Dataset" icon="database" href="/docs/quick-start/tutorial-create-dataset">
+    Walk through the creation flow that produces the Data tab state
+  </Card>
   <Card title="Explore Tab" icon="search" href="/docs/explore-and-search/dataset-interface-explore-tab">
     The workspace for viewing and analyzing dataset content
   </Card>
-  <Card title="Views Tab" icon="blend" href="/docs/explore-and-search/dataset-interface-views-tab">
-    Saved combinations of filters and search queries
-  </Card>
-  <Card title="Enrich Tab" icon="sparkles" href="/docs/explore-and-search/dataset-interface-enrich-tab">
-    Model selection and enrichment progress tracking
+  <Card title="Task Manager" icon="list-checks" href="/docs/advanced-features/task-manager">
+    Monitor in-flight operations across all datasets
   </Card>
 </CardGroup>
