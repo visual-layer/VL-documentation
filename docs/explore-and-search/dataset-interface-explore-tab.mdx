@@ -6,59 +6,122 @@ sidebarTitle: "Explore tab"
 
 The **Explore** tab is the primary workspace inside a dataset. All viewing, search, filtering, cluster navigation, quality analysis, and selection happen here.
 
-<Note>
-This page is a scaffold. Each section below will be filled in with complete control-by-control coverage as the reference is built out.
-</Note>
-
 <Frame>
-  <img src="/images/overview-cluster-view.png" alt="Explore tab of the dataset workspace" />
+  <img src="/images/dataset-explore-layout.png" alt="Explore tab of the dataset workspace" />
 </Frame>
 
 ## Layout Overview
 
-The Explore tab is organized into five screen regions that stay in place as you navigate. Each region is covered in its own section below.
+The Explore tab is organized into five numbered regions that stay in place as you navigate, plus the **Details Sidebar** on the right.
 
 <div className="integrations-table">
 
 | # | Region | Purpose |
 |---|--------|---------|
-| <img src="/images/1light.png" className="img-marker" alt="1" /> | **Top Header** | Hosts the dataset title, status indicator, and the tab row for **Data**, **Views**, **Explore**, and **Enrich** |
+| <img src="/images/1light.png" className="img-marker" alt="1" /> | **Top Header** | Dataset title, dataset-level stats, status indicator, and the tab row for **Data**, **Views**, **Explore**, and **Enrich** |
 | <img src="/images/2light.png" className="img-marker" alt="2" /> | **Filter & Search Bar** | View-mode switcher (**Clusters**, **Images**, **Objects**), the search input, and filter controls |
-| <img src="/images/3light.png" className="img-marker" alt="3" /> | **Action Bar** | Operations on the current result set: share, export, and selection management |
-| <img src="/images/4light.png" className="img-marker" alt="4" /> | **Details Sidebar** | Insights, issues (duplicates, outliers, blurry, dark), labels, user tags, and metadata |
+| <img src="/images/3light.png" className="img-marker" alt="3" /> | **Ask VL** | Conversational launcher that builds searches and filters from a natural-language prompt |
+| <img src="/images/4light.png" className="img-marker" alt="4" /> | **Action Bar** | Operations on the current result set: share, export, view-density controls, and selection management |
 | <img src="/images/5light.png" className="img-marker" alt="5" /> | **Content Grid** | The main display area showing clusters, images, or objects |
 
 </div>
 
+The **Details Sidebar** on the right of the workspace hosts insights, quality issues, labels, user tags, and metadata for the current view or selection. It stays visible alongside the numbered regions.
+
 ## Top Header
 
-The top header hosts the dataset title, dataset-level stats (image count, object count, video count, video frame count, creation date), the dataset status indicator, and the tab row that switches between **Data**, **Views**, **Explore**, and **Enrich**. The **Ask VL** launcher also lives here.
+The top header is the orientation strip across the very top of the workspace. It tells you which dataset you are in, how large it is, what state it is in, and which tab you are viewing.
 
-_Scaffold: Document each element in the top header, including the dataset title, stats row, status badge, tab row, and the **Ask VL** launcher._
+The header contains:
+
+- **Dataset title** — the name given to the dataset at creation. Click to return to the **Dataset Inventory**.
+- **Dataset stats** — counts for images, objects, videos, and video frames, plus the creation date.
+- **Status indicator** — the current dataset state (**Indexing**, **Ready**, and so on). A dataset must be **Ready** before its content appears in the **Explore** tab.
+- **Tab row** — the four top-level tabs that make up the dataset workspace: [**Data**](/docs/explore-and-search/dataset-interface-data-tab), [**Views**](/docs/explore-and-search/dataset-interface-views-tab), **Explore**, and [**Enrich**](/docs/explore-and-search/dataset-interface-enrich-tab). The currently active tab is underlined.
 
 ## Filter & Search Bar
 
-The filter and search bar holds the view-mode switcher, the search input, and the filter controls. The view-mode switcher toggles between **Clusters** (default), **Images** (flat grid), and **Objects**. The search and filter controls apply to the current view.
+The filter and search bar is the horizontal row directly beneath the header. It holds the view-mode switcher, the search input, and the controls that build and manage active filters.
 
-_Scaffold: Document the view-mode switcher (including the Clusters granularity knob), the search input, the **Add Filter** affordance, every filter group, operator, and threshold control, and the clear/reset affordances._
+### View-Mode Switcher
+
+The view-mode switcher toggles between three ways of looking at the same dataset:
+
+- **Clusters** (default) — groups visually similar images together. Use the granularity control to make clusters larger and fewer, or smaller and more numerous.
+- **Images** — a flat grid of every individual image. Use this when you need to browse or select without grouping.
+- **Objects** — a flat grid of detected objects (bounding-box crops). Available once object-level enrichment has run.
+
+### Search Input
+
+The search input is the single text field that drives both **Semantic Search** and **Caption Search**. Type a natural-language description to find conceptually matching content, or use boolean operators (`AND`, `OR`, `-`, `"phrase"`) when filtering by captions. For the full syntax and examples, see [How to Search & Filter](/docs/explore-and-search/using-search-filter).
+
+The **Visual Search** icon inside or next to the search input opens the external-image upload flow for finding visually similar content from an image you provide. See [Visual Search](/docs/explore-and-search/visual-search) for all four ways to trigger it.
+
+### Filter Controls
+
+The filter controls build and manage the active query:
+
+- **Add Filter** — opens the filter menu, which dynamically adapts to show filter categories available for the current view (labels, folders, files, user tags, metadata, quality issues, duplicates, outliers, class outliers, mislabels, and select uniques).
+- **Query Modal** — the configuration popup for each filter, where you set operators (`IS`, `IS NOT`, `IS ONE OF`, `CONTAINS`, `STARTS WITH`) and, where applicable, confidence or similarity thresholds.
+- **Query Panel** — the row of active filter chips beneath the bar. All active filters combine with **AND** logic. Click a chip to edit, click **X** to remove, or click **Clear All** to reset.
+- **Save View** — saves the current filter combination as a named view. Saved views appear in both the **Save View** dropdown and the [**Views** tab](/docs/explore-and-search/dataset-interface-views-tab).
+
+For every available filter, operator, and threshold, see the [Filter Options Reference](/docs/explore-and-search/using-search-filter#filter-options-reference).
+
+## Ask VL
+
+**Ask VL** is the conversational launcher in the upper-right of the workspace. It opens a chat interface that turns natural-language prompts into the equivalent search and filter combinations without requiring you to pick each filter by hand.
+
+Use **Ask VL** when you know what you want to find but not which filter builds the query. For the full workflow and examples, see [VL Chat](/docs/explore-and-search/vl-chat).
 
 ## Action Bar
 
-The action bar hosts operations that act on the current result set or selection: share, export, and selection management.
+The action bar hosts operations that act on the current result set or selection. It sits between the filter bar and the content grid and stays in place as you scroll.
 
-_Scaffold: Document each action button, including its selection-state behavior and the dialogs it opens._
+The action bar exposes:
 
-## Details Sidebar
-
-The details sidebar shows insights, issues, labels, user tags, and metadata for the current view or selection. Issue categories include **Duplicates**, **Outliers**, **Blurry**, and **Dark**, each with its own count and drill-in affordance.
-
-_Scaffold: Document each sub-panel in the sidebar, each metric shown, and each call-to-action it exposes._
+- **Selection management** — the count of currently selected items plus **Select All** and **Clear Selection** affordances.
+- **Share** — shares the current view or selection with a collaborator by email.
+- **Export** — exports the current result set, selection, or filter-matched items. See [Export a Dataset](/docs/advanced-dataset-management/export-dataset) for the export options.
+- **View-density controls** — adjust how many items appear per row and the granularity of cluster grouping.
 
 ## Content Grid
 
-The content grid is the main display area. It renders clusters, images, or objects depending on the current view mode, and it is the source of all in-place actions such as hover to preview, select, or Find Similar.
+The content grid is the main display area and the source of all in-place actions. Its contents depend on the active view mode.
 
-_Scaffold: Document the cluster thumbnail affordances, the hover + crop Find Similar entry point, the region-of-interest selection, the image card, the object card, and every context menu._
+### Cluster View
+
+In **Clusters** mode, the grid displays cluster cards. Each card shows a representative thumbnail, the cluster size, and label coverage. Hover over a card to reveal in-place actions:
+
+- **Find Similar** — launches a visual-similarity search using the cluster's representative image as the anchor.
+- **Open cluster** — click the card to drill into its individual images or objects.
+
+For the theory behind clustering, see [How Search & Filter Work](/docs/explore-and-search/explore-theory). For cluster navigation tips, see [Understanding Clusters](/docs/quick-start/understanding-clusters).
+
+### Image View
+
+In **Images** mode, the grid displays every image in a flat layout. Hover any image to reveal:
+
+- **Find Similar** — visual-similarity search using the hovered image as the anchor.
+- **Select** — toggle the image into the current selection.
+
+Click an image to open its details page, where you can draw a **Region of Interest** crop and launch a crop-based **Find Similar** search. See [Visual Search](/docs/explore-and-search/visual-search) for the full flow.
+
+### Objects View
+
+In **Objects** mode, the grid displays detected object crops. Hover behavior matches the image view: **Find Similar** uses the object's embedding as the anchor, and selection toggles apply to individual objects.
+
+## Details Sidebar
+
+The details sidebar runs along the right edge of the workspace and shows insights about the current view or selection. Its panels update as you change filters, change views, or select items.
+
+The sidebar exposes:
+
+- **Enrichment Models** — the models that have run against the dataset and any available preview shortcuts. See [Enrich Your Datasets](/docs/advanced-dataset-management/enrich-overview).
+- **Issues** — quality-issue counts with drill-in links for each category: **Duplicates**, **Outliers**, **Dark**, and **Blurry**. Click any row to apply the corresponding filter.
+- **Labels** — the label distribution for the current view. Click a label to filter by it.
+- **User Tags** — the user tags applied to items in the current view. Click a tag to filter by it. See [Tag Items](/docs/advanced-features/tag-iteams) for how tags are created.
+- **Metadata** — the custom metadata fields available for filtering. See [Custom Metadata](/docs/advanced-features/custom-metadata).
 
 ## Related Resources
 
@@ -66,8 +129,8 @@ _Scaffold: Document the cluster thumbnail affordances, the hover + crop Find Sim
   <Card title="Dataset Interface Reference" icon="layout-dashboard" href="/docs/explore-and-search/dataset-interface-reference">
     Overview of the full dataset workspace and the four tabs
   </Card>
-  <Card title="Data Tab" icon="database" href="/docs/explore-and-search/dataset-interface-data-tab">
-    The dataset's setup and status surface
+  <Card title="How to Search & Filter" icon="sliders-horizontal" href="/docs/explore-and-search/using-search-filter">
+    Step-by-step guide to running searches and filters
   </Card>
   <Card title="Views Tab" icon="blend" href="/docs/explore-and-search/dataset-interface-views-tab">
     Saved combinations of filters and search queries

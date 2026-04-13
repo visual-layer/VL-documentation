@@ -4,11 +4,7 @@ description: "Reference for the Enrich tab inside a Visual Layer dataset — mod
 sidebarTitle: "Enrich tab"
 ---
 
-The **Enrich** tab is where AI-driven enrichment of the dataset is configured and monitored. It exposes the model picker, the preview of model output, and the progress view for running enrichment jobs.
-
-<Note>
-This page is a scaffold. Each section below will be filled in with complete coverage as the reference is built out.
-</Note>
+The **Enrich** tab is where AI-driven enrichment of the dataset is configured and monitored. It exposes the model picker, the preview of model output, and the progress view for running enrichment jobs. For the end-to-end workflow, see [Enrich Your Datasets with AI Models](/docs/advanced-dataset-management/enrich-overview).
 
 ## Layout Overview
 
@@ -19,37 +15,53 @@ The Enrich tab is organized into three areas.
 | Region | Purpose |
 |--------|---------|
 | **Model Picker** | Select one or more models to run against the dataset |
-| **Preview Panel** | Show a sample of model output on a small set of images before committing to a full run |
+| **Preview Panel** | Inspect a sample of model output before committing to a full run |
 | **Progress View** | Track the status of running enrichment jobs and review past jobs |
 
 </div>
 
 ## Model Picker
 
-The model picker lists the models available for enrichment and allows selecting one or more to apply to the dataset.
+The model picker lists every enrichment model available for the dataset. Each entry shows the model name, its task type, and a short description. Click a model to select it, then click **Add Models** to include additional models in the same run.
 
-_Scaffold: Document the model list, model metadata, selection behavior, and any version or compatibility indicators._
+Available models cover a range of enrichment tasks:
+
+- **Object detection** — draws bounding boxes and classifies each detected object
+- **Image tagging** — assigns labels to the entire image
+- **Image and object captioning** — generates descriptive text for images or objects
+- **Semantic search embeddings** — powers conceptual search across the dataset
+- **Face detection** — detects faces and facial landmarks
+
+For the full catalog, including task type, descriptions, and model dependencies, see [Model Catalog](/docs/Dataset-Enrichment/model-catalog).
+
+<Note>
+Some models require pre-existing enrichments before they can run. For example, **VL-Object-Captioner** requires **Object Detection** to have been applied first, and semantic search models require captions or embeddings from a prior enrichment step.
+</Note>
 
 ## Preview Panel
 
-The preview panel runs the selected model(s) on a small sample of images and displays the output so the results can be inspected before committing to a full run.
+The preview panel runs the selected model(s) on a small sample of images and displays the output so you can inspect the results before committing to a full dataset run.
 
-_Scaffold: Document the sample set, the output display, and any iterate or discard affordances._
+Click **Generate Models Preview** to produce the sample. If multiple models are selected, switch between them in the preview panel to compare outputs. Use the preview to confirm a model is appropriate for the dataset before paying the cost of a full run.
+
+When the preview looks right, click **Enrich Dataset** to run every selected model across all images and frames in the dataset.
 
 ## Progress View
 
-The progress view shows the status of in-flight enrichment jobs and the history of completed jobs, including any notifications generated along the way.
+The progress view tracks enrichment jobs from start to finish. Each job entry shows the models being run, a live progress indicator, and a timestamp. Completed jobs remain in the view as history.
 
-_Scaffold: Document the per-job status indicators, timestamps, the notifications surface, and the relationship between this view and the Task Manager._
+Enrichment runs do not block exploration. You can continue to search, filter, and select in the **Explore** tab while a job is in flight, and newly generated metadata becomes available in the [Details Sidebar](/docs/explore-and-search/dataset-interface-explore-tab#details-sidebar) and filter options once the job completes.
+
+For live status across every dataset in the workspace, use the [Task Manager](/docs/advanced-features/task-manager). Notifications for completed enrichment runs appear in the bell icon in the dataset header.
 
 ## Related Resources
 
 <CardGroup cols={2}>
-  <Card title="Dataset Interface Reference" icon="layout-dashboard" href="/docs/explore-and-search/dataset-interface-reference">
-    Overview of the full dataset workspace and the four tabs
+  <Card title="Enrich Your Datasets" icon="sparkles" href="/docs/advanced-dataset-management/enrich-overview">
+    How enrichment works and the end-to-end run flow
   </Card>
-  <Card title="Enrich Overview" icon="sparkles" href="/docs/advanced-dataset-management/enrich-overview">
-    How enrichment works and how to configure it end-to-end
+  <Card title="Model Catalog" icon="boxes" href="/docs/Dataset-Enrichment/model-catalog">
+    Every available enrichment model, task type, and dependency
   </Card>
   <Card title="Task Manager" icon="list-checks" href="/docs/advanced-features/task-manager">
     Monitor every running task, including enrichment jobs

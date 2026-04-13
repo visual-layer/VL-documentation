@@ -4,11 +4,7 @@ description: "Reference for the Views tab inside a Visual Layer dataset — save
 sidebarTitle: "Views tab"
 ---
 
-The **Views** tab lists every saved view for the dataset. A saved view captures a specific combination of filters, search queries, and thresholds so it can be reloaded later or shared with the team.
-
-<Note>
-This page is a scaffold. Each section below will be filled in with complete coverage as the reference is built out.
-</Note>
+The **Views** tab lists every saved view for the dataset. A saved view captures a specific combination of filters, search queries, and thresholds so it can be reloaded, monitored for new matches, and shared with the team. For the full concept and workflow, see [Saved Views](/docs/collab-and-downstream/saved-views).
 
 ## Layout Overview
 
@@ -18,36 +14,79 @@ The Views tab is organized into two areas.
 
 | Region | Purpose |
 |--------|---------|
-| **Views Table** | The list of saved views with their metadata, monitoring state, and actions |
-| **Expanded Row** | When a row is expanded, shows the trend chart, image preview grid, and share panel for the selected view |
+| **Views Table** | The list of saved views with their metadata, monitoring state, and row actions |
+| **Expanded Row** | When a row is expanded, shows the query details, trend chart, preview grid, and share panel for the selected view |
 
 </div>
 
 ## Views Table
 
-The views table displays one row per saved view with columns for name, creator, creation date, monitoring state, and row actions.
+The views table displays one row per saved view. Each row exposes a fixed set of columns plus a three-dot action menu.
 
-_Scaffold: Document each column, the monitoring toggle, the three-dot menu actions (edit, duplicate, delete), and the row-expand affordance._
+<div className="integrations-table">
+
+| Column | Description |
+|--------|-------------|
+| **Name** | The view name. Click to expand the row and see full details. |
+| **Total Results** | The cumulative count of items matching the view filters. |
+| **Last Result** | How long ago the most recent matching result was detected. |
+| **Creation Time** | When the view was created. |
+| **Created By** | The user who created the view, shown as avatar and name. |
+| **Monitoring** | Toggle to enable or disable alerts for this view. When enabled, users with access to the dataset receive a notification whenever new items match the view. |
+
+</div>
+
+### Row Actions
+
+Each row exposes a **Share** icon and a three-dot menu. The **Share** icon opens the [share panel](#expanded-row) for emailing the view to a collaborator. The three-dot menu exposes **Delete**, which permanently removes the view and its trend data.
+
+Views are immutable. To change a view's filters, delete it and create a new one from the **Explore** tab.
 
 ## Expanded Row
 
-Expanding a view reveals the trend chart, a preview grid of current results, and the sharing panel for granting access to other users.
+Clicking a row expands it into two sections that sit inside the table.
 
-_Scaffold: Document the trend chart axes and tooltips, the preview grid, and the share panel controls._
+### Query Details
+
+The **Query Details** section is a read-only display of every filter captured in the view, shown as filter badges. Click **Explore Results** to jump to the [Explore tab](/docs/explore-and-search/dataset-interface-explore-tab) with the view's filters applied.
+
+A saved view records the complete filter state at creation, including:
+
+- Text and semantic search queries
+- VQL (Visual Query Language) filters
+- Label and tag selections
+- Quality issue filters (duplicates, outliers, mislabels)
+- Entity type (images, objects, or video frames)
+- Similarity thresholds
+- Metadata source filters
+- Folder path filters
+
+### Trend Results and Preview
+
+Below the query details, the expanded row displays a split panel:
+
+- **Trend Results** (left) — a bar chart showing how the result count has changed over time. The chart displays the last 8 data points with timestamps and counts. Hover any bar to see the exact date and count for that point.
+- **Preview** (right) — a scrollable grid of thumbnail images from the current matching results.
+
+### Share Panel
+
+The share panel is reached from either the row's **Share** icon or the expanded row. Enter a recipient email address and an optional personal message (up to 250 characters), then click **Invite** to send an email with the view context and a direct link.
+
+Sharing a view does not grant additional access. Views are visible to every collaborator on the dataset — the share action simply draws attention to a specific view.
 
 ## Related Resources
 
 <CardGroup cols={2}>
+  <Card title="Saved Views" icon="blend" href="/docs/collab-and-downstream/saved-views">
+    Create, monitor, share, and manage named filter queries
+  </Card>
   <Card title="Dataset Interface Reference" icon="layout-dashboard" href="/docs/explore-and-search/dataset-interface-reference">
     Overview of the full dataset workspace and the four tabs
   </Card>
+  <Card title="Monitoring and Alerts" icon="blend" href="/docs/advanced-features/notifications">
+    How the monitoring and alerting system behind Views works
+  </Card>
   <Card title="Explore Tab" icon="search" href="/docs/explore-and-search/dataset-interface-explore-tab">
-    The workspace for viewing and analyzing dataset content
-  </Card>
-  <Card title="Data Tab" icon="database" href="/docs/explore-and-search/dataset-interface-data-tab">
-    The dataset's setup and status surface
-  </Card>
-  <Card title="Saved Views" icon="blend" href="/docs/collab-and-downstream/saved-views">
-    Creating, sharing, and monitoring saved views
+    Build the filter combinations that become saved views
   </Card>
 </CardGroup>
