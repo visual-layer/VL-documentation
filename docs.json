@@ -101,8 +101,8 @@
                         "group": "Explore & Search",
                         "pages": [
                             "docs/quick-start/dataset-exploration-ux",
-                            "docs/explore-and-search/vl-chat",
                             "docs/explore-and-search/explore-theory",
+                            "docs/explore-and-search/vl-chat",
                             "docs/explore-and-search/visual-search",
                             "docs/explore-and-search/recipes",
                             "docs/explore-and-search/using-search-filter"

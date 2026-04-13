@@ -1,27 +1,37 @@
 ---
 title: Visual Search
-description: Find visually similar images, objects, or patterns in your dataset using Visual Layer's powerful similarity search options.
+description: Find visually similar images, objects, or cropped regions in your dataset using Visual Layer's similarity search.
 ---
 
 <Card title="How this Helps" icon="lightbulb">
-  Visual Search allows you to find near-duplicates, repeated patterns, and conceptually similar content in your dataset—whether at the image or object level. It’s ideal for identifying anomalies, clustering related visuals, and accelerating QA review.
+  Visual Search finds near-duplicates, repeated patterns, and conceptually similar content in your dataset at the image, object, or region level. Use it for anomaly investigation, pattern clustering, and accelerated QA review.
 </Card>
 
 ## Overview
 
-Visual Layer enables intuitive similarity search across datasets using deep visual embeddings. You can run a similarity search in several ways:
+Visual Layer runs similarity search across your dataset using deep visual embeddings. You can compare against any of the following references:
 
-- [On a cluster](#similarity-search-on-a-cluster)  
-- [On an image or object](#similarity-search-on-an-image-or-object)  
-- [Using a region of interest](#similarity-search-using-a-region-of-interest)  
-- [By Image Upload](#similarity-search-via-image-upload)
+- An entire **cluster** representative
+- An **image preview**, from any place an image appears in the UI
+- A **cropped region** drawn directly on an image preview
+- An **object** bounding box inside an image
+- An **external image** uploaded from your device
+
+Every image preview in the product supports two similarity actions on hover:
+
+- **Find Similar** — searches against the whole image.
+- **Crop to find similar** — opens an inline cropper on the thumbnail so you can draw a **Region of Interest** and search against that specific area. This is the recommended path when you want to isolate a defect, object, or detail rather than match the full frame.
+
+Because both actions live on the preview itself, you never need to leave the current view to start a visual search.
 
 ## Similarity Search on a Cluster
 
-To find similar results based on a full cluster:
+Use this path to find clusters visually similar to one you already see.
 
-1. Hover over the desired cluster in your dataset.
+1. Hover over the target cluster card in the **Dataset Exploration** view.
 2. Click **Find Similar** at the bottom of the card.
+
+The search runs against the cluster's representative embedding and returns the most similar clusters in the dataset.
 
 <video
   autoPlay
@@ -33,52 +43,80 @@ To find similar results based on a full cluster:
   style={{ borderRadius: '10px' }}
 ></video>
 
-## Similarity Search on an Image or Object
+## Similarity Search from an Image Preview
 
-You can also trigger similarity search directly from any image or object. There are multiple entry points depending on your view:
+Any image thumbnail in the product surfaces the same two similarity actions. The entry points differ only in where you are when you reach for them.
 
-### Search from the Dataset Page
+### Entry points
 
-1. Click into a cluster.
-2. Hover over the image or object and click **Find Similar**.
+Hover an image thumbnail in any of these locations:
 
-<Frame>
-  <img src="https://files.readme.io/67833bc9d2959b2165dc17f6c69fa0e6c6eadd09b98f090dba08e0e6ca813a76-Scene-1_2.gif" alt="Similarity Search from Dataset Page" />
-</Frame>
+- **On a cluster card in the exploration view.** Cluster cards show a preview carousel of representative thumbnails. Hovering a single thumbnail reveals the similarity actions, so you can launch a search against that one image without opening the cluster first.
+- **Inside an opened cluster.** Click into a cluster to view its full grid, then hover any thumbnail in the grid.
+- **On the image details page.** Open an image to its details view and hover the main image.
 
-### Search from the Cluster Details Page
+### Search against the whole image
 
-1. Click an image or object to open the **Image Details Page**.
-2. Click **Find Similar**, then click the similarity icon centered on the image.
-
-<Frame>
-  <img src="https://files.readme.io/1e3113710ffe12699bc92844d8bbf90f8a35bcae9c7b9e8da826047ebf5e9a3b-Scene-1_2_copy.gif" alt="Similarity Search from Image Details Page" />
-</Frame>
-
-### Search by Object
-
-To run similarity search based on a specific object in the image:
-
-1. Hover over the object’s bounding box.
-2. Click the **Find Similar** icon.
-
-## Similarity Search Using a Region of Interest
-
-You can crop part of an image and use that region as a visual anchor:
-
-1. Open an image from any cluster.
+1. Hover the image thumbnail.
 2. Click **Find Similar**.
-3. Drag to define the Region of Interest.
-4. Click the similarity icon again to start the search.
 
-## Similarity Search by Image Upload
+The search returns images whose embeddings are closest to the full reference image.
 
-You can also start a similarity search using an external image:
-
-1. On the Dataset Page, click the **Find Similar** icon near the search bar.
-2. Upload an image from your local device.
-3. Optionally crop it before starting the search.
-
+{/* TODO: replace external readme.io GIF with a locally hosted screen recording captured against the current VQL-upgrade UI (includes crop button) */}
 <Frame>
-  <img src="https://files.readme.io/632ec1043a7acd38bb9f928d26c6cf7f96b6f5f496561e7905f25bcf623f3c52-Scene-1_2_2.gif" alt="Similarity Search via Upload" />
+  <img src="https://files.readme.io/67833bc9d2959b2165dc17f6c69fa0e6c6eadd09b98f090dba08e0e6ca813a76-Scene-1_2.gif" alt="Similarity search triggered from a hovered image thumbnail" />
 </Frame>
+
+### Search against a Region of Interest
+
+Region-of-interest search compares a cropped area of the reference against the dataset. Use it to isolate a specific defect, object, or pattern while ignoring background content.
+
+1. Hover the image thumbnail.
+2. Click **Crop to find similar**. An inline cropper opens directly on the thumbnail.
+3. Drag to draw the region you want to search against.
+4. Click **Find Similar** inside the cropper overlay to run the search.
+
+The crop flow is available from every entry point listed above — the cluster card preview thumbnail, the opened cluster grid, and the image details page — so you can pick the access point that keeps you closest to your current context.
+
+{/* TODO: add a locally hosted screen recording of the crop-to-find-similar flow on a cluster card preview thumbnail */}
+
+## Similarity Search from an Object
+
+When an image contains detected objects, each bounding box is its own similarity anchor.
+
+1. Open a cluster or image that has object detections.
+2. Hover directly over the object's bounding box.
+3. Click the **Find Similar** icon that appears on the box.
+
+The search returns images that contain visually similar objects rather than similar full scenes.
+
+## Similarity Search by External Image Upload
+
+Use this path when your reference image is not already in the dataset.
+
+1. On the **Dataset** page, click the **Visual Search** icon near the main search bar.
+2. Upload an image from your local device.
+3. (Optional) Drag to crop the uploaded image before searching.
+4. Click **Find Similar** to run the search against your dataset.
+
+{/* TODO: replace external readme.io GIF with a locally hosted screen recording of the upload + crop flow */}
+<Frame>
+  <img src="https://files.readme.io/632ec1043a7acd38bb9f928d26c6cf7f96b6f5f496561e7905f25bcf623f3c52-Scene-1_2_2.gif" alt="Similarity search via external image upload" />
+</Frame>
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="How Search and Filter Work" icon="scan-text" href="/docs/explore-and-search/explore-theory">
+    The embedding theory behind visual similarity and nearest-neighbor search.
+  </Card>
+  <Card title="How to Search & Filter" icon="sliders-horizontal" href="/docs/explore-and-search/using-search-filter">
+    Step-by-step guide to running searches and filters, plus the full list of available options.
+  </Card>
+  <Card title="Exploration Recipes" icon="graduation-cap" href="/docs/explore-and-search/recipes">
+    Step-by-step workflows that combine visual search with filtering.
+  </Card>
+  <Card title="Saved Views" icon="blend" href="/docs/collab-and-downstream/saved-views">
+    Persist a search so you and your team can return to it later.
+  </Card>
+</CardGroup>

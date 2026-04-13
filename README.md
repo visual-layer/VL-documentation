@@ -1,58 +1,75 @@
-# Prerequisites
+# Visual Layer Documentation
 
-Before you start, ensure you have the following installed:
+This repository contains the source for the Visual Layer documentation site, built with [Mintlify](https://mintlify.com). It covers product usage, deployment, API reference, and admin guides for cloud and on-premises customers.
 
-- **Git**: [Download Git](https://git-scm.com/) (for version control)
-- **Node.js**: [Download Node.js](https://nodejs.org/) (LTS version recommended)
-- **A GitHub account**
-- **A code editor**: e.g., [Visual Studio Code](https://code.visualstudio.com/)
+The published site lives at [docs.visual-layer.com](https://docs.visual-layer.com).
 
-## Setting Up Your Local Environment
+## Repository Layout
 
-### 🛠️ Installing the Mintlify CLI
+| Path | Contents |
+|---|---|
+| `docs/` | All published documentation pages, organized by section (`quick-start/`, `explore-and-search/`, `Dataset-Enrichment/`, etc.) |
+| `images/` | Screenshots, diagrams, and screen recordings referenced by MDX pages |
+| `docs.json` | Mintlify navigation, theme, and site configuration |
+| `styles.css` | Custom CSS for Visual Layer branding, tables, and components |
+| `CLAUDE.md` | Instructions for Claude Code when editing this repo (style, voice, conventions) |
+| `CONTRIBUTING.md` | Branch workflow, commit conventions, and review process |
+| `internal/` | Internal-only documentation (excluded from the published site) |
+| `.claude/skills/` | Project-scoped Claude Code skills bundled with the repo |
 
-#### Step 1: Ensure Node.js is Installed
-Mintlify CLI requires **Node.js version 19 or higher**.
+## Quick Start
 
-- **Check your current version**:
-    ```bash
-    node -v
-    ```
-- **If needed, install or upgrade Node.js**:
-    - Using Node Version Manager (nvm):
-        ```bash
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-        nvm install node
-        ```
-    - Direct download: Visit the [official Node.js website](https://nodejs.org/) and download the latest version.
+The fastest way to preview docs locally is to install the Mintlify CLI and run the dev server.
 
-#### Step 2: Install the Mintlify CLI Globally
-Install via npm:
-```bash
-npm install -g mintlify
-```
-This command installs the Mintlify CLI globally, allowing you to use it from any directory.
+### Prerequisites
 
-#### Step 3: Verify the Installation
-Check the installed version:
-```bash
-mintlify --version
-```
-This ensures that the CLI is installed correctly and is accessible from your terminal.
+- **Node.js** version 19 or higher ([download](https://nodejs.org/))
+- **Git** ([download](https://git-scm.com/))
+- **A code editor** such as [VS Code](https://code.visualstudio.com/)
 
-### 🚀 Using the Mintlify CLI in Your Workflow
+### Install and Run
 
-#### Preview Documentation Locally
-1. Navigate to your project directory (ensure it contains the `docs.json` file).
-2. Run the development server:
-     ```bash
-     mintlify dev
-     ```
-3. Open your browser and visit `http://localhost:3000` to view your documentation.
+1. Clone the repository.
 
-#### Customize the Development Server Port
-If port 3000 is in use or you prefer a different port:
+   ```bash
+   git clone https://github.com/visual-layer/VL-documentation.git
+   cd VL-documentation
+   ```
+
+2. Install the Mintlify CLI globally.
+
+   ```bash
+   npm install -g mintlify
+   ```
+
+3. Start the development server from the repo root.
+
+   ```bash
+   mintlify dev
+   ```
+
+4. Open `http://localhost:3000` in your browser.
+
+To run on a different port:
+
 ```bash
 mintlify dev --port 3333
 ```
-This starts the server on port 3333.
+
+## Editing Documentation
+
+All pages are MDX (Markdown with JSX components). Style, voice, structure, and Mintlify component conventions are documented in [`CLAUDE.md`](./CLAUDE.md). Contributors should read it before making content changes.
+
+For branch and commit conventions, see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+
+## Working with Claude Code
+
+This repo is set up for collaborative editing with [Claude Code](https://claude.com/claude-code), Anthropic's coding agent. Project-scoped skills are bundled under `.claude/skills/` and load automatically when you run Claude Code from the repo root.
+
+For the full Claude workflow, including which skills are available and how to use them, see [`internal/using-claude.md`](./internal/using-claude.md). That file is internal-only and excluded from the published docs site.
+
+## Related Resources
+
+- [Mintlify documentation](https://mintlify.com/docs)
+- [Visual Layer product site](https://visual-layer.com)
+- [Published docs site](https://docs.visual-layer.com)
