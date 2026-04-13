@@ -20,51 +20,45 @@ The Explore tab is organized into five screen regions that stay in place as you 
 
 <div className="integrations-table">
 
-| Region | Purpose |
-|--------|---------|
-| **Top Tab Bar** | Switches between **Explore**, **Data**, **Views**, and **Enrich** |
-| **Filter Panel** | Apply and combine filters, search tools, and metadata criteria |
-| **Action Bar** | Run operations on the current result set: export, share, selection management |
-| **Content Grid** | The main display area showing clusters, images, or objects |
-| **Details Sidebar** | View metadata, insights, statistics, and access enrichment features |
+| # | Region | Purpose |
+|---|--------|---------|
+| <img src="/images/1light.png" className="img-marker" alt="1" /> | **Top Header** | Hosts the dataset title, status indicator, and the tab row for **Data**, **Views**, **Explore**, and **Enrich** |
+| <img src="/images/2light.png" className="img-marker" alt="2" /> | **Filter & Search Bar** | View-mode switcher (**Clusters**, **Images**, **Objects**), the search input, and filter controls |
+| <img src="/images/3light.png" className="img-marker" alt="3" /> | **Action Bar** | Operations on the current result set: share, export, and selection management |
+| <img src="/images/4light.png" className="img-marker" alt="4" /> | **Details Sidebar** | Insights, issues (duplicates, outliers, blurry, dark), labels, user tags, and metadata |
+| <img src="/images/5light.png" className="img-marker" alt="5" /> | **Content Grid** | The main display area showing clusters, images, or objects |
 
 </div>
 
-## Top Tab Bar
+## Top Header
 
-The top tab bar is the entry point to the four dataset tabs. In the Explore tab, it also hosts workspace-level controls such as the dataset title, dataset status indicator, and VL Chat launcher.
+The top header hosts the dataset title, dataset-level stats (image count, object count, video count, video frame count, creation date), the dataset status indicator, and the tab row that switches between **Data**, **Views**, **Explore**, and **Enrich**. The **Ask VL** launcher also lives here.
 
-_Scaffold: Document each element in the top bar, including hover states, badge indicators, and the **Ask VL** button._
+_Scaffold: Document each element in the top header, including the dataset title, stats row, status badge, tab row, and the **Ask VL** launcher._
 
-## View Mode Switcher
+## Filter & Search Bar
 
-The Content Grid supports multiple view modes. **Clusters** is the default; a flat grid view is available as an alternative for reviewing every image linearly without grouping.
+The filter and search bar holds the view-mode switcher, the search input, and the filter controls. The view-mode switcher toggles between **Clusters** (default), **Images** (flat grid), and **Objects**. The search and filter controls apply to the current view.
 
-_Scaffold: Document the Clusters view (including the granularity knob), the Images flat view, and the Objects view, plus the controls that switch between them._
-
-## Filter Panel
-
-The Filter Panel is where every filter, search, and criterion applies to the current result set. It adapts to the current view mode and exposes semantic search, visual similarity, metadata filters, and quality filters.
-
-_Scaffold: Document each filter group, operator, threshold control, and clear/reset affordance._
+_Scaffold: Document the view-mode switcher (including the Clusters granularity knob), the search input, the **Add Filter** affordance, every filter group, operator, and threshold control, and the clear/reset affordances._
 
 ## Action Bar
 
-The Action Bar hosts operations that act on the current result set or selection: export, share, bulk selection, bulk tagging, and save view.
+The action bar hosts operations that act on the current result set or selection: share, export, and selection management.
 
 _Scaffold: Document each action button, including its selection-state behavior and the dialogs it opens._
 
-## Content Grid
-
-The Content Grid is the main display area. It renders clusters, images, or objects depending on the current view mode, and it is the source of all in-place actions like hover to preview, select, or Find Similar.
-
-_Scaffold: Document the cluster thumbnail affordances, the hover + crop Find Similar entry point, the region-of-interest selection, the image card, the object card, and every context menu._
-
 ## Details Sidebar
 
-The Details Sidebar shows metadata, insights, and statistics for the current view or selection, and provides access to enrichment features such as **Ask VL**.
+The details sidebar shows insights, issues, labels, user tags, and metadata for the current view or selection. Issue categories include **Duplicates**, **Outliers**, **Blurry**, and **Dark**, each with its own count and drill-in affordance.
 
-_Scaffold: Document each tab in the sidebar, each metric shown, and each call-to-action it exposes._
+_Scaffold: Document each sub-panel in the sidebar, each metric shown, and each call-to-action it exposes._
+
+## Content Grid
+
+The content grid is the main display area. It renders clusters, images, or objects depending on the current view mode, and it is the source of all in-place actions such as hover to preview, select, or Find Similar.
+
+_Scaffold: Document the cluster thumbnail affordances, the hover + crop Find Similar entry point, the region-of-interest selection, the image card, the object card, and every context menu._
 
 ## Related Resources
 
