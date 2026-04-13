@@ -19,7 +19,7 @@ The Explore tab is organized into five numbered regions that stay in place as yo
 | # | Region | Purpose |
 |---|--------|---------|
 | <img src="/images/1light.png" className="img-marker" alt="1" /> | **Top Header** | Dataset title, dataset-level stats, status indicator, and the tab row for **Data**, **Views**, **Explore**, and **Enrich** |
-| <img src="/images/2light.png" className="img-marker" alt="2" /> | **Filter & Search Bar** | View-mode switcher (**Clusters**, **Images**, **Objects**), the search input, and filter controls |
+| <img src="/images/2light.png" className="img-marker" alt="2" /> | **Filter & Search Area** | Entity-type switcher, layout switcher, search input, and filter controls |
 | <img src="/images/3light.png" className="img-marker" alt="3" /> | **Ask VL** | Conversational launcher that builds searches and filters from a natural-language prompt |
 | <img src="/images/4light.png" className="img-marker" alt="4" /> | **Action Bar** | Operations on the current result set: share, export, view-density controls, and selection management |
 | <img src="/images/5light.png" className="img-marker" alt="5" /> | **Content Grid** | The main display area showing clusters, images, or objects |
@@ -43,34 +43,62 @@ The header contains:
 - **Status indicator** — the current dataset state (**Indexing**, **Ready**, and so on). A dataset must be **Ready** before its content appears in the **Explore** tab.
 - **Tabs** — the four top-level tabs that make up the dataset workspace: [**Data**](/docs/explore-and-search/dataset-interface-data-tab), [**Views**](/docs/explore-and-search/dataset-interface-views-tab), **Explore**, and [**Enrich**](/docs/explore-and-search/dataset-interface-enrich-tab). The currently active tab is underlined.
 
-## Filter & Search Bar
+## Filter & Search Area
 
-The filter and search bar is the horizontal row directly beneath the header. It holds the view-mode switcher, the search input, and the controls that build and manage active filters.
+The filter and search area is the horizontal row directly beneath the header. It holds two separate view switchers, the search input, and the controls that build and manage active filters.
 
-### View-Mode Switcher
+<Frame>
+  <img src="/images/dataset-filter-search-area.png" alt="Filter and search area with entity-type switcher on the left, search input in the center, and layout switcher on the right" />
+</Frame>
 
-The view-mode switcher toggles between three ways of looking at the same dataset:
+### View-Mode Switchers
 
-- **Clusters** (default) — groups visually similar images together. Use the granularity control to make clusters larger and fewer, or smaller and more numerous.
-- **Images** — a flat grid of every individual image. Use this when you need to browse or select without grouping.
-- **Objects** — a flat grid of detected objects (bounding-box crops). Available once object-level enrichment has run.
+The area exposes two independent switchers, one on each side:
+
+- **Entity-type switcher** (left side) — toggles between **Images** and **Objects**. Use it to decide whether the content grid shows full images or object-level crops. The **Objects** option is available once object-level enrichment has run against the dataset.
+- **Layout switcher** (right side) — toggles between **Clusters** and **Flat**. **Clusters** groups visually similar items together and is the default. **Flat** displays every item in a single grid without grouping. A granularity control next to the switcher adjusts how coarse or fine the clustering is.
+
+The two switchers combine. You can view clustered images, clustered objects, a flat image grid, or a flat object grid.
 
 ### Search Input
 
-The search input is the single text field that drives both **Semantic Search** and **Caption Search**. Type a natural-language description to find conceptually matching content, or use boolean operators (`AND`, `OR`, `-`, `"phrase"`) when filtering by captions. For the full syntax and examples, see [How to Search & Filter](/docs/explore-and-search/using-search-filter).
+The search input is the single text field in the center of the filter and search area. It drives both **Semantic Search** and **Caption Search**.
 
-The **Visual Search** icon inside or next to the search input opens the external-image upload flow for finding visually similar content from an image you provide. See [Visual Search](/docs/explore-and-search/visual-search) for all four ways to trigger it.
+<Frame>
+  <img src="/images/dataset-Search-input.png" alt="Search input with visual search upload dialog and filter menu" />
+</Frame>
+
+Type a natural-language description to find conceptually matching content, or use boolean operators (`AND`, `OR`, `-`, `"phrase"`) when filtering by captions. For the full syntax and examples, see [How to Search & Filter](/docs/explore-and-search/using-search-filter).
+
+The **Visual Search** icon next to the search input opens the external-image upload flow for finding visually similar content from an image you provide. Drag and drop an image into the dialog or click **Browse Images** to pick one from disk. See [Visual Search](/docs/explore-and-search/visual-search) for all four ways to trigger visual similarity.
 
 ### Filter Controls
 
-The filter controls build and manage the active query:
+The filter controls build and manage the active query. Click the filter icon next to the search input to open the filters menu.
 
-- **Add Filter** — opens the filter menu, which dynamically adapts to show filter categories available for the current view (labels, folders, files, user tags, metadata, quality issues, duplicates, outliers, class outliers, mislabels, and select uniques).
-- **Query Modal** — the configuration popup for each filter, where you set operators (`IS`, `IS NOT`, `IS ONE OF`, `CONTAINS`, `STARTS WITH`) and, where applicable, confidence or similarity thresholds.
-- **Query Panel** — the row of active filter chips beneath the bar. All active filters combine with **AND** logic. Click a chip to edit, click **X** to remove, or click **Clear All** to reset.
-- **Save View** — saves the current filter combination as a named view. Saved views appear in both the **Save View** dropdown and the [**Views** tab](/docs/explore-and-search/dataset-interface-views-tab).
+<Frame>
+  <img src="/images/dataset-filters-menu.png" alt="Filters menu with folders, files, labels, user tags, caption, duplicates, outliers, quality issues, select uniques, insertion time, and media status" />
+</Frame>
 
-For every available filter, operator, and threshold, see the [Filter Options Reference](/docs/explore-and-search/using-search-filter#filter-options-reference).
+The filters menu offers:
+
+- **Folders** — filter by directory path or folder name
+- **Files** — filter by filename patterns
+- **Labels** — filter by assigned class labels or annotation status
+- **User Tags** — filter by custom metadata tags applied to items
+- **Caption** — filter by image captions using boolean operators
+- **Duplicates** — find identical or near-identical items
+- **Outliers** — surface anomalies that differ from the rest of the dataset
+- **Quality Issues** — detect **Blurry**, **Dark**, or **Bright** images
+- **Select Uniques** — keep only visually distinct items
+- **Insertion Time** — filter by when an item entered the dataset
+- **Media Status** — filter by media state
+
+Once a filter is selected, the **Query Modal** opens for operator and threshold configuration. Active filters appear as chips in the **Query Panel** below the bar. All active filters combine with **AND** logic. Click a chip to edit, click **X** to remove, or click **Clear All** to reset.
+
+**Save View** saves the current filter combination as a named view. Saved views appear in both the **Save View** dropdown and the [**Views** tab](/docs/explore-and-search/dataset-interface-views-tab).
+
+For every operator, threshold, and filter-specific workflow, see the [Filter Options Reference](/docs/explore-and-search/using-search-filter#filter-options-reference).
 
 ## Ask VL
 
