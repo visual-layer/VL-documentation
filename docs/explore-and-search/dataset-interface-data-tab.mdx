@@ -1,0 +1,60 @@
+---
+title: "Data Tab"
+description: "Reference for the Data tab inside a Visual Layer dataset — setup checklist, media preview, and activity log."
+sidebarTitle: "Data tab"
+---
+
+The **Data** tab is the dataset's setup and status surface. It shows how the dataset was configured, the media that was ingested into it, and the history of operations that have run on it.
+
+<Note>
+This page is a scaffold. Each section below will be filled in with complete coverage as the reference is built out.
+</Note>
+
+## Layout Overview
+
+The Data tab is organized into three areas.
+
+<div className="integrations-table">
+
+| Region | Purpose |
+|--------|---------|
+| **Creation Checklist** | Shows the five setup stages the dataset passed through: data source, annotations, index type, upload, and indexing |
+| **Media Preview** | A grid preview of the media that was uploaded into the dataset |
+| **Activity Log** | A chronological log of operations (saving, indexing, ready, and so on) with timestamps |
+
+</div>
+
+## Creation Checklist
+
+The creation checklist displays the five stages that completed when the dataset was created: **Select Data Source**, **Add Annotations**, **Select Index Type**, **Upload Data**, and **Visual Layer Indexing**.
+
+_Scaffold: Document what each stage represents, the state it shows after completion, and how the checklist relates to the dataset status._
+
+## Media Preview
+
+The media preview shows a paginated grid of the images uploaded to the dataset along with file names and label availability indicators.
+
+_Scaffold: Document the grid, file-name display, labels-available indicator, and any hover or click affordances._
+
+## Activity Log
+
+The activity log lists completed and in-progress operations for the dataset with timestamps and status indicators.
+
+_Scaffold: Document each log entry type, status indicator, and any filter or sort controls on the log panel._
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Dataset Interface Reference" icon="layout-dashboard" href="/docs/explore-and-search/dataset-interface-reference">
+    Overview of the full dataset workspace and the four tabs
+  </Card>
+  <Card title="Explore Tab" icon="search" href="/docs/explore-and-search/dataset-interface-explore-tab">
+    The workspace for viewing and analyzing dataset content
+  </Card>
+  <Card title="Views Tab" icon="blend" href="/docs/explore-and-search/dataset-interface-views-tab">
+    Saved combinations of filters and search queries
+  </Card>
+  <Card title="Enrich Tab" icon="sparkles" href="/docs/explore-and-search/dataset-interface-enrich-tab">
+    Model selection and enrichment progress tracking
+  </Card>
+</CardGroup>

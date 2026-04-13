@@ -1,0 +1,60 @@
+---
+title: "Enrich Tab"
+description: "Reference for the Enrich tab inside a Visual Layer dataset — model selection and enrichment progress tracking."
+sidebarTitle: "Enrich tab"
+---
+
+The **Enrich** tab is where AI-driven enrichment of the dataset is configured and monitored. It exposes the model picker, the preview of model output, and the progress view for running enrichment jobs.
+
+<Note>
+This page is a scaffold. Each section below will be filled in with complete coverage as the reference is built out.
+</Note>
+
+## Layout Overview
+
+The Enrich tab is organized into three areas.
+
+<div className="integrations-table">
+
+| Region | Purpose |
+|--------|---------|
+| **Model Picker** | Select one or more models to run against the dataset |
+| **Preview Panel** | Show a sample of model output on a small set of images before committing to a full run |
+| **Progress View** | Track the status of running enrichment jobs and review past jobs |
+
+</div>
+
+## Model Picker
+
+The model picker lists the models available for enrichment and allows selecting one or more to apply to the dataset.
+
+_Scaffold: Document the model list, model metadata, selection behavior, and any version or compatibility indicators._
+
+## Preview Panel
+
+The preview panel runs the selected model(s) on a small sample of images and displays the output so the results can be inspected before committing to a full run.
+
+_Scaffold: Document the sample set, the output display, and any iterate or discard affordances._
+
+## Progress View
+
+The progress view shows the status of in-flight enrichment jobs and the history of completed jobs, including any notifications generated along the way.
+
+_Scaffold: Document the per-job status indicators, timestamps, the notifications surface, and the relationship between this view and the Task Manager._
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Dataset Interface Reference" icon="layout-dashboard" href="/docs/explore-and-search/dataset-interface-reference">
+    Overview of the full dataset workspace and the four tabs
+  </Card>
+  <Card title="Enrich Overview" icon="sparkles" href="/docs/advanced-dataset-management/enrich-overview">
+    How enrichment works and how to configure it end-to-end
+  </Card>
+  <Card title="Task Manager" icon="list-checks" href="/docs/advanced-features/task-manager">
+    Monitor every running task, including enrichment jobs
+  </Card>
+  <Card title="Explore Tab" icon="search" href="/docs/explore-and-search/dataset-interface-explore-tab">
+    Where enriched metadata becomes filterable and searchable
+  </Card>
+</CardGroup>
