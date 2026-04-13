@@ -32,15 +32,15 @@ The views table displays one row per saved view. Each row exposes a fixed set of
 | **Last Result** | How long ago the most recent matching result was detected. |
 | **Creation Time** | When the view was created. |
 | **Created By** | The user who created the view, shown as avatar and name. |
-| **Monitoring** | Toggle to enable or disable alerts for this view. When enabled, users with access to the dataset receive a notification whenever new items match the view. |
+| **Monitoring** | Toggle to enable or disable alerts for this view. When enabled, users with access to the dataset receive a notification whenever new items match the view. See [Monitoring and Alerts](/docs/advanced-features/notifications) for alert delivery details. |
 
 </div>
 
 ### Row Actions
 
-Each row exposes a **Share** icon and a three-dot menu. The **Share** icon opens the [share panel](#expanded-row) for emailing the view to a collaborator. The three-dot menu exposes **Delete**, which permanently removes the view and its trend data.
+Each row exposes a **Share** icon and a three-dot menu. The **Share** icon opens the [share panel](#share-panel) for emailing the view to a collaborator. The three-dot menu exposes **Delete**, which permanently removes the view and its trend data.
 
-Views are immutable. To change a view's filters, delete it and create a new one from the **Explore** tab.
+Views are immutable. To change a view's filters, delete it and create a new one from the [Explore tab](/docs/explore-and-search/dataset-interface-explore-tab). To manage saved views programmatically, see the [Saved Views API](/api-reference/saved-views).
 
 ## Expanded Row
 
@@ -52,13 +52,13 @@ The **Query Details** section is a read-only display of every filter captured in
 
 A saved view records the complete filter state at creation, including:
 
-- Text and semantic search queries
+- Text and [semantic search](/docs/explore-and-search/using-search-filter#semantic-search-natural-language) queries
 - VQL (Visual Query Language) filters
-- Label and tag selections
-- Quality issue filters (duplicates, outliers, mislabels)
+- [Label](/docs/advanced-dataset-management/importing-annotations) and [user tag](/docs/advanced-features/tag-iteams) selections
+- [Quality issue](/docs/explore-and-search/using-search-filter#quality--confidence-thresholds) filters (duplicates, outliers, mislabels)
 - Entity type (images, objects, or video frames)
-- Similarity thresholds
-- Metadata source filters
+- [Similarity](/docs/explore-and-search/visual-search) thresholds
+- [Metadata](/docs/advanced-features/custom-metadata) source filters
 - Folder path filters
 
 ### Trend Results and Preview

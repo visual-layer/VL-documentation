@@ -4,7 +4,7 @@ description: "Reference for every panel, control, and action inside the Explore 
 sidebarTitle: "Explore tab"
 ---
 
-The **Explore** tab is the primary workspace inside a dataset. All viewing, search, filtering, cluster navigation, quality analysis, and selection happen here.
+The **Explore** tab is the primary workspace inside a dataset. All viewing, search, filtering, cluster navigation, quality analysis, and selection happen here. For a task-oriented walk-through of the workflow this tab supports, see [Exploring Datasets](/docs/quick-start/dataset-exploration-ux).
 
 <Frame>
   <img src="/images/dataset-explore-layout.png" alt="Explore tab of the dataset workspace" />
@@ -38,9 +38,9 @@ The top header is the orientation strip across the very top of the workspace. It
 
 The header contains:
 
-- **Dataset name** — the name given to the dataset at creation.
+- **Dataset name** — the name given to the dataset at creation. See [Create a Dataset](/docs/quick-start/tutorial-create-dataset) for the creation flow.
 - **Tooltip with dataset metadata** — hover the info icon next to the dataset name to reveal counts for images, objects, videos, and video frames, plus the creation date.
-- **Status indicator** — the current dataset state (**Indexing**, **Ready**, and so on). A dataset must be **Ready** before its content appears in the **Explore** tab.
+- **Status indicator** — the current dataset state (**Indexing**, **Ready**, and so on). A dataset must be **Ready** before its content appears in the **Explore** tab. Dataset status is also visible from the [Dataset Inventory](/docs/quick-start/dataset-inventory-ux).
 - **Tabs** — the four top-level tabs that make up the dataset workspace: [**Data**](/docs/explore-and-search/dataset-interface-data-tab), [**Views**](/docs/explore-and-search/dataset-interface-views-tab), **Explore**, and [**Enrich**](/docs/explore-and-search/dataset-interface-enrich-tab). The currently active tab is underlined.
 
 ## Filter & Search Area
@@ -82,15 +82,15 @@ The filter controls build and manage the active query. Click the filter icon nex
 
 The filters menu offers:
 
-- **Folders** — filter by directory path or folder name
-- **Files** — filter by filename patterns
-- **Labels** — filter by assigned class labels or annotation status
-- **User Tags** — filter by custom metadata tags applied to items
-- **Caption** — filter by image captions using boolean operators
-- **Duplicates** — find identical or near-identical items
-- **Outliers** — surface anomalies that differ from the rest of the dataset
-- **Quality Issues** — detect **Blurry**, **Dark**, or **Bright** images
-- **Select Uniques** — keep only visually distinct items
+- [**Folders**](/docs/explore-and-search/using-search-filter#filter-options-reference) — filter by directory path or folder name
+- [**Files**](/docs/explore-and-search/using-search-filter#filter-options-reference) — filter by filename patterns
+- [**Labels**](/docs/explore-and-search/using-search-filter#filter-options-reference) — filter by assigned class labels or annotation status
+- [**User Tags**](/docs/explore-and-search/using-search-filter#filter-options-reference) — filter by custom metadata tags applied to items. See [Tag Items](/docs/advanced-features/tag-iteams) for how tags are created.
+- [**Caption**](/docs/explore-and-search/using-search-filter#caption-search-boolean-logic) — filter by image captions using boolean operators
+- [**Duplicates**](/docs/explore-and-search/using-search-filter#duplicates) — find identical or near-identical items
+- [**Outliers**](/docs/explore-and-search/using-search-filter#filter-options-reference) — surface anomalies that differ from the rest of the dataset
+- [**Quality Issues**](/docs/explore-and-search/using-search-filter#quality--confidence-thresholds) — detect **Blurry**, **Dark**, or **Bright** images
+- [**Select Uniques**](/docs/explore-and-search/using-search-filter#select-uniques-redundancy-filtering) — keep only visually distinct items
 - **Insertion Time** — filter by when an item entered the dataset
 - **Media Status** — filter by media state
 
@@ -113,7 +113,7 @@ The action bar hosts operations that act on the current result set or selection.
 The action bar exposes:
 
 - **Selection management** — the count of currently selected items plus **Select All** and **Clear Selection** affordances.
-- **Share** — shares the current view or selection with a collaborator by email.
+- **Share** — shares the current view or selection with a collaborator by email. See [Share a Dataset](/docs/collab-and-downstream/share-dataset) for sharing the full dataset, or [Saved Views](/docs/collab-and-downstream/saved-views#sharing-a-view) for sharing a specific filtered view.
 - **Export** — exports the current result set, selection, or filter-matched items. See [Export a Dataset](/docs/advanced-dataset-management/export-dataset) for the export options.
 - **View-density controls** — adjust how many items appear per row and the granularity of cluster grouping.
 
@@ -125,23 +125,23 @@ The content grid is the main display area and the source of all in-place actions
 
 In **Clusters** mode, the grid displays cluster cards. Each card shows a representative thumbnail, the cluster size, and label coverage. Hover over a card to reveal in-place actions:
 
-- **Find Similar** — launches a visual-similarity search using the cluster's representative image as the anchor.
+- **Find Similar** — launches a [Visual Search](/docs/explore-and-search/visual-search#similarity-search-on-a-cluster) using the cluster's representative image as the anchor.
 - **Open cluster** — click the card to drill into its individual images or objects.
 
-For the theory behind clustering, see [How Search & Filter Work](/docs/explore-and-search/explore-theory). For cluster navigation tips, see [Understanding Clusters](/docs/quick-start/understanding-clusters).
+For the concepts behind clustering and embeddings, see [How Search & Filter Work](/docs/explore-and-search/explore-theory). For cluster navigation tips and examples, see [Understanding Clusters](/docs/quick-start/understanding-clusters). For multi-step workflows that combine clusters with filters, see [Recipes](/docs/explore-and-search/recipes).
 
 ### Image View
 
 In **Images** mode, the grid displays every image in a flat layout. Hover any image to reveal:
 
-- **Find Similar** — visual-similarity search using the hovered image as the anchor.
+- **Find Similar** — [Visual Search](/docs/explore-and-search/visual-search#similarity-search-from-an-image-preview) using the hovered image as the anchor.
 - **Select** — toggle the image into the current selection.
 
-Click an image to open its details page, where you can draw a **Region of Interest** crop and launch a crop-based **Find Similar** search. See [Visual Search](/docs/explore-and-search/visual-search) for the full flow.
+Click an image to open its details page, where you can draw a **Region of Interest** crop and launch a crop-based **Find Similar** search. See [Search Against a Region of Interest](/docs/explore-and-search/visual-search#search-against-a-region-of-interest) for the full flow.
 
 ### Objects View
 
-In **Objects** mode, the grid displays detected object crops. Hover behavior matches the image view: **Find Similar** uses the object's embedding as the anchor, and selection toggles apply to individual objects.
+In **Objects** mode, the grid displays detected object crops. Hover behavior matches the image view: [**Find Similar**](/docs/explore-and-search/visual-search#similarity-search-from-an-object) uses the object's embedding as the anchor, and selection toggles apply to individual objects. Object-level browsing becomes available once an object-detection model has run against the dataset — see the [Enrich tab](/docs/explore-and-search/dataset-interface-enrich-tab) for the workflow.
 
 ## Details Sidebar
 
@@ -149,11 +149,11 @@ The details sidebar runs along the right edge of the workspace and shows insight
 
 The sidebar exposes:
 
-- **Enrichment Models** — the models that have run against the dataset and any available preview shortcuts. See [Enrich Your Datasets](/docs/advanced-dataset-management/enrich-overview).
-- **Issues** — quality-issue counts with drill-in links for each category: **Duplicates**, **Outliers**, **Dark**, and **Blurry**. Click any row to apply the corresponding filter.
-- **Labels** — the label distribution for the current view. Click a label to filter by it.
-- **User Tags** — the user tags applied to items in the current view. Click a tag to filter by it. See [Tag Items](/docs/advanced-features/tag-iteams) for how tags are created.
-- **Metadata** — the custom metadata fields available for filtering. See [Custom Metadata](/docs/advanced-features/custom-metadata).
+- **Enrichment Models** — the models that have run against the dataset and any available preview shortcuts. See [Enrich Your Datasets](/docs/advanced-dataset-management/enrich-overview) for the run flow and the [Model Catalog](/docs/Dataset-Enrichment/model-catalog) for every available model.
+- **Issues** — quality-issue counts with drill-in links for each category: [**Duplicates**](/docs/explore-and-search/using-search-filter#duplicates), [**Outliers**](/docs/explore-and-search/using-search-filter#filter-options-reference), **Dark**, and **Blurry**. Click any row to apply the corresponding filter. For the signal-quality concepts behind these categories, see [How Signal Quality Is Measured](/docs/explore-and-search/explore-theory#how-is-signal-quality-measured).
+- **Labels** — the label distribution for the current view. Click a label to filter by it. To bring labels in from an external annotation file, see [Importing Annotations](/docs/advanced-dataset-management/importing-annotations).
+- **User Tags** — the user tags applied to items in the current view. Click a tag to filter by it. See [Tag Items](/docs/advanced-features/tag-iteams) for how tags are created and managed.
+- **Metadata** — the custom metadata fields available for filtering. See [Custom Metadata](/docs/advanced-features/custom-metadata) for how to attach metadata at creation time or via the API.
 
 ## Related Resources
 
