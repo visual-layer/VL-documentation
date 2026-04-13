@@ -1,2 +1,10 @@
 # Exclude internal documentation from Mintlify parsing
 internal-only/
+internal/
+
+# Claude Code instructions — internal
+CLAUDE.md
+
+# Mintlify also auto-ignores: .git, .github, .claude, .vscode, node_modules,
+# README.md, LICENSE.md, CHANGELOG.md, CONTRIBUTING.md
+# See https://www.mintlify.com/docs/organize/mintignore

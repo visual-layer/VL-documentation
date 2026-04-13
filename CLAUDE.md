@@ -11,6 +11,15 @@ This is the **Visual Layer Documentation Website** - a comprehensive documentati
 - Always align with the conventions, guidelines, standards, style tone & voice we've established in this guide
 - Always consult with mintlify docs if you you're not sure on structure, syntax, etc.
 
+## Bundled skills
+
+This repo bundles project-scoped Claude Code skills under `.claude/skills/`. They auto-load when Claude Code runs from the repo root:
+
+- **`tech-write`** — voice, structure, and feature-availability rules for Visual Layer documentation. Includes references for feature availability, page templates, and Mintlify setup. Expects `vl-product` cloned alongside this repo at `../vl-product`.
+- **`vl-brand`** — Visual Layer brand voice and the marketing color system.
+
+For the full Claude workflow (when each skill activates, example prompts, troubleshooting), see `internal/using-claude.md`. For branch and PR workflow, see `CONTRIBUTING.md`. Both files are internal-only and excluded from the published docs site via `.mintignore`.
+
 ## Common Development Commands
 
 ### Local Development
