@@ -1007,6 +1007,18 @@ img.img-sm[data-rmiz-modal-img] {
   max-height: 90% !important;
 }
 
+/* Inline marker icons (e.g., numbered callouts in tables) */
+img.img-marker {
+  width: 28px !important;
+  height: 28px !important;
+  max-width: 28px !important;
+  max-height: 28px !important;
+  min-width: 0 !important;
+  display: inline-block !important;
+  margin: 0 !important;
+  vertical-align: middle;
+}
+
 /* Legal cards — compact variant */
 .vl-landing-legal {
   max-width: 960px;
