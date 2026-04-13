@@ -1,0 +1,84 @@
+---
+title: "Explore Tab"
+description: "Reference for every panel, control, and action inside the Explore tab of a Visual Layer dataset."
+sidebarTitle: "Explore tab"
+---
+
+The **Explore** tab is the primary workspace inside a dataset. All viewing, search, filtering, cluster navigation, quality analysis, and selection happen here.
+
+<Note>
+This page is a scaffold. Each section below will be filled in with complete control-by-control coverage as the reference is built out.
+</Note>
+
+<Frame>
+  <img src="/images/overview-cluster-view.png" alt="Explore tab of the dataset workspace" />
+</Frame>
+
+## Layout Overview
+
+The Explore tab is organized into five screen regions that stay in place as you navigate. Each region is covered in its own section below.
+
+<div className="integrations-table">
+
+| Region | Purpose |
+|--------|---------|
+| **Top Tab Bar** | Switches between **Explore**, **Data**, **Views**, and **Enrich** |
+| **Filter Panel** | Apply and combine filters, search tools, and metadata criteria |
+| **Action Bar** | Run operations on the current result set: export, share, selection management |
+| **Content Grid** | The main display area showing clusters, images, or objects |
+| **Details Sidebar** | View metadata, insights, statistics, and access enrichment features |
+
+</div>
+
+## Top Tab Bar
+
+The top tab bar is the entry point to the four dataset tabs. In the Explore tab, it also hosts workspace-level controls such as the dataset title, dataset status indicator, and VL Chat launcher.
+
+_Scaffold: Document each element in the top bar, including hover states, badge indicators, and the **Ask VL** button._
+
+## View Mode Switcher
+
+The Content Grid supports multiple view modes. **Clusters** is the default; a flat grid view is available as an alternative for reviewing every image linearly without grouping.
+
+_Scaffold: Document the Clusters view (including the granularity knob), the Images flat view, and the Objects view, plus the controls that switch between them._
+
+## Filter Panel
+
+The Filter Panel is where every filter, search, and criterion applies to the current result set. It adapts to the current view mode and exposes semantic search, visual similarity, metadata filters, and quality filters.
+
+_Scaffold: Document each filter group, operator, threshold control, and clear/reset affordance._
+
+## Action Bar
+
+The Action Bar hosts operations that act on the current result set or selection: export, share, bulk selection, bulk tagging, and save view.
+
+_Scaffold: Document each action button, including its selection-state behavior and the dialogs it opens._
+
+## Content Grid
+
+The Content Grid is the main display area. It renders clusters, images, or objects depending on the current view mode, and it is the source of all in-place actions like hover to preview, select, or Find Similar.
+
+_Scaffold: Document the cluster thumbnail affordances, the hover + crop Find Similar entry point, the region-of-interest selection, the image card, the object card, and every context menu._
+
+## Details Sidebar
+
+The Details Sidebar shows metadata, insights, and statistics for the current view or selection, and provides access to enrichment features such as **Ask VL**.
+
+_Scaffold: Document each tab in the sidebar, each metric shown, and each call-to-action it exposes._
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Dataset Interface Reference" icon="layout-dashboard" href="/docs/explore-and-search/dataset-interface-reference">
+    Overview of the full dataset workspace and the four tabs
+  </Card>
+  <Card title="Data Tab" icon="database" href="/docs/explore-and-search/dataset-interface-data-tab">
+    The dataset's setup and status surface
+  </Card>
+  <Card title="Views Tab" icon="blend" href="/docs/explore-and-search/dataset-interface-views-tab">
+    Saved combinations of filters and search queries
+  </Card>
+  <Card title="Enrich Tab" icon="sparkles" href="/docs/explore-and-search/dataset-interface-enrich-tab">
+    Model selection and enrichment progress tracking
+  </Card>
+</CardGroup>
