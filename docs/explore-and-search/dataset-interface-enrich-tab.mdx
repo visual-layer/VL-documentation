@@ -22,15 +22,17 @@ The Enrich tab is organized into three areas.
 
 ## Model Picker
 
-The model picker lists every enrichment model available for the dataset. Each entry shows the model name, its task type, and a short description. Click a model to select it, then click **Add Models** to include additional models in the same run.
+The model picker lists every enrichment model available for the dataset. Each entry shows the model name, its task type, and a short description. Selecting a model highlights it, and **Add Models** includes additional models in the same run.
 
 Available models cover a range of enrichment tasks:
 
-- **Object detection** — draws bounding boxes and classifies each detected object. Feeds the [Objects view](/docs/explore-and-search/dataset-interface-explore-tab#objects-view) in the **Explore** tab.
-- **Image tagging** — assigns labels to the entire image. Populates the **Labels** panel in the [Details Sidebar](/docs/explore-and-search/dataset-interface-explore-tab#details-sidebar).
-- **Image and object captioning** — generates descriptive text that powers [Caption Search](/docs/explore-and-search/using-search-filter#caption-search-boolean-logic).
-- **Semantic search embeddings** — powers [Semantic Search](/docs/explore-and-search/using-search-filter#semantic-search-natural-language) across the dataset. For the theory, see [How Semantic Search Understands Language](/docs/explore-and-search/explore-theory#how-does-semantic-search-understand-language).
-- **Face detection** — detects faces and facial landmarks.
+| Task Type | Purpose |
+|-----------|---------|
+| **Object detection** | Draws bounding boxes and classifies each detected object. Feeds the [Objects view](/docs/explore-and-search/dataset-interface-explore-tab#objects-view) in the **Explore** tab. |
+| **Image tagging** | Assigns labels to the entire image. Populates the **Labels** panel in the [Details Sidebar](/docs/explore-and-search/dataset-interface-explore-tab#details-sidebar). |
+| **Image and object captioning** | Generates descriptive text that powers [Caption Search](/docs/explore-and-search/using-search-filter#caption-search-boolean-logic). |
+| **Semantic search embeddings** | Powers [Semantic Search](/docs/explore-and-search/using-search-filter#semantic-search-natural-language) across the dataset. For the theory, see [How Semantic Search Understands Language](/docs/explore-and-search/explore-theory#how-does-semantic-search-understand-language). |
+| **Face detection** | Detects faces and facial landmarks. |
 
 For the full catalog, including task type, descriptions, and model dependencies, see [Model Catalog](/docs/Dataset-Enrichment/model-catalog).
 
@@ -40,11 +42,7 @@ Some models require pre-existing enrichments before they can run. For example, *
 
 ## Preview Panel
 
-The preview panel runs the selected model(s) on a small sample of images and displays the output so you can inspect the results before committing to a full dataset run.
-
-Click **Generate Models Preview** to produce the sample. If multiple models are selected, switch between them in the preview panel to compare outputs. Use the preview to confirm a model is appropriate for the dataset before paying the cost of a full run.
-
-When the preview looks right, click **Enrich Dataset** to run every selected model across all images and frames in the dataset.
+The preview panel runs the selected model(s) on a small sample of images and displays the output so a reviewer can inspect the results before committing to a full dataset run. A **Generate Models Preview** button produces the sample, and when multiple models are selected the panel allows switching between them to compare outputs. An **Enrich Dataset** button commits every selected model to a full run across all images and frames in the dataset. For the end-to-end procedure, see [Enrich Your Datasets](/docs/advanced-dataset-management/enrich-overview).
 
 ## Progress View
 
