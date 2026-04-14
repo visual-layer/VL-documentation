@@ -20,20 +20,50 @@ The interface integrates search and filtering into a cohesive workspace. Before 
 
 ## Switching the Grid Layout
 
-The **Explore** tab has two grid layouts — **Visual Similarity** (clustered) and **Flat View** — plus a granularity control for clusters. The layout switcher sits on the right side of the filter and search area.
+The **Explore** tab has two grid layouts — **Visual Similarity** (clustered) and **Flat View** — plus a granularity control for clusters. The **Layout Toggle** sits on the right side of the filter and search area.
 
 ### Switch to Cluster View
 
-1. Click the layout switcher on the right of the filter and search area.
+1. Click the **Layout Toggle** on the right of the filter and search area.
 2. Select **Visual Similarity**.
-3. Adjust the granularity control next to the switcher to make clusters coarser (fewer, larger clusters) or finer (more, smaller clusters).
+3. Adjust the granularity control next to the toggle to make clusters coarser (fewer, larger clusters) or finer (more, smaller clusters).
 
 ### Switch to Flat View
 
-1. Click the layout switcher on the right of the filter and search area.
+1. Click the **Layout Toggle** on the right of the filter and search area.
 2. Select **Flat View**.
 
 For the concepts behind clustering, see [How Search & Filter Work](/docs/explore-and-search/explore-theory#how-does-visual-similarity-find-nearest-neighbors). For cluster navigation tips, see [Understanding Clusters](/docs/quick-start/understanding-clusters).
+
+---
+
+## Switching the Search Type
+
+The **Search Type Toggle** on the left side of the filter and search area sets whether searches, filters, clusters, and hover actions operate on full **Images** or on detected **Objects**. Flipping it reshapes the **Explore** tab around the selected search type: clusters regroup, counts change, searches run against different embeddings, and the available metadata changes accordingly.
+
+The **Objects** option becomes available once an object-detection model has run against the dataset. If it is disabled, run a model such as **VL-Object-Detector** from the [Enrich tab](/docs/explore-and-search/dataset-interface-enrich-tab) first.
+
+### Search by Images
+
+1. Click the **Search Type Toggle** on the left of the filter and search area.
+2. Select **Images**.
+
+In **Images** mode, clusters group full images. The dataset-level count shown at the bottom of the filter and search area is the total number of images, and every filter, search, and hover action operates on full images.
+
+<Frame>
+  <img src="/images/dataset-cluster-search-images.png" alt="Clusters view in Images mode with annotated total image count, cluster-level image count, some and all image labels in cluster, and the metadata switch" />
+</Frame>
+
+### Search by Objects
+
+1. Click the **Search Type Toggle** on the left of the filter and search area.
+2. Select **Objects**.
+
+In **Objects** mode, clusters group detected object crops. The dataset-level count becomes the total number of objects across every image, and filters, searches, and hover actions operate on individual object bounding boxes.
+
+<Frame>
+  <img src="/images/dataset-cluster-search-objects.png" alt="Clusters view in Objects mode with annotated total object count, cluster-level object count, some and all object labels in cluster, and the metadata switch" />
+</Frame>
 
 ---
 
