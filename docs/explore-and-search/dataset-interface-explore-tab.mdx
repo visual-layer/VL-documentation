@@ -12,21 +12,20 @@ The **Explore** tab is the primary workspace inside a dataset. All viewing, sear
 
 ## Layout Overview
 
-The Explore tab is organized into five numbered regions that stay in place as you navigate, plus the **Details Sidebar** on the right.
+The Explore tab is organized into four numbered regions that stay in place as you navigate, plus the **Insights Panel** on the right.
 
 <div className="integrations-table">
 
 | # | Region | Purpose |
 |---|--------|---------|
 | <img src="/images/1light.png" className="img-marker" alt="1" /> | **Top Header** | Dataset title, dataset-level stats, status indicator, and the tab row for **Data**, **Views**, **Explore**, and **Enrich** |
-| <img src="/images/2light.png" className="img-marker" alt="2" /> | **Filter & Search Area** | Entity-type switcher, layout switcher, search input, and filter controls |
-| <img src="/images/3light.png" className="img-marker" alt="3" /> | **Ask VL** | Conversational launcher that builds searches and filters from a natural-language prompt |
-| <img src="/images/4light.png" className="img-marker" alt="4" /> | **Dataset Actions** | Dataset-wide controls on the right side of the top header: status, Ask VL Chat, notifications, share, and the three-dot menu |
-| <img src="/images/5light.png" className="img-marker" alt="5" /> | **Content Grid** | The main display area showing clusters, images, or objects |
+| <img src="/images/2light.png" className="img-marker" alt="2" /> | **Filter & Search Area** | Search Type Toggle, Layout Toggle, Search box, and Filter Menu |
+| <img src="/images/3light.png" className="img-marker" alt="3" /> | **Dataset Actions** | Dataset-wide controls on the right side of the top header: status, VL Chat, notifications, share, and the three-dot menu |
+| <img src="/images/4light.png" className="img-marker" alt="4" /> | **Content Grid** | The main display area showing clusters, images, or objects |
 
 </div>
 
-The **Details Sidebar** on the right of the workspace hosts insights, quality issues, labels, user tags, and metadata for the current view or selection. It stays visible alongside the numbered regions.
+The **Insights Panel** on the right of the workspace hosts insights, quality issues, labels, user tags, and metadata for the current view or selection. It stays visible alongside the numbered regions.
 
 ## Top Header
 
@@ -48,41 +47,25 @@ Dataset-wide controls sit on the right side of the top header and are documented
 
 ## Filter & Search Area
 
-The filter and search area is the horizontal row directly beneath the header. It holds two separate view switchers, the search input, and the controls that build and manage active filters.
+The filter and search area is the horizontal row directly beneath the header. It holds the **Search Type Toggle** on the left, the **Layout Toggle** on the right, and the **Search box** and **Filter Menu** in the center.
 
 <Frame>
-  <img src="/images/dataset-filter-search-area.png" alt="Filter and search area with entity-type switcher on the left, search input in the center, and layout switcher on the right" />
+  <img src="/images/dataset-filter-search-area.png" alt="Filter and search area with the Search Type Toggle on the left, Search box in the center, and Layout Toggle on the right" />
 </Frame>
 
-### Entity-Type Switcher
+### Search Type Toggle
 
-The entity-type switcher on the left side of the filter and search area toggles between **Images** and **Objects**. This is more than a cosmetic change — the switch changes what you are looking at, what you can search against, and which metadata is available.
+The **Search Type Toggle** on the left side of the filter and search area sets what you are searching against: **Images** or **Objects**. This is more than a cosmetic change — it determines which embeddings are used for search, which metadata appears in the workspace, and what every filter, search, and hover action operates on.
 
 <Frame>
-  <img src="/images/object-image-switch.png" alt="Entity-type switcher toggling a dataset between Images mode and Objects mode" />
+  <img src="/images/object-image-switch.png" alt="Search Type Toggle switching a dataset between Images search and Objects search" />
 </Frame>
 
 The **Objects** option is available once an object-detection model has run against the dataset. If the option is disabled, run a model such as **VL-Object-Detector** from the [Enrich tab](/docs/explore-and-search/dataset-interface-enrich-tab) first.
 
-#### How the Switch Changes Your Workspace
+For what changes in the workspace when you flip between **Images** and **Objects**, see [Switching the Search Type](/docs/explore-and-search/using-search-filter#switching-the-search-type).
 
-Flipping the switch reshapes the **Explore** tab around the selected entity. Clusters regroup, counts change, searches run against different embeddings, and the available metadata changes with the entity type.
-
-In **Images** mode, clusters group full images. The dataset-level count shown at the bottom of the filter and search area is the total number of images, and every filter, search, and hover action operates on full images.
-
-<Frame>
-  <img src="/images/dataset-cluster-search-images.png" alt="Clusters view in Images mode with annotated total image count, cluster-level image count, some and all image labels in cluster, and the metadata switch" />
-</Frame>
-
-In **Objects** mode, clusters group detected object crops. The dataset-level count becomes the total number of objects across every image, and filters, searches, and hover actions operate on individual object bounding boxes.
-
-<Frame>
-  <img src="/images/dataset-cluster-search-objects.png" alt="Clusters view in Objects mode with annotated total object count, cluster-level object count, some and all object labels in cluster, and the metadata switch" />
-</Frame>
-
-Each cluster card shows the entity count for that cluster, the metadata pills currently selected for the cluster (see [Labels, Captions, and User Tags](#labels-captions-and-user-tags) below), and a metadata switch for changing which metadata the cluster displays.
-
-#### Labels, Captions, and User Tags
+### Labels, Captions, and User Tags
 
 Each cluster card displays one metadata type at a time. Use the switch at the top of the cluster to change which metadata is shown.
 
@@ -104,45 +87,33 @@ Which labels and captions appear on a cluster depends on which enrichment models
 Click any label, caption term, or user tag in a cluster card to apply it as a filter across the dataset.
 </Tip>
 
-### Layout Switcher
+### Layout Toggle
 
-The layout switcher on the right side of the filter and search area toggles between **Visual Similarity** (clustered) and **Flat View**. It controls how the content grid is arranged — not what is in it.
-
-<Frame>
-  <img src="/images/switch-flat-cluster.png" alt="Layout switcher dropdown showing Flat View and Visual Similarity options" />
-</Frame>
-
-The two switchers combine. You can view clustered images, clustered objects, a flat image grid, or a flat object grid.
-
-#### Visual Similarity (Clusters) — Default
-
-In **Visual Similarity** mode, the grid displays cluster cards. Each card groups a set of visually similar items together, with a representative thumbnail and the cluster's entity count. Cluster grouping is powered by embeddings. For the concepts behind it, see [How Search & Filter Work](/docs/explore-and-search/explore-theory#how-does-visual-similarity-find-nearest-neighbors).
-
-A granularity control sits next to the switcher and sets whether clusters are coarser (fewer, larger clusters) or finer (more, smaller clusters). For a deeper look at how to read and navigate clusters, see [Understanding Clusters](/docs/quick-start/understanding-clusters). For the step-by-step instructions, see [How to Search & Filter](/docs/explore-and-search/using-search-filter#switching-the-grid-layout).
-
-#### Flat View
-
-In **Flat View**, the grid displays every item in a single ungrouped layout. This layout suits browsing or selection without grouping, for example scrolling through every image in a filter result or bulk-selecting items. For the step-by-step instructions, see [How to Search & Filter](/docs/explore-and-search/using-search-filter#switching-the-grid-layout).
+The **Layout Toggle** on the right side of the filter and search area switches between **Visual Similarity** (clustered) and **Flat View**. It controls how the content grid is arranged, not what appears in it, so it combines with the **Search Type Toggle** to produce clustered images, clustered objects, a flat image grid, or a flat object grid.
 
 <Frame>
-  <img src="/images/flat-view.png" alt="Flat view of a dataset showing every image in a single ungrouped grid" />
+  <img src="/images/switch-flat-cluster.png" alt="Layout Toggle dropdown showing Flat View and Visual Similarity options" />
 </Frame>
 
-### Search Input
+For what each layout displays, see [Content Grid](#content-grid) below. For step-by-step instructions on switching layouts, see [How to Search & Filter](/docs/explore-and-search/using-search-filter#switching-the-grid-layout).
 
-The search input is the single text field in the center of the filter and search area. It drives both **Semantic Search** and **Caption Search**.
+### Search Box
+
+The center of the filter and search area contains the **Search box** and two adjacent buttons.
 
 <Frame>
-  <img src="/images/dataset-Search-input.png" alt="Search input with visual search upload dialog and filter menu" />
+  <img src="/images/dataset-Search-input.png" alt="Search box with visual search upload dialog and filter menu" />
 </Frame>
 
-Type a natural-language description to find conceptually matching content, or use boolean operators (`AND`, `OR`, `-`, `"phrase"`) when filtering by captions. For the full syntax and examples, see [How to Search & Filter](/docs/explore-and-search/using-search-filter).
-
-The **Visual Search** icon next to the search input opens the external-image upload flow for finding visually similar content from an image you provide. Drag and drop an image into the dialog or click **Browse Images** to pick one from disk. See [Visual Search](/docs/explore-and-search/visual-search) for all four ways to trigger visual similarity.
+| Element | Description |
+|---------|-------------|
+| **Search box** | Text field that drives both **Semantic Search** and **Caption Search**. Type a natural-language description to find conceptually matching content, or use boolean operators (`AND`, `OR`, `-`, `"phrase"`) when filtering by captions. See [How to Search & Filter](/docs/explore-and-search/using-search-filter) for the full syntax. |
+| **Visual Search button** | Opens the external-image upload flow for finding visually similar content. Drag and drop an image into the dialog or click **Browse Images** to pick one from disk. See [Visual Search](/docs/explore-and-search/visual-search) for all four ways to trigger visual similarity. |
+| **Filter Menu** | Opens the filter menu for building and managing active queries. See [Filter Controls](#filter-controls) below. |
 
 ### Filter Controls
 
-The filter controls build and manage the active query. Click the filter icon next to the search input to open the filters menu.
+The filter controls build and manage the active query. Click the **Filter Menu** icon next to the **Search box** to open the filters menu.
 
 <Frame>
   <img src="/images/dataset-filters-menu.png" alt="Filters menu with folders, files, labels, user tags, caption, duplicates, outliers, quality issues, select uniques, insertion time, and media status" />
@@ -168,35 +139,35 @@ Selecting a filter opens the **Query Modal** for operator and threshold configur
 
 For every operator, threshold, and filter-specific workflow, see the [Filter Options Reference](/docs/explore-and-search/using-search-filter#filter-options-reference).
 
-## Ask VL
-
-**Ask VL** is the conversational launcher in the upper-right of the workspace. It opens a chat interface that turns natural-language prompts into the equivalent search and filter combinations without requiring you to pick each filter by hand.
-
-Use **Ask VL** when you know what you want to find but not which filter builds the query. For the full workflow and examples, see [VL Chat](/docs/explore-and-search/vl-chat).
-
 ## Dataset Actions
 
 Dataset Actions occupy the right side of the top header and apply to the entire dataset, regardless of which tab is open.
 
 <Frame>
-  <img src="/images/dataset-actions.png" alt="Dataset actions: status indicator, Ask VL Chat, notifications bell, share, and three-dot menu" />
+  <img src="/images/dataset-actions-callouts.png" alt="Dataset actions: status indicator, VL Chat, notifications bell, share, and three-dot menu" />
 </Frame>
 
 | Control | Description |
 |---------|-------------|
 | **Status indicator** | The current dataset state (**Indexing**, **Ready**, and so on). A dataset must be **Ready** before its content appears in the **Explore** tab. Dataset status is also visible from the [Dataset Inventory](/docs/quick-start/dataset-inventory-ux). |
-| **Ask VL Chat** | Conversational launcher for building searches and filters from a natural-language prompt. See [Ask VL](#ask-vl). |
+| **VL Chat** | Conversational launcher for building searches and filters from a natural-language prompt. See [VL Chat](/docs/explore-and-search/vl-chat). |
 | **Notifications bell** | Opens the notifications panel for alerts on this dataset, including [saved-view alerts](/docs/collab-and-downstream/saved-views#monitoring-and-alerts) and enrichment-run completions. See [Monitoring and Alerts](/docs/advanced-features/notifications). |
 | **Share** | Opens the [Share a Dataset](/docs/collab-and-downstream/share-dataset) flow for inviting collaborators. |
 | **Three-dot menu** | Dataset-level actions such as rename, delete, and [snapshot](/docs/advanced-dataset-management/dataset-snapshots). |
 
 ## Content Grid
 
-The content grid is the main display area and the source of all in-place actions. Its contents depend on the active view mode.
+The content grid is the main display area and the source of all in-place actions. Its contents depend on the active layout selected from the [Layout Toggle](#layout-toggle) and the search type selected from the [Search Type Toggle](#search-type-toggle).
 
 ### Cluster View
 
-In **Clusters** mode, the grid displays cluster cards. Each card shows a representative thumbnail, the cluster size, and label coverage. Hovering any card reveals in-place actions:
+In **Visual Similarity** mode, the grid displays cluster cards. Each card shows a representative thumbnail, the cluster size, and label coverage. When the [Search Type Toggle](#search-type-toggle) is set to **Objects**, each card groups detected object crops instead of full images.
+
+<Frame>
+  <img src="/images/dataset-cluster-view.png" alt="Cluster view of a dataset with cluster cards arranged in a grid" />
+</Frame>
+
+Hovering any cluster card reveals in-place actions:
 
 | Action | Description |
 |--------|-------------|
@@ -205,41 +176,44 @@ In **Clusters** mode, the grid displays cluster cards. Each card shows a represe
 
 For the concepts behind clustering and embeddings, see [How Search & Filter Work](/docs/explore-and-search/explore-theory). For cluster navigation tips and examples, see [Understanding Clusters](/docs/quick-start/understanding-clusters). For multi-step workflows that combine clusters with filters, see [Recipes](/docs/explore-and-search/recipes).
 
-### Image View
+### Flat View
 
-In **Images** mode, the grid displays every image in a flat layout. Hovering any image reveals:
+In **Flat View**, the grid displays every item in a single ungrouped layout. When the [Search Type Toggle](#search-type-toggle) is set to **Images**, each cell is a full image; when set to **Objects**, each cell is a detected object crop. Object-level browsing becomes available once an object-detection model has run against the dataset — see the [Enrich tab](/docs/explore-and-search/dataset-interface-enrich-tab) for the workflow.
+
+<Frame>
+  <img src="/images/dataset-flat-view.png" alt="Flat view of a dataset showing every item in a single ungrouped grid" />
+</Frame>
+
+Hovering any item reveals in-place actions:
 
 | Action | Description |
 |--------|-------------|
-| **Find Similar** | Runs a [Visual Search](/docs/explore-and-search/visual-search#similarity-search-from-an-image-preview) using the hovered image as the anchor. |
-| **Select** | Toggles the image into the current selection. |
+| [**Find Similar**](/docs/explore-and-search/visual-search#similarity-search-from-an-image-preview) | Runs a [Visual Search](/docs/explore-and-search/visual-search) using the hovered item's embedding as the anchor. |
+| **Select** | Toggles the item into the current selection. |
 
 Clicking an image opens its details page, where a **Region of Interest** crop can launch a crop-based **Find Similar** search. See [Search Against a Region of Interest](/docs/explore-and-search/visual-search#search-against-a-region-of-interest) for the full flow.
 
-### Objects View
+## Insights Panel
 
-In **Objects** mode, the grid displays detected object crops. Hover behavior matches the image view:
+The **Insights Panel** runs along the right edge of the workspace and shows insights about the current view or selection. Its panels update as filters change, views change, or items are selected.
 
-| Action | Description |
-|--------|-------------|
-| [**Find Similar**](/docs/explore-and-search/visual-search#similarity-search-from-an-object) | Uses the object's embedding as the anchor. |
-| **Select** | Toggles the individual object into the current selection. |
+<Frame>
+  <img src="/images/metadata-details.png" alt="Insights Panel showing enrichment models, quality issues, labels, user tags, and metadata for the current view" />
+</Frame>
 
-Object-level browsing becomes available once an object-detection model has run against the dataset. See the [Enrich tab](/docs/explore-and-search/dataset-interface-enrich-tab) for the workflow.
+The panel exposes the following sections:
 
-## Details Sidebar
+<div className="integrations-table">
 
-The details sidebar runs along the right edge of the workspace and shows insights about the current view or selection. Its panels update as filters change, views change, or items are selected.
+| # | Panel | Description |
+|---|-------|-------------|
+| <img src="/images/1light.png" className="img-marker" alt="1" /> | **Enrichment Models** | The models that have run against the dataset and any available preview shortcuts. See [Enrich Your Datasets](/docs/advanced-dataset-management/enrich-overview) for the run flow and the [Model Catalog](/docs/Dataset-Enrichment/model-catalog) for every available model. |
+| <img src="/images/2light.png" className="img-marker" alt="2" /> | **Issues** | Quality-issue counts with drill-in links for each category: [**Duplicates**](/docs/explore-and-search/using-search-filter#duplicates), [**Outliers**](/docs/explore-and-search/using-search-filter#filter-options-reference), **Dark**, and **Blurry**. Clicking any row applies the corresponding filter. For the signal-quality concepts behind these categories, see [How Signal Quality Is Measured](/docs/explore-and-search/explore-theory#how-is-signal-quality-measured). |
+| <img src="/images/3light.png" className="img-marker" alt="3" /> | **Labels** | The label distribution for the current view. Clicking a label filters by it. To bring labels in from an external annotation file, see [Importing Annotations](/docs/advanced-dataset-management/importing-annotations). |
+| <img src="/images/4light.png" className="img-marker" alt="4" /> | **User Tags** | The user tags applied to items in the current view. Clicking a tag filters by it. See [Tag Items](/docs/advanced-features/tag-iteams) for how tags are created and managed. |
+| <img src="/images/5light.png" className="img-marker" alt="5" /> | **Metadata** | The custom metadata fields available for filtering. See [Custom Metadata](/docs/advanced-features/custom-metadata) for how to attach metadata at creation time or via the API. |
 
-The sidebar exposes the following panels:
-
-| Panel | Description |
-|-------|-------------|
-| **Enrichment Models** | The models that have run against the dataset and any available preview shortcuts. See [Enrich Your Datasets](/docs/advanced-dataset-management/enrich-overview) for the run flow and the [Model Catalog](/docs/Dataset-Enrichment/model-catalog) for every available model. |
-| **Issues** | Quality-issue counts with drill-in links for each category: [**Duplicates**](/docs/explore-and-search/using-search-filter#duplicates), [**Outliers**](/docs/explore-and-search/using-search-filter#filter-options-reference), **Dark**, and **Blurry**. Clicking any row applies the corresponding filter. For the signal-quality concepts behind these categories, see [How Signal Quality Is Measured](/docs/explore-and-search/explore-theory#how-is-signal-quality-measured). |
-| **Labels** | The label distribution for the current view. Clicking a label filters by it. To bring labels in from an external annotation file, see [Importing Annotations](/docs/advanced-dataset-management/importing-annotations). |
-| **User Tags** | The user tags applied to items in the current view. Clicking a tag filters by it. See [Tag Items](/docs/advanced-features/tag-iteams) for how tags are created and managed. |
-| **Metadata** | The custom metadata fields available for filtering. See [Custom Metadata](/docs/advanced-features/custom-metadata) for how to attach metadata at creation time or via the API. |
+</div>
 
 ## Related Resources
 
