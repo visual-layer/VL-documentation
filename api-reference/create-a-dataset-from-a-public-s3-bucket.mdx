@@ -1,6 +1,6 @@
 ---
-title: Create a Dataset from an S3 Bucket
-description: Create a new Visual Layer dataset by pointing to a public or private S3 bucket using the cloud API.
+title: "Create a Dataset "
+description: "Create a new Visual Layer dataset by pointing to a public or private S3 bucket using the cloud API."
 ---
 
 <Card title="How This Helps" icon="hand-platter">
@@ -8,7 +8,7 @@ description: Create a new Visual Layer dataset by pointing to a public or privat
 </Card>
 
 <Note>
-Use `status_new` for all status checks. The `status` field is being retired. See [Retrieve Dataset Status](/api-reference/retrieve-dataset-status).
+  Use `status_new` for all status checks. The `status` field is being retired. See [Retrieve Dataset Status](/api-reference/retrieve-dataset-status).
 </Note>
 
 ## Prerequisites
@@ -32,7 +32,7 @@ Content-Type: multipart/form-data
 ### Parameters
 
 | Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| --- | --- | --- | --- |
 | `dataset_name` | string | Yes | The display name for the new dataset. |
 | `bucket_path` | string | Yes | S3 path to the bucket or folder containing your media files. |
 
@@ -57,7 +57,7 @@ curl -X POST \
 Save the `dataset_id` — you need it for all subsequent operations on this dataset.
 
 <Tip>
-Dataset creation is asynchronous. After the initial request, poll `GET /api/v1/dataset/{dataset_id}` until `status_new` is `READY` before running search or export operations.
+  Dataset creation is asynchronous. After the initial request, poll `GET /api/v1/dataset/{dataset_id}` until `status_new` is `READY` before running search or export operations.
 </Tip>
 
 ---
@@ -124,7 +124,7 @@ print(f"Dataset ready: {dataset_id}")
 See [Error Handling](/api-reference/errors) for the error response format and Python handling patterns.
 
 | HTTP Code | Meaning |
-|-----------|---------|
+| --- | --- |
 | **200** | Dataset created successfully. |
 | **400** | Bad Request — missing or invalid parameters. |
 | **401** | Unauthorized — check your JWT token. |
@@ -138,6 +138,7 @@ See [Error Handling](/api-reference/errors) for the error response format and Py
   <Card title="Retrieve Dataset Status" icon="circle-check" href="/api-reference/retrieve-dataset-status">
     Poll dataset status until processing completes.
   </Card>
+
   <Card title="Add Media to an Existing Dataset" icon="database" href="/api-reference/add-media-to-existing-dataset">
     Incrementally add new media to an indexed dataset.
   </Card>
