@@ -4,6 +4,46 @@ description: "Stay up-to-date with the latest features, enhancements, and bug fi
 ---
 
 
+<Update label="2026-05-01" version="2.60.94">
+
+This release focuses on smoother review workflows, cleaner user management, and a wave of UI polish across the platform.
+
+## New Features
+
+### Resource Transfer on User Deletion
+
+Deleting a user now transfers their datasets, tasks, and other resources to an admin instead of leaving them orphaned. The delete user dialog has been updated to clearly explain what happens to the user's content.
+
+[Learn more about user management.](/docs/self-hosting/user-management)
+
+### Folder Names with Special Characters
+
+Dataset folder names containing special characters now render correctly throughout the interface, making it easier to work with datasets that follow your existing naming conventions.
+
+## Enhancements
+
+- **Streamlined dataset creation.** The dataset creation menu has been simplified for a more direct path to a new dataset. [See dataset creation.](/docs/quick-start/tutorial-create-dataset)
+- **Task Manager layout.** Action names now have more space, so longer task descriptions remain readable at a glance. [See the Task Manager.](/docs/advanced-features/task-manager)
+- **Export feedback.** A loading spinner now appears on the export option while an export is in progress. [See exporting datasets.](/docs/advanced-dataset-management/export-dataset)
+- **More reliable cloud sync.** AWS sync now retries with exponential backoff when transient errors occur, improving the reliability of large bucket ingestions. [See Amazon S3 integration.](/docs/Integrations/Amazon-s3)
+- **Camtek CSV imports.** Semicolon-delimited `db.csv` files are now detected automatically, and missing-column errors point to the correct field.
+
+## Bug Fixes
+
+- **Review page** no longer scrolls to the top when assigning items, and the assign popover stays correctly aligned.
+- **Asset preview** metadata popover now closes when the preview is closed.
+- **Cluster view** no longer opens unexpectedly when interacting with the metadata popup, and cluster pages open reliably when the LP tab is open.
+- **Filter panel** OK and Reset buttons are now disabled when no filters are selected, and the Add Filter popup no longer shows a duplicate background.
+- **Tooltips:** long dataset names display a tooltip, the checkbox tooltip is positioned correctly, and alert tooltips no longer persist after a popup is opened.
+- **Header UI** no longer breaks when the health-check API status is not green.
+- **Feedback footer** no longer enlarges or sticks open after upgrade.
+- **Copy toast** behavior is now consistent across the platform.
+- **Gradient buttons** no longer shift position on hover.
+- **Object thumbnails** now render correctly in deployments where `CDN_FULLPATH` is unset.
+
+</Update>
+
+
 <Update label="2025-09-01" version="2.44.2">
 
 ## New Features
