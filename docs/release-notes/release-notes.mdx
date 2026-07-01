@@ -4,6 +4,77 @@ description: "Stay up-to-date with the latest features, enhancements, and bug fi
 ---
 
 
+<Update label="2026-07-01">
+
+This release focuses on a broader model catalog, dataset lifecycle improvements, and a wide sweep of theming and UI polish across the app.
+
+## New Features
+
+### RF-DETR object detection model
+
+RF-DETR is now available as an object detection enrichment model. You can select it when enriching datasets to generate bounding boxes across your images, expanding the choices already available in the model catalog.
+
+[Browse the model catalog.](/docs/Dataset-Enrichment/model-catalog)
+
+### Image tiling in the ingestion pipeline
+
+A new tiling step has been added to the ingestion pipeline. Very large images are automatically split into smaller tiles during processing, improving detection quality on high-resolution imagery and unlocking better results for dense-object use cases.
+
+### Hard delete for datasets
+
+Dataset deletion has been consolidated into a single, unified confirmation flow. Deleting a dataset now fully removes its records and associated storage, so cleanup is more predictable and datasets no longer linger after removal.
+
+## Updates
+
+### Light theme polish across the app
+
+We've completed a broad pass over the light theme so surfaces, icons, labels, and hover states render consistently everywhere. Improvements include:
+
+- Sidebar active-state indication is now clearly visible in the light theme
+- Enrich data button, size filter icon, and "Add More Models" button render correctly in light theme
+- Selected items in select lists display with the correct colors
+- Assign label hover and selected states in the review modal are legible
+- Snapshot, caption, and enrichment preview icons display correctly
+- Metadata video thumbnails render properly in the right side panel
+- Regression Model Jobs radio labels display correctly
+
+### Dark theme polish
+
+- Cart item delete button is now visible against the dark background
+- Tag assignment toast background matches the current theme
+- "Add Filter" options hover state is visible
+- Decline Review toast uses the correct background
+- Metadata video hover states no longer stick after switching themes
+
+### Modal and control consistency
+
+- Cancel buttons are consistent across all modals
+- The Review modal is now properly centered and no longer forces an extra scrollbar
+- Float buttons in the Review section no longer show an unexpected border on hover
+- Datepicker's OK button no longer picks up a stray border on hover
+- Selected card frame names are displayed in the correct text color
+- "Ignore Item" labels display correctly on review cards in the light theme
+
+### Enrichment preview
+
+- The metadata popup is no longer triggered from the enrichment preview card, keeping the preview focused and reducing accidental interactions.
+
+## Bug Fixes
+
+- Tooltips no longer overflow outside the tooltip box on long text
+- Empty tooltips no longer remain visible after being clicked
+- Clicking a tooltip no longer triggers events on the element beneath it
+- The "No Match Found" state now renders against a proper background
+- The Labels card now uses the standard tooltip component for consistent behavior
+- Table column sorting now toggles correctly on repeated clicks
+- The "Assign" dropdown no longer appears behind the "For Review" label
+- Caption icon alignment and spacing in "View Actions" have been corrected
+- Disabled controls are no longer clickable in certain flows
+- Version information is now shown correctly in the UI
+
+</Update>
+
+
 <Update label="2025-09-01" version="2.44.2">
 
 ## New Features
